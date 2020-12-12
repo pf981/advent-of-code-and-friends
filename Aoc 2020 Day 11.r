@@ -1,4 +1,208 @@
 # Databricks notebook source
+# MAGIC %md https://adventofcode.com/2020/day/11
+# MAGIC 
+# MAGIC <main>
+# MAGIC <script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+# MAGIC <article class="day-desc"><h2>--- Day 11: Seating System ---</h2><p>Your plane lands with plenty of time to spare. The final leg of your journey is a ferry that goes directly to the tropical island where you can finally start your vacation. As you reach the waiting area to board the ferry, you realize you're so early, nobody else has even arrived yet!</p>
+# MAGIC <p>By modeling the process people use to choose (or abandon) their seat in the waiting area, you're pretty sure you can predict the best place to sit. You make a quick map of the seat layout (your puzzle input).</p>
+# MAGIC <p>The seat layout fits neatly on a grid. Each position is either floor (<code>.</code>), an empty seat (<code>L</code>), or an occupied seat (<code>#</code>). For example, the initial seat layout might look like this:</p>
+# MAGIC <pre><code>L.LL.LL.LL
+# MAGIC LLLLLLL.LL
+# MAGIC L.L.L..L..
+# MAGIC LLLL.LL.LL
+# MAGIC L.LL.LL.LL
+# MAGIC L.LLLLL.LL
+# MAGIC ..L.L.....
+# MAGIC LLLLLLLLLL
+# MAGIC L.LLLLLL.L
+# MAGIC L.LLLLL.LL
+# MAGIC </code></pre>
+# MAGIC <p>Now, you just need to model the people who will be arriving shortly. Fortunately, people are entirely predictable and always follow a simple set of rules. All decisions are based on the <em>number of occupied seats</em> adjacent to a given seat (one of the eight positions immediately up, down, left, right, or diagonal from the seat). The following rules are applied to every seat simultaneously:</p>
+# MAGIC <ul>
+# MAGIC <li>If a seat is <em>empty</em> (<code>L</code>) and there are <em>no</em> occupied seats adjacent to it, the seat becomes <em>occupied</em>.</li>
+# MAGIC <li>If a seat is <em>occupied</em> (<code>#</code>) and <em>four or more</em> seats adjacent to it are also occupied, the seat becomes <em>empty</em>.</li>
+# MAGIC <li>Otherwise, the seat's state does not change.</li>
+# MAGIC </ul>
+# MAGIC <p><span title="Floor... floor never changes.">Floor (<code>.</code>) never changes</span>; seats don't move, and nobody sits on the floor.</p>
+# MAGIC <p>After one round of these rules, every seat in the example layout becomes occupied:</p>
+# MAGIC <pre><code>#.##.##.##
+# MAGIC #######.##
+# MAGIC #.#.#..#..
+# MAGIC ####.##.##
+# MAGIC #.##.##.##
+# MAGIC #.#####.##
+# MAGIC ..#.#.....
+# MAGIC ##########
+# MAGIC #.######.#
+# MAGIC #.#####.##
+# MAGIC </code></pre>
+# MAGIC <p>After a second round, the seats with four or more occupied adjacent seats become empty again:</p>
+# MAGIC <pre><code>#.LL.L#.##
+# MAGIC #LLLLLL.L#
+# MAGIC L.L.L..L..
+# MAGIC #LLL.LL.L#
+# MAGIC #.LL.LL.LL
+# MAGIC #.LLLL#.##
+# MAGIC ..L.L.....
+# MAGIC #LLLLLLLL#
+# MAGIC #.LLLLLL.L
+# MAGIC #.#LLLL.##
+# MAGIC </code></pre>
+# MAGIC <p>This process continues for three more rounds:</p>
+# MAGIC <pre><code>#.##.L#.##
+# MAGIC #L###LL.L#
+# MAGIC L.#.#..#..
+# MAGIC #L##.##.L#
+# MAGIC #.##.LL.LL
+# MAGIC #.###L#.##
+# MAGIC ..#.#.....
+# MAGIC #L######L#
+# MAGIC #.LL###L.L
+# MAGIC #.#L###.##
+# MAGIC </code></pre>
+# MAGIC <pre><code>#.#L.L#.##
+# MAGIC #LLL#LL.L#
+# MAGIC L.L.L..#..
+# MAGIC #LLL.##.L#
+# MAGIC #.LL.LL.LL
+# MAGIC #.LL#L#.##
+# MAGIC ..L.L.....
+# MAGIC #L#LLLL#L#
+# MAGIC #.LLLLLL.L
+# MAGIC #.#L#L#.##
+# MAGIC </code></pre>
+# MAGIC <pre><code>#.#L.L#.##
+# MAGIC #LLL#LL.L#
+# MAGIC L.#.L..#..
+# MAGIC #L##.##.L#
+# MAGIC #.#L.LL.LL
+# MAGIC #.#L#L#.##
+# MAGIC ..L.L.....
+# MAGIC #L#L##L#L#
+# MAGIC #.LLLLLL.L
+# MAGIC #.#L#L#.##
+# MAGIC </code></pre>
+# MAGIC <p>At this point, something interesting happens: the chaos stabilizes and further applications of these rules cause no seats to change state! Once people stop moving around, you count <em><code>37</code></em> occupied seats.</p>
+# MAGIC <p>Simulate your seating area by applying the seating rules repeatedly until no seats change state. <em>How many seats end up occupied?</em></p>
+# MAGIC </article>
+# MAGIC <p>Your puzzle answer was <code>2361</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>As soon as people start to arrive, you realize your mistake. People don't just care about adjacent seats - they care about <em>the first seat they can see</em> in each of those eight directions!</p>
+# MAGIC <p>Now, instead of considering just the eight immediately adjacent seats, consider the <em>first seat</em> in each of those eight directions. For example, the empty seat below would see <em>eight</em> occupied seats:</p>
+# MAGIC <pre><code>.......#.
+# MAGIC ...#.....
+# MAGIC .#.......
+# MAGIC .........
+# MAGIC ..#L....#
+# MAGIC ....#....
+# MAGIC .........
+# MAGIC #........
+# MAGIC ...#.....
+# MAGIC </code></pre>
+# MAGIC <p>The leftmost empty seat below would only see <em>one</em> empty seat, but cannot see any of the occupied ones:</p>
+# MAGIC <pre><code>.............
+# MAGIC .L.L.#.#.#.#.
+# MAGIC .............
+# MAGIC </code></pre>
+# MAGIC <p>The empty seat below would see <em>no</em> occupied seats:</p>
+# MAGIC <pre><code>.##.##.
+# MAGIC #.#.#.#
+# MAGIC ##...##
+# MAGIC ...L...
+# MAGIC ##...##
+# MAGIC #.#.#.#
+# MAGIC .##.##.
+# MAGIC </code></pre>
+# MAGIC <p>Also, people seem to be more tolerant than you expected: it now takes <em>five or more</em> visible occupied seats for an occupied seat to become empty (rather than <em>four or more</em> from the previous rules). The other rules still apply: empty seats that see no occupied seats become occupied, seats matching no rule don't change, and floor never changes.</p>
+# MAGIC <p>Given the same starting layout as above, these new rules cause the seating area to shift around as follows:</p>
+# MAGIC <pre><code>L.LL.LL.LL
+# MAGIC LLLLLLL.LL
+# MAGIC L.L.L..L..
+# MAGIC LLLL.LL.LL
+# MAGIC L.LL.LL.LL
+# MAGIC L.LLLLL.LL
+# MAGIC ..L.L.....
+# MAGIC LLLLLLLLLL
+# MAGIC L.LLLLLL.L
+# MAGIC L.LLLLL.LL
+# MAGIC </code></pre>
+# MAGIC <pre><code>#.##.##.##
+# MAGIC #######.##
+# MAGIC #.#.#..#..
+# MAGIC ####.##.##
+# MAGIC #.##.##.##
+# MAGIC #.#####.##
+# MAGIC ..#.#.....
+# MAGIC ##########
+# MAGIC #.######.#
+# MAGIC #.#####.##
+# MAGIC </code></pre>
+# MAGIC <pre><code>#.LL.LL.L#
+# MAGIC #LLLLLL.LL
+# MAGIC L.L.L..L..
+# MAGIC LLLL.LL.LL
+# MAGIC L.LL.LL.LL
+# MAGIC L.LLLLL.LL
+# MAGIC ..L.L.....
+# MAGIC LLLLLLLLL#
+# MAGIC #.LLLLLL.L
+# MAGIC #.LLLLL.L#
+# MAGIC </code></pre>
+# MAGIC <pre><code>#.L#.##.L#
+# MAGIC #L#####.LL
+# MAGIC L.#.#..#..
+# MAGIC ##L#.##.##
+# MAGIC #.##.#L.##
+# MAGIC #.#####.#L
+# MAGIC ..#.#.....
+# MAGIC LLL####LL#
+# MAGIC #.L#####.L
+# MAGIC #.L####.L#
+# MAGIC </code></pre>
+# MAGIC <pre><code>#.L#.L#.L#
+# MAGIC #LLLLLL.LL
+# MAGIC L.L.L..#..
+# MAGIC ##LL.LL.L#
+# MAGIC L.LL.LL.L#
+# MAGIC #.LLLLL.LL
+# MAGIC ..L.L.....
+# MAGIC LLLLLLLLL#
+# MAGIC #.LLLLL#.L
+# MAGIC #.L#LL#.L#
+# MAGIC </code></pre>
+# MAGIC <pre><code>#.L#.L#.L#
+# MAGIC #LLLLLL.LL
+# MAGIC L.L.L..#..
+# MAGIC ##L#.#L.L#
+# MAGIC L.L#.#L.L#
+# MAGIC #.L####.LL
+# MAGIC ..#.#.....
+# MAGIC LLL###LLL#
+# MAGIC #.LLLLL#.L
+# MAGIC #.L#LL#.L#
+# MAGIC </code></pre>
+# MAGIC <pre><code>#.L#.L#.L#
+# MAGIC #LLLLLL.LL
+# MAGIC L.L.L..#..
+# MAGIC ##L#.#L.L#
+# MAGIC L.L#.LL.L#
+# MAGIC #.LLLL#.LL
+# MAGIC ..#.L.....
+# MAGIC LLL###LLL#
+# MAGIC #.LLLLL#.L
+# MAGIC #.L#LL#.L#
+# MAGIC </code></pre>
+# MAGIC <p>Again, at this point, people stop shifting around and the seating area reaches equilibrium. Once this occurs, you count <em><code>26</code></em> occupied seats.</p>
+# MAGIC <p>Given the new visibility method and the rule change for occupied seats becoming empty, once equilibrium is reached, <em>how many seats end up occupied?</em></p>
+# MAGIC </article>
+# MAGIC <p>Your puzzle answer was <code>2119</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+# MAGIC <p>At this point, you should <a href="/2020">return to your Advent calendar</a> and try another puzzle.</p>
+# MAGIC <p>If you still want to see it, you can <a href="11/input" target="_blank">get your puzzle input</a>.</p>
+# MAGIC <p>You can also <span class="share">[Share<span class="share-content">on
+# MAGIC   <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Seating+System%22+%2D+Day+11+%2D+Advent+of+Code+2020&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F11&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+# MAGIC   <a href="javascript:void(0);" onclick="var mastodon_instance=prompt('Mastodon Instance / Server Name?'); if(typeof mastodon_instance==='string' &amp;&amp; mastodon_instance.length){this.href='https://'+mastodon_instance+'/share?text=I%27ve+completed+%22Seating+System%22+%2D+Day+11+%2D+Advent+of+Code+2020+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F11'}else{return false;}" target="_blank">Mastodon</a></span>]</span> this puzzle.</p>
+# MAGIC </main>
+
+# COMMAND ----------
+
 library(tidyverse)
 
 # COMMAND ----------
