@@ -68,6 +68,20 @@ input <- "#.#................#..............#......#......
 
 # COMMAND ----------
 
+input <- ".#..#..###
+####.###.#
+....###.#.
+..###.##.#
+##.##.#.#.
+....###..#
+..#.#..#.#
+#..#.#.###
+.##...##.#
+.....#.#..
+"
+
+# COMMAND ----------
+
 asteroids_str <- read_lines(input)
 
 # COMMAND ----------
@@ -82,7 +96,10 @@ asteroids
 
 # COMMAND ----------
 
-coords <- which(asteroids == "#", arr.ind = TRUE) %>% as_tibble() %>% set_names("y", "x") %>% mutate(y = nrow(asteroids) - y)
+coords <-
+  which(asteroids == "#", arr.ind = TRUE) %>%
+  as_tibble() %>%
+  transmute(x = col - 1, y = nrow(asteroids) - row - 1)
 
 # COMMAND ----------
 
@@ -97,15 +114,34 @@ result <-
   #filter(!(x == x1 & y == y1)) %>%
   mutate(
     slope = (y - y1) / (x - x1),
+    quadrant = 1 + (y1 < y) + (x1 < x) + (y1 >= y & x1 < x),
     d = (x - x1)^2 + (y - y1)^2
   ) %>%
-  group_by(x, y, slope) %>%
+  group_by(x, y, slope, quadrant) %>%
   arrange(d) %>%
   slice(1) %>%
   ungroup() %>%
   count(x, y) %>%
   arrange(desc(n))
 result
+
+# COMMAND ----------
+
+a=crossing(a=coords, b=coords) %>%
+  as.list() %>%
+  bind_cols() %>%
+  #filter(!(x == x1 & y == y1)) %>%
+  mutate(
+    slope = (y - y1) / (x - x1),
+    d = (x - x1)^2 + (y - y1)^2
+  ) %>% 
+  filter(x == 6, y == 3)
+display(a)
+
+# COMMAND ----------
+
+a %>% group_by(slope) %>% filter(n() > 1) %>%
+ggplot(aes(x1, y1, col = factor(slope))) + geom_point() + annotate("point", x = 6, y = 3)
 
 # COMMAND ----------
 
@@ -131,7 +167,10 @@ find_max_asteroids <- function(asteroids_str) {
     unlist() %>%
     matrix(ncol = nchar(asteroids_str[[1]]), byrow = TRUE)
   
-  coords <- which(asteroids == "#", arr.ind = TRUE) %>% as_tibble() %>% set_names("y", "x") %>% mutate(y = nrow(asteroids) - y)
+  coords <-
+    which(asteroids == "#", arr.ind = TRUE) %>%
+    as_tibble() %>%
+    transmute(x = col - 1, y = nrow(asteroids) - row - 1)
   
   result <-
     crossing(a=coords, b=coords) %>%
@@ -189,7 +228,8 @@ test_that("example map 2 works", expect_equal(find_max_asteroids("#.#...#.#.
 
 # COMMAND ----------
 
-test_that("example map 1 works", expect_equal(find_max_asteroids("......#.#.
+test_that("example maps work", {
+  expect_equal(find_max_asteroids("......#.#.
 #..#.#....
 ..#######.
 .#.#.###..
@@ -201,7 +241,7 @@ test_that("example map 1 works", expect_equal(find_max_asteroids("......#.#.
 .#....####
 ")$answer,
   33
-))
+)
   expect_equal(
     find_max_asteroids("#.#...#.#.
 .###....#.
@@ -272,6 +312,7 @@ find_max_asteroids("......#.#.
 
 # COMMAND ----------
 
+# This should be 41
 find_max_asteroids(".#..#..###
 ####.###.#
 ....###.#.
