@@ -71,7 +71,7 @@ find_max_asteroids <- function(asteroids_str) {
   coords <-
     which(asteroids == "#", arr.ind = TRUE) %>%
     as_tibble() %>%
-    transmute(x = col - 1, y = nrow(asteroids) - row - 1)
+    transmute(x = col - 1, y = row - 1)
   
   distances <-
     crossing(a=coords, b=coords) %>%
@@ -79,11 +79,10 @@ find_max_asteroids <- function(asteroids_str) {
     bind_cols() %>%
     filter(!(x == x1 & y == y1)) %>% # ?
     mutate(
-      slope = (y - y1) / (x - x1),
-      quadrant = 1 + (y1 < y) + (x1 < x) + (y1 >= y & x1 < x),
+      angle = Arg(complex(real = x - x1, imaginary = y - y1)) %% (2 * pi),
       d = (x - x1)^2 + (y - y1)^2
     ) %>%
-    group_by(x, y, slope, quadrant) %>%
+    group_by(x, y, angle) %>%
     arrange(d)
   
   result <- 
@@ -99,7 +98,7 @@ find_max_asteroids <- function(asteroids_str) {
     best_y = result$y[[1]],
     distances = distances,
     result = result,
-    p = ggplot(result, aes(x, y, label = n)) + geom_point() + geom_label()
+    p = ggplot(result, aes(x, y, label = n)) + geom_point() + geom_label() + scale_y_reverse()
   )
 }
 
@@ -118,8 +117,7 @@ library(testthat)
 
 # COMMAND ----------
 
-test_that("example maps work", {
-  expect_equal(find_max_asteroids("......#.#.
+res <- find_max_asteroids("......#.#.
 #..#.#....
 ..#######.
 .#.#.###..
@@ -129,9 +127,41 @@ test_that("example maps work", {
 .##.#..###
 ##...#..#.
 .#....####
-")$answer,
-  33
-)
+")
+
+# COMMAND ----------
+
+res$p
+
+# COMMAND ----------
+
+res$result
+
+# COMMAND ----------
+
+lst(res$best_x, res$best_y)
+
+# COMMAND ----------
+
+test_that("example map 1 works", {
+  res <- find_max_asteroids("......#.#.
+#..#.#....
+..#######.
+.#.#.###..
+.#..#.....
+..#....#.#
+#..#....#.
+.##.#..###
+##...#..#.
+.#....####
+")
+  expect_equal(res$answer, 33)
+  expect_equal(c(res$best_x, res$best_y), c(5, 8))
+})
+
+# COMMAND ----------
+
+
   expect_equal(
     find_max_asteroids("#.#...#.#.
 .###....#.
