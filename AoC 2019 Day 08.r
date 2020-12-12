@@ -66,9 +66,9 @@ height <- 6
 
 # COMMAND ----------
 
-input <- "123456789012"
-width <- 3
-height <- 2
+# input <- "123456789012"
+# width <- 3
+# height <- 2
 
 # COMMAND ----------
 
