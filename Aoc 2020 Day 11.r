@@ -130,95 +130,29 @@ seats
 
 # COMMAND ----------
 
-# MAGIC %md ### Attempt 1
-
-# COMMAND ----------
-
-count_occupied_adjacent <- function(seats, i, j) {
-  offset_df <-
-    expand.grid(new_i = c(-1, 0, 1), new_j = c(-1, 0, 1)) %>% 
-    mutate(
-      new_i = i + new_i,
-      new_j = j + new_j
-    ) %>%
-    filter(
-      !(new_i == i & new_j == j),
-      new_i <= nrow(seats),
-      new_j <= ncol(seats),
-      new_i > 0,
-      new_j > 0
-    )
-  
-  sum(seats[cbind(offset_df$new_i, offset_df$new_j)] == "#")
-}
-
-update <- function(seats) {
-  new_occupied <- tibble(i = integer(), j = integer())
-  new_empty <- tibble(i = integer(), j = integer())
-  for (i in seq_len(nrow(seats))) {
-    for (j in seq_len(ncol(seats))) {
-      if (seats[i, j] == "L" && count_occupied_adjacent(seats, i, j) == 0) {
-        new_occupied <- bind_rows(new_occupied, tibble(i = i, j = j))
-      }
-      if (seats[i, j] == "#" && count_occupied_adjacent(seats, i, j) >= 4) {
-        new_empty <- bind_rows(new_empty, tibble(i = i, j = j))
-      }
-    }
-  }
-  
-  seats[cbind(new_occupied$i, new_occupied$j)] <- "#"
-  seats[cbind(new_empty$i, new_empty$j)] <- "L"
-  
-  seats
-}
-
-full_update <- function(seats) {
-  repeat {
-    prev <- seats
-    seats <- update(seats)
-    
-    if (all(prev == seats)) {
-      break
-    }
-  }
-  seats
-}
-
-# COMMAND ----------
-
-s <- full_update(seats)
-s
-
-# COMMAND ----------
-
-sum(s == "#")
-#> 2361
-
-# COMMAND ----------
-
-# MAGIC %md ### Attempt 2
-
-# COMMAND ----------
-
-# MAGIC %md This attempt uses vectorised operations and no loops or growing vectors. This makes it _waaayyyy_ faster.
-# MAGIC 
-# MAGIC `Attempt 1` took 26 minutes, `Attempt 2` took 0.49 seconds!
-
-# COMMAND ----------
-
 install.packages("matrixcalc")
 
 # COMMAND ----------
 
+left <- function(m) matrixcalc::shift.left(m, fill = NA_integer_)
+right <- function(m) matrixcalc::shift.right(m, fill = NA_integer_)
+up <- function(m) matrixcalc::shift.up(m, fill = NA_integer_)
+down <- function(m) matrixcalc::shift.down(m, fill = NA_integer_)
+
+# COMMAND ----------
+
 inds <- matrix(seq_along(unlist(seats)), ncol = ncol(seats))
-N <- matrixcalc::shift.down(inds, fill = NA_integer_)
-NE <- matrixcalc::shift.left(N, fill = NA_integer_)
-E <- matrixcalc::shift.left(inds, fill = NA_integer_)
-SE <- matrixcalc::shift.up(E, fill = NA_integer_)
-S <- matrixcalc::shift.up(inds, fill = NA_integer_)
-SW <- matrixcalc::shift.right(S, fill = NA_integer_)
-W <- matrixcalc::shift.right(inds, fill = NA_integer_)
-NW <- matrixcalc::shift.right(N, fill = NA_integer_)
+
+N <- down(inds)
+NE <- compose(left, down)(inds)
+E <- left(inds)
+SE <- compose(left, up)(inds)
+S <- up(inds)
+SW <- compose(right, up)(inds)
+W <- right(inds)
+NW <- compose(right, down)(inds)
+
+# COMMAND ----------
 
 update <- function(seats) {
   repeat {
@@ -253,24 +187,16 @@ sum(update(seats) == "#")
 # COMMAND ----------
 
 offsets <- function(m, f) {
-  l <- list()
+  result <- matrix(NA_integer_, nrow = nrow(m), ncol = ncol(m))
   repeat {
     m <- f(m)
     if (all(is.na(m))) {
       break
     }
-    l <- c(l, list(m))
+    result <- coalesce(result, m)
   }
-  # simplify2array(l)
-  reduce(l, coalesce)
+  result
 }
-
-# COMMAND ----------
-
-left <- function(m) matrixcalc::shift.left(m, fill = NA_integer_)
-right <- function(m) matrixcalc::shift.right(m, fill = NA_integer_)
-up <- function(m) matrixcalc::shift.up(m, fill = NA_integer_)
-down <- function(m) matrixcalc::shift.down(m, fill = NA_integer_)
 
 # COMMAND ----------
 
