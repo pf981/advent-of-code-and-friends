@@ -79,7 +79,7 @@ find_max_asteroids <- function(asteroids_str) {
     bind_cols() %>%
     filter(!(x == x1 & y == y1)) %>% # ?
     mutate(
-      angle = Arg(complex(real = x - x1, imaginary = y - y1)) %% (2 * pi),
+      angle = (-pi / 2 + Arg(complex(real = x - x1, imaginary = y - y1))) %% (2 * pi),
       d = (x - x1)^2 + (y - y1)^2
     ) %>%
     group_by(x, y, angle) %>%
@@ -117,17 +117,77 @@ library(testthat)
 
 # COMMAND ----------
 
-res <- find_max_asteroids("......#.#.
-#..#.#....
-..#######.
-.#.#.###..
-.#..#.....
-..#....#.#
-#..#....#.
-.##.#..###
-##...#..#.
-.#....####
+res <- find_max_asteroids(".#..##.###...#######
+##.############..##.
+.#.######.########.#
+.###.#######.####.#.
+#####.##.#.##.###.##
+..#####..#.#########
+####################
+#.####....###.#.#.##
+##.#################
+#####.##.###..####..
+..######..##.#######
+####.##.####...##..#
+.#####..#.######.###
+##...#.##########...
+#.##########.#######
+.####.#.###.###.#.##
+....##.##.###..#####
+.#.#.###########.###
+#.#.#.#####.####.###
+###.##.####.##.#..##
 ")
+
+# COMMAND ----------
+
+ggplot(result, aes(x, y, label = n)) + geom_point() + geom_label() + scale_y_reverse()
+
+# COMMAND ----------
+
+res$distances %>%
+  filter(x == res$best_x, y == res$best_y) %>%
+  ungroup() %>%
+  mutate(
+    angle = (-pi / 2 + Arg(complex(real = x - x1, imaginary = y - y1))) %% (2 * pi)
+  ) %>%
+  group_by(angle) %>%
+  mutate(rn = row_number()) %>%
+  arrange(rn, angle) %>%
+  ungroup() %>%
+  mutate(id = row_number()) %>%
+  head(50)
+
+# COMMAND ----------
+
+res$distances %>%
+  filter(x == res$best_x, y == res$best_y) %>%
+  ungroup() %>%
+  mutate(
+    angle = (-pi / 2 + Arg(complex(real = x - x1, imaginary = y - y1))) %% (2 * pi)
+  ) %>%
+  group_by(angle) %>%
+  mutate(rn = row_number()) %>%
+  arrange(rn, angle) %>%
+  ungroup() %>%
+  mutate(id = row_number()) %>%
+  slice(200)
+
+# COMMAND ----------
+
+result$distances %>%
+  filter(x == result$best_x, y == result$best_y) %>%
+  ungroup() %>%
+  mutate(
+    angle = (-pi / 2 + Arg(complex(real = x - x1, imaginary = y - y1))) %% (2 * pi)
+  ) %>%
+  group_by(angle) %>%
+  mutate(rn = row_number()) %>%
+  arrange(rn, angle) %>%
+  ungroup() %>%
+  mutate(id = row_number()) %>%
+  head(50) %>%
+  ggplot(aes(x1, y1, label = id)) + geom_label() + annotate("point", x = result$best_x, y = result$best_y, col = "red") + scale_y_reverse()
 
 # COMMAND ----------
 
@@ -320,3 +380,21 @@ result$distances %>%
 # COMMAND ----------
 
 display(result$result)
+
+# COMMAND ----------
+
+# tribble(
+#   ~id, ~x, ~y,
+#     1,  1, -10,
+#     2, 10,  -1,
+#     3, 10,   1,
+#     4,1,10,
+#     5,-1,10,
+#     6,-10,1,
+#     7,-10,-1,
+#     8,-1,-10
+# ) %>%
+#   mutate(
+#     angle = (pi / 2 + Arg(complex(real = x, imaginary = y))) %% (2 * pi)
+#   ) %>%
+#   arrange(angle)
