@@ -232,7 +232,7 @@ find_max_asteroids <- function(asteroids_str) {
     transmute(x = col - 1, y = row - 1)
   
   distances <-
-    crossing(a=coords, b=coords) %>%
+    crossing(a = coords, b = coords) %>%
     as.list() %>%
     bind_cols() %>%
     filter(!(x == x1 & y == y1)) %>% # ?
@@ -362,6 +362,5 @@ result$distances %>%
   mutate(rn = row_number()) %>%
   arrange(rn, angle) %>%
   ungroup() %>%
-  mutate(id = row_number()) %>%
   slice(200) %>%
   with(100 * x1 + y1)
