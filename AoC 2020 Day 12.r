@@ -773,7 +773,7 @@ F37
 
 # COMMAND ----------
 
-read_lines(input) %>% keep(str_starts, "R|L") %>% unique() %>% sort()
+# read_lines(input) %>% keep(str_starts, "R|L") %>% unique() %>% sort()
 
 # COMMAND ----------
 
@@ -827,26 +827,26 @@ abs(sum(result$delta_north)) + abs(sum(result$delta_east))
 
 # COMMAND ----------
 
-# TESTING
-input <- "F10
-N3
-F7
-R90
-F11
-L180
-F11
-L90
-F7
-S3
-F10
-"
+# # TESTING
+# input <- "F10
+# N3
+# F7
+# R90
+# F11
+# L180
+# F11
+# L90
+# F7
+# S3
+# F10
+# "
 
-directions <-
-  read_lines(input) %>%
-  as_tibble() %>%
-  extract(value, c("action", "value"), "(.)(\\d+)") %>%
-  mutate(value = as.numeric(value))
-directions
+# directions <-
+#   read_lines(input) %>%
+#   as_tibble() %>%
+#   extract(value, c("action", "value"), "(.)(\\d+)") %>%
+#   mutate(value = as.numeric(value))
+# directions
 
 # COMMAND ----------
 
@@ -869,6 +869,30 @@ wp_changes
 
 # COMMAND ----------
 
+# for (i in which(wp_changes$action %in% c("L", "R"))) {
+#   cur_wp <- wp_changes %>% slice(1:i) %>% summarise(wp_north = sum(wp_delta_north), wp_east = sum(wp_delta_east))
+
+#   x <- cur_wp$wp_east
+#   y <- cur_wp$wp_north
+  
+#   v <- paste0(wp_changes$action[i], wp_changes$value[i])
+#   if (v %in% c("L180", "R180")) {
+#     new_x <- -x
+#     new_y <- -y
+#   } else if (v %in% c("L270", "R90")) {
+#     new_x <- -y
+#     new_y <- x
+#   } else if (v %in% c("R270", "L90")) {
+#     new_x <- y
+#     new_y <- -x
+#   }
+  
+#   wp_changes$wp_delta_north[i] <- new_y - y
+#   wp_changes$wp_delta_east[i] <- new_x - x
+# }
+
+# COMMAND ----------
+
 for (i in which(wp_changes$action %in% c("L", "R"))) {
   cur_wp <- wp_changes %>% slice(1:i) %>% summarise(wp_north = sum(wp_delta_north), wp_east = sum(wp_delta_east))
 
@@ -879,12 +903,12 @@ for (i in which(wp_changes$action %in% c("L", "R"))) {
   if (v %in% c("L180", "R180")) {
     new_x <- -x
     new_y <- -y
-  } else if (v %in% c("L270", "R90")) {
-    new_x <- -y
-    new_y <- x
-  } else if (v %in% c("R270", "L90")) {
+  } else if (v %in% c("L270", "R90")) { # FIXME: TEST - these signs r90 and l90 are swapped nhere
     new_x <- y
     new_y <- -x
+  } else if (v %in% c("R270", "L90")) {
+    new_x <- -y
+    new_y <- x
   }
   
   wp_changes$wp_delta_north[i] <- new_y - y
@@ -938,6 +962,18 @@ result <-
 # COMMAND ----------
 
 display(result) # FIXME: The bug is in turning left/right
+
+# COMMAND ----------
+
+result %>% tail(1) %>% with(abs(ship_abs_east) + abs(ship_abs_north))
+
+# COMMAND ----------
+
+# 44534 too high
+
+# COMMAND ----------
+
+# 41212
 
 # COMMAND ----------
 
