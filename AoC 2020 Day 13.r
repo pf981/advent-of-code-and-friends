@@ -167,20 +167,175 @@ mod_values
 
 # COMMAND ----------
 
-# install.packages("numbers")
+# MAGIC %md `numbers::chinese(mod_values$a, mod_values$m)` didn't give the right answer so I had to implement the Chinese remainder theorem myself.
+# MAGIC 
+# MAGIC I modified [this](https://rosettacode.org/wiki/Chinese_remainder_theorem#R) to be able to handle 64 bit integers.
 
 # COMMAND ----------
 
-answer <- numbers::chinese(mod_values$a, mod_values$m)
+mul_inv <- function(a, b)
+{
+  b0 <- b
+  x0 <- 0L
+  x1 <- 1L
+
+  if (b == 1) return(1L)
+  while(a > 1){
+    # q <- as.integer(a/b)
+    q <- bit64::as.integer64(a / b)
+
+    t <- b
+    b <- a %% b
+    a <- t
+
+    t <- x0
+    x0 <- x1 - q*x0
+    x1 <- t
+  }
+
+  if (x1 < 0) x1 <- x1 + b0
+  return(x1)
+}
+
+chinese_remainder <- function(a, m)
+{
+  a <- bit64::as.integer64(a)
+  m <- bit64::as.integer64(m)
+
+  prod <- 1L
+  sum <- 0L
+
+  for (i in seq_along(m)) {
+    prod <- prod * m[i]
+  }
+
+  for (i in seq_along(m)) {
+    p <- prod / m[i]
+    sum <- sum + a[i] * mul_inv(p, m[i]) * p
+  }
+
+  sum %% prod
+}
+
+# COMMAND ----------
+
+# mul_inv <- function(a, b)
+# {
+#   b0 <- b
+#   x0 <- 0L
+#   x1 <- 1L
+ 
+#   if (b == 1) return(1L)
+#   while(a > 1){
+#     q <- as.integer(a/b)
+ 
+#     t <- b
+#     b <- a %% b
+#     a <- t
+ 
+#     t <- x0
+#     x0 <- x1 - q*x0
+#     x1 <- t
+#   }
+ 
+#   if (x1 < 0) x1 <- x1 + b0
+#   return(x1)
+# }
+ 
+# chinese_remainder <- function(a, n)
+# {
+#   len <- length(n)
+ 
+#   prod <- 1L
+#   sum <- 0L
+ 
+#   for (i in 1:len) prod <- prod * n[i]
+ 
+#   for (i in 1:len){
+#     p <- as.integer(prod / n[i])
+#     sum <- sum + a[i] * mul_inv(p, n[i]) * p
+#   }
+ 
+#   return(sum %% prod)
+# }
+
+# COMMAND ----------
+
+lst(mod_values$a, mod_values$m)
+
+# COMMAND ----------
+
+paste0(mod_values$m, collapse=",")
+
+# COMMAND ----------
+
+# mul_inv <- function(a, b)
+# {
+#   message(a)
+#   b0 <- b
+#   x0 <- 0L
+#   x1 <- 1L
+ 
+#   if (b == 1) return(1L)
+#   while(a > 1) {
+#     q <- a / b
+ 
+#     t <- b
+#     b <- a %% b
+#     a <- t
+ 
+#     t <- x0
+#     x0 <- x1 - q*x0
+#     x1 <- t
+#   }
+ 
+#   if (x1 < 0) x1 <- x1 + b0
+#   return(x1)
+# }
+ 
+# chinese_remainder <- function(a, n)
+# {
+#   len <- length(n)
+ 
+#   prod <- 1
+#   sum <- 0
+ 
+#   for (i in 1:len) prod <- prod * n[i]
+ 
+#   for (i in 1:len) {
+#     p <- prod / n[i]
+#     sum <- sum + a[i] * mul_inv(p, n[i]) * p
+#   }
+ 
+#   return(sum %% prod)
+# }
+
+# COMMAND ----------
+
+# a= mod_values$a
+# n = mod_values$m
+
+# COMMAND ----------
+
+#   len <- length(n)
+ 
+#   prod <- 1L
+#   sum <- 0L
+ 
+#  # for (i in 1:len) prod <- prod * n[i]
+
+# COMMAND ----------
+
+len
+
+# COMMAND ----------
+
+answer <- chinese_remainder(mod_values$a, mod_values$m)
 answer %>% format(scientific = FALSE)
 
 # COMMAND ----------
 
-# 1010182346291441 too low
-# 1010182346291360 too low, too
-
-# COMMAND ----------
-
+# Check the answer
 mod_values %>%
   mutate(
   soonest = id - (answer %% id)
