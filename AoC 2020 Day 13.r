@@ -146,14 +146,6 @@ tibble(
 
 # COMMAND ----------
 
-# bus_ids <- c(17,NA,13,19)
-# bus_ids <- c(67,7,59,61)
-# bus_ids <- c(67,NA,7,59,61)
-# bus_ids <- c(67,7,NA,59,61)
-# bus_ids <- c(1789,37,47,1889)
-
-# COMMAND ----------
-
 mod_values <-
   bus_ids %>%
   enframe(name = "position", value = "id") %>%
@@ -173,15 +165,15 @@ mod_values
 
 # COMMAND ----------
 
-mul_inv <- function(a, b)
-{
+mul_inv <- function(a, b) {
   b0 <- b
   x0 <- 0L
   x1 <- 1L
 
-  if (b == 1) return(1L)
-  while(a > 1){
-    # q <- as.integer(a/b)
+  if (b == 1) {
+    return(1L)
+  }
+  while(a > 1) {
     q <- bit64::as.integer64(a / b)
 
     t <- b
@@ -189,16 +181,17 @@ mul_inv <- function(a, b)
     a <- t
 
     t <- x0
-    x0 <- x1 - q*x0
+    x0 <- x1 - q * x0
     x1 <- t
   }
 
-  if (x1 < 0) x1 <- x1 + b0
-  return(x1)
+  if (x1 < 0) {
+    x1 <- x1 + b0
+  }
+  x1
 }
 
-chinese_remainder <- function(a, m)
-{
+chinese_remainder <- function(a, m) {
   a <- bit64::as.integer64(a)
   m <- bit64::as.integer64(m)
 
@@ -219,132 +212,6 @@ chinese_remainder <- function(a, m)
 
 # COMMAND ----------
 
-# mul_inv <- function(a, b)
-# {
-#   b0 <- b
-#   x0 <- 0L
-#   x1 <- 1L
- 
-#   if (b == 1) return(1L)
-#   while(a > 1){
-#     q <- as.integer(a/b)
- 
-#     t <- b
-#     b <- a %% b
-#     a <- t
- 
-#     t <- x0
-#     x0 <- x1 - q*x0
-#     x1 <- t
-#   }
- 
-#   if (x1 < 0) x1 <- x1 + b0
-#   return(x1)
-# }
- 
-# chinese_remainder <- function(a, n)
-# {
-#   len <- length(n)
- 
-#   prod <- 1L
-#   sum <- 0L
- 
-#   for (i in 1:len) prod <- prod * n[i]
- 
-#   for (i in 1:len){
-#     p <- as.integer(prod / n[i])
-#     sum <- sum + a[i] * mul_inv(p, n[i]) * p
-#   }
- 
-#   return(sum %% prod)
-# }
-
-# COMMAND ----------
-
-lst(mod_values$a, mod_values$m)
-
-# COMMAND ----------
-
-paste0(mod_values$m, collapse=",")
-
-# COMMAND ----------
-
-# mul_inv <- function(a, b)
-# {
-#   message(a)
-#   b0 <- b
-#   x0 <- 0L
-#   x1 <- 1L
- 
-#   if (b == 1) return(1L)
-#   while(a > 1) {
-#     q <- a / b
- 
-#     t <- b
-#     b <- a %% b
-#     a <- t
- 
-#     t <- x0
-#     x0 <- x1 - q*x0
-#     x1 <- t
-#   }
- 
-#   if (x1 < 0) x1 <- x1 + b0
-#   return(x1)
-# }
- 
-# chinese_remainder <- function(a, n)
-# {
-#   len <- length(n)
- 
-#   prod <- 1
-#   sum <- 0
- 
-#   for (i in 1:len) prod <- prod * n[i]
- 
-#   for (i in 1:len) {
-#     p <- prod / n[i]
-#     sum <- sum + a[i] * mul_inv(p, n[i]) * p
-#   }
- 
-#   return(sum %% prod)
-# }
-
-# COMMAND ----------
-
-# a= mod_values$a
-# n = mod_values$m
-
-# COMMAND ----------
-
-#   len <- length(n)
- 
-#   prod <- 1L
-#   sum <- 0L
- 
-#  # for (i in 1:len) prod <- prod * n[i]
-
-# COMMAND ----------
-
-len
-
-# COMMAND ----------
-
 answer <- chinese_remainder(mod_values$a, mod_values$m)
 answer %>% format(scientific = FALSE)
-
-# COMMAND ----------
-
-# Check the answer
-mod_values %>%
-  mutate(
-  soonest = id - (answer %% id)
-)
-
-# COMMAND ----------
-
-1010182346291467
-
-# COMMAND ----------
-
-# MAGIC %md `numbers::chinese` doesn't give the right answer!? If I put it into https://www.dcode.fr/chinese-remainder I get the right answer
+#> "1010182346291467"
