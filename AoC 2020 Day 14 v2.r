@@ -684,15 +684,20 @@ format(answer, scientific = FALSE)
 
 expand_mask <- function(mask) {
   replacement_grid <- expand.grid(
-    rep(list(c("0", "1")), str_count(mask, "X")),
+    rep(list(c("z", "1")), str_count(mask, "X")),
     stringsAsFactors = FALSE
   )
   
-  reduce(
+  result <- reduce(
     replacement_grid,
     str_replace,
     pattern = "X",
     .init = mask
+  )
+  
+  tibble(
+    mask_1 = result %>% chartr("z", "0", .),
+    mask_0 = result %>% chartr("10z", "110", .)
   )
 }
 
@@ -713,34 +718,16 @@ result
 
 # COMMAND ----------
 
-result$mask
-
-# COMMAND ----------
-
 df <-
   result %>%
   unnest(mask) %>%
   mutate(
     address_bin = as.binary(address, n = 36),
-    mask = mask %>% binary_str_to_dec() %>% as.binary(n = 36),
-    address_final = map2(address_bin, mask, ~(.x | .y)) # FIXME: THIS IS THE PROBLEM! 0 -> 0
+    mask_1 = mask_1 %>% binary_str_to_dec() %>% as.binary(n = 36),
+    mask_0 = mask_0 %>% binary_str_to_dec() %>% as.binary(n = 36),
+    address_masked_bin = pmap(lst(address_bin, mask_1, mask_0), ~(..1 | ..2) & ..3),
+    address_masked = map_dbl(address_masked_bin, as.double)
   )
-
-# COMMAND ----------
-
-df$address_final
-
-# COMMAND ----------
-
-df$address_bin
-
-# COMMAND ----------
-
-df$mask
-
-# COMMAND ----------
-
-df
 
 # COMMAND ----------
 
@@ -754,19 +741,8 @@ print_df(df) %>% display()
 
 # COMMAND ----------
 
-# as.double(df$address_final[[1]])
-
-# COMMAND ----------
-
-# df$address_final
-df %>%
-  mutate(address_final = map_dbl(address_final, as.double)) %>% pull(address_final) %>% unique()
-
-# COMMAND ----------
-
 a=  df %>%
-  mutate(address_final = map_dbl(address_final, as.double)) %>%
-  group_by(address_final) %>%
+  group_by(address_masked) %>%
   slice(n()) %>%
   ungroup() %>%
   pull(value)
