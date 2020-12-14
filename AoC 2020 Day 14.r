@@ -618,68 +618,11 @@ input_lines <- read_lines(input)
 
 # COMMAND ----------
 
-map_dfr(
+mem <- map_dfr(
   split(input_lines, cumsum(str_detect(input_lines, "^mask = "))),
   process_segment
 )
-
-# COMMAND ----------
-
-cumsum(str_detect(input_lines, "^mask = "))
-
-# COMMAND ----------
-
-split(input_lines, cumsum(str_detect(input_lines, "^mask = ")))
-
-# COMMAND ----------
-
-input_lines
-
-# COMMAND ----------
-
-process_segment <- function(segment) {
-  segment_lines <- read_lines(segment)
-
-  mask <- segment_lines[[1]] %>% str_replace("mask = ", "")
-
-  segment_lines[-1] %>%
-    as_tibble() %>%
-    extract(value, c("address", "value"), "mem\\[(\\d+)\\] = (\\d+)") %>%
-    transmute(
-      address = as.integer(address),
-      value = as.integer(value),
-      mask = mask
-    )
-}
-
-# COMMAND ----------
-
-process_segment("mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X
-mem[8] = 11
-mem[7] = 101
-mem[8] = 0
-")
-
-# COMMAND ----------
-
-map_dfr(segments, process_segment)
-
-# COMMAND ----------
-
-input_lines <- read_lines(input)
-
-mask <- input_lines[[1]] %>% str_replace("mask = ", "")
-
-mem <-
-  input_lines[-1] %>%
-  as_tibble() %>%
-  extract(value, c("address", "value"), "mem\\[(\\d+)\\] = (\\d+)") %>%
-  transmute(
-    address = as.integer(address),
-    value = as.integer(value)
-  )
-
-lst(mask, mem)
+display(mem)
 
 # COMMAND ----------
 
@@ -687,17 +630,9 @@ lst(mask, mem)
 binary_str_to_dec <- function(x) {
   x %>%
     str_split("") %>%
-    unlist() %>%
-    as.integer() %>%
-    reduce(~.x * 2 + .y)
+    map(as.integer) %>%
+    map(function(y) reduce(y, ~.x * 2 + .y))
 }
-
-# COMMAND ----------
-
-mask_1 <- mask %>% chartr("X", "0", .) %>% binary_str_to_dec() %>% as.binary(n = 36)
-mask_0 <- mask %>% chartr("1X0", "110", .) %>% binary_str_to_dec() %>% as.binary(n = 36)
- 
-lst(mask_1, mask_0)
 
 # COMMAND ----------
 
@@ -705,225 +640,26 @@ result <-
   mem %>%
   mutate(
     value_bin = as.binary(value, n = 36),
-    masked_bin = map(value_bin, ~(. | mask_1) & mask_0),
-    masked = map_int(masked_bin, as.integer)
+    
+    mask_1 = mask %>% chartr("X", "0", .) %>% binary_str_to_dec() %>% as.binary(n = 36),
+    mask_0 = mask %>% chartr("1X0", "110", .) %>% binary_str_to_dec() %>% as.binary(n = 36),
+    
+    masked_bin = pmap(lst(value_bin, mask_1, mask_0), ~(..1 | ..2) & ..3),
+    masked = map_dbl(masked_bin, as.double) # Can't use integer because it's too big
   )
 result
 
 # COMMAND ----------
 
-result %>%
+result$masked
+
+# COMMAND ----------
+
+answer <-
+  result %>%
   group_by(address) %>%
   slice(n()) %>%
   ungroup() %>%
   summarise(answer = sum(masked)) %>%
   pull(answer)
-
-# COMMAND ----------
-
-# MAGIC %md ## Scratch
-
-# COMMAND ----------
-
-binary_str_to_dec("111111111111111111111111111111111101")
-
-# COMMAND ----------
-
-binary_str_to_dec <- function(x) {
-  x %>%
-    str_split("") %>%
-    map(as.integer) %>%
-    map_dbl(function(x) reduce(x, ~.x * 2 + .y))
-}
-
-# COMMAND ----------
-
-mask %>% chartr("1X0", "110", .) %>% strtoi(2)
-
-# COMMAND ----------
-
-strtoi("111111111111111111111111111111111101", 2)
-
-# COMMAND ----------
-
-mask %>% chartr("1X0", "110", .)
-
-# COMMAND ----------
-
- "11111111111111111111111111111" %>% strtoi(2)
-
-# COMMAND ----------
-
- "11111111111111111111" %>%
-    str_split("") %>%
-    unlist() %>%
-    as.integer() %>% 
-   as.raw() %>%
-  # rawToBits() %>%
-  packBits("integer")
-
-# COMMAND ----------
-
-?packBits
-
-
-# COMMAND ----------
-
-mask %>% chartr("1X0", "110", .) %>% strtoi(base = 2L)# %>% as.binary()
-
-# COMMAND ----------
-
-binaryLogic::as.binary(101, n = 36) | binaryLogic::as.binary(101, n = 36)
-
-# COMMAND ----------
-
-str_to_bits <- function(x) {
- x %>%
-  str_split("") %>%
-  unlist() %>%
-  as.integer() %>%
-  as.raw()
-}
-
-# COMMAND ----------
-
-strtoi("101111111x111111", 2)
-
-# COMMAND ----------
-
-mask_1 <- str_to_bits(mask)
-mask_0 <- str_to_bits(mask %>% chartr("1X0", "110", .))
-
-lst(mask_1, mask_0)
-
-# COMMAND ----------
-
-mem %>%
-  mutate(
-    value_raw = 
-  )
-
-# COMMAND ----------
-
-bit::as.bit(mask_0)
-
-# COMMAND ----------
-
-bit::bitwhich(203)
-
-# COMMAND ----------
-
-
-
-# COMMAND ----------
-
-# MAGIC %md ## Scratch
-
-# COMMAND ----------
-
-input_lines <- read_lines(input)
-
-mask <- input_lines[[1]] %>% str_replace("mask = ", "")
-mask_1 <- mask %>% str_replace_all("X", "0") %>% strtoi(base = 2) %>% as.raw()
-mask_0 <- mask %>% chartr("1X0", "110", .) %>% strtoi(base = 2) %>% as.raw()
-
-mem <-
-  input_lines[-1] %>%
-  as_tibble() %>%
-  extract(value, c("address", "value"), "mem\\[(\\d+)\\] = (\\d+)") %>%
-  transmute(
-    address = as.integer(address),
-    value = as.integer(value),
-    value_raw = as.raw(value)
-  )
-
-lst(mask, mask_1, mask_0, mem)
-
-# COMMAND ----------
-
-
-
-# COMMAND ----------
-
-mask_1
-
-# COMMAND ----------
-
-mask_0 %>% as.integer()
-
-# COMMAND ----------
-
-mask_0
-
-# COMMAND ----------
-
-mask %>% chartr("1X0", "110", .) %>% strtoi(base = 2) %>% as.raw()
-
-# COMMAND ----------
-
-mask %>% chartr("1X0", "001", .) %>% strtoi(base = 2) %>% as.raw()
-
-# COMMAND ----------
-
-mask %>% chartr("1X0", "110", .) %>% strtoi(base = 2)
-
-# COMMAND ----------
-
-mask %>% chartr("1X0", "110", .)
-
-# COMMAND ----------
-
-packbi(10000)
-
-# COMMAND ----------
-
-bit::bit("111111111111111111111111111111111101")
-
-# COMMAND ----------
-
-binary_str_to_dec <- function(x) {
-  x %>%
-    str_split("") %>%
-    map(as.integer) %>%
-    map_dbl(function(x) reduce(x, ~.x * 2 + .y))
-}
-
-# COMMAND ----------
-
-str_to_bits("111111111111111111111111111111111101") & str_to_bits("000000000000000000000000000000000011")
-
-# COMMAND ----------
-
-"111111111111111111111111111111111101" %>% binary_str_to_dec() %>% intToBits() %>% str()
-
-# COMMAND ----------
-
-bit::as.bit(110)
-
-# COMMAND ----------
-
-"111111111111111111111111111111111101" %>% str_split("") %>% map(as.integer) %>% map_dbl(function(x) reduce(x, ~.x * 2 + .y))
-
-# COMMAND ----------
-
-"111111111111111111111111111111111101" %>% str_split("") %>% map(as.integer)
-
-# COMMAND ----------
-
-reduce("111111111111111111111111111111111101" %>% str_split("") %>% map(as.integer) %>% first(), ~.x * 2 + .y)
-
-# COMMAND ----------
-
-reduce("111111111111111111111111111111111101" %>% str_split(""), ~.x * 2 + .y)
-
-# COMMAND ----------
-
-?reduce
-
-# COMMAND ----------
-
-mask %>% chartr("1X0", "110", .) %>% as.raw()
-
-# COMMAND ----------
-
-as.raw(0) | mask_1 & mask_0
+format(answer, scientific = FALSE)
