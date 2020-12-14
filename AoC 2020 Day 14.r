@@ -599,6 +599,14 @@ mem[13784] = 33278200
 
 # COMMAND ----------
 
+# input <- "mask = 000000000000000000000000000000X1001X
+# mem[42] = 100
+# mask = 00000000000000000000000000000000X0XX
+# mem[26] = 1
+# "
+
+# COMMAND ----------
+
 process_segment <- function(segment_lines) {
   mask <- segment_lines[[1]] %>% str_replace("mask = ", "")
 
@@ -663,3 +671,254 @@ answer <-
   summarise(answer = sum(masked)) %>%
   pull(answer)
 format(answer, scientific = FALSE)
+
+# COMMAND ----------
+
+# MAGIC %md ## Part 2
+
+# COMMAND ----------
+
+# mask <- "X01X0"
+
+# COMMAND ----------
+
+expand_mask <- function(mask) {
+  replacement_grid <- expand.grid(
+    rep(list(c("0", "1")), str_count(mask, "X")),
+    stringsAsFactors = FALSE
+  )
+  
+  reduce(
+    replacement_grid,
+    str_replace,
+    pattern = "X",
+    .init = mask
+  )
+}
+
+# COMMAND ----------
+
+result <-
+  mem %>%
+  mutate(
+    value_bin = as.binary(value, n = 36),
+    
+    mask = map(mask, expand_mask)
+  )
+result
+
+# COMMAND ----------
+
+df <-
+  result %>%
+  unnest(mask) %>%
+  mutate(
+    address_bin = as.binary(address, n = 36),
+    mask = mask %>% binary_str_to_dec() %>% as.binary(n = 36),
+    address_final = map2(address_bin, mask, ~(.x | .y))
+  )
+
+# COMMAND ----------
+
+df
+
+# COMMAND ----------
+
+# as.double(df$address_final[[1]])
+
+# COMMAND ----------
+
+# df$address_final
+df %>%
+  mutate(address_final = map_dbl(address_final, as.double)) %>% pull(address_final) %>% unique()
+
+# COMMAND ----------
+
+a=  df %>%
+  mutate(address_final = map_dbl(address_final, as.double)) %>%
+  group_by(address_final) %>%
+  slice(n()) %>%
+  ungroup() %>%
+  pull(value)
+
+# COMMAND ----------
+
+format(sum(a), scientific = FALSE)
+
+# COMMAND ----------
+
+# 1702907407523 too low
+
+# COMMAND ----------
+
+answer <-
+  df %>%
+  mutate(address_final = map_dbl(address_final, as.double)) %>%
+  group_by(address_final) %>%
+  slice(n()) %>%
+  ungroup() %>%
+  summarise(answer = sum(value)) %>%
+  pull(answer)
+format(answer, scientific = FALSE)
+
+# COMMAND ----------
+
+answer
+
+# COMMAND ----------
+
+# MAGIC %md ## Scratch
+
+# COMMAND ----------
+
+result %>%
+  mutate(
+    mask_bin = map(mask, as.binary)
+  )
+
+# COMMAND ----------
+
+str_count(mem$mask, "X") %>% table()
+
+# COMMAND ----------
+
+2^9 * 63
+
+# COMMAND ----------
+
+result <-
+  mem %>%
+  mutate(
+    value_bin = as.binary(value, n = 36),
+    
+    mask_1 = mask %>% chartr("X", "0", .) %>% binary_str_to_dec() %>% as.binary(n = 36),
+    mask_0 = mask %>% chartr("1X0", "110", .) %>% binary_str_to_dec() %>% as.binary(n = 36),
+    
+    masked_bin = pmap(lst(value_bin, mask_1, mask_0), ~(..1 | ..2) & ..3),
+    masked = map_dbl(masked_bin, as.double) # Can't use integer because it's too big
+  )
+result
+
+# COMMAND ----------
+
+expand_mask("X01X0X")
+
+# COMMAND ----------
+
+rep(list(c("0", "1")), str_count(mask, "X"))
+
+# COMMAND ----------
+
+reduce(
+  expand.grid(list(c("0", "1"), c("0", "1")), stringsAsFactors = FALSE),
+
+  str_replace,
+  pattern = "X",
+  .init = "X01X0"
+)
+
+# COMMAND ----------
+
+"X01X0" %>% str_count("X")
+
+# COMMAND ----------
+
+"X01X0" %>% str_replace("X", "0")
+
+# COMMAND ----------
+
+str_replace
+
+# COMMAND ----------
+
+sr = expand.grid(list(c("0", "1"), c("0", "1")), stringsAsFactors = FALSE)
+
+# COMMAND ----------
+
+?expand.grid
+
+# COMMAND ----------
+
+v = expand.grid(list(c("0", "1"), c("0", "1")), stringsAsFactors = FALSE)
+v
+
+# COMMAND ----------
+
+str_replace("X01X0", pattern = "X", replacement = v[[1]])
+
+# COMMAND ----------
+
+reduce(
+  expand.grid(list(c("0", "1"), c("0", "1")), stringsAsFactors = FALSE),
+
+  str_replace,
+  pattern = "X",
+  .init = "X01X0"
+)
+
+# COMMAND ----------
+
+reduce2(
+  expand.grid(list(c("0", "1"), c("0", "1")), stringsAsFactors = FALSE),
+
+  ~str_replace(.y, .x, pattern = "X")
+)
+
+# COMMAND ----------
+
+str_replace(
+  str_replace("X01X0", pattern = "X", replacement = v[[1]]),
+  pattern = "X", replacement = v[[2]]
+)
+
+# COMMAND ----------
+
+reduce2(
+  expand.grid(list(c("0", "1"), c("0", "1")), stringsAsFactors = FALSE),
+
+  ~str_replace(.y, .x, pattern = "X")
+)
+
+# COMMAND ----------
+
+str_replace
+
+# COMMAND ----------
+
+?reduce
+
+# COMMAND ----------
+
+str_replace("X01X0", pattern = "X")
+
+# COMMAND ----------
+
+expand.grid(list(c("0", "1"), c("0", "1")), stringsAsFactors = FALSE) %>%
+  map(str_replace, string = "X01X0", pattern = "X")
+
+# COMMAND ----------
+
+expand.grid(list(c("0", "1"), c("0", "1")), stringsAsFactors = FALSE) %>%
+  map(str_replace, string = "X01X0", pattern = "X")
+
+# COMMAND ----------
+
+expand.grid(list(c(0, 1), c(0, 1), c(0, 1)))
+
+# COMMAND ----------
+
+expand.grid(c(0, 1), c(0, 1), c(0, 1))
+
+# COMMAND ----------
+
+mask_address <- function(address, mask) {
+  
+}
+
+# COMMAND ----------
+
+address_masked = mask_address(address, mask)
+
+# COMMAND ----------
+
+mem
