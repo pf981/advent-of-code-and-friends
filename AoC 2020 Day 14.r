@@ -599,6 +599,73 @@ mem[13784] = 33278200
 
 # COMMAND ----------
 
+process_segment <- function(segment_lines) {
+  mask <- segment_lines[[1]] %>% str_replace("mask = ", "")
+
+  segment_lines[-1] %>%
+    as_tibble() %>%
+    extract(value, c("address", "value"), "mem\\[(\\d+)\\] = (\\d+)") %>%
+    transmute(
+      address = as.integer(address),
+      value = as.integer(value),
+      mask = mask
+    )
+}
+
+# COMMAND ----------
+
+input_lines <- read_lines(input)
+
+# COMMAND ----------
+
+map_dfr(
+  split(input_lines, cumsum(str_detect(input_lines, "^mask = "))),
+  process_segment
+)
+
+# COMMAND ----------
+
+cumsum(str_detect(input_lines, "^mask = "))
+
+# COMMAND ----------
+
+split(input_lines, cumsum(str_detect(input_lines, "^mask = ")))
+
+# COMMAND ----------
+
+input_lines
+
+# COMMAND ----------
+
+process_segment <- function(segment) {
+  segment_lines <- read_lines(segment)
+
+  mask <- segment_lines[[1]] %>% str_replace("mask = ", "")
+
+  segment_lines[-1] %>%
+    as_tibble() %>%
+    extract(value, c("address", "value"), "mem\\[(\\d+)\\] = (\\d+)") %>%
+    transmute(
+      address = as.integer(address),
+      value = as.integer(value),
+      mask = mask
+    )
+}
+
+# COMMAND ----------
+
+process_segment("mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X
+mem[8] = 11
+mem[7] = 101
+mem[8] = 0
+")
+
+# COMMAND ----------
+
+map_dfr(segments, process_segment)
+
+# COMMAND ----------
+
 input_lines <- read_lines(input)
 
 mask <- input_lines[[1]] %>% str_replace("mask = ", "")
