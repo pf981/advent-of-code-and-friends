@@ -1,5 +1,88 @@
 # Databricks notebook source
 # MAGIC %md https://adventofcode.com/2020/day/14
+# MAGIC 
+# MAGIC <main>
+# MAGIC <script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+# MAGIC <article class="day-desc"><h2>--- Day 14: Docking Data ---</h2><p>As your ferry approaches the sea port, the captain asks for your help again. The computer system that runs this port isn't compatible with the docking program on the ferry, so the docking parameters aren't being correctly initialized in the docking program's memory.</p>
+# MAGIC <p>After a brief inspection, you discover that the sea port's computer system uses a strange <a href="https://en.wikipedia.org/wiki/Mask_(computing)" target="_blank">bitmask</a> system in its initialization program. Although you don't have the correct decoder chip handy, you can emulate it in software!</p>
+# MAGIC <p>The initialization program (your puzzle input) can either update the bitmask or write a value to memory.  Values and memory addresses are both 36-bit unsigned integers.  For example, ignoring bitmasks for a moment, a line like <code>mem[8] = 11</code> would write the value <code>11</code> to memory address <code>8</code>.</p>
+# MAGIC <p>The bitmask is always given as a string of 36 bits, written with the most significant bit (representing <code>2^35</code>) on the left and the least significant bit (<code>2^0</code>, that is, the <code>1</code>s bit) on the right. The current bitmask is applied to values immediately before they are written to memory: a <code>0</code> or <code>1</code> overwrites the corresponding bit in the value, while an <code>X</code> leaves the bit in the value unchanged.</p>
+# MAGIC <p>For example, consider the following program:</p>
+# MAGIC <pre><code>mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X
+# MAGIC mem[8] = 11
+# MAGIC mem[7] = 101
+# MAGIC mem[8] = 0
+# MAGIC </code></pre>
+# MAGIC <p>This program starts by specifying a bitmask (<code>mask = ....</code>). The mask it specifies will overwrite two bits in every written value: the <code>2</code>s bit is overwritten with <code>0</code>, and the <code>64</code>s bit is overwritten with <code>1</code>.</p>
+# MAGIC <p>The program then attempts to write the value <code>11</code> to memory address <code>8</code>. By expanding everything out to individual bits, the mask is applied as follows:</p>
+# MAGIC <pre><code>value:  000000000000000000000000000000001011  (decimal 11)
+# MAGIC mask:   XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X
+# MAGIC result: 00000000000000000000000000000<em>1</em>0010<em>0</em>1  (decimal 73)
+# MAGIC </code></pre>
+# MAGIC <p>So, because of the mask, the value <code>73</code> is written to memory address <code>8</code> instead. Then, the program tries to write <code>101</code> to address <code>7</code>:</p>
+# MAGIC <pre><code>value:  000000000000000000000000000001100101  (decimal 101)
+# MAGIC mask:   XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X
+# MAGIC result: 00000000000000000000000000000<em>1</em>1001<em>0</em>1  (decimal 101)
+# MAGIC </code></pre>
+# MAGIC <p>This time, the mask has no effect, as the bits it overwrote were already the values the mask tried to set. Finally, the program tries to write <code>0</code> to address <code>8</code>:</p>
+# MAGIC <pre><code>value:  000000000000000000000000000000000000  (decimal 0)
+# MAGIC mask:   XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X
+# MAGIC result: 00000000000000000000000000000<em>1</em>0000<em>0</em>0  (decimal 64)
+# MAGIC </code></pre>
+# MAGIC <p><code>64</code> is written to address <code>8</code> instead, overwriting the value that was there previously.</p>
+# MAGIC <p>To initialize your ferry's docking program, you need the sum of all values left in memory after the initialization program completes. (The entire 36-bit address space begins initialized to the value <code>0</code> at every address.) In the above example, only two values in memory are not zero - <code>101</code> (at address <code>7</code>) and <code>64</code> (at address <code>8</code>) - producing a sum of <em><code>165</code></em>.</p>
+# MAGIC <p>Execute the initialization program. <em>What is the sum of all values left in memory after it completes?</em></p>
+# MAGIC </article>
+# MAGIC <p>Your puzzle answer was <code>10885823581193</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>For some reason, the sea port's computer system still can't communicate with your ferry's docking program. It must be using <em>version 2</em> of the decoder chip!</p>
+# MAGIC <p>A version 2 decoder chip doesn't modify the values being written at all.  Instead, it acts as a <a href="https://www.youtube.com/watch?v=PvfhANgLrm4" target="_blank">memory address decoder</a>. Immediately before a value is written to memory, each bit in the bitmask modifies the corresponding bit of the destination <em>memory address</em> in the following way:</p>
+# MAGIC <ul>
+# MAGIC <li>If the bitmask bit is <code>0</code>, the corresponding memory address bit is <em>unchanged</em>.</li>
+# MAGIC <li>If the bitmask bit is <code>1</code>, the corresponding memory address bit is <em>overwritten with <code>1</code></em>.</li>
+# MAGIC <li>If the bitmask bit is <code>X</code>, the corresponding memory address bit is <span title="Technically, since you're on a boat, they're all floating."><em>floating</em></span>.</li>
+# MAGIC </ul>
+# MAGIC <p>A <em>floating</em> bit is not connected to anything and instead fluctuates unpredictably. In practice, this means the floating bits will take on <em>all possible values</em>, potentially causing many memory addresses to be written all at once!</p>
+# MAGIC <p>For example, consider the following program:</p>
+# MAGIC <pre><code>mask = 000000000000000000000000000000X1001X
+# MAGIC mem[42] = 100
+# MAGIC mask = 00000000000000000000000000000000X0XX
+# MAGIC mem[26] = 1
+# MAGIC </code></pre>
+# MAGIC <p>When this program goes to write to memory address <code>42</code>, it first applies the bitmask:</p>
+# MAGIC <pre><code>address: 000000000000000000000000000000101010  (decimal 42)
+# MAGIC mask:    000000000000000000000000000000X1001X
+# MAGIC result:  000000000000000000000000000000<em>X1</em>10<em>1X</em>
+# MAGIC </code></pre>
+# MAGIC <p>After applying the mask, four bits are overwritten, three of which are different, and two of which are <em>floating</em>. Floating bits take on every possible combination of values; with two floating bits, four actual memory addresses are written:</p>
+# MAGIC <pre><code>000000000000000000000000000000<em>0</em>1101<em>0</em>  (decimal 26)
+# MAGIC 000000000000000000000000000000<em>0</em>1101<em>1</em>  (decimal 27)
+# MAGIC 000000000000000000000000000000<em>1</em>1101<em>0</em>  (decimal 58)
+# MAGIC 000000000000000000000000000000<em>1</em>1101<em>1</em>  (decimal 59)
+# MAGIC </code></pre>
+# MAGIC <p>Next, the program is about to write to memory address <code>26</code> with a different bitmask:</p>
+# MAGIC <pre><code>address: 000000000000000000000000000000011010  (decimal 26)
+# MAGIC mask:    00000000000000000000000000000000X0XX
+# MAGIC result:  00000000000000000000000000000001<em>X</em>0<em>XX</em>
+# MAGIC </code></pre>
+# MAGIC <p>This results in an address with three floating bits, causing writes to <em>eight</em> memory addresses:</p>
+# MAGIC <pre><code>00000000000000000000000000000001<em>0</em>0<em>00</em>  (decimal 16)
+# MAGIC 00000000000000000000000000000001<em>0</em>0<em>01</em>  (decimal 17)
+# MAGIC 00000000000000000000000000000001<em>0</em>0<em>10</em>  (decimal 18)
+# MAGIC 00000000000000000000000000000001<em>0</em>0<em>11</em>  (decimal 19)
+# MAGIC 00000000000000000000000000000001<em>1</em>0<em>00</em>  (decimal 24)
+# MAGIC 00000000000000000000000000000001<em>1</em>0<em>01</em>  (decimal 25)
+# MAGIC 00000000000000000000000000000001<em>1</em>0<em>10</em>  (decimal 26)
+# MAGIC 00000000000000000000000000000001<em>1</em>0<em>11</em>  (decimal 27)
+# MAGIC </code></pre>
+# MAGIC <p>The entire 36-bit address space still begins initialized to the value 0 at every address, and you still need the sum of all values left in memory at the end of the program.  In this example, the sum is <em><code>208</code></em>.</p>
+# MAGIC <p>Execute the initialization program using an emulator for a version 2 decoder chip. <em>What is the sum of all values left in memory after it completes?</em></p>
+# MAGIC </article>
+# MAGIC <p>Your puzzle answer was <code>3816594901962</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+# MAGIC <p>At this point, you should <a href="/2020">return to your Advent calendar</a> and try another puzzle.</p>
+# MAGIC <p>If you still want to see it, you can <a href="14/input" target="_blank">get your puzzle input</a>.</p>
+# MAGIC <p>You can also <span class="share">[Share<span class="share-content">on
+# MAGIC   <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Docking+Data%22+%2D+Day+14+%2D+Advent+of+Code+2020&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F14&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+# MAGIC   <a href="javascript:void(0);" onclick="var mastodon_instance=prompt('Mastodon Instance / Server Name?'); if(typeof mastodon_instance==='string' &amp;&amp; mastodon_instance.length){this.href='https://'+mastodon_instance+'/share?text=I%27ve+completed+%22Docking+Data%22+%2D+Day+14+%2D+Advent+of+Code+2020+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F14'}else{return false;}" target="_blank">Mastodon</a></span>]</span> this puzzle.</p>
+# MAGIC </main>
 
 # COMMAND ----------
 
@@ -7,7 +90,7 @@ library(tidyverse)
 
 # COMMAND ----------
 
-install.packages("binaryLogic")
+# install.packages("binaryLogic")
 
 # COMMAND ----------
 
@@ -599,11 +682,11 @@ mem[13784] = 33278200
 
 # COMMAND ----------
 
-input <- "mask = 000000000000000000000000000000X1001X
-mem[42] = 100
-mask = 00000000000000000000000000000000X0XX
-mem[26] = 1
-"
+# input <- "mask = 000000000000000000000000000000X1001X
+# mem[42] = 100
+# mask = 00000000000000000000000000000000X0XX
+# mem[26] = 1
+# "
 
 # COMMAND ----------
 
@@ -618,6 +701,12 @@ process_segment <- function(segment_lines) {
       value = as.integer(value),
       mask = mask
     )
+}
+
+# COMMAND ----------
+
+print_df <- function(df) {
+  mutate_if(df, is.list, function(x) map_chr(x, paste0, collapse = ""))
 }
 
 # COMMAND ----------
@@ -659,10 +748,6 @@ result
 
 # COMMAND ----------
 
-result$masked
-
-# COMMAND ----------
-
 answer <-
   result %>%
   group_by(address) %>%
@@ -678,27 +763,24 @@ format(answer, scientific = FALSE)
 
 # COMMAND ----------
 
-# mask <- "X01X0"
-
-# COMMAND ----------
-
 expand_mask <- function(mask) {
   replacement_grid <- expand.grid(
-    rep(list(c("0", "1")), str_count(mask, "X")),
+    rep(list(c("z", "1")), str_count(mask, "X")),
     stringsAsFactors = FALSE
   )
   
-  reduce(
+  result <- reduce(
     replacement_grid,
     str_replace,
     pattern = "X",
     .init = mask
   )
+  
+  tibble(
+    mask_1 = result %>% chartr("z", "0", .),
+    mask_0 = result %>% chartr("10z", "110", .)
+  )
 }
-
-# COMMAND ----------
-
-expand_mask("000000000000000000000000000000X1001X")
 
 # COMMAND ----------
 
@@ -706,91 +788,29 @@ result <-
   mem %>%
   mutate(
     value_bin = as.binary(value, n = 36),
-    
     mask = map(mask, expand_mask)
+  ) %>%
+  unnest(mask) %>%
+  mutate(
+    address_bin = as.binary(address, n = 36),
+    mask_1 = mask_1 %>% binary_str_to_dec() %>% as.binary(n = 36),
+    mask_0 = mask_0 %>% binary_str_to_dec() %>% as.binary(n = 36),
+    address_masked_bin = pmap(lst(address_bin, mask_1, mask_0), ~(..1 | ..2) & ..3),
+    address_masked = map_dbl(address_masked_bin, as.double)
   )
 result
 
 # COMMAND ----------
 
-result$mask
-
-# COMMAND ----------
-
-df <-
-  result %>%
-  unnest(mask) %>%
-  mutate(
-    address_bin = as.binary(address, n = 36),
-    mask = mask %>% binary_str_to_dec() %>% as.binary(n = 36),
-    address_final = map2(address_bin, mask, ~(.x | .y)) # FIXME: THIS IS THE PROBLEM! 0 -> 0
-  )
-
-# COMMAND ----------
-
-df$address_final
-
-# COMMAND ----------
-
-df$address_bin
-
-# COMMAND ----------
-
-df$mask
-
-# COMMAND ----------
-
-df
-
-# COMMAND ----------
-
-print_df <- function(df) {
-  mutate_if(df, is.list, function(x) map_chr(x, paste0, collapse = ""))
-}
-
-# COMMAND ----------
-
-print_df(df) %>% display()
-
-# COMMAND ----------
-
-# as.double(df$address_final[[1]])
-
-# COMMAND ----------
-
-# df$address_final
-df %>%
-  mutate(address_final = map_dbl(address_final, as.double)) %>% pull(address_final) %>% unique()
-
-# COMMAND ----------
-
-a=  df %>%
-  mutate(address_final = map_dbl(address_final, as.double)) %>%
-  group_by(address_final) %>%
-  slice(n()) %>%
-  ungroup() %>%
-  pull(value)
-
-# COMMAND ----------
-
-format(sum(a), scientific = FALSE)
-
-# COMMAND ----------
-
-# 1702907407523 too low
+print_df(result) %>% display()
 
 # COMMAND ----------
 
 answer <-
-  df %>%
-  mutate(address_final = map_dbl(address_final, as.double)) %>%
-  group_by(address_final) %>%
+  result %>%
+  group_by(address_masked) %>%
   slice(n()) %>%
   ungroup() %>%
-  summarise(answer = sum(value)) %>%
+  summarise(answer = sum(as.double(value))) %>% # Too big for integer
   pull(answer)
 format(answer, scientific = FALSE)
-
-# COMMAND ----------
-
-answer
