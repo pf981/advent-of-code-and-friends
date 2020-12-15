@@ -78,7 +78,7 @@ nums
 
 # Use environments as hash map
 simulate <- function(n, init) {
-  last_seen <- new.env(init)
+  last_seen <- new.env(hash = TRUE)
   for (i in seq_along(init)) {
     last_seen[[as.character(init[i])]] <- i
   }
