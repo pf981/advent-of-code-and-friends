@@ -414,7 +414,11 @@ sum(error_values)
 
 # COMMAND ----------
 
-valid_tickets <- nearby_tickets %>% filter(!(value %in% error_values))
+invalid_tickets <- nearby_tickets %>% filter(value %in% error_values) %>% pull(ticket_id)
+
+# COMMAND ----------
+
+valid_tickets <- nearby_tickets %>% filter(!(ticket_id %in% invalid_tickets))
 valid_tickets
 
 # COMMAND ----------
@@ -426,42 +430,7 @@ type_matches <-
   summarise(tickets = n_distinct(ticket_id)) %>%
   ungroup() %>%
   filter(tickets == max(tickets))
-type_matches %>% display()
-
-# COMMAND ----------
-
-type_matches %>%
-  #ungroup() %>%
-  group_by(type_id2) %>%
-  #mutate(n=n())
-  filter(n() == 1)
-
-# COMMAND ----------
-
-final_matches <- NULL
-
-# COMMAND ----------
-
-type_matches %>%
-    filter(!(type_id2 %in% final_matches$type_id2), !(type_id1 %in% final_matches$type_id1))
-
-# COMMAND ----------
-
-new_matches <-
-    type_matches %>%
-    filter(!(type_id2 %in% final_matches$type_id2)) %>%
-    group_by(type_id2) %>%
-    filter(n() == 1)
-new_matches
-
-# COMMAND ----------
-
-final_matches
-
-# COMMAND ----------
-
-final_matches <- bind_rows(final_matches, new_matches)
-final_matches
+type_matches %>% display() # FIXME: There should be all type_id2s in this table!
 
 # COMMAND ----------
 
@@ -487,118 +456,11 @@ display(final_matches)
 
 # COMMAND ----------
 
-nrow(new_matches)
-
-# COMMAND ----------
-
-# type_matches <-
-#   valid_tickets %>%
-#   inner_join(constraints) %>%
-#   count(type_id2, type_id1, type) %>%
-#   arrange(desc(n))
-# type_matches %>% display()
-
-# COMMAND ----------
-
-# MAGIC %md ## Scratch
-
-# COMMAND ----------
-
-# valid_tickets %>%
-#  inner_join(constraints)
-
-# COMMAND ----------
-
-# nearby_tickets %>%
-#   inner_join(constraints)
-
-# COMMAND ----------
-
-# type_matches <-
-#   nearby_tickets %>%
-#   inner_join(constraints) %>%
-#   count(type_id2, type_id1, type) %>%
-#   arrange(type_id1, desc(n))
-# type_matches
-
-# COMMAND ----------
-
-# type_matches %>% transmute(candidate_type_id = type_id2, type, n)
-
-# COMMAND ----------
-
-# type_matches %>% filter(n == max(n))
-
-# COMMAND ----------
-
-# count_matches <- function(types) {
-#   types_df <- enframe(types, name = "type_id2", value = "type")
-  
-#   inner_join(type_matches, types_df) %>%
-#     summarise(n = sum(n)) %>%
-#     pull(n)
-# }
-
-# COMMAND ----------
-
-# install.packages("gtools")
-
-# COMMAND ----------
-
-# all_types <- unique(type_matches$type)
-
-# COMMAND ----------
-
-# all_types %>% length()
-
-# COMMAND ----------
-
-# MAGIC %md This **will not** work. There are like `2*10^18` permutations.
-
-# COMMAND ----------
-
-# type_perms <- gtools::permutations(n = length(all_types), r = length(all_types), v = all_types) %>% asplit(1)
-
-# COMMAND ----------
-
-# best <- type_perms[[type_perms %>% map_int(count_matches) %>% which.max()]] %>% enframe(name = "type_id2", value = "type")
-# best
-
-# COMMAND ----------
-
-# constraints %>% inner_join(best) %>% inner_join(nearby_tickets)
-
-# COMMAND ----------
-
-# result <- your_ticket %>% inner_join(best) %>% filter(str_starts("departure"))
-# result
-
-# COMMAND ----------
-
-# result %>% pull(value) %>% reduce(`*`)
-
-# COMMAND ----------
-
-# min1, max1, min2, max2
-
-# COMMAND ----------
-
-# valid_tickets <- inner_join(nearby_tickets, constraints)
-
-# COMMAND ----------
-
-# valid_tickets
-
-# COMMAND ----------
-
-# For each column id
-#   For each possible field
-#     Get the list of columns with a single valid ticket!?
-
-# COMMAND ----------
-
-# MAGIC %md Oh! There are no other invalid tickets! That changes things.
-
-# COMMAND ----------
-
-# available_ids <- 
+answer <-
+  your_ticket %>%
+  inner_join(final_matches %>% select(type_id2, type)) %>%
+  filter(str_starts(type, "departure")) %>%
+  pull(value) %>%
+  as.double() %>% # Too big for integer
+  reduce(`*`)
+format(answer, scientific = FALSE)
