@@ -428,6 +428,14 @@ type_matches
 
 # COMMAND ----------
 
+type_matches %>% transmute(candidate_type_id = type_id2, type, n)
+
+# COMMAND ----------
+
+type_matches %>% filter(n == max(n))
+
+# COMMAND ----------
+
 # count_matches <- function(types) {
 #   types_df <- enframe(types, name = "type_id2", value = "type")
   
