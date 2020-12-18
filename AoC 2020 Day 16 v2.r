@@ -334,18 +334,18 @@ nearby tickets:
 
 # COMMAND ----------
 
-input <- "class: 0-1 or 4-19
-row: 0-5 or 8-19
-seat: 0-13 or 16-19
+# input <- "class: 0-1 or 4-19
+# row: 0-5 or 8-19
+# seat: 0-13 or 16-19
 
-your ticket:
-11,12,13
+# your ticket:
+# 11,12,13
 
-nearby tickets:
-3,9,18
-15,1,5
-5,14,9
-"
+# nearby tickets:
+# 3,9,18
+# 15,1,5
+# 5,14,9
+# "
 
 # COMMAND ----------
 
@@ -414,25 +414,120 @@ sum(error_values)
 
 # COMMAND ----------
 
-nearby_tickets %>%
-  inner_join(constraints)
+valid_tickets <- nearby_tickets %>% filter(!(value %in% error_values))
+valid_tickets
 
 # COMMAND ----------
 
 type_matches <-
-  nearby_tickets %>%
+  valid_tickets %>%
   inner_join(constraints) %>%
-  count(type_id2, type_id1, type) %>%
-  arrange(type_id1, desc(n))
-type_matches
+  group_by(type_id2, type_id1, type) %>%
+  summarise(tickets = n_distinct(ticket_id)) %>%
+  ungroup() %>%
+  filter(tickets == max(tickets))
+type_matches %>% display()
 
 # COMMAND ----------
 
-type_matches %>% transmute(candidate_type_id = type_id2, type, n)
+type_matches %>%
+  #ungroup() %>%
+  group_by(type_id2) %>%
+  #mutate(n=n())
+  filter(n() == 1)
 
 # COMMAND ----------
 
-type_matches %>% filter(n == max(n))
+final_matches <- NULL
+
+# COMMAND ----------
+
+type_matches %>%
+    filter(!(type_id2 %in% final_matches$type_id2), !(type_id1 %in% final_matches$type_id1))
+
+# COMMAND ----------
+
+new_matches <-
+    type_matches %>%
+    filter(!(type_id2 %in% final_matches$type_id2)) %>%
+    group_by(type_id2) %>%
+    filter(n() == 1)
+new_matches
+
+# COMMAND ----------
+
+final_matches
+
+# COMMAND ----------
+
+final_matches <- bind_rows(final_matches, new_matches)
+final_matches
+
+# COMMAND ----------
+
+final_matches <- NULL
+
+repeat {
+  new_matches <-
+    type_matches %>%
+    filter(
+      !(type_id2 %in% final_matches$type_id2),
+      !(type_id1 %in% final_matches$type_id1)
+    ) %>%
+    group_by(type_id2) %>%
+    filter(n() == 1)
+  
+  if (nrow(new_matches) == 0) {
+    break
+  }
+  
+  final_matches <- bind_rows(final_matches, new_matches)
+}
+display(final_matches)
+
+# COMMAND ----------
+
+nrow(new_matches)
+
+# COMMAND ----------
+
+# type_matches <-
+#   valid_tickets %>%
+#   inner_join(constraints) %>%
+#   count(type_id2, type_id1, type) %>%
+#   arrange(desc(n))
+# type_matches %>% display()
+
+# COMMAND ----------
+
+# MAGIC %md ## Scratch
+
+# COMMAND ----------
+
+# valid_tickets %>%
+#  inner_join(constraints)
+
+# COMMAND ----------
+
+# nearby_tickets %>%
+#   inner_join(constraints)
+
+# COMMAND ----------
+
+# type_matches <-
+#   nearby_tickets %>%
+#   inner_join(constraints) %>%
+#   count(type_id2, type_id1, type) %>%
+#   arrange(type_id1, desc(n))
+# type_matches
+
+# COMMAND ----------
+
+# type_matches %>% transmute(candidate_type_id = type_id2, type, n)
+
+# COMMAND ----------
+
+# type_matches %>% filter(n == max(n))
 
 # COMMAND ----------
 
@@ -481,3 +576,29 @@ type_matches %>% filter(n == max(n))
 # COMMAND ----------
 
 # result %>% pull(value) %>% reduce(`*`)
+
+# COMMAND ----------
+
+# min1, max1, min2, max2
+
+# COMMAND ----------
+
+# valid_tickets <- inner_join(nearby_tickets, constraints)
+
+# COMMAND ----------
+
+# valid_tickets
+
+# COMMAND ----------
+
+# For each column id
+#   For each possible field
+#     Get the list of columns with a single valid ticket!?
+
+# COMMAND ----------
+
+# MAGIC %md Oh! There are no other invalid tickets! That changes things.
+
+# COMMAND ----------
+
+# available_ids <- 
