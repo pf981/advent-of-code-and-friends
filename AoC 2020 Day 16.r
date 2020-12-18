@@ -34,11 +34,30 @@
 # MAGIC <p>It doesn't matter which position corresponds to which field; you can identify invalid <em>nearby tickets</em> by considering only whether tickets contain <em>values that are not valid for any field</em>. In this example, the values on the first <em>nearby ticket</em> are all valid for at least one field. This is not true of the other three <em>nearby tickets</em>: the values <code>4</code>, <code>55</code>, and <code>12</code> are are not valid for any field. Adding together all of the invalid values produces your <em>ticket scanning error rate</em>: <code>4 + 55 + 12</code> = <em><code>71</code></em>.</p>
 # MAGIC <p>Consider the validity of the <em>nearby tickets</em> you scanned. <em>What is your ticket scanning error rate?</em></p>
 # MAGIC </article>
-# MAGIC <p>To begin, <a href="16/input" target="_blank">get your puzzle input</a>.</p>
-# MAGIC <form method="post" action="16/answer"><input type="hidden" name="level" value="1"><p>Answer: <input type="text" name="answer" autocomplete="off"> <input type="submit" value="[Submit]"></p></form>
+# MAGIC <p>Your puzzle answer was <code>30869</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Now that you've identified which tickets contain invalid values, <em>discard those tickets entirely</em>. Use the remaining valid tickets to determine which field is which.</p>
+# MAGIC <p>Using the valid ranges for each field, determine what order the fields appear on the tickets. The order is consistent between all tickets: if <code>seat</code> is the third field, it is the third field on every ticket, including <em>your ticket</em>.</p>
+# MAGIC <p>For example, suppose you have the following notes:</p>
+# MAGIC <pre><code>class: 0-1 or 4-19
+# MAGIC row: 0-5 or 8-19
+# MAGIC seat: 0-13 or 16-19
+# MAGIC 
+# MAGIC your ticket:
+# MAGIC 11,12,13
+# MAGIC 
+# MAGIC nearby tickets:
+# MAGIC 3,9,18
+# MAGIC 15,1,5
+# MAGIC 5,14,9
+# MAGIC </code></pre>
+# MAGIC <p>Based on the <em>nearby tickets</em> in the above example, the first position must be <code>row</code>, the second position must be <code>class</code>, and the third position must be <code>seat</code>; you can conclude that in <em>your ticket</em>, <code>class</code> is <code>12</code>, <code>row</code> is <code>11</code>, and <code>seat</code> is <code>13</code>.</p>
+# MAGIC <p>Once you work out which field is which, look for the six fields on <em>your ticket</em> that start with the word <code>departure</code>. <em>What do you get if you multiply those six values together?</em></p>
+# MAGIC </article>
+# MAGIC <p>Your puzzle answer was <code>4381476149273</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+# MAGIC <p>At this point, you should <a href="/2020">return to your Advent calendar</a> and try another puzzle.</p>
+# MAGIC <p>If you still want to see it, you can <a href="16/input" target="_blank">get your puzzle input</a>.</p>
 # MAGIC <p>You can also <span class="share">[Share<span class="share-content">on
-# MAGIC   <a href="https://twitter.com/intent/tweet?text=%22Ticket+Translation%22+%2D+Day+16+%2D+Advent+of+Code+2020&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F16&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
-# MAGIC   <a href="javascript:void(0);" onclick="var mastodon_instance=prompt('Mastodon Instance / Server Name?'); if(typeof mastodon_instance==='string' &amp;&amp; mastodon_instance.length){this.href='https://'+mastodon_instance+'/share?text=%22Ticket+Translation%22+%2D+Day+16+%2D+Advent+of+Code+2020+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F16'}else{return false;}" target="_blank">Mastodon</a></span>]</span> this puzzle.</p>
+# MAGIC   <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Ticket+Translation%22+%2D+Day+16+%2D+Advent+of+Code+2020&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F16&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+# MAGIC   <a href="javascript:void(0);" onclick="var mastodon_instance=prompt('Mastodon Instance / Server Name?'); if(typeof mastodon_instance==='string' &amp;&amp; mastodon_instance.length){this.href='https://'+mastodon_instance+'/share?text=I%27ve+completed+%22Ticket+Translation%22+%2D+Day+16+%2D+Advent+of+Code+2020+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F16'}else{return false;}" target="_blank">Mastodon</a></span>]</span> this puzzle.</p>
 # MAGIC </main>
 
 # COMMAND ----------
@@ -414,54 +433,53 @@ sum(error_values)
 
 # COMMAND ----------
 
-nearby_tickets %>%
-  inner_join(constraints)
+invalid_tickets <- nearby_tickets %>% filter(value %in% error_values) %>% pull(ticket_id)
+
+# COMMAND ----------
+
+valid_tickets <- nearby_tickets %>% filter(!(ticket_id %in% invalid_tickets))
+valid_tickets
 
 # COMMAND ----------
 
 type_matches <-
-  nearby_tickets %>%
+  valid_tickets %>%
   inner_join(constraints) %>%
-  count(type_id2, type_id1, type) %>%
-  arrange(desc(n))
-type_matches
+  group_by(type_id2, type_id1, type) %>%
+  summarise(tickets = n_distinct(ticket_id)) %>%
+  ungroup() %>%
+  filter(tickets == max(tickets))
+type_matches %>% display() # FIXME: There should be all type_id2s in this table!
 
 # COMMAND ----------
 
-count_matches <- function(types) {
-  types_df <- enframe(types, name = "type_id2", value = "type")
+final_matches <- NULL
+
+repeat {
+  new_matches <-
+    type_matches %>%
+    filter(
+      !(type_id2 %in% final_matches$type_id2),
+      !(type_id1 %in% final_matches$type_id1)
+    ) %>%
+    group_by(type_id2) %>%
+    filter(n() == 1)
   
-  inner_join(type_matches, types_df) %>%
-    summarise(n = sum(n)) %>%
-    pull(n)
+  if (nrow(new_matches) == 0) {
+    break
+  }
+  
+  final_matches <- bind_rows(final_matches, new_matches)
 }
+display(final_matches)
 
 # COMMAND ----------
 
-# install.packages("gtools")
-
-# COMMAND ----------
-
-all_types <- unique(type_matches$type)
-
-# COMMAND ----------
-
-type_perms <- gtools::permutations(n = length(all_types), r = length(all_types), v = all_types) %>% asplit(1)
-
-# COMMAND ----------
-
-best <- type_perms[[type_perms %>% map_int(count_matches) %>% which.max()]] %>% enframe(name = "type_id2", value = "type")
-best
-
-# COMMAND ----------
-
-constraints %>% inner_join(best) %>% inner_join(nearby_tickets)
-
-# COMMAND ----------
-
-result <- your_ticket %>% inner_join(best) %>% filter(str_starts("departure"))
-result
-
-# COMMAND ----------
-
-result %>% pull(value) %>% reduce(`*`)
+answer <-
+  your_ticket %>%
+  inner_join(final_matches %>% select(type_id2, type)) %>%
+  filter(str_starts(type, "departure")) %>%
+  pull(value) %>%
+  as.double() %>% # Too big for integer
+  reduce(`*`)
+format(answer, scientific = FALSE)
