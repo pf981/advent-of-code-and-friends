@@ -430,12 +430,13 @@ math_strings <- read_lines(input)
 # COMMAND ----------
 
 results <- map_dbl(math_strings, eval_left_to_right)
-results
+format(results, scientific = FALSE)
 
 # COMMAND ----------
 
 answer <- sum(results)
 format(answer, scientific = FALSE)
+#> [1] "1408133923393"
 
 # COMMAND ----------
 
@@ -443,115 +444,32 @@ format(answer, scientific = FALSE)
 
 # COMMAND ----------
 
-walkast::walk_ast(parse_expr("2 * 3 + (4 * 5)"), walkast::show_tree())
-
-# COMMAND ----------
-
-walk_ast(parse_expr("2 * 3 + (4 * 5)"), replace(quote(`+`), quote(`-`)))
-
-# COMMAND ----------
-
-walkast::walk_ast(parse_expr("2 - 3 + (4 - 5)"), walkast::replace(quote(`-`), quote(`*`)))
-
-# COMMAND ----------
-
-res <- walkast::walk_ast(
-  parse_expr(str_replace_all("5 + (8 * 3 + 9 + 3 * 4 * 3)", fixed("*"), "-")),
-  walkast::make_visitor(
-    hd = function(f) {
-      if (f == "-") {
-        `*`
-      } else {
-        f
+eval_new_precedence <- function (math_string) {
+  new_expr <- walkast::walk_ast(
+    parse_expr(chartr("*+", "+*", math_string)),
+    walkast::make_visitor(
+      hd = function(f) {
+        if (f == "+") {
+          `*`
+        } else if (f == "*") {
+          `+`
+        } else {
+          f
+        }
       }
-    }
+    )
   )
-)
-res
+  
+  eval_tidy(new_expr)
+}
 
 # COMMAND ----------
 
-walkast::nest_expr(
-  parse_expr("5 + (8 * 3 + 9 + 3 * 4 * 3)")
-)
+results <- map_dbl(math_strings, eval_new_precedence)
+format(results, scientific = FALSE)
 
 # COMMAND ----------
 
-eval_tidy(res)
-
-# COMMAND ----------
-
-x == "-"
-
-# COMMAND ----------
-
-str(all.equal(`-`, `+`))
-
-# COMMAND ----------
-
-`-` == `+`
-
-# COMMAND ----------
-
-walkast::walk_ast(
-  walkast::walk_ast(parse_expr("2 * 3 + (4 * 5)"),
-  walkast::make_visitor(
-    hd = function(f) {
-      new_name <- as.name(paste0("x", runif(1, 0, 100000000)))
-      decoy_f <- as.name(sample(c("+", "-", "*", "/", "%%", "%*%"), 1))
-      bquote({
-        .(new_name) <- .(f)
-        .(decoy_f)(.(runif(1, min = 0, max = 1)), .(runif(1, min = 0, max = 1)))
-        .(new_name)
-      })
-    }
-  )
-)
-
-# COMMAND ----------
-
-walkast::make_visitor(
-  hd = function(f) {
-    new_name <- as.name(paste0("x", runif(1, 0, 100000000)))
-    decoy_f <- as.name(sample(c("+", "-", "*", "/", "%%", "%*%"), 1))
-    bquote({
-      .(new_name) <- .(f)
-      .(decoy_f)(.(runif(1, min = 0, max = 1)), .(runif(1, min = 0, max = 1)))
-      .(new_name)
-    })
-  }
-)
-
-# COMMAND ----------
-
-walkast::show_tree()
-
-# COMMAND ----------
-
-walkast::make_visitor(
-  hd = function(f) {
-    new_name <- as.name(paste0("x", runif(1, 0, 100000000)))
-    decoy_f <- as.name(sample(c("+", "-", "*", "/", "%%", "%*%"), 1))
-    bquote({
-      .(new_name) <- .(f)
-      .(decoy_f)(.(runif(1, min = 0, max = 1)), .(runif(1, min = 0, max = 1)))
-      .(new_name)
-    })
-  }
-)
-
-# COMMAND ----------
-
-exprs %>% map_dbl(eval_tidy)
-
-# COMMAND ----------
-
-5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))
-
-# COMMAND ----------
-
-26+437+12240+13632
-
-# COMMAND ----------
-
-# 27817628443 too low
+answer <- sum(results)
+format(answer, scientific = FALSE)
+#> [1] "314455761823725"
