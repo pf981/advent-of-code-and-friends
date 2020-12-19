@@ -82,7 +82,7 @@ sim <- function(active) {
     active
   )
   
-  bind_rows(new_active1, new_active2)
+  bind_rows(new_active1, new_active2) %>% distinct() # I don't think I need distinct but won't hurt
 }
 
 # COMMAND ----------
@@ -121,6 +121,22 @@ print_state(sim(active))
 
 # COMMAND ----------
 
+print_state(sim(sim(active)))
+
+# COMMAND ----------
+
+print_state(sim(sim(sim(active))))
+
+# COMMAND ----------
+
+test_active <- sim(sim(active))
+
+# COMMAND ----------
+
+get_neighbors(test_active) %>% arrange(z, y, x) %>% display()
+
+# COMMAND ----------
+
 get_neighbors(active) %>%
   count(x, y, z) %>%
   ggplot(aes(x, y, label = n)) +
@@ -131,82 +147,28 @@ get_neighbors(active) %>%
 
 # COMMAND ----------
 
-  neighbors <- get_neighbors(active)
-  
-  new_active1 <- inner_join(
-    active,
-    neighbors %>% count(x, y, z) %>% filter(n %in% c(2, 3))
-  )
-  
-  new_active2 <- anti_join(
-    neighbors %>% count(x, y, z) %>% filter(n == 3),
-    active
-  )
-  
-  bind_rows(new_active1, new_active2)
-
-# COMMAND ----------
-
-new_active1 #%>% print_state()
-
-# COMMAND ----------
-
-new_active2 %>% arrange(z, y, x)
-
-# COMMAND ----------
-
-  bind_rows(new_active1, new_active2) %>% print_state()
-
-# COMMAND ----------
-
- bind_rows(new_active1, new_active2) %>% arrange(z, y, x)
-
-# COMMAND ----------
-
- bind_rows(new_active1, new_active2) %>% arrange(z, y, x) %>% filter(z == 0) 
-
-# COMMAND ----------
-
- bind_rows(new_active1, new_active2) %>% arrange(z, y, x) %>% filter(z == 0) %>% print_slice()
-
-# COMMAND ----------
-
-# MAGIC %md The issue is with print_slice.
-
-# COMMAND ----------
-
-# active2 <- active
-
-# COMMAND ----------
-
-# active <-  bind_rows(new_active1, new_active2) %>% arrange(z, y, x) %>% filter(z == 0)
-
-# COMMAND ----------
-
-print_slice <- function(active) {
-  cat(paste0("\n\nz=", active$z[[1]], "\n"))
-  active <-
-    active %>%
-    mutate(
-      x = x - min(x) + 1,
-      y = y - min(y) + 1
-    )
-  m <- matrix(".", nrow = max(active$x), ncol = max(active$y))
-  m[cbind(active$x, active$y)] <- "#"
-  cat(apply(m, 2, paste0, collapse = "") %>% paste0(collapse = "\n"))
+result <- active
+for (i in seq_len(6)) {
+  result <- sim(result)
 }
+result
 
 # COMMAND ----------
 
-print_slice <- function(active) {
-  cat(paste0("\n\nz=", active$z[[1]], "\n"))
-  active <-
-    active %>%
-    mutate(
-      x = x - min(x) + 1,
-      y = y - min(y) + 1
-    )
-  m <- matrix(".", nrow = max(active$x), ncol = max(active$y))
-  m[cbind(active$x, active$y)] <- "#"
-  cat(apply(m, 1, paste0, collapse = "") %>% paste0(collapse = "\n"))
-}
+unique(result$z)
+
+# COMMAND ----------
+
+nrow((result))
+
+# COMMAND ----------
+
+112-86
+
+# COMMAND ----------
+
+nrow(sim(result))
+
+# COMMAND ----------
+
+nrow(result)
