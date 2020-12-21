@@ -1864,7 +1864,6 @@ parse_tile <- function(x) {
     west = to_binary(m[,1])
   )
 }
-parse_tile(tiles[[1]])
 
 # COMMAND ----------
 
@@ -1877,8 +1876,120 @@ tiles
 
 # COMMAND ----------
 
-borders
+tiles <-
+  tiles %>%
+  mutate(orientation = list(1:4)) %>%
+  unnest_longer(orientation) %>%
+  mutate(
+    n = case_when(
+      orientation == 1 ~ north,
+      orientation == 2 ~ east,
+      orientation == 3 ~ south,
+      orientation == 4 ~ west
+    ),
+    w = case_when(
+      orientation == 1 ~ west,
+      orientation == 2 ~ north,
+      orientation == 3 ~ east,
+      orientation == 4 ~ south
+    ),
+    s = case_when(
+      orientation == 1 ~ south,
+      orientation == 2 ~ west,
+      orientation == 3 ~ north,
+      orientation == 4 ~ east
+    ),
+    e = case_when(
+      orientation == 1 ~ east,
+      orientation == 2 ~ south,
+      orientation == 3 ~ west,
+      orientation == 4 ~ north
+    )
+  ) %>%
+  transmute(
+    tile_id_original = tile_id,
+    tile_id = str_c(tile_id, "_", orientation),
+    n,
+    w,
+    s,
+    e
+  )
 
 # COMMAND ----------
 
-graph square arrangement
+width <- tiles %>% pull(tile_id_original) %>% unique() %>% length() %>% sqrt()
+width
+
+# COMMAND ----------
+
+place_tile <- function(placed_tile_mat, tiles, to_place_tile_id, i, j) {
+  message(paste0("Trying ", to_place_tile_id, " in ", i, ", ", j, "."))
+  this_tile <- tiles %>% filter(tile_id == to_place_tile_id)
+  
+  required_north <- ifelse(
+    j > 1,
+    tiles$s[tiles$tile_id == placed_tile_mat[i, j - 1]],
+    this_tile$n
+  )
+  required_west <- ifelse(
+    i > 1,
+    tiles$e[tiles$tile_id == placed_tile_mat[i - 1, j]],
+    this_tile$w
+  )
+  message(glue::glue("Required n:{required_north}; w:{required_west}"))
+  message(glue::glue("Actual n:{this_tile$n}; w:{this_tile$w}"))
+
+  if (this_tile$n != required_north || this_tile$w != required_west) {
+    return(NA)
+  }
+  
+  message(paste0("Placing ", to_place_tile_id, " in ", i, ", ", j, "."))
+  
+  placed_tile_mat[i, j] <- to_place_tile_id
+  if (i == width && j == width) {
+    return(placed_tile_mat)
+  }
+  
+  # Remove tile
+  # tiles <- tiles %>% filter(tile_id_original != this_tile$tile_id_original)
+  remaining_tiles <- tiles %>% filter(!(tile_id_original %in% parse_number(placed_tile_mat)))
+  i <- i + 1
+  if (i > width) {
+    i <- 1
+    j <- j + 1
+  }
+  
+  # Iterate through remaining tiles and place_tile
+  for (new_tile_id in remaining_tiles$tile_id) {
+    result <- place_tile(placed_tile_mat, tiles, new_tile_id, i, j)
+    if (!is.na(result)) {
+      return(result)
+    }
+  }
+  return(NA)
+}
+
+# COMMAND ----------
+
+place_tile(matrix(NA, nrow = width, ncol = width), tiles, "1951_1", 1, 1)
+
+# COMMAND ----------
+
+place_tile(matrix(NA, nrow = width, ncol = width), tiles, "1951_2", 1, 1)
+
+# COMMAND ----------
+
+place_tile(matrix(NA, nrow = width, ncol = width), tiles, "1951_3", 1, 1)
+# I think this is the correct orientation.
+
+# COMMAND ----------
+
+place_tile(matrix(NA, nrow = width, ncol = width), tiles, "1951_4", 1, 1)
+
+# COMMAND ----------
+
+tiles %>% display()
+
+# COMMAND ----------
+
+# MAGIC %md FIXME: The issue is that they can be FLIPPED virtically and/or horizontally!
