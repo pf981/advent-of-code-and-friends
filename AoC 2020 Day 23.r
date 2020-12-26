@@ -51,9 +51,10 @@ destination: {destination} (i: {destination_i})
     cups <- append(candidates, picked_up, after = destination_i)
     
     # Need which(cups == current_cup) == cur_i
-    cups <- rotate(cups, which(cups == current_cup) - cur_i)
+    #cups <- rotate(cups, which(cups == current_cup) - cur_i)
 
-    cur_i <- (cur_i %% length(cups)) + 1
+    #cur_i <- (cur_i %% length(cups)) + 1
+    cur_i <- (which(cups == current_cup) %% length(cups)) + 1
   }
   
   cups
@@ -69,61 +70,31 @@ rotate(result, which(result == 1) - 1) %>%
 
 # COMMAND ----------
 
-# MAGIC %md ## Scratch
+# MAGIC %md ## Part 2
 
 # COMMAND ----------
 
-# simulate_moves <- function(cups, n_moves = 1, debug = FALSE) {
-#   cur_i <- 1
-#   for (move in seq_len(n_moves)) {
-#     current_cup <- cups[cur_i]
-#     picked_up_i <- ((cur_i + seq_len(3) - 1) %% length(cups)) + 1
-#     picked_up <- cups[picked_up_i]
+result <- simulate_moves(
+  c(cups, seq(from = max(cups), to = 1000000, by = 1)),
+  10000000
+)
 
-#     destination_i <- max(cups[cups < current_cup & !(seq_along(cups) %in% picked_up_i)])
-#     candidates <- cups[-picked_up_i]
-#     destination <- max(candidates[candidates < current_cup])
-#     if (!is.finite(destination)) {
-#       destination <- max(candidates)
-#     }
-#     destination_i <- which(cups == destination)
+# first_two <-
+#   rotate(result, which(result == 1) - 1) %>%
+#   tail(-1) %>%
+#   head(2)
 
-#     if (debug) {
-#       message(glue::glue('-- move {move} --
-# cups: {paste0(cups, ifelse(seq_along(cups) == cur_i, "*", ""), collapse = " ")}
-# pick up: {paste0(picked_up, collapse = " ")}
-# destination: {destination} (i: {destination_i})
-
-# '))
-#     }
-    
-    
-#     cups <- append(cups[-picked_up_i], picked_up, after = destination_i)
-    
-#     cur_i <- (cur_i %% length(cups)) + 1
-#   }
-# }
+# first_two[1] * first_two[2]
 
 # COMMAND ----------
 
-# move <- 1
-
-# cur_i <- 1
-# current_cup <- cups[cur_i]
-# picked_up_i <- ((cur_i + seq_len(3) - 1) %% length(cups)) + 1
-# picked_up <- cups[picked_up_i]
-
-# destination_i <- 1
-
-# append(cups[-picked_up_i], picked_up, after = destination_i)
+result
 
 # COMMAND ----------
 
-# cups <- c(3, 4, 6, 7, 2, 5, 8, 9, 1)
-# cur_i <- 3
-# current_cup <- 5
-# which(cups == current_cup) - cur_i
+first_two <-
+  rotate(result, which(result == 1) - 1) %>%
+  tail(-1) %>%
+  head(2)
 
-# COMMAND ----------
-
-# rotate(cups, 3)
+first_two[1] * first_two[2]
