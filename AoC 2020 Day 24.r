@@ -575,27 +575,27 @@ nenenesenenwnenwneneneswnwnenenwnenenenw
 
 # COMMAND ----------
 
-input <- "sesenwnenenewseeswwswswwnenewsewsw
-neeenesenwnwwswnenewnwwsewnenwseswesw
-seswneswswsenwwnwse
-nwnwneseeswswnenewneswwnewseswneseene
-swweswneswnenwsewnwneneseenw
-eesenwseswswnenwswnwnwsewwnwsene
-sewnenenenesenwsewnenwwwse
-wenwwweseeeweswwwnwwe
-wsweesenenewnwwnwsenewsenwwsesesenwne
-neeswseenwwswnwswswnw
-nenwswwsewswnenenewsenwsenwnesesenew
-enewnwewneswsewnwswenweswnenwsenwsw
-sweneswneswneneenwnewenewwneswswnese
-swwesenesewenwneswnwwneseswwne
-enesenwswwswneneswsenwnewswseenwsese
-wnwnesenesenenwwnenwsewesewsesesew
-nenewswnwewswnenesenwnesewesw
-eneswnwswnwsenenwnwnwwseeswneewsenese
-neswnwewnwnwseenwseesewsenwsweewe
-wseweeenwnesenwwwswnew
-"
+# input <- "sesenwnenenewseeswwswswwnenewsewsw
+# neeenesenwnwwswnenewnwwsewnenwseswesw
+# seswneswswsenwwnwse
+# nwnwneseeswswnenewneswwnewseswneseene
+# swweswneswnenwsewnwneneseenw
+# eesenwseswswnenwswnwnwsewwnwsene
+# sewnenenenesenwsewnenwwwse
+# wenwwweseeeweswwwnwwe
+# wsweesenenewnwwnwsenewsenwwsesesenwne
+# neeswseenwwswnwswswnw
+# nenwswwsewswnenenewsenwsenwnesesenew
+# enewnwewneswsewnwswenweswnenwsenwsw
+# sweneswneswneneenwnewenewwneswswnese
+# swwesenesewenwneswnwwneseswwne
+# enesenwswwswneneswsenwnewswseenwsese
+# wnwnesenesenenwwnenwsewesewsesesew
+# nenewswnwewswnenesenwnesewesw
+# eneswnwswnwsenenwnwnwwseeswneewsenese
+# neswnwewnwnwseenwseesewsenwsweewe
+# wseweeenwnesenwwwswnew
+# "
 
 # COMMAND ----------
 
@@ -604,7 +604,7 @@ tiles
 
 # COMMAND ----------
 
-# Directions are e, se, w
+# MAGIC %md Directions are `x`, `y`
 
 # COMMAND ----------
 
@@ -613,12 +613,21 @@ paths <-
   enframe(name = "path_id", value = "direction") %>%
   unnest(direction) %>%
   mutate(
-    d = ifelse(direction %in% c("e", "se", "sw"), 1, -1),
-    direction = case_when(
-      direction == "w" ~ "e",
-      direction == "nw" ~ "se",
-      direction == "ne" ~ "sw",
-      TRUE ~ direction
+    x = case_when(
+      direction == "e"  ~ 2,
+      direction == "se" ~ 1,
+      direction == "sw" ~ -1,
+      direction == "w"  ~ -2,
+      direction == "nw" ~ -1,
+      direction == "ne" ~ 1,
+    ),
+    y = case_when(
+      direction == "e"  ~ 0,
+      direction == "se" ~ -1,
+      direction == "sw" ~ -1,
+      direction == "w"  ~ 0,
+      direction == "nw" ~ 1,
+      direction == "ne" ~ 1,
     )
   )
 paths
@@ -626,17 +635,8 @@ paths
 # COMMAND ----------
 
 paths %>%
-  group_by(path_id, direction) %>%
-  summarise(d = sum(d)) %>%
-  pivot_wider(id_cols = path_id, names_from = direction, values_from = d) %>%
-  count(e, se, sw) %>%
+  group_by(path_id) %>%
+  summarise(x = sum(x), y = sum(y)) %>%
+  count(x, y) %>%
   filter((n %% 2) == 1) %>%
   nrow()
-
-# COMMAND ----------
-
-# 322 wrong. too low
-
-# COMMAND ----------
-
-# 564 too high
