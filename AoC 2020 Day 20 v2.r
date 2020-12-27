@@ -1737,113 +1737,117 @@ Tile 1303:
 
 # COMMAND ----------
 
-input <- "Tile 2311:
-..##.#..#.
-##..#.....
-#...##..#.
-####.#...#
-##.##.###.
-##...#.###
-.#.#.#..##
-..#....#..
-###...#.#.
-..###..###
+# input <- "Tile 2311:
+# ..##.#..#.
+# ##..#.....
+# #...##..#.
+# ####.#...#
+# ##.##.###.
+# ##...#.###
+# .#.#.#..##
+# ..#....#..
+# ###...#.#.
+# ..###..###
 
-Tile 1951:
-#.##...##.
-#.####...#
-.....#..##
-#...######
-.##.#....#
-.###.#####
-###.##.##.
-.###....#.
-..#.#..#.#
-#...##.#..
+# Tile 1951:
+# #.##...##.
+# #.####...#
+# .....#..##
+# #...######
+# .##.#....#
+# .###.#####
+# ###.##.##.
+# .###....#.
+# ..#.#..#.#
+# #...##.#..
 
-Tile 1171:
-####...##.
-#..##.#..#
-##.#..#.#.
-.###.####.
-..###.####
-.##....##.
-.#...####.
-#.##.####.
-####..#...
-.....##...
+# Tile 1171:
+# ####...##.
+# #..##.#..#
+# ##.#..#.#.
+# .###.####.
+# ..###.####
+# .##....##.
+# .#...####.
+# #.##.####.
+# ####..#...
+# .....##...
 
-Tile 1427:
-###.##.#..
-.#..#.##..
-.#.##.#..#
-#.#.#.##.#
-....#...##
-...##..##.
-...#.#####
-.#.####.#.
-..#..###.#
-..##.#..#.
+# Tile 1427:
+# ###.##.#..
+# .#..#.##..
+# .#.##.#..#
+# #.#.#.##.#
+# ....#...##
+# ...##..##.
+# ...#.#####
+# .#.####.#.
+# ..#..###.#
+# ..##.#..#.
 
-Tile 1489:
-##.#.#....
-..##...#..
-.##..##...
-..#...#...
-#####...#.
-#..#.#.#.#
-...#.#.#..
-##.#...##.
-..##.##.##
-###.##.#..
+# Tile 1489:
+# ##.#.#....
+# ..##...#..
+# .##..##...
+# ..#...#...
+# #####...#.
+# #..#.#.#.#
+# ...#.#.#..
+# ##.#...##.
+# ..##.##.##
+# ###.##.#..
 
-Tile 2473:
-#....####.
-#..#.##...
-#.##..#...
-######.#.#
-.#...#.#.#
-.#########
-.###.#..#.
-########.#
-##...##.#.
-..###.#.#.
+# Tile 2473:
+# #....####.
+# #..#.##...
+# #.##..#...
+# ######.#.#
+# .#...#.#.#
+# .#########
+# .###.#..#.
+# ########.#
+# ##...##.#.
+# ..###.#.#.
 
-Tile 2971:
-..#.#....#
-#...###...
-#.#.###...
-##.##..#..
-.#####..##
-.#..####.#
-#..#.#..#.
-..####.###
-..#.#.###.
-...#.#.#.#
+# Tile 2971:
+# ..#.#....#
+# #...###...
+# #.#.###...
+# ##.##..#..
+# .#####..##
+# .#..####.#
+# #..#.#..#.
+# ..####.###
+# ..#.#.###.
+# ...#.#.#.#
 
-Tile 2729:
-...#.#.#.#
-####.#....
-..#.#.....
-....#..#.#
-.##..##.#.
-.#.####...
-####.#.#..
-##.####...
-##..#.##..
-#.##...##.
+# Tile 2729:
+# ...#.#.#.#
+# ####.#....
+# ..#.#.....
+# ....#..#.#
+# .##..##.#.
+# .#.####...
+# ####.#.#..
+# ##.####...
+# ##..#.##..
+# #.##...##.
 
-Tile 3079:
-#.#.#####.
-.#..######
-..#.......
-######....
-####.#..#.
-.#...#.##.
-#.#####.##
-..#.###...
-..#.......
-..#.###..."
+# Tile 3079:
+# #.#.#####.
+# .#..######
+# ..#.......
+# ######....
+# ####.#..#.
+# .#...#.##.
+# #.#####.##
+# ..#.###...
+# ..#.......
+# ..#.###..."
+
+# COMMAND ----------
+
+str_rev <- stringi::stri_reverse
 
 # COMMAND ----------
 
@@ -1852,8 +1856,15 @@ parse_tile <- function(x) {
   
   tile_id <- parse_number(l[[1]])
   
-  m <- str_split(l[-1], "") %>% unlist() %>% matrix(ncol = nchar(l[[2]]), byrow = TRUE)
-  
+  lst(
+    tile_id = parse_number(l[[1]]),
+    m = str_split(l[-1], "") %>% unlist() %>% matrix(ncol = nchar(l[[2]]), byrow = TRUE)
+  )
+}
+
+get_edges <- function(tile_info) {
+  tile_id <- tile_info$tile_id
+  m <- tile_info$m
   tibble(
     tile_id = tile_id,
     north = str_c(m[1,], collapse = ""),
@@ -1862,6 +1873,24 @@ parse_tile <- function(x) {
     west = str_c(rev(m[,1]), collapse = "")
   )
 }
+
+# COMMAND ----------
+
+# parse_tile <- function(x) {
+#   l <- read_lines(x)
+  
+#   tile_id <- parse_number(l[[1]])
+  
+#   m <- str_split(l[-1], "") %>% unlist() %>% matrix(ncol = nchar(l[[2]]), byrow = TRUE)
+  
+#   tibble(
+#     tile_id = tile_id,
+#     north = str_c(m[1,], collapse = ""),
+#     east = str_c(m[,ncol(m)], collapse = ""),
+#     south = str_c(rev(m[nrow(m),]), collapse = ""),
+#     west = str_c(rev(m[,1]), collapse = "")
+#   )
+# }
 
 # COMMAND ----------
 
@@ -1911,196 +1940,79 @@ explode <- function(tiles) {
       tile_id_original = tile_id,
       tile_id = str_c(tile_id, "_", orientation, ifelse(is_inverted, "i", "")),
       n,
-      w,
+      e,
       s,
-      e
+      w
     )
 }
 
 # COMMAND ----------
 
-parsed <- parse_tile(x)
-str(parsed)
+# parsed <- parse_tile(x)
+# str(parsed)
+# explode(parsed)
 
 # COMMAND ----------
 
-explode(parsed)
-
-# COMMAND ----------
-
-x = "Tile 3079:
-#.#.#####.
-.#..######
-..#.......
-######....
-####.#..#.
-.#...#.##.
-#.#####.##
-..#.###...
-..#.......
-..#.###...
-"
-  l <- read_lines(x)
-  
-  tile_id <- parse_number(l[[1]])
- m <- str_split(l[-1], "") %>% unlist() %>% matrix(ncol = nchar(l[[2]]), byrow = TRUE)
-
-# COMMAND ----------
-
-str_rev <- stringi::stri_reverse
-
-# COMMAND ----------
-
-lst(
-  N = m[1,],
-  E = m[,ncol(m)],
-  S = rev(m[nrow(m),]),
-  W = rev(m[,1])
-)
-
-# COMMAND ----------
-
-m[,ncol(m)]
-
-# COMMAND ----------
-
-
-
-# COMMAND ----------
-
-to_binary <- function(x) sum(2 ^ (which(rev(x) == "#") - 1))
-
-parse_tile <- function(x) {
-  l <- read_lines(x)
-  
-  tile_id <- parse_number(l[[1]])
-  
-  m <- str_split(l[-1], "") %>% unlist() %>% matrix(ncol = nchar(l[[2]]), byrow = TRUE)
-  
-  result <- tibble(
-    tile_id = tile_id,
-    north = to_binary(m[1,]),
-    east = to_binary(m[,ncol(m)]),
-    south = to_binary(m[nrow(m),]),
-    west = to_binary(m[,1]),
-    is_inverted = FALSE
-  )
-  inverted <- tibble(
-    tile_id = tile_id,
-    north = to_binary(rev(m[1,])),
-    east = to_binary(rev(m[,1])),
-    south = to_binary(rev(m[nrow(m),])),
-    west = to_binary(rev(m[,ncol(m)])),
-    is_inverted = TRUE
-  )
-
-  bind_rows(result, inverted)
-}
+tiles_m <-
+  input %>%
+  str_split("\n\n") %>%
+  unlist() %>%
+  map(parse_tile)
+tiles_m
 
 # COMMAND ----------
 
 tiles <-
-  input %>%
-  str_split("\n\n") %>%
-  unlist() %>%
-  map_dfr(parse_tile)
+  tiles_m %>%
+  map_dfr(get_edges)
 tiles
 
 # COMMAND ----------
 
-tiles <-
-  tiles %>%
-  mutate(orientation = list(1:4)) %>%
-  unnest_longer(orientation) %>%
-  mutate(
-    n = case_when(
-      orientation == 1 ~ north,
-      orientation == 2 ~ east,
-      orientation == 3 ~ south,
-      orientation == 4 ~ west
-    ),
-    w = case_when(
-      orientation == 1 ~ west,
-      orientation == 2 ~ north,
-      orientation == 3 ~ east,
-      orientation == 4 ~ south
-    ),
-    s = case_when(
-      orientation == 1 ~ south,
-      orientation == 2 ~ west,
-      orientation == 3 ~ north,
-      orientation == 4 ~ east
-    ),
-    e = case_when(
-      orientation == 1 ~ east,
-      orientation == 2 ~ south,
-      orientation == 3 ~ west,
-      orientation == 4 ~ north
-    )
-  ) %>%
-  transmute(
-    tile_id_original = tile_id,
-    tile_id = str_c(tile_id, "_", orientation, ifelse(is_inverted, "i", "")),
-    n,
-    w,
-    s,
-    e
-  )
-display(tiles)
+# tiles <-
+#   input %>%
+#   str_split("\n\n") %>%
+#   unlist() %>%
+#   map_dfr(parse_tile)
+# tiles
 
 # COMMAND ----------
 
-tiles %>% filter(tile_id == "1951_3")
+tiles_exploded <- explode(tiles)
+display(tiles_exploded)
 
 # COMMAND ----------
 
-to_binary("#...##.#.." %>% str_split("") %>% unlist()) # N
+tiles_exploded %>% filter(tile_id == "1951_3i")
 
 # COMMAND ----------
 
-to_binary("#.##...##." %>% str_split("") %>% unlist()) # S
-
-# COMMAND ----------
-
-to_binary(".#..#######." %>% str_split("") %>% unlist()) # E
-
-# COMMAND ----------
-
-to_binary("##.#..#..#" %>% str_split("") %>% unlist()) # w
-
-# COMMAND ----------
-
-tiles %>% filter(tile_id == "1951_1")
-
-# COMMAND ----------
-
-width <- tiles %>% pull(tile_id_original) %>% unique() %>% length() %>% sqrt()
-width
-
-# COMMAND ----------
-
-place_tile <- function(placed_tile_mat, tiles, to_place_tile_id, i, j) {
-  message(paste0("Trying ", to_place_tile_id, " in ", i, ", ", j, "."))
+place_tile <- function(placed_tile_mat, tiles, to_place_tile_id, i, j, width, debug = FALSE) {
+  verbose <- if (debug) message else function(...) invisible()
+  
+  verbose(paste0("Trying ", to_place_tile_id, " in ", i, ", ", j, "."))
   this_tile <- tiles %>% filter(tile_id == to_place_tile_id)
   
   required_north <- ifelse(
     j > 1,
-    tiles$s[tiles$tile_id == placed_tile_mat[i, j - 1]],
+    str_rev(tiles$s[tiles$tile_id == placed_tile_mat[i, j - 1]]),
     this_tile$n
   )
   required_west <- ifelse(
     i > 1,
-    tiles$e[tiles$tile_id == placed_tile_mat[i - 1, j]],
+    str_rev(tiles$e[tiles$tile_id == placed_tile_mat[i - 1, j]]),
     this_tile$w
   )
-  message(glue::glue("Required n:{required_north}; w:{required_west}"))
-  message(glue::glue("Actual n:{this_tile$n}; w:{this_tile$w}"))
+  
+  verbose(glue::glue("Required n:{required_north}; w:{required_west}"))
+  verbose(glue::glue("Actual n:{this_tile$n}; w:{this_tile$w}"))
 
   if (this_tile$n != required_north || this_tile$w != required_west) {
     return(NA)
   }
   
-  message(paste0("Placing ", to_place_tile_id, " in ", i, ", ", j, "."))
+  verbose(paste0("Placing ", to_place_tile_id, " in ", i, ", ", j, "."))
   
   placed_tile_mat[i, j] <- to_place_tile_id
   if (i == width && j == width) {
@@ -2118,7 +2030,7 @@ place_tile <- function(placed_tile_mat, tiles, to_place_tile_id, i, j) {
   
   # Iterate through remaining tiles and place_tile
   for (new_tile_id in remaining_tiles$tile_id) {
-    result <- place_tile(placed_tile_mat, tiles, new_tile_id, i, j)
+    result <- place_tile(placed_tile_mat, tiles, new_tile_id, i, j, width, debug)
     if (!is.na(result)) {
       return(result)
     }
@@ -2126,27 +2038,325 @@ place_tile <- function(placed_tile_mat, tiles, to_place_tile_id, i, j) {
   return(NA)
 }
 
+solve <- function(tiles_exploded, debug = FALSE) {
+  width <- tiles_exploded %>% pull(tile_id_original) %>% unique() %>% length() %>% sqrt()
+
+  for (to_place_tile_id in tiles_exploded$tile_id) {
+    result <- place_tile(
+      matrix(NA, nrow = width, ncol = width),
+      tiles_exploded,
+      to_place_tile_id,
+      i = 1,
+      j = 1,
+      width = width,
+      debug = debug
+    )
+    if (!is.na(result)) {
+      return(result)
+    }
+  }
+  NA
+}
+
 # COMMAND ----------
 
-place_tile(matrix(NA, nrow = width, ncol = width), tiles, "1951_1", 1, 1)
+# Takes 3.6 minutes
+result <- solve(tiles_exploded)
+result
 
 # COMMAND ----------
 
-place_tile(matrix(NA, nrow = width, ncol = width), tiles, "1951_2", 1, 1)
+corners <- c(
+  result[1, 1],
+  result[1, ncol(result)],
+  result[nrow(result), ncol(result)],
+  result[nrow(result), 1]
+) %>%
+  parse_number()
+corners
 
 # COMMAND ----------
 
-place_tile(matrix(NA, nrow = width, ncol = width), tiles, "1951_3", 1, 1)
-# I think this is the correct orientation.
+answer <- reduce(corners, `*`)
+format(answer, scientific = FALSE)
 
 # COMMAND ----------
 
-place_tile(matrix(NA, nrow = width, ncol = width), tiles, "1951_4", 1, 1)
+# MAGIC %md ## Part 2
 
 # COMMAND ----------
 
-tiles %>% display()
+rotate <- function(x) apply(t(x), 2, rev)
+# rotate <- function(x) t(apply(x, 2, rev))
+
+get_trimmed_tile <- function(original_tile_id, orientation, is_inverted) {
+  m <-
+    tiles_m %>%
+    keep(~.$tile_id == original_tile_id) %>%
+    `[[`(1) %>%
+    `[[`("m")
+  
+  if (is_inverted) {
+    m <- t(apply(m, 1, rev))
+  }
+
+  if (orientation > 1) {
+    for (i in seq(from = 2, to = orientation, by = 1)) {
+      m <- rotate(m)
+    }
+  }
+  
+  m[c(-1, -nrow(m)), c(-1, -ncol(m))]
+}
 
 # COMMAND ----------
 
-# MAGIC %md FIXME: The issue is that they can be FLIPPED virtically and/or horizontally!
+coords <-
+  cbind(as.character(result), which(result == result, arr.ind = TRUE)) %>%
+  as_tibble() %>%
+  transmute(
+    tile_id = V1,
+    x = as.integer(row),
+    y = as.integer(col)
+  )
+coords
+
+# COMMAND ----------
+
+map_tiles <-
+  coords %>%
+  mutate(
+    s = asplit(str_match(tile_id, "(\\d+)_(\\d)(i?)"), 1),
+    original_tile_id = map_chr(s, 2),
+    orientation = map_int(s, ~as.integer(.[3])),
+    is_inverted = map_lgl(s, ~.[4] == "i")
+  ) %>%
+  select(-s) %>%
+  mutate(m = pmap(lst(original_tile_id, orientation, is_inverted), get_trimmed_tile))
+map_tiles
+
+# COMMAND ----------
+
+img_m <-
+  map_tiles %>%
+  group_by(y) %>%
+  arrange(x) %>%
+  summarise(m = list(reduce(m, cbind))) %>%
+  ungroup() %>%
+  arrange(y) %>%
+  summarise(m = list(reduce(m, rbind))) %>%
+  pull(m) %>%
+  first()
+
+# COMMAND ----------
+
+print_mat <- function(mat) {
+  apply(mat, 1, paste0, collapse = "") %>%
+  paste0(collapse = "\n") %>%
+  cat()
+}
+print_mat(img_m)
+
+# COMMAND ----------
+
+
+
+# COMMAND ----------
+
+monster <- "                  # 
+#    ##    ##    ###
+ #  #  #  #  #  #   " %>%
+  read_lines() %>%
+  str_split("") %>%
+  simplify2array() %>%
+  t()
+monster
+
+# COMMAND ----------
+
+monster_hashes <- sum(monster == "#")
+monster_hashes
+
+# COMMAND ----------
+
+show_monster <- function(mat, monster) {
+  if (sum(monster == mat) == sum(monster == "#")) {
+    mat[monster == "#"] <- "O"
+  }
+  
+  mat
+}
+
+# COMMAND ----------
+
+show_monster(ifelse(monster == " ", ".", "#"), monster)
+
+# COMMAND ----------
+
+1:(1 + ncol(monster) - 1)
+
+# COMMAND ----------
+
+1:(1 + ncol(monster) - 1)
+
+# COMMAND ----------
+
+monster[1:(1 + ncol(monster) - 1), 1:(1 + nrow(monster) - 1)]
+
+# COMMAND ----------
+
+result <- img_m
+for (x in seq_len(ncol(result) - ncol(monster) + 1)) {
+  for (y in seq_len(nrow(result) - nrow(monster) + 1)) {
+    result[y:(y + nrow(monster) - 1), x:(x + ncol(monster) - 1)] <- show_monster(result[y:(y + nrow(monster) - 1), x:(x + ncol(monster) - 1)], monster)
+  }
+}
+result
+
+# COMMAND ----------
+
+monster_mats <- list(
+  monster,
+  rotate(monster),
+  rotate(rotate(monster)),
+  rotate(rotate(rotate(monster))),
+  
+  t(apply(monster, 1, rev)),
+  rotate(t(apply(monster, 1, rev))),
+  rotate(rotate(t(apply(monster, 1, rev)))),
+  rotate(rotate(rotate(t(apply(monster, 1, rev)))))
+)
+
+# COMMAND ----------
+
+result <- img_m
+for (monster_mat in monster_mats) {
+  for (x in seq_len(ncol(result) - ncol(monster_mat) + 1)) {
+    for (y in seq_len(nrow(result) - nrow(monster_mat) + 1)) {
+      result[y:(y + nrow(monster_mat) - 1), x:(x + ncol(monster_mat) - 1)] <- show_monster(result[y:(y + nrow(monster_mat) - 1), x:(x + ncol(monster_mat) - 1)], monster_mat)
+    }
+  }
+  result
+}
+result
+
+# COMMAND ----------
+
+sum(result == "#")
+
+# COMMAND ----------
+
+# MAGIC %md ## Scratch
+
+# COMMAND ----------
+
+  map_tiles %>%
+  group_by(y) %>%
+  arrange(y, x)
+
+# COMMAND ----------
+
+  map_tiles %>%
+  group_by(y) %>%
+  arrange(x) %>%
+  summarise(m = list(reduce(m, cbind))) %>%
+  filter(y == 1) %>%
+  pull(m) %>%
+  first()
+
+# COMMAND ----------
+
+map_tiles %>% filter(y == 1, x %in% c(1, 2))
+
+# COMMAND ----------
+
+map_tiles %>% filter(y == 1, x %in% c(1, 2)) %>% summarise(m = list(reduce(m, cbind))) %>% pull(m)
+
+# COMMAND ----------
+
+map_tiles %>%
+  group_by(y) %>%
+  arrange(x) %>%
+  summarise(m = list(reduce(m, cbind))) %>%
+  filter(y == 1) %>%
+  pull(m) %>%
+  first()
+
+# COMMAND ----------
+
+img_m
+
+# COMMAND ----------
+
+apply(img_m, 1, paste0, collapse = "") %>% paste0(collapse = "\n") %>% cat()
+
+# COMMAND ----------
+
+.#.###.### #.#...#### .#....#.## .####.#..# ...#..#.#. .####...#. ..#.####.. .###.###.# .###...#.. ....#...#. .#..#...## #.....#.##
+..##..##.# .#.###...# .......... ...#...### ......#... #.......## ....#..### ###.##.#.# #####.#... #....#.#.# #....###.. .........#
+.#..#.##.# ......#..# ##.#...... .......##. #....#.### #........# ..##..#..# #..#.##..# #.###..#.# ...#.#.#.. ..#..##.## #.........
+#......#.# #..#...... ....#....# .......##. ..#....#.. #..#..#..# ....#.#... .###.###.# ..##....#. ...#..#... ..##...#.. ....##...#
+..#......# .#.##.###. #...#..##. #..#..#..# ..#..##..# ...#.#.... .....##.## #.#....#.. #....#.#.. .###...... ....#.#... .##.......
+...#..##.. #.....##.. ##...#.#.# ##...#.... ........#. ...####..# .#..###.## #......#.. .##...###. #........# #...##.#.. .#...#.##.
+...#.#...# ####..#.## .......#.# ....##.... #..#.....# .....#..#. ##..##..## ##......#. ..#.###### ..##.#...# #..##.#..# #......##.
+#..#..#..# .#......#. .#.#.#.... ##........ ...#..#..# ..#.#...## #.#....### ##..#.##.# .....##..# #...#..... ...##..... .#.....#.#
+.......... #..#.....# ..#.##...# ..#..##### .......#.# ...#..#... #......#.. ..#....... #.#......# ###....... .#....#..# ###...##.#
+...##.#.#. ##.#.#..## .##.#.##.# ..#..##... ...###.##. ...#.####. .##..###.# ##..###.#. ...##.#..# ....#.##.. .#..#..### #....###.#
+
+# COMMAND ----------
+
+.#.#.##... ##..#.#.## #.##.#.##..####.#..#...#..#.#..####.#.....#.####...###.###.##..#.##.......#...#..#..#...###.....#.##
+.......... #.....#..# #...##.#.....#...###......#......#..#.......#..######.##.#.##......#.##....#.#.##....###...........#
+#..#..#..# .#......#. ....#.#.#........##.#....#.#####...#.#....##..#..##..#.##..##..##........#.#.#....#..##.###.........
+#...#.#... ##.#..#### #.#..............##...#....#...#..#.........#.#....###.###.#######.#.....#..#.....##...#......##...#
+..##..#... ..##.....# #.#.#...###..#..#..#..#..##..##..####........##.###.#....#...###...##..###..........#.#....##.......
+#......#.. .###.##.#. .##..#...###...#............#.....#.#....#..###.###......#....#.#....##........##...##.#...#...#.##.
+#.#......# ......#..# #....#........##....#..#.....##..#..#..###..##..####......#..#....##....##.#...##..##.#..##......##.
+#.##.#..#. #..#...... ......#.####...........#..#..##........##.#....#####..#.##.##.#..###.##...#........##......#.....#.#
+#.##..##.. #...###.#. ............#..#####.......#.###.......##......#....#..........#.########........#....#..####...##.#
+###.###.#. ####...#.# ##.#....#...#..##......###.##..#...####..##..###.###..###.#...#...###.....#.##...#..#..####....###.#
+
+# COMMAND ----------
+
+get_trimmed_tile("3539", 1, FALSE)
+
+# COMMAND ----------
+
+get_trimmed_tile("3539", 1, TRUE)
+
+# COMMAND ----------
+
+get_trimmed_tile("3539", 2, FALSE)
+
+# COMMAND ----------
+
+m <-
+  tiles_m %>%
+  keep(~.$tile_id == "3539") %>%
+  `[[`(1) %>%
+  `[[`("m")
+m
+
+# COMMAND ----------
+
+m[c(-1, -nrow(m)), c(-1, -ncol(m))]
+
+# COMMAND ----------
+
+asplit(str_match(coords$tile_id, "(\\d+)_(\\d)(i?)"), 1)
+
+# COMMAND ----------
+
+str_match(coords$tile_id, "(\\d+)_(\\d)(i?)")
+
+# COMMAND ----------
+
+current_tile_id <- "3671_2i"
+
+# COMMAND ----------
+
+# tile_id, x, y
+
+# COMMAND ----------
+
+str_match(current_tile_id, "(\\d+)_(\\d)(i?)")
