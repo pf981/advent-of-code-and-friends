@@ -733,3 +733,78 @@ answer
 # COMMAND ----------
 
 # MAGIC %md ## Part 2
+
+# COMMAND ----------
+
+list(c(42), c(42, 8))
+
+# COMMAND ----------
+
+all_rules$value[all_rules$rule_id == 8] <- list(list(c(42), c(42, 8)))
+all_rules$value[all_rules$rule_id == 11] <- list(list(c(42, 31), c(42, 11, 31)))
+
+# COMMAND ----------
+
+generate_regex(0)
+
+# COMMAND ----------
+
+result <-
+  messages %>%
+  mutate(is_match = str_detect(value, paste0("^", generate_regex(0), "$")))
+result
+
+# COMMAND ----------
+
+max_depth <- messages$value %>% nchar() %>% max()
+max_depth <- 
+
+# COMMAND ----------
+
+max_depth <- 20
+
+generate_regex <- function(rule, depth = 1) {
+  if (rule == 42) {
+    #stop()
+    #message(42)
+    depth <- depth + 1
+  }
+  if (depth >= max_depth) {
+    #stop("Max depth")
+    
+    # if (rule == 42) rule <- value[1]
+    #rule <- value[sample.int(seq_along(value), 1)]
+    return("")
+  }
+  
+  if (length(rule) > 1) {
+    return(rule %>% map_chr(generate_regex, depth = depth) %>% paste0(collapse = ""))
+  }
+  
+  
+  value <- all_rules %>% filter(rule_id == rule) %>% pull(value) %>% first()
+  
+
+  
+  
+  if (is.character(value)) {
+    return (value)
+  }
+  glue::glue("(?:{str_c(map_chr(value, generate_regex, depth = depth), collapse = '|')})")
+}
+
+# COMMAND ----------
+
+regex <- generate_regex(0)
+
+# COMMAND ----------
+
+result <-
+  messages %>%
+  mutate(is_match = str_detect(value, paste0("^", regex, "$")))
+result
+
+# COMMAND ----------
+
+answer <- result %>% filter(is_match) %>% nrow()
+answer
