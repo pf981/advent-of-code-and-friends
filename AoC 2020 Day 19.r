@@ -123,7 +123,17 @@ message_counts
 
 # COMMAND ----------
 
-full_join(message_counts, final_rules)
+full_join(message_counts, final_rules) %>% display()
+
+# COMMAND ----------
+
+full_join(message_counts, final_rules) %>%
+  filter(value == "ababbb") %>% display()
+
+# COMMAND ----------
+
+full_join(message_counts, final_rules) %>%
+  filter(rule_id == 0)
 
 # COMMAND ----------
 
