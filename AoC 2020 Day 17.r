@@ -19,10 +19,10 @@ input <- ".#.####.
 
 # COMMAND ----------
 
-input <- ".#.
-..#
-###
-"
+# input <- ".#.
+# ..#
+# ###
+# "
 
 # COMMAND ----------
 
@@ -82,7 +82,7 @@ sim <- function(active) {
     active
   )
   
-  bind_rows(new_active1, new_active2) %>% distinct() # I don't think I need distinct but won't hurt
+  bind_rows(new_active1, new_active2) %>% distinct() %>% select(-n) # I don't think I need distinct but won't hurt
 }
 
 # COMMAND ----------
@@ -129,21 +129,15 @@ print_state(sim(sim(sim(active))))
 
 # COMMAND ----------
 
-test_active <- sim(sim(active))
-
-# COMMAND ----------
-
-get_neighbors(test_active) %>% arrange(z, y, x) %>% display()
-
-# COMMAND ----------
-
-get_neighbors(active) %>%
-  count(x, y, z) %>%
-  ggplot(aes(x, y, label = n)) +
-    geom_label() +
-    facet_grid(~z) +
-    scale_y_reverse()
-# This looks correct
+# v <- sim(active)
+# get_neighbors(v) %>%
+#   count(x, y, z) %>%
+#   ggplot(aes(x, y, label = n)) +
+#     geom_label() +
+#     geom_point(data = v, color = "red", alpha = 0.5, size = 8) +
+#     facet_grid(~z) +
+#     scale_y_reverse()
+# # This looks correct
 
 # COMMAND ----------
 
@@ -152,22 +146,6 @@ for (i in seq_len(6)) {
   result <- sim(result)
 }
 result
-
-# COMMAND ----------
-
-unique(result$z)
-
-# COMMAND ----------
-
-nrow((result))
-
-# COMMAND ----------
-
-112-86
-
-# COMMAND ----------
-
-nrow(sim(result))
 
 # COMMAND ----------
 
