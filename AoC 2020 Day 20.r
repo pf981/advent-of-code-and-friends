@@ -1,5 +1,261 @@
 # Databricks notebook source
 # MAGIC %md https://adventofcode.com/2020/day/20
+# MAGIC 
+# MAGIC <main>
+# MAGIC <script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+# MAGIC <article class="day-desc"><h2>--- Day 20: Jurassic Jigsaw ---</h2><p>The high-speed train leaves the forest and quickly carries you south. You can even see a desert in the distance! Since you have some spare time, you <span title="Just in case. Maybe they missed something.">might as well</span> see if there was anything interesting in the image the Mythical Information Bureau satellite captured.</p>
+# MAGIC <p>After decoding the satellite messages, you discover that the data actually contains many small images created by the satellite's <em>camera array</em>. The camera array consists of many cameras; rather than produce a single square image, they produce many smaller square image <em>tiles</em> that need to be <em>reassembled back into a single image</em>.</p>
+# MAGIC <p>Each camera in the camera array returns a single monochrome <em>image tile</em> with a random unique <em>ID number</em>.  The tiles (your puzzle input) arrived in a random order.</p>
+# MAGIC <p>Worse yet, the camera array appears to be malfunctioning: each image tile has been <em>rotated and flipped to a random orientation</em>. Your first task is to reassemble the original image by orienting the tiles so they fit together.</p>
+# MAGIC <p>To show how the tiles should be reassembled, each tile's image data includes a border that should line up exactly with its adjacent tiles. All tiles have this border, and the border lines up exactly when the tiles are both oriented correctly. Tiles at the edge of the image also have this border, but the outermost edges won't line up with any other tiles.</p>
+# MAGIC <p>For example, suppose you have the following nine tiles:</p>
+# MAGIC <pre><code>Tile 2311:
+# MAGIC ..##.#..#.
+# MAGIC ##..#.....
+# MAGIC #...##..#.
+# MAGIC ####.#...#
+# MAGIC ##.##.###.
+# MAGIC ##...#.###
+# MAGIC .#.#.#..##
+# MAGIC ..#....#..
+# MAGIC ###...#.#.
+# MAGIC ..###..###
+# MAGIC 
+# MAGIC Tile 1951:
+# MAGIC #.##...##.
+# MAGIC #.####...#
+# MAGIC .....#..##
+# MAGIC #...######
+# MAGIC .##.#....#
+# MAGIC .###.#####
+# MAGIC ###.##.##.
+# MAGIC .###....#.
+# MAGIC ..#.#..#.#
+# MAGIC #...##.#..
+# MAGIC 
+# MAGIC Tile 1171:
+# MAGIC ####...##.
+# MAGIC #..##.#..#
+# MAGIC ##.#..#.#.
+# MAGIC .###.####.
+# MAGIC ..###.####
+# MAGIC .##....##.
+# MAGIC .#...####.
+# MAGIC #.##.####.
+# MAGIC ####..#...
+# MAGIC .....##...
+# MAGIC 
+# MAGIC Tile 1427:
+# MAGIC ###.##.#..
+# MAGIC .#..#.##..
+# MAGIC .#.##.#..#
+# MAGIC #.#.#.##.#
+# MAGIC ....#...##
+# MAGIC ...##..##.
+# MAGIC ...#.#####
+# MAGIC .#.####.#.
+# MAGIC ..#..###.#
+# MAGIC ..##.#..#.
+# MAGIC 
+# MAGIC Tile 1489:
+# MAGIC ##.#.#....
+# MAGIC ..##...#..
+# MAGIC .##..##...
+# MAGIC ..#...#...
+# MAGIC #####...#.
+# MAGIC #..#.#.#.#
+# MAGIC ...#.#.#..
+# MAGIC ##.#...##.
+# MAGIC ..##.##.##
+# MAGIC ###.##.#..
+# MAGIC 
+# MAGIC Tile 2473:
+# MAGIC #....####.
+# MAGIC #..#.##...
+# MAGIC #.##..#...
+# MAGIC ######.#.#
+# MAGIC .#...#.#.#
+# MAGIC .#########
+# MAGIC .###.#..#.
+# MAGIC ########.#
+# MAGIC ##...##.#.
+# MAGIC ..###.#.#.
+# MAGIC 
+# MAGIC Tile 2971:
+# MAGIC ..#.#....#
+# MAGIC #...###...
+# MAGIC #.#.###...
+# MAGIC ##.##..#..
+# MAGIC .#####..##
+# MAGIC .#..####.#
+# MAGIC #..#.#..#.
+# MAGIC ..####.###
+# MAGIC ..#.#.###.
+# MAGIC ...#.#.#.#
+# MAGIC 
+# MAGIC Tile 2729:
+# MAGIC ...#.#.#.#
+# MAGIC ####.#....
+# MAGIC ..#.#.....
+# MAGIC ....#..#.#
+# MAGIC .##..##.#.
+# MAGIC .#.####...
+# MAGIC ####.#.#..
+# MAGIC ##.####...
+# MAGIC ##..#.##..
+# MAGIC #.##...##.
+# MAGIC 
+# MAGIC Tile 3079:
+# MAGIC #.#.#####.
+# MAGIC .#..######
+# MAGIC ..#.......
+# MAGIC ######....
+# MAGIC ####.#..#.
+# MAGIC .#...#.##.
+# MAGIC #.#####.##
+# MAGIC ..#.###...
+# MAGIC ..#.......
+# MAGIC ..#.###...
+# MAGIC </code></pre>
+# MAGIC <p>By rotating, flipping, and rearranging them, you can find a square arrangement that causes all adjacent borders to line up:</p>
+# MAGIC <pre><code>#...##.#.. ..###..### #.#.#####.
+# MAGIC ..#.#..#.# ###...#.#. .#..######
+# MAGIC .###....#. ..#....#.. ..#.......
+# MAGIC ###.##.##. .#.#.#..## ######....
+# MAGIC .###.##### ##...#.### ####.#..#.
+# MAGIC .##.#....# ##.##.###. .#...#.##.
+# MAGIC #...###### ####.#...# #.#####.##
+# MAGIC .....#..## #...##..#. ..#.###...
+# MAGIC #.####...# ##..#..... ..#.......
+# MAGIC #.##...##. ..##.#..#. ..#.###...
+# MAGIC 
+# MAGIC #.##...##. ..##.#..#. ..#.###...
+# MAGIC ##..#.##.. ..#..###.# ##.##....#
+# MAGIC ##.####... .#.####.#. ..#.###..#
+# MAGIC ####.#.#.. ...#.##### ###.#..###
+# MAGIC .#.####... ...##..##. .######.##
+# MAGIC .##..##.#. ....#...## #.#.#.#...
+# MAGIC ....#..#.# #.#.#.##.# #.###.###.
+# MAGIC ..#.#..... .#.##.#..# #.###.##..
+# MAGIC ####.#.... .#..#.##.. .######...
+# MAGIC ...#.#.#.# ###.##.#.. .##...####
+# MAGIC 
+# MAGIC ...#.#.#.# ###.##.#.. .##...####
+# MAGIC ..#.#.###. ..##.##.## #..#.##..#
+# MAGIC ..####.### ##.#...##. .#.#..#.##
+# MAGIC #..#.#..#. ...#.#.#.. .####.###.
+# MAGIC .#..####.# #..#.#.#.# ####.###..
+# MAGIC .#####..## #####...#. .##....##.
+# MAGIC ##.##..#.. ..#...#... .####...#.
+# MAGIC #.#.###... .##..##... .####.##.#
+# MAGIC #...###... ..##...#.. ...#..####
+# MAGIC ..#.#....# ##.#.#.... ...##.....
+# MAGIC </code></pre>
+# MAGIC <p>For reference, the IDs of the above tiles are:</p>
+# MAGIC <pre><code><em>1951</em>    2311    <em>3079</em>
+# MAGIC 2729    1427    2473
+# MAGIC <em>2971</em>    1489    <em>1171</em>
+# MAGIC </code></pre>
+# MAGIC <p>To check that you've assembled the image correctly, multiply the IDs of the four corner tiles together. If you do this with the assembled tiles from the example above, you get <code>1951 * 3079 * 2971 * 1171</code> = <em><code>20899048083289</code></em>.</p>
+# MAGIC <p>Assemble the tiles into an image. <em>What do you get if you multiply together the IDs of the four corner tiles?</em></p>
+# MAGIC </article>
+# MAGIC <p>Your puzzle answer was <code>30425930368573</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Now, you're ready to <em>check the image for sea monsters</em>.</p>
+# MAGIC <p>The borders of each tile are not part of the actual image; start by removing them.</p>
+# MAGIC <p>In the example above, the tiles become:</p>
+# MAGIC <pre><code>.#.#..#. ##...#.# #..#####
+# MAGIC ###....# .#....#. .#......
+# MAGIC ##.##.## #.#.#..# #####...
+# MAGIC ###.#### #...#.## ###.#..#
+# MAGIC ##.#.... #.##.### #...#.##
+# MAGIC ...##### ###.#... .#####.#
+# MAGIC ....#..# ...##..# .#.###..
+# MAGIC .####... #..#.... .#......
+# MAGIC 
+# MAGIC #..#.##. .#..###. #.##....
+# MAGIC #.####.. #.####.# .#.###..
+# MAGIC ###.#.#. ..#.#### ##.#..##
+# MAGIC #.####.. ..##..## ######.#
+# MAGIC ##..##.# ...#...# .#.#.#..
+# MAGIC ...#..#. .#.#.##. .###.###
+# MAGIC .#.#.... #.##.#.. .###.##.
+# MAGIC ###.#... #..#.##. ######..
+# MAGIC 
+# MAGIC .#.#.### .##.##.# ..#.##..
+# MAGIC .####.## #.#...## #.#..#.#
+# MAGIC ..#.#..# ..#.#.#. ####.###
+# MAGIC #..####. ..#.#.#. ###.###.
+# MAGIC #####..# ####...# ##....##
+# MAGIC #.##..#. .#...#.. ####...#
+# MAGIC .#.###.. ##..##.. ####.##.
+# MAGIC ...###.. .##...#. ..#..###
+# MAGIC </code></pre>
+# MAGIC <p>Remove the gaps to form the actual image:</p>
+# MAGIC <pre><code>.#.#..#.##...#.##..#####
+# MAGIC ###....#.#....#..#......
+# MAGIC ##.##.###.#.#..######...
+# MAGIC ###.#####...#.#####.#..#
+# MAGIC ##.#....#.##.####...#.##
+# MAGIC ...########.#....#####.#
+# MAGIC ....#..#...##..#.#.###..
+# MAGIC .####...#..#.....#......
+# MAGIC #..#.##..#..###.#.##....
+# MAGIC #.####..#.####.#.#.###..
+# MAGIC ###.#.#...#.######.#..##
+# MAGIC #.####....##..########.#
+# MAGIC ##..##.#...#...#.#.#.#..
+# MAGIC ...#..#..#.#.##..###.###
+# MAGIC .#.#....#.##.#...###.##.
+# MAGIC ###.#...#..#.##.######..
+# MAGIC .#.#.###.##.##.#..#.##..
+# MAGIC .####.###.#...###.#..#.#
+# MAGIC ..#.#..#..#.#.#.####.###
+# MAGIC #..####...#.#.#.###.###.
+# MAGIC #####..#####...###....##
+# MAGIC #.##..#..#...#..####...#
+# MAGIC .#.###..##..##..####.##.
+# MAGIC ...###...##...#...#..###
+# MAGIC </code></pre>
+# MAGIC <p>Now, you're ready to search for sea monsters! Because your image is monochrome, a sea monster will look like this:</p>
+# MAGIC <pre><code>                  # 
+# MAGIC #    ##    ##    ###
+# MAGIC  #  #  #  #  #  #   
+# MAGIC </code></pre>
+# MAGIC <p>When looking for this pattern in the image, <em>the spaces can be anything</em>; only the <code>#</code> need to match. Also, you might need to rotate or flip your image before it's oriented correctly to find sea monsters. In the above image, <em>after flipping and rotating it</em> to the appropriate orientation, there are <em>two</em> sea monsters (marked with <code><em>O</em></code>):</p>
+# MAGIC <pre><code>.####...#####..#...###..
+# MAGIC #####..#..#.#.####..#.#.
+# MAGIC .#.#...#.###...#.##.<em>O</em>#..
+# MAGIC #.<em>O</em>.##.<em>O</em><em>O</em>#.#.<em>O</em><em>O</em>.##.<em>O</em><em>O</em><em>O</em>##
+# MAGIC ..#<em>O</em>.#<em>O</em>#.<em>O</em>##<em>O</em>..<em>O</em>.#<em>O</em>##.##
+# MAGIC ...#.#..##.##...#..#..##
+# MAGIC #.##.#..#.#..#..##.#.#..
+# MAGIC .###.##.....#...###.#...
+# MAGIC #.####.#.#....##.#..#.#.
+# MAGIC ##...#..#....#..#...####
+# MAGIC ..#.##...###..#.#####..#
+# MAGIC ....#.##.#.#####....#...
+# MAGIC ..##.##.###.....#.##..#.
+# MAGIC #...#...###..####....##.
+# MAGIC .#.##...#.##.#.#.###...#
+# MAGIC #.###.#..####...##..#...
+# MAGIC #.###...#.##...#.##<em>O</em>###.
+# MAGIC .<em>O</em>##.#<em>O</em><em>O</em>.###<em>O</em><em>O</em>##..<em>O</em><em>O</em><em>O</em>##.
+# MAGIC ..<em>O</em>#.<em>O</em>..<em>O</em>..<em>O</em>.#<em>O</em>##<em>O</em>##.###
+# MAGIC #.#..##.########..#..##.
+# MAGIC #.#####..#.#...##..#....
+# MAGIC #....##..#.#########..##
+# MAGIC #...#.....#..##...###.##
+# MAGIC #..###....##.#...##.##.#
+# MAGIC </code></pre>
+# MAGIC <p>Determine how rough the waters are in the sea monsters' habitat by counting the number of <code>#</code> that are <em>not</em> part of a sea monster. In the above example, the habitat's water roughness is <em><code>273</code></em>.</p>
+# MAGIC <p><em>How many <code>#</code> are not part of a sea monster?</em></p>
+# MAGIC </article>
+# MAGIC <p>Your puzzle answer was <code>2453</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+# MAGIC <p>At this point, you should <a href="/2020">return to your Advent calendar</a> and try another puzzle.</p>
+# MAGIC <p>If you still want to see it, you can <a href="20/input" target="_blank">get your puzzle input</a>.</p>
+# MAGIC <p>You can also <span class="share">[Share<span class="share-content">on
+# MAGIC   <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Jurassic+Jigsaw%22+%2D+Day+20+%2D+Advent+of+Code+2020&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F20&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+# MAGIC   <a href="javascript:void(0);" onclick="var mastodon_instance=prompt('Mastodon Instance / Server Name?'); if(typeof mastodon_instance==='string' &amp;&amp; mastodon_instance.length){this.href='https://'+mastodon_instance+'/share?text=I%27ve+completed+%22Jurassic+Jigsaw%22+%2D+Day+20+%2D+Advent+of+Code+2020+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F20'}else{return false;}" target="_blank">Mastodon</a></span>]</span> this puzzle.</p>
+# MAGIC </main>
 
 # COMMAND ----------
 
@@ -1737,113 +1993,117 @@ Tile 1303:
 
 # COMMAND ----------
 
-input <- "Tile 2311:
-..##.#..#.
-##..#.....
-#...##..#.
-####.#...#
-##.##.###.
-##...#.###
-.#.#.#..##
-..#....#..
-###...#.#.
-..###..###
+# input <- "Tile 2311:
+# ..##.#..#.
+# ##..#.....
+# #...##..#.
+# ####.#...#
+# ##.##.###.
+# ##...#.###
+# .#.#.#..##
+# ..#....#..
+# ###...#.#.
+# ..###..###
 
-Tile 1951:
-#.##...##.
-#.####...#
-.....#..##
-#...######
-.##.#....#
-.###.#####
-###.##.##.
-.###....#.
-..#.#..#.#
-#...##.#..
+# Tile 1951:
+# #.##...##.
+# #.####...#
+# .....#..##
+# #...######
+# .##.#....#
+# .###.#####
+# ###.##.##.
+# .###....#.
+# ..#.#..#.#
+# #...##.#..
 
-Tile 1171:
-####...##.
-#..##.#..#
-##.#..#.#.
-.###.####.
-..###.####
-.##....##.
-.#...####.
-#.##.####.
-####..#...
-.....##...
+# Tile 1171:
+# ####...##.
+# #..##.#..#
+# ##.#..#.#.
+# .###.####.
+# ..###.####
+# .##....##.
+# .#...####.
+# #.##.####.
+# ####..#...
+# .....##...
 
-Tile 1427:
-###.##.#..
-.#..#.##..
-.#.##.#..#
-#.#.#.##.#
-....#...##
-...##..##.
-...#.#####
-.#.####.#.
-..#..###.#
-..##.#..#.
+# Tile 1427:
+# ###.##.#..
+# .#..#.##..
+# .#.##.#..#
+# #.#.#.##.#
+# ....#...##
+# ...##..##.
+# ...#.#####
+# .#.####.#.
+# ..#..###.#
+# ..##.#..#.
 
-Tile 1489:
-##.#.#....
-..##...#..
-.##..##...
-..#...#...
-#####...#.
-#..#.#.#.#
-...#.#.#..
-##.#...##.
-..##.##.##
-###.##.#..
+# Tile 1489:
+# ##.#.#....
+# ..##...#..
+# .##..##...
+# ..#...#...
+# #####...#.
+# #..#.#.#.#
+# ...#.#.#..
+# ##.#...##.
+# ..##.##.##
+# ###.##.#..
 
-Tile 2473:
-#....####.
-#..#.##...
-#.##..#...
-######.#.#
-.#...#.#.#
-.#########
-.###.#..#.
-########.#
-##...##.#.
-..###.#.#.
+# Tile 2473:
+# #....####.
+# #..#.##...
+# #.##..#...
+# ######.#.#
+# .#...#.#.#
+# .#########
+# .###.#..#.
+# ########.#
+# ##...##.#.
+# ..###.#.#.
 
-Tile 2971:
-..#.#....#
-#...###...
-#.#.###...
-##.##..#..
-.#####..##
-.#..####.#
-#..#.#..#.
-..####.###
-..#.#.###.
-...#.#.#.#
+# Tile 2971:
+# ..#.#....#
+# #...###...
+# #.#.###...
+# ##.##..#..
+# .#####..##
+# .#..####.#
+# #..#.#..#.
+# ..####.###
+# ..#.#.###.
+# ...#.#.#.#
 
-Tile 2729:
-...#.#.#.#
-####.#....
-..#.#.....
-....#..#.#
-.##..##.#.
-.#.####...
-####.#.#..
-##.####...
-##..#.##..
-#.##...##.
+# Tile 2729:
+# ...#.#.#.#
+# ####.#....
+# ..#.#.....
+# ....#..#.#
+# .##..##.#.
+# .#.####...
+# ####.#.#..
+# ##.####...
+# ##..#.##..
+# #.##...##.
 
-Tile 3079:
-#.#.#####.
-.#..######
-..#.......
-######....
-####.#..#.
-.#...#.##.
-#.#####.##
-..#.###...
-..#.......
-..#.###..."
+# Tile 3079:
+# #.#.#####.
+# .#..######
+# ..#.......
+# ######....
+# ####.#..#.
+# .#...#.##.
+# #.#####.##
+# ..#.###...
+# ..#.......
+# ..#.###..."
+
+# COMMAND ----------
+
+str_rev <- stringi::stri_reverse
 
 # COMMAND ----------
 
@@ -1852,8 +2112,15 @@ parse_tile <- function(x) {
   
   tile_id <- parse_number(l[[1]])
   
-  m <- str_split(l[-1], "") %>% unlist() %>% matrix(ncol = nchar(l[[2]]), byrow = TRUE)
-  
+  lst(
+    tile_id = parse_number(l[[1]]),
+    m = str_split(l[-1], "") %>% unlist() %>% matrix(ncol = nchar(l[[2]]), byrow = TRUE)
+  )
+}
+
+get_edges <- function(tile_info) {
+  tile_id <- tile_info$tile_id
+  m <- tile_info$m
   tibble(
     tile_id = tile_id,
     north = str_c(m[1,], collapse = ""),
@@ -1911,196 +2178,60 @@ explode <- function(tiles) {
       tile_id_original = tile_id,
       tile_id = str_c(tile_id, "_", orientation, ifelse(is_inverted, "i", "")),
       n,
-      w,
+      e,
       s,
-      e
+      w
     )
 }
 
 # COMMAND ----------
 
-parsed <- parse_tile(x)
-str(parsed)
-
-# COMMAND ----------
-
-explode(parsed)
-
-# COMMAND ----------
-
-x = "Tile 3079:
-#.#.#####.
-.#..######
-..#.......
-######....
-####.#..#.
-.#...#.##.
-#.#####.##
-..#.###...
-..#.......
-..#.###...
-"
-  l <- read_lines(x)
-  
-  tile_id <- parse_number(l[[1]])
- m <- str_split(l[-1], "") %>% unlist() %>% matrix(ncol = nchar(l[[2]]), byrow = TRUE)
-
-# COMMAND ----------
-
-str_rev <- stringi::stri_reverse
-
-# COMMAND ----------
-
-lst(
-  N = m[1,],
-  E = m[,ncol(m)],
-  S = rev(m[nrow(m),]),
-  W = rev(m[,1])
-)
-
-# COMMAND ----------
-
-m[,ncol(m)]
-
-# COMMAND ----------
-
-
-
-# COMMAND ----------
-
-to_binary <- function(x) sum(2 ^ (which(rev(x) == "#") - 1))
-
-parse_tile <- function(x) {
-  l <- read_lines(x)
-  
-  tile_id <- parse_number(l[[1]])
-  
-  m <- str_split(l[-1], "") %>% unlist() %>% matrix(ncol = nchar(l[[2]]), byrow = TRUE)
-  
-  result <- tibble(
-    tile_id = tile_id,
-    north = to_binary(m[1,]),
-    east = to_binary(m[,ncol(m)]),
-    south = to_binary(m[nrow(m),]),
-    west = to_binary(m[,1]),
-    is_inverted = FALSE
-  )
-  inverted <- tibble(
-    tile_id = tile_id,
-    north = to_binary(rev(m[1,])),
-    east = to_binary(rev(m[,1])),
-    south = to_binary(rev(m[nrow(m),])),
-    west = to_binary(rev(m[,ncol(m)])),
-    is_inverted = TRUE
-  )
-
-  bind_rows(result, inverted)
-}
+tiles_m <-
+  input %>%
+  str_split("\n\n") %>%
+  unlist() %>%
+  map(parse_tile)
+tiles_m
 
 # COMMAND ----------
 
 tiles <-
-  input %>%
-  str_split("\n\n") %>%
-  unlist() %>%
-  map_dfr(parse_tile)
+  tiles_m %>%
+  map_dfr(get_edges)
 tiles
 
 # COMMAND ----------
 
-tiles <-
-  tiles %>%
-  mutate(orientation = list(1:4)) %>%
-  unnest_longer(orientation) %>%
-  mutate(
-    n = case_when(
-      orientation == 1 ~ north,
-      orientation == 2 ~ east,
-      orientation == 3 ~ south,
-      orientation == 4 ~ west
-    ),
-    w = case_when(
-      orientation == 1 ~ west,
-      orientation == 2 ~ north,
-      orientation == 3 ~ east,
-      orientation == 4 ~ south
-    ),
-    s = case_when(
-      orientation == 1 ~ south,
-      orientation == 2 ~ west,
-      orientation == 3 ~ north,
-      orientation == 4 ~ east
-    ),
-    e = case_when(
-      orientation == 1 ~ east,
-      orientation == 2 ~ south,
-      orientation == 3 ~ west,
-      orientation == 4 ~ north
-    )
-  ) %>%
-  transmute(
-    tile_id_original = tile_id,
-    tile_id = str_c(tile_id, "_", orientation, ifelse(is_inverted, "i", "")),
-    n,
-    w,
-    s,
-    e
-  )
-display(tiles)
+tiles_exploded <- explode(tiles)
+display(tiles_exploded)
 
 # COMMAND ----------
 
-tiles %>% filter(tile_id == "1951_3")
-
-# COMMAND ----------
-
-to_binary("#...##.#.." %>% str_split("") %>% unlist()) # N
-
-# COMMAND ----------
-
-to_binary("#.##...##." %>% str_split("") %>% unlist()) # S
-
-# COMMAND ----------
-
-to_binary(".#..#######." %>% str_split("") %>% unlist()) # E
-
-# COMMAND ----------
-
-to_binary("##.#..#..#" %>% str_split("") %>% unlist()) # w
-
-# COMMAND ----------
-
-tiles %>% filter(tile_id == "1951_1")
-
-# COMMAND ----------
-
-width <- tiles %>% pull(tile_id_original) %>% unique() %>% length() %>% sqrt()
-width
-
-# COMMAND ----------
-
-place_tile <- function(placed_tile_mat, tiles, to_place_tile_id, i, j) {
-  message(paste0("Trying ", to_place_tile_id, " in ", i, ", ", j, "."))
+place_tile <- function(placed_tile_mat, tiles, to_place_tile_id, i, j, width, debug = FALSE) {
+  verbose <- if (debug) message else function(...) invisible()
+  
+  verbose(paste0("Trying ", to_place_tile_id, " in ", i, ", ", j, "."))
   this_tile <- tiles %>% filter(tile_id == to_place_tile_id)
   
   required_north <- ifelse(
     j > 1,
-    tiles$s[tiles$tile_id == placed_tile_mat[i, j - 1]],
+    str_rev(tiles$s[tiles$tile_id == placed_tile_mat[i, j - 1]]),
     this_tile$n
   )
   required_west <- ifelse(
     i > 1,
-    tiles$e[tiles$tile_id == placed_tile_mat[i - 1, j]],
+    str_rev(tiles$e[tiles$tile_id == placed_tile_mat[i - 1, j]]),
     this_tile$w
   )
-  message(glue::glue("Required n:{required_north}; w:{required_west}"))
-  message(glue::glue("Actual n:{this_tile$n}; w:{this_tile$w}"))
+  
+  verbose(glue::glue("Required n:{required_north}; w:{required_west}"))
+  verbose(glue::glue("Actual n:{this_tile$n}; w:{this_tile$w}"))
 
   if (this_tile$n != required_north || this_tile$w != required_west) {
     return(NA)
   }
   
-  message(paste0("Placing ", to_place_tile_id, " in ", i, ", ", j, "."))
+  verbose(paste0("Placing ", to_place_tile_id, " in ", i, ", ", j, "."))
   
   placed_tile_mat[i, j] <- to_place_tile_id
   if (i == width && j == width) {
@@ -2118,7 +2249,7 @@ place_tile <- function(placed_tile_mat, tiles, to_place_tile_id, i, j) {
   
   # Iterate through remaining tiles and place_tile
   for (new_tile_id in remaining_tiles$tile_id) {
-    result <- place_tile(placed_tile_mat, tiles, new_tile_id, i, j)
+    result <- place_tile(placed_tile_mat, tiles, new_tile_id, i, j, width, debug)
     if (!is.na(result)) {
       return(result)
     }
@@ -2126,27 +2257,173 @@ place_tile <- function(placed_tile_mat, tiles, to_place_tile_id, i, j) {
   return(NA)
 }
 
+solve <- function(tiles_exploded, debug = FALSE) {
+  width <- tiles_exploded %>% pull(tile_id_original) %>% unique() %>% length() %>% sqrt()
+
+  for (to_place_tile_id in tiles_exploded$tile_id) {
+    result <- place_tile(
+      matrix(NA, nrow = width, ncol = width),
+      tiles_exploded,
+      to_place_tile_id,
+      i = 1,
+      j = 1,
+      width = width,
+      debug = debug
+    )
+    if (!is.na(result)) {
+      return(result)
+    }
+  }
+  NA
+}
+
 # COMMAND ----------
 
-place_tile(matrix(NA, nrow = width, ncol = width), tiles, "1951_1", 1, 1)
+# Takes 3.6 minutes
+result <- solve(tiles_exploded)
+result
 
 # COMMAND ----------
 
-place_tile(matrix(NA, nrow = width, ncol = width), tiles, "1951_2", 1, 1)
+corners <- c(
+  result[1, 1],
+  result[1, ncol(result)],
+  result[nrow(result), ncol(result)],
+  result[nrow(result), 1]
+) %>%
+  parse_number()
+corners
 
 # COMMAND ----------
 
-place_tile(matrix(NA, nrow = width, ncol = width), tiles, "1951_3", 1, 1)
-# I think this is the correct orientation.
+answer <- reduce(corners, `*`)
+format(answer, scientific = FALSE)
 
 # COMMAND ----------
 
-place_tile(matrix(NA, nrow = width, ncol = width), tiles, "1951_4", 1, 1)
+# MAGIC %md ## Part 2
 
 # COMMAND ----------
 
-tiles %>% display()
+rotate <- function(x) apply(t(x), 2, rev)
+# rotate <- function(x) t(apply(x, 2, rev))
+
+get_trimmed_tile <- function(original_tile_id, orientation, is_inverted) {
+  m <-
+    tiles_m %>%
+    keep(~.$tile_id == original_tile_id) %>%
+    `[[`(1) %>%
+    `[[`("m")
+  
+  if (is_inverted) {
+    m <- t(apply(m, 1, rev))
+  }
+
+  if (orientation > 1) {
+    for (i in seq(from = 2, to = orientation, by = 1)) {
+      m <- rotate(m)
+    }
+  }
+  
+  m[c(-1, -nrow(m)), c(-1, -ncol(m))]
+}
 
 # COMMAND ----------
 
-# MAGIC %md FIXME: The issue is that they can be FLIPPED virtically and/or horizontally!
+coords <-
+  cbind(as.character(result), which(result == result, arr.ind = TRUE)) %>%
+  as_tibble() %>%
+  transmute(
+    tile_id = V1,
+    x = as.integer(row),
+    y = as.integer(col)
+  )
+coords
+
+# COMMAND ----------
+
+map_tiles <-
+  coords %>%
+  mutate(
+    s = asplit(str_match(tile_id, "(\\d+)_(\\d)(i?)"), 1),
+    original_tile_id = map_chr(s, 2),
+    orientation = map_int(s, ~as.integer(.[3])),
+    is_inverted = map_lgl(s, ~.[4] == "i")
+  ) %>%
+  select(-s) %>%
+  mutate(m = pmap(lst(original_tile_id, orientation, is_inverted), get_trimmed_tile))
+map_tiles
+
+# COMMAND ----------
+
+img_m <-
+  map_tiles %>%
+  group_by(y) %>%
+  arrange(x) %>%
+  summarise(m = list(reduce(m, cbind))) %>%
+  ungroup() %>%
+  arrange(y) %>%
+  summarise(m = list(reduce(m, rbind))) %>%
+  pull(m) %>%
+  first()
+
+# COMMAND ----------
+
+print_mat <- function(mat) {
+  apply(mat, 1, paste0, collapse = "") %>%
+  paste0(collapse = "\n") %>%
+  cat()
+}
+print_mat(img_m)
+
+# COMMAND ----------
+
+monster <- "                  # 
+#    ##    ##    ###
+ #  #  #  #  #  #   " %>%
+  read_lines() %>%
+  str_split("") %>%
+  simplify2array() %>%
+  t()
+monster
+
+# COMMAND ----------
+
+show_monster <- function(mat, monster) {
+  if (sum(monster == mat) == sum(monster == "#")) {
+    mat[monster == "#"] <- "O"
+  }
+  
+  mat
+}
+
+# COMMAND ----------
+
+monster_mats <- list(
+  monster,
+  rotate(monster),
+  rotate(rotate(monster)),
+  rotate(rotate(rotate(monster))),
+  
+  t(apply(monster, 1, rev)),
+  rotate(t(apply(monster, 1, rev))),
+  rotate(rotate(t(apply(monster, 1, rev)))),
+  rotate(rotate(rotate(t(apply(monster, 1, rev)))))
+)
+
+# COMMAND ----------
+
+result <- img_m
+for (monster_mat in monster_mats) {
+  for (x in seq_len(ncol(result) - ncol(monster_mat) + 1)) {
+    for (y in seq_len(nrow(result) - nrow(monster_mat) + 1)) {
+      result[y:(y + nrow(monster_mat) - 1), x:(x + ncol(monster_mat) - 1)] <- show_monster(result[y:(y + nrow(monster_mat) - 1), x:(x + ncol(monster_mat) - 1)], monster_mat)
+    }
+  }
+  result
+}
+result
+
+# COMMAND ----------
+
+sum(result == "#")
