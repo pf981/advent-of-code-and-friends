@@ -55,14 +55,110 @@ nested_rules <-
   ) %>%
   unnest(value) %>%
   mutate(
-    value = str_split(value, " ") %>% map(as.integer)
-  )
+    linked_rule_id = str_split(value, " ") %>% map(as.integer)
+  ) %>%
+  group_by(rule_id) %>%
+  mutate(sub_rule_id = row_number()) %>%
+  unnest(linked_rule_id) %>%
+  select(-value)
 nested_rules
+
+# COMMAND ----------
+
+solved_rules <-
+  char_rules %>%
+  mutate(
+    sub_rule_id = 1,
+    letter_count = 1
+  )
+solved_rules
+
+repeat {
+  new_rules <-
+    nested_rules %>%
+    left_join(select(solved_rules, -sub_rule_id), by = c("linked_rule_id" = "rule_id")) %>%
+    group_by(rule_id, sub_rule_id) %>%
+    filter(all(!is.na(letter_count))) %>%
+    group_by(rule_id, sub_rule_id, value) %>%
+    summarise(letter_count = sum(letter_count))
+
+  old_solved_rule_count <- solved_rules %>% distinct(rule_id, sub_rule_id) %>% nrow()
+  
+  solved_rules <- bind_rows(solved_rules, new_rules) %>% distinct()
+  
+  new_solved_rule_count <- solved_rules %>% distinct(rule_id, sub_rule_id) %>% nrow()
+  
+  if (old_solved_rule_count == new_solved_rule_count) {
+    break
+  }
+}
+
+# COMMAND ----------
+
+final_rules <-
+  solved_rules %>%
+  left_join(expand(., rule_id, value, sub_rule_id)) %>%
+  replace_na(list(letter_count = 0)) %>%
+  rename(letter = value)
+final_rules
 
 # COMMAND ----------
 
 messages <- split_strs[[2]] %>% enframe(name = "message_id")
 messages
+
+# COMMAND ----------
+
+message_counts <-
+  map_dfr(unique(final_rules$letter), function(v) {
+    messages %>%
+      mutate(
+        letter = v,
+        letter_count = str_count(value, letter)
+      )
+  }) %>%
+  left_join(expand(., message_id, value, letter)) %>%
+  replace_na(list(letter_count = 0))
+message_counts
+
+# COMMAND ----------
+
+full_join(message_counts, final_rules)
+
+# COMMAND ----------
+
+# MAGIC %md ## Scratch
+
+# COMMAND ----------
+
+# new_rules <-
+#   nested_rules %>%
+#   left_join(select(solved_rules, -sub_rule_id), by = c("linked_rule_id" = "rule_id")) %>%
+#   group_by(rule_id, sub_rule_id) %>%
+#   filter(all(!is.na(letter_count))) %>%
+#   group_by(rule_id, sub_rule_id, value) %>%
+#   summarise(letter_count = sum(letter_count))
+
+# solved_rules <- bind_rows(solved_rules, new_rules) %>% distinct()
+# solved_rules
+
+# COMMAND ----------
+
+solved_rules %>% distinct(rule_id, sub_rule_id) %>% nrow()
+
+# COMMAND ----------
+
+nested_rules
+
+# COMMAND ----------
+
+nested_rules %>% 
+  select(-sub_rule_id) %>%
+  left_join(solved_rules, by = c("linked_rule_id" = "rule_id")) %>%
+  group_by(rule_id, sub_rule_id) %>%
+  filter(all(!is.na(letter_count))) %>%
+  group_by(rule_id, sub_rule_id, value) %>%
+  summarise(letter_count = sum(letter_count))
 
 # COMMAND ----------
 
