@@ -96,10 +96,6 @@ distances <- map_int(permutations, compute_distance)
 
 # COMMAND ----------
 
-
-
-# COMMAND ----------
-
 answer <- min(distances)
 answer
 
