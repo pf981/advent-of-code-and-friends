@@ -179,10 +179,17 @@ simulate <- function(
     status = "Pending", # Win/Lose/Pending
     mana_spent = 0,
     actions = character()
-  )
+  ),
+  is_hard = FALSE
 ) {
   m("\n\n-- Player turn --")
   state <- turn(state)
+  if (is_hard) {
+    state$hp <- state$hp - 1
+    if (state$hp <= 0) {
+      state$status <- "Lose"
+    }
+  }
   if (state$status != "Pending" && state$mana >= 53) return(state)
   
   if (action == "Magic Missile") {
@@ -279,7 +286,8 @@ find_win <- function(
     status = "Pending", # Win/Lose/Pending
     mana_spent = 0,
     actions = character()
-  )
+  ),
+  is_hard = FALSE
 ) {
   states <- replicate(5, start_state, simplify = FALSE)
   next_action <- c("Magic Missile", "Drain", "Shield", "Poison", "Recharge")
@@ -296,7 +304,7 @@ find_win <- function(
     mana_to_be_spent <- mana_to_be_spent[-i]
     
     
-      new_state <- simulate(action, state)
+      new_state <- simulate(action, state, is_hard)
       new_state$actions <- c(new_state$actions, action)
       if (new_state$status == "Win") {
         return(new_state)
@@ -313,8 +321,26 @@ find_win <- function(
 # COMMAND ----------
 
 silent <- TRUE
-result <- find_win()
-str(result) # Took 7 mins
+result <- find_win()# Took 2 mins
+str(result) 
+
+# COMMAND ----------
+
+answer <- result$mana_spent
+answer
+
+# COMMAND ----------
+
+# MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>On the next run through the game, you increase the difficulty to <em>hard</em>.</p>
+# MAGIC <p>At the start of each <em>player turn</em> (before any other effects apply), you lose <code>1</code> hit point. If this brings you to or below <code>0</code> hit points, you lose.</p>
+# MAGIC <p>With the same starting stats for you and the boss, what is the <em>least amount of mana</em> you can spend and still win the fight?</p>
+# MAGIC </article>
+
+# COMMAND ----------
+
+silent <- TRUE
+result <- find_win(is_hard = TRUE) # Took 13 mins
+str(result)
 
 # COMMAND ----------
 
