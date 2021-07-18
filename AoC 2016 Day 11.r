@@ -108,10 +108,11 @@ elements
 
 # COMMAND ----------
 
-lookup <- c(-rev(seq_along(elements)), seq_along(elements))
+lookup <- seq_len(2 * length(elements))
+
 names(lookup) <- c(
-  str_c(rev(elements), "-compatible microchip"),
-  str_c(elements, " generator") # Generators are positive
+  str_c(elements, "-compatible microchip"),
+  str_c(elements, " generator")
 )
 
 floor_to_int <- function(floor) {
@@ -132,108 +133,100 @@ floors
 
 # COMMAND ----------
 
-is_valid_floor <- function(floor) {
-  if (all(floor < 0)) { # No generators
-    return (TRUE)
-  }
-  at_risk_chips <-
-    floor %>%
-    keep(~. < 0) %>%
-    discard(~-. %in% floor) # Chips with their corresponding generator are not at risk
-  
-  if (length(at_risk_chips) > 0) {
-    return (FALSE)
-  }
-  TRUE
-}
+elevator_col <- 2 * length(elements) + 1
+microchip_col <- seq(from = 1, to = length(elements), by = 1)
+generator_col <- seq(from = length(elements) + 1, to = 2 * length(elements), by = 1)
 
-is_valid <- function(state) {
-  state$elevator >= 1 && state$elevator <= length(state$floors) && all(map_lgl(state$floors, is_valid_floor))
-}
-
-is_solved <- function(state) {
-  floor_lengths <- map_int(state$floors, length)
-  
-  last(floor_lengths) > 0 && all(head(floor_lengths, -1) == 0)
-}
+lst(elevator_col, microchip_col, generator_col)
 
 # COMMAND ----------
 
-possible_items_to_move <- function(state) {
-  floor <- state$floors[[state$elevator]]
-  
-  crossing(item1 = floor, item2 = floor) %>%
-    pmap(c) %>%
-    map(sort) %>%
-    map(unique) %>%
-    unique()
+m_start <-
+  floors %>%
+  map(function(x) {
+    v <- rep(FALSE, 2 * length(elements))
+    v[x] <- TRUE
+    v
+  }) %>%
+  simplify2array() %>%
+  t() %>%
+  cbind(c(TRUE, rep(FALSE, nrow(.) - 1)))
+
+colnames(m_start) <- c(str_c(elements, "-M"), str_c(elements, "-G"), "E")
+rownames(m_start) <- str_c("F", seq_len(nrow(m_start)))
+m_start
+
+# COMMAND ----------
+
+is_valid <- function(m) {
+  microchips <- m[,microchip_col]
+  generators <- m[,generator_col]
+
+  # Microchips without a corresponding generator
+  exposed_microchips <- microchips & !generators
+
+  # Filtered to floors that contain a generator
+  !any(exposed_microchips[as.logical(apply(generators, 1, FUN=max)),])
 }
 
-update_state <- function(state, elevator, items) {
-  if (elevator < 1 || elevator > length(state$floors)) {
-    return(list(elevator = -1)) # Some invalid state
-  }
-  state$floors[[state$elevator]] <- state$floors[[state$elevator]] %>% discard(. %in% items)
-  state$floors[[elevator]] <- c(state$floors[[elevator]], items) %>% sort()
-  state$elevator <- elevator
-  
-  state
-}
+hash_m <- function(m) str_c(m, collapse = "")
 
-all_single_moves <- function(state) {
-  result <- list()
-  for (elevator in c(state$elevator - 1, state$elevator + 1)) {
-    for (items in possible_items_to_move(state)) {
-      new_state <- update_state(state, elevator, items)
-      if (is_valid(new_state)) {
-        result <- c(result, list(new_state))
-      }
-    }
-  }
-  result
-}
-
-hash_state <- function(state) digest::digest(state, algo = "xxhash64") # Slightly faster than md5
-
-solve <- function(start_state = lst(elevator = 1, floors = floors)) {
-  states <- list(start_state)
+solve <- function(m = m_start) {
+  ms <- list(m)
   n_moves <- c(0)
   
-  done_states <- map_chr(states, hash_state)
+  done_states <- map_chr(ms, hash_m)
   
   repeat {
+    # Choose the state with the least moves
     i <- which.min(n_moves)
-    state <- states[[i]]
+    m <- ms[[i]]
     n_move <- n_moves[[i]]
     
-    states[[i]] <- NULL
+    ms[[i]] <- NULL
     n_moves <- n_moves[-i]
 
-    new_states <- all_single_moves(state)
-    
-    new_states_hash <- map_chr(new_states, hash_state)
-    new_states <- new_states[!(new_states_hash %in% done_states)]
-    done_states <- c(done_states, new_states_hash[!(new_states_hash %in% done_states)])
-    
-    new_n_moves <- rep(n_move + 1, length(new_states))
 
-    for (new_state in new_states) {
-      if (is_solved(new_state)) {
-        return(list(state = new_state, n_moves = n_move + 1))
+    # All possible moves
+    elevator <- which(m[, elevator_col])
+    possble_items <- which(m[elevator, -elevator_col])
+    for (new_elevator in c(elevator + 1, elevator - 1)) {
+      if (new_elevator < 1 || new_elevator > nrow(m)) {
+        next
+      }
+      
+      for (item1 in possble_items) {
+        for (item2 in c(0, possble_items[possble_items > item1])) {
+          items <- c(item1, item2, elevator_col)
+          
+          new_m <- m
+          new_m[elevator, items] <- FALSE
+          new_m[new_elevator, items] <- TRUE
+          
+          if (!is_valid(m)) {
+            next
+          }
+          
+#         REMOVETHIS_states <<- c(REMOVETHIS_states, list(new_m))
+          
+          # Check if the problem is solved
+          if (all(new_m[nrow(new_m),])) {
+            return(n_move + 1)
+          }
+          
+          state_hash <- hash_m(new_m)
+          if (!(state_hash %in% done_states)) { # If the state hasn't been reached before
+            ms <- c(ms, list(new_m))
+            n_moves <- c(n_moves, n_move + 1)
+            done_states <- c(done_states, state_hash)
+          }
+        }
       }
     }
-
-    states <- c(states, new_states)
-    n_moves <- c(n_moves, new_n_moves)
   }
 }
 
 # COMMAND ----------
 
-result <- solve() # Took > 10 hrs and didn't finish
-result
-
-# COMMAND ----------
-
-answer <- result$n_moves
-answer
+answer <- solve()
+answer # This took 8.4 hrs
