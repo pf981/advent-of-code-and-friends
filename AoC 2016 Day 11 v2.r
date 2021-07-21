@@ -282,9 +282,11 @@ is_valid <- function(state) {
   !any(floors_with_exposed_chip %in% floors_with_generator)
 }
 
-hash <- function(state) {
-  state %>%
-    arrange(microchip, generator) %>% # Sorting the state means that element names are interchangable - dramatically reducing the state space
+hash <- function(state, elevator) {
+  list(
+    state = state %>% arrange(microchip, generator), # Sorting the state means that element names are interchangable - dramatically reducing the state space
+    elevator = elevator
+  ) %>%
     digest::digest()
 }
 
@@ -293,7 +295,7 @@ solve <- function(state = start_state) {
   n_moves <- c(0)
   elevators <- c(1)
   
-  done_states <- map_chr(states, hash)
+  done_states <- c(hash(state, 1))
   
   repeat {
     # Choose the state with the least moves
@@ -323,17 +325,17 @@ solve <- function(state = start_state) {
             }
           }
           
-          state_hash <- hash(new_state)
+          state_hash <- hash(new_state, new_elevator)
           if (state_hash %in% done_states) {
             next
           }
           
-          if (!is_valid(state)) {
+          if (!is_valid(new_state)) {
             next
           }
           
           # Check if the problem is solved
-          if (all(state == 4)) {
+          if (all(new_state == 4)) {
             return(n_move + 1)
           }
           
@@ -350,7 +352,15 @@ solve <- function(state = start_state) {
 # COMMAND ----------
 
 answer <- solve()
-answer
+answer # 1.6 hrs
+
+# COMMAND ----------
+
+# 62 isn't right
+
+# COMMAND ----------
+
+# MAGIC %md ## Scratch
 
 # COMMAND ----------
 
