@@ -146,10 +146,6 @@ swap position 6 with position 1
 
 # COMMAND ----------
 
-rotate_dir("abcde", "left", 0)
-
-# COMMAND ----------
-
 swap_position <- function(s, x, y) {
   x <- as.integer(x) + 1
   y <- as.integer(y) + 1
@@ -184,12 +180,14 @@ rotate_dir <- function(s, x, y) {
 
 rotate_pos <- function(s, x, y) {
   d <- str_locate(s, x) %>% first()
+  d <- d - 1
   
   if (d >= 4) {
     d <- d + 1
-    if (d > str_length(s)) {
-      d <- d - str_length(s)
-    }
+  }
+  d <- d + 1
+  if (d > str_length(s)) {
+    d <- d - str_length(s)
   }
   rotate_dir(s, "right", d)
 }
@@ -234,117 +232,46 @@ df
 
 # COMMAND ----------
 
-s <- "abcdefgh"
+answer <- "abcdefgh"
 
 for (i in seq_len(nrow(df))) {
-  s <- with(df[i,], f[[1]](s, x, y))
-  # message(i, " ", s)
+  answer <- with(df[i,], f[[1]](answer, x, y))
 }
-s
+answer
 
 # COMMAND ----------
 
-# gfadhecb isn't right
+# MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>You scrambled the password correctly, but you discover that you <a href="https://en.wikipedia.org/wiki/File_system_permissions">can't actually modify</a> the <a href="https://en.wikipedia.org/wiki/Passwd">password file</a> on the system. You'll need to un-scramble one of the existing passwords by reversing the scrambling process.</p>
+# MAGIC <p>What is the un-scrambled version of the scrambled password <code>fbgdceah</code>?</p>
+# MAGIC </article>
 
 # COMMAND ----------
 
-df[67,]
-
-# COMMAND ----------
-
-# gfadhecb isn't right
-
-# COMMAND ----------
-
-rotate_pos("abdec", "b")
-# b position = 2
-# So rotate right 2
-
-# COMMAND ----------
-
-rotate_dir("abdec", "right", 2)
-
-# COMMAND ----------
-
-rotate_pos("ecabd", "d")
-# d at position 5
-rotate_dir("ecabd", "right", 5)
-
-# COMMAND ----------
-
-# LAST INSTRUCTION IS WRONG
-
-# COMMAND ----------
-
-s <- "abcdefgh"
-
-for (i in seq_len(nrow(df))) {
-  message(i, " ", s)
-  s <- with(df[i,], f[[1]](s, x, y))
+reverse_f <- function(s, f_str, x, y) {
+  f <- get(f_str)
+  if (f_str %in% c("swap_position", "swap_letter", "reverse")){
+    return(f(s, x, y))
+  }
+  if (f_str == "rotate_dir") {
+    rotate_dir(s, ifelse(x == "right", "left", "right"), y)
+  }
+  
+  candidate <- s
+  repeat {
+    if (f(candidate, x, y) == s) return(candidate)
+    candidate <- stringi::stri_rand_shuffle(candidate)
+  }
 }
-s
 
 # COMMAND ----------
 
-# fegdahbc not right
+answer <- "fbgdceah"
 
-# COMMAND ----------
-
-df[24,]
-
-# COMMAND ----------
-
-rotate_pos("gehdacfb", "f")
-
-# COMMAND ----------
-
-rotate_dir("gehdacfb", "left", 1)
-
-# COMMAND ----------
-
-with(df[i,], f[[1]](1 ,1 ,b))
-
-# COMMAND ----------
-
-
-  s <- df$f[[i]](s, df$a[i], df$b[i])
-
-# COMMAND ----------
-
-get("swap_position")
-
-# COMMAND ----------
-
-# MAGIC %md ## Test
-
-# COMMAND ----------
-
-swap_position("abcde", "4", "0")
-
-# COMMAND ----------
-
-swap_letter("ebcda", "d", "b")
-
-# COMMAND ----------
-
-reverse("edcba", "0", "4")
-
-# COMMAND ----------
-
-rotate_dir("abcde", "left", "1")
-
-# COMMAND ----------
-
-move("bcdea", "1", "4")
-
-# COMMAND ----------
-
-move("bdeac", "3", "0")
-
-# COMMAND ----------
-
-rotate_pos("abdec", "b")
-
-# COMMAND ----------
-
-rotate_pos("ecabd", "d")
+for (i in rev(seq_len(nrow(df)))) {
+  f <- df$instruction[i]
+  x <- df$x[i]
+  y <- df$y[i]
+  
+  answer <- reverse_f(answer, f, x, y)
+}
+answer
