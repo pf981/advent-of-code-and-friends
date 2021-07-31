@@ -309,16 +309,6 @@ input <- "                                             /------------------------
 
 # COMMAND ----------
 
-# input <- "/->-\\        
-# |   |  /----\\
-# | /-+--+-\\  |
-# | | |  | v  |
-# \\-+-/  \\-+--/
-#   \\------/   
-# "
-
-# COMMAND ----------
-
 m <-
   input %>%
   read_lines() %>%
@@ -390,6 +380,7 @@ step <- function(carts) {
     }
     
     if (any(carts$row == row & carts$col == col)) {
+      # Just return the answer rather than carts
       return(str_c(col - 1, row - 1, sep = ","))
     }
     
@@ -546,9 +537,6 @@ last_cart <- function(carts) {
 
 # COMMAND ----------
 
-answer <- last_cart(carts)
+result <- last_cart(carts)
+answer <- str_c(result$col - 1, result$row - 1, sep = ",")
 answer
-
-# COMMAND ----------
-
-str_c(answer$col - 1, answer$row - 1, sep = ",")
