@@ -303,123 +303,6 @@ input <- "################################
 
 # COMMAND ----------
 
-# input <- "#######
-# #.G...#
-# #...EG#
-# #.#.#G#
-# #..G#E#
-# #.....#
-# #######
-# "
-
-# COMMAND ----------
-
-# input <- "#########
-# #G..G..G#
-# #.......#
-# #.......#
-# #G..E..G#
-# #.......#
-# #.......#
-# #G..G..G#
-# #########
-# "
-
-# COMMAND ----------
-
-# input <- "#######
-# #G..#E#
-# #E#E.E#
-# #G.##.#
-# #...#E#
-# #...E.#
-# #######
-# "
-
-# COMMAND ----------
-
-# input <- "#######
-# #E..EG#
-# #.#G.E#
-# #E.##E#
-# #G..#.#
-# #..E#.#
-# #######
-# "
-
-# COMMAND ----------
-
-# input <- "#######
-# #E.G#.#
-# #.#G..#
-# #G.#.G#
-# #G..#.#
-# #...E.#
-# #######
-# "
-
-# COMMAND ----------
-
-# input <- "#######
-# #.E...#
-# #.#..G#
-# #.###.#
-# #E#G#G#
-# #...#G#
-# #######
-# "
-
-# COMMAND ----------
-
-# input <- "#########
-# #G......#
-# #.E.#...#
-# #..##..G#
-# #...##..#
-# #...#...#
-# #.G...G.#
-# #.....G.#
-# #########
-# "
-
-# COMMAND ----------
-
-# input <- "################################
-# #####################...########
-# ##########.##########..#########
-# ##########.##########...########
-# #######....########.....########
-# ######.....######..........#####
-# #######....######..........#####
-# #######....#####...........#####
-# #######..#.####........G...#####
-# ########....###.......G.GE######
-# ######....####.....G...GE..#####
-# ######..###...G........G......##
-# ######..##....#####............#
-# #######..G...#######.G........##
-# #######..G..#########EGEE.....##
-# ######..#...#########GE.......##
-# #####.......#########E.E.......#
-# #####....G..#########GE........#
-# ###...###...#########G.........#
-# ####.###..G..#######..........##
-# ####.##.......#####....#.....###
-# ##....#....GG.G.......####....##
-# ##..............##########...###
-# #....#..........#.##########.###
-# #.................##########.###
-# ##........##......##############
-# #........#####....##############
-# #..###.########...##############
-# #..#############..##############
-# ##.#############################
-# ##.#############################
-# ################################
-# "
-
-# COMMAND ----------
-
 start_m <-
   read_lines(input) %>%
   str_split("") %>%
@@ -434,14 +317,6 @@ hp <- matrix(0, nrow = nrow(start_m), ncol = ncol(start_m))
 hp[start_m %in% c("G", "E")] <- 200
 
 hp
-
-# COMMAND ----------
-
-# The most efficient way is to get number of steps from all enemies to everywhere else. Then just choose the mn adjacent square. But that would need to be resolved in reverse order
-
-# Easiest way is solve up, left, right, down separately and pick the smallest
-
-# Memoise move will dramaticall speed up
 
 # COMMAND ----------
 
@@ -474,7 +349,6 @@ move <- function(state, cur_pos, target_squares) {
   first_cols <- c(NA)
   
   while (length(ds) > 0) {
-    # print(ds)
     i <- which.min(ds)
     
     d <- ds[i]
@@ -496,11 +370,7 @@ move <- function(state, cur_pos, target_squares) {
       cur_first_col <- cur_col
     }
     
-    # message(glue::glue("Trying ({cur_row}, {cur_col}): {s$m[cur_row, cur_col]}"))
-    
     # If found target
-    # mym <<- s$m # FIXME: TEST
-    # stop(s$m) # FIXME: TEST
     if (state$m[cur_row, cur_col] == "T") {
       return(tibble(row = cur_first_row, col = cur_first_col))
     }
@@ -523,8 +393,6 @@ move <- function(state, cur_pos, target_squares) {
 
 step <- function(state) {
   units <- which_df(state$m %in% c("G", "E"), state$m)
-  #print("units:") # FIXME: Remove
-  #print(units) # FIXME: Remove
 
   for (i in seq_len(nrow(units))) {
     cur_pos <- slice(units, i)
@@ -543,7 +411,6 @@ step <- function(state) {
     
     # If not in range, then move
     if (nrow(get_adjacent_squares(cur_pos, state$m, enemy_type)) == 0) {
-      #message(glue::glue("Unit ({cur_pos[1]}, {cur_pos[2]}) moving.")) # FIXME: REMOVE
       new_pos <- move(state, cur_pos, target_squares)
   
       if (!(new_pos$row == cur_pos$row && new_pos$col == cur_pos$col)) {
@@ -678,8 +545,6 @@ answer # 37.05 minutes
 
 step <- function(state) {
   units <- which_df(state$m %in% c("G", "E"), state$m)
-  #print("units:") # FIXME: Remove
-  #print(units) # FIXME: Remove
 
   for (i in seq_len(nrow(units))) {
     cur_pos <- slice(units, i)
@@ -698,7 +563,6 @@ step <- function(state) {
     
     # If not in range, then move
     if (nrow(get_adjacent_squares(cur_pos, state$m, enemy_type)) == 0) {
-      #message(glue::glue("Unit ({cur_pos[1]}, {cur_pos[2]}) moving.")) # FIXME: REMOVE
       new_pos <- move(state, cur_pos, target_squares)
   
       if (!(new_pos$row == cur_pos$row && new_pos$col == cur_pos$col)) {
@@ -755,47 +619,41 @@ calculate_outcome <- function(state) {
 
 # COMMAND ----------
 
-start_state <- list(
-  m = start_m,
-  hp = hp,
-  rounds_completed = 0,
-  elf_dead = FALSE,
-  e_dmg = 4
-)
+# This method did not find the right number. This is because if an elf damage results in a loss, that doesn't mean that all lower elf damages will also lose.
 
-highest_dmg_lost <- 2
-lowest_dmg_won <- Inf
-lowest_dmg_won_outcome <- NA
+# start_state <- list(
+#   m = start_m,
+#   hp = hp,
+#   rounds_completed = 0,
+#   elf_dead = FALSE,
+#   e_dmg = 4
+# )
 
-repeat {
-  state <- start_state
-  state$e_dmg <- min(
-    (highest_dmg_lost + lowest_dmg_won) %/% 2,
-    highest_dmg_lost * 2
-  )
+# highest_dmg_lost <- 2
+# lowest_dmg_won <- Inf
+# lowest_dmg_won_outcome <- NA
+
+# repeat {
+#   state <- start_state
+#   state$e_dmg <- min(
+#     (highest_dmg_lost + lowest_dmg_won) %/% 2,
+#     highest_dmg_lost * 2
+#   )
   
-  if (state$e_dmg == highest_dmg_lost || state$e_dmg == lowest_dmg_won) break
+#   if (state$e_dmg == highest_dmg_lost || state$e_dmg == lowest_dmg_won) break
   
-  outcome <- calculate_outcome(state)
+#   outcome <- calculate_outcome(state)
   
-  if (!is.na(outcome)) {
-    lowest_dmg_won_outcome <- outcome
-    lowest_dmg_won <- state$e_dmg
-  } else {
-    highest_dmg_lost <- state$e_dmg
-  }
-}
+#   if (!is.na(outcome)) {
+#     lowest_dmg_won_outcome <- outcome
+#     lowest_dmg_won <- state$e_dmg
+#   } else {
+#     highest_dmg_lost <- state$e_dmg
+#   }
+# }
 
-answer <- lowest_dmg_won_outcome
-answer # 2.23 hrs
-
-# COMMAND ----------
-
-# 83435 too low. I think it's not guaranteed to find lowest damage
-
-# COMMAND ----------
-
-lst(highest_dmg_lost, lowest_dmg_won, lowest_dmg_won_outcome)
+# answer <- lowest_dmg_won_outcome
+# answer # 2.23 hrs
 
 # COMMAND ----------
 
@@ -824,4 +682,4 @@ repeat {
 }
 
 answer <- lowest_dmg_won_outcome
-answer
+answer # 2.68 hrs
