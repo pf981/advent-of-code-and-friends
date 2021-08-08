@@ -186,24 +186,24 @@ lst(from, to)
 
 visited <- NULL
 visited_d <- NULL
-poss <- c("0,0")
+nodes <- c("0,0")
 ds <- c(0)
 
 while (length(ds) > 0) {
-  pos <- poss[1]
+  node <- nodes[1]
   d <- ds[1]
     
-  poss <- poss[-1]
+  nodes <- nodes[-1]
   ds <- ds[-1]
 
-  if (pos %in% visited) next
+  if (node %in% visited) next
   
-  visited <- c(visited, pos)
+  visited <- c(visited, node)
   visited_d <- c(visited_d, d)
   
-  new_poss <- to[from == pos]
-  poss <- c(poss, new_poss)
-  ds <- c(ds, rep(d + 1, length(new_poss)))
+  new_nodes <- to[from == node]
+  nodes <- c(nodes, new_nodes)
+  ds <- c(ds, rep(d + 1, length(new_nodes)))
 }
 
 answer <- max(visited_d)
