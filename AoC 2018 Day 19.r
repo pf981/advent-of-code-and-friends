@@ -146,10 +146,10 @@ int solve_cpp(int ip_register, std::vector<std::string> ops, std::vector<int> as
 
 answer <- solve_cpp(
   ip_register = ip_register,
-  op = instructions$op,
-  a = instructions$a,
-  b = instructions$b,
-  output_register = instructions$output_register
+  ops = instructions$op,
+  as = instructions$a,
+  bs = instructions$b,
+  output_registers = instructions$output_register
 )
 answer
 
