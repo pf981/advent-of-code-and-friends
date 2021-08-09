@@ -68,11 +68,6 @@ lst(depth, target)
 
 # COMMAND ----------
 
-# depth <- 510
-# target <- c(10, 10)
-
-# COMMAND ----------
-
 extra <- 20
 geologic_index <- matrix(0, nrow = target[2] + 1 + extra, ncol = target[1] + 1 + extra)
 geologic_index[1, ] <- (seq_len(ncol(geologic_index)) - 1) * 16807
@@ -90,19 +85,6 @@ for (x in seq_len(ncol(geologic_index) - 1)) {
 
 geologic_index[target[2] + 1, target[1] + 1] <- 0
 erosion_level[target[2] + 1, target[1] + 1] <- (geologic_index[target[2] + 1, target[1] + 1] + depth) %% 20183
-
-# COMMAND ----------
-
-# print_m <- function(erosion_level) {
-#   m <- matrix("", nrow = nrow(erosion_level), ncol = nrow(erosion_level))
-#   m[erosion_level %% 3 == 0] <- "."
-#   m[erosion_level %% 3 == 1] <- "="
-#   m[erosion_level %% 3 == 2] <- "|"
-#   m[1, 1] <- "M"
-#   m[target[2] + 1, target[1] + 1] <- "T"
-#   m %>% apply(1, str_c, collapse = "") %>% str_c(collapse = "\n") %>% cat()
-# }
-# print_m(erosion_level)
 
 # COMMAND ----------
 
