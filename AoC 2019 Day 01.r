@@ -21,6 +21,10 @@
 
 # COMMAND ----------
 
+library(tidyverse)
+
+# COMMAND ----------
+
 input <- "57351
 149223
 142410
@@ -125,10 +129,6 @@ input <- "57351
 
 # COMMAND ----------
 
-library("tidyverse")
-
-# COMMAND ----------
-
 modules <- 
   input %>%
   read_table(col_names = FALSE) %>%
@@ -136,7 +136,8 @@ modules <-
 
 # COMMAND ----------
 
-sum(modules %/% 3 - 2)
+answer <- sum(modules %/% 3 - 2)
+answer
 
 # COMMAND ----------
 
@@ -169,6 +170,8 @@ calc_fuel_full <- function(module) {
 
 # COMMAND ----------
 
-modules %>%
+answer <-
+  modules %>%
   map_int(calc_fuel_full) %>%
   sum()
+answer
