@@ -51,6 +51,14 @@
 
 # COMMAND ----------
 
+install.packages("igraph")
+
+# COMMAND ----------
+
+library(tidyverse)
+
+# COMMAND ----------
+
 input <- "R45)497
 TYR)159
 RJC)Z1B
@@ -1162,38 +1170,8 @@ L1Q)1WM
 
 # COMMAND ----------
 
-# # Test
-# input <- "COM)B
-# B)C
-# C)D
-# D)E
-# E)F
-# B)G
-# G)H
-# D)I
-# E)J
-# J)K
-# K)L
-# "
-
-# COMMAND ----------
-
-library("tidyverse")
-
-# COMMAND ----------
-
 orbits <- read_delim(input, delim = ")", col_names = c("center", "satellite"))
-
-display(orbits)
-
-# COMMAND ----------
-
-objects <- orbits %>% unlist() %>% unique()
-length(objects)
-
-# COMMAND ----------
-
-# MAGIC %md ### Set up graph
+orbits
 
 # COMMAND ----------
 
@@ -1211,7 +1189,9 @@ count_orbits <- function(v, graph = g) {
 
 # COMMAND ----------
 
-objects %>% map_dbl(count_orbits) %>% sum()
+objects <- orbits %>% unlist() %>% unique()
+answer <- objects %>% map_dbl(count_orbits) %>% sum()
+answer
 
 # COMMAND ----------
 
@@ -1262,32 +1242,6 @@ objects %>% map_dbl(count_orbits) %>% sum()
 
 # COMMAND ----------
 
-# # Test
-# input <- "COM)B
-# B)C
-# C)D
-# D)E
-# E)F
-# B)G
-# G)H
-# D)I
-# E)J
-# J)K
-# K)L
-# K)YOU
-# I)SAN
-# "
-# orbits <- read_delim(input, delim = ")", col_names = c("center", "satellite"))
-
-# display(orbits)
-
-# g <- 
-#   orbits %>%
-#   transmute(src = satellite, dst = center) %>%
-#   as.matrix() %>%
-#   igraph::graph_from_edgelist()
-
-# COMMAND ----------
-
 # Subtract 3 because we don't count the first and last. Subtract 2 for the ends, then subtract another because we are counting edges, not nodes.
-igraph::shortest_paths(g, "YOU", "SAN", mode = "all")$vpath[[1]] %>% length() %>% `-`(3)
+answer <- igraph::shortest_paths(g, "YOU", "SAN", mode = "all")$vpath[[1]] %>% length() %>% `-`(3)
+answer
