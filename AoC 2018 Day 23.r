@@ -1126,7 +1126,7 @@ smt2_command <- glue::glue("
 (maximize (+
   {bot_constraints}
 ))
-(minimize (+ (abs x) (abs x) (abs x)))
+(minimize (+ (abs x) (abs y) (abs z)))
 (check-sat)
 (eval x)
 (eval y)
