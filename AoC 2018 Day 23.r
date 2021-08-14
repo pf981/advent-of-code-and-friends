@@ -1042,29 +1042,6 @@ pos=<44976824,82275257,10252670>, r=57889284
 
 # COMMAND ----------
 
-# input <- "pos=<0,0,0>, r=4
-# pos=<1,0,0>, r=1
-# pos=<4,0,0>, r=3
-# pos=<0,2,0>, r=1
-# pos=<0,5,0>, r=3
-# pos=<0,0,3>, r=1
-# pos=<1,1,1>, r=1
-# pos=<1,1,2>, r=1
-# pos=<1,3,1>, r=1
-# "
-
-# COMMAND ----------
-
-# input <- "pos=<10,12,12>, r=2
-# pos=<12,14,12>, r=2
-# pos=<16,12,12>, r=4
-# pos=<14,14,14>, r=6
-# pos=<50,50,50>, r=200
-# pos=<10,10,10>, r=5
-# "
-
-# COMMAND ----------
-
 df <-
   read_lines(input) %>%
   str_extract_all("-?\\d+") %>%
@@ -1108,330 +1085,65 @@ answer
 
 # COMMAND ----------
 
-Rcpp::cppFunction('
-std::vector<int> solve(std::vector<std::vector<int> > bots, std::vector<int> start, std::vector<int> end) {
-  std::vector<int> best;
-  int best_n_bots = 0;
-
-  for (int x = start[0]; x <= end[0]; ++x) {
-    for (int y = start[1]; y <= end[1]; ++y) {
-      for (int z = start[2]; z <= end[2]; ++z) {
-        int n_bots = std::count_if(
-          bots.begin(),
-          bots.end(),
-          [&](std::vector<int> bot){return abs(bot[0] - x) + abs(bot[1] - y) + abs(bot[2] - z) <= bot[3];}
-        );
-        // std::cout << x << ", " << y << ", " << z << ": " << n_bots << std::endl;
-        // if (n_bots > best_n_bots || (n_bots == best_n_bots && abs(x) + abs(y) + abs(z) < abs(best[0]) + abs(best[1]) + abs(best[2]))) {
-        if (n_bots > best_n_bots) {
-          best_n_bots = n_bots;
-          best = {x, y, z};
-        }
-      }
-    }
-  }
-
-  return best;
-}
-')
+# MAGIC %sh sudo apt-get install --yes z3
 
 # COMMAND ----------
 
-bots <- df %>% asplit(1)
-bots
+# MAGIC %sh z3 --help
 
 # COMMAND ----------
 
-ends <- map_dfr(c("x", "y", "z"), ~tibble(
-  start = min(df[[.]] - df$r),
-  end = max(df[[.]] + df$r)
-))
-ends
-
-# COMMAND ----------
-
-new_df <- df %>% mutate_all(`%/%`, 1000000)
-
-bots <- new_df %>% asplit(1)
-
-ends <- map_dfr(c("x", "y", "z"), ~tibble(
-  start = min(new_df[[.]]),
-  end = max(new_df[[.]])
-))
-ends
-
-# COMMAND ----------
-
-solve(bots, ends$start, ends$end) # <<<--- WORKING ON THIS
-
-# COMMAND ----------
-
-divisor <- 1000000
-while (divisor > 0) {
-  new_df <- df %>% mutate_all(`%/%`, divisor)
-
-  bots <- new_df %>% asplit(1)
-
-  ends <- map_dfr(c("x", "y", "z"), ~tibble(
-    start = min(new_df[[.]]),
-    end = max(new_df[[.]])
-  ))
-  # Update ends
-  
-  result <- solve(bots, ends$start, ends$end)
-  
-  divisor <- divisor %/% 10
+smt2 <- function(commands, bin_path = "z3", args = "-smt2") {
+  file_name <- tempfile(fileext = ".smt")
+  write_lines(commands, file_name)
+  result <- system(glue::glue("{bin_path} {args} {file_name}"), intern = TRUE)
+  file.remove(file_name)
+  result
 }
 
 # COMMAND ----------
 
-solve(bots, ends$start, ends$end) # 9 seconds
-
-# COMMAND ----------
-
-result <- solve(bots, ends$start, ends$end)
-result
-
-# COMMAND ----------
-
-answer <- result %>% abs() %>% sum()
-answer
-
-# COMMAND ----------
-
-# ends <- map_dfr(c("x", "y", "z"), ~tibble(
-#   start = min(new_df[[.]] - new_df$r),
-#   end = max(new_df[[.]] + new_df$r)
-# ))
-
-# COMMAND ----------
-
-# MAGIC %md ## scratch
-
-# COMMAND ----------
-
-result <- solve(df, ends$start, ends$end)
-result
-
-# COMMAND ----------
-
-# What if you plot high res transparent. Then find the brightest. This would work in 2d but not 3d...
-
-# COMMAND ----------
-
-solve <- function(df, start, end) {
-  best <- c(NA, NA, NA)
-  best_n_bots <- 0
-  for (x in seq(from = start[1], to = end[1], by = 1)) {
-    for (y in seq(from = start[2], to = end[2], by = 1)) {
-      for (z in seq(from = start[3], to = end[3], by = 1)) {
-        n_bots <-
-          df %>%
-          filter(abs(x - !!x) + abs(y - !!y) + abs(z - !!z) <= r) %>%
-          nrow()
-        if (n_bots > best_n_bots) {
-          best_n_bots <- n_bots
-          best_start <- c(x, y, z)
-        }
-      }
-    }
-  }
-  
-  best
-}
-
-# COMMAND ----------
-
-solve(df, ends$start, ends$end) # Why is this so slow!?
-
-# COMMAND ----------
-
-z = 12
-df %>% filter(z == !!z)
-
-# COMMAND ----------
-
-df
-
-# COMMAND ----------
-
-Rcpp:cppFunction('
-std::vector<int> solve(
-  std_vector<int> bot_x, std_vector<int> bot_y, std_vector<int> bot_z, std_vector<int> bot_r,
-  int start_x, int start_y, int start_z, int end_x, int end_y, int end_z
-) {
-  
-  for (x = start_x, x <= end_x; ++x) {
-    for (y = start_y, y <= end_y; ++y) {
-      for (x = start_z, z <= end_z; ++z) {
-        
-      }
-    }
-  }
-
-  return std::vector<int>();
-}
-')
-
-# COMMAND ----------
-
-Rcpp::cppFunction('
-std::vector<int> solve(int bots) {
-  // for (x = )
-
-  return std::vector<int>();
-}
-')
-
-# COMMAND ----------
-
-solve(list(1, 2, 3, 4))
-
-# COMMAND ----------
-
-solve <- function(df) {
-  positions <- crossing(
-    x = seq(from = min(df$x - df$r), to = max(df$x + df$r), by = 1),
-    y = seq(from = min(df$y - df$r), to = max(df$y + df$r), by = 1),
-    z = seq(from = min(df$z - df$r), to = max(df$z + df$r), by = 1)
+bot_constraints <-
+  df %>%
+  glue::glue_data("(ite
+  (<=
+    (+
+     (abs (- x {x}))
+     (abs (- y {y}))
+     (abs (- z {z}))
+    )
+    {r}
   )
-  
-  in_range <- sqldf::sqldf("
-    SELECT p.x, p.y, p.z, COUNT(*) AS n_in_range
-    FROM
-      positions p
-      JOIN df b ON
-        ABS(b.x - p.x) + ABS(b.y - p.y) + ABS(b.z - p.z) <= b.r
-    GROUP BY 1, 2, 3
-    ORDER BY n_in_range DESC
-  ")
-  
-  in_range %>%
-    filter(n_in_range == max(n_in_range))# %>%
-    # mutate(d = abs(x) + abs(y) + abs(z)) %>%
-    # pull(d) %>%
-    # min()
-}
+  1
+  0
+)") %>%
+  str_c(collapse = "\n")
+
+smt2_command <- glue::glue("
+(declare-const x Int)
+(declare-const y Int)
+(declare-const z Int)
+(maximize (+
+  {bot_constraints}
+))
+(minimize (+ (abs x) (abs x) (abs x)))
+(check-sat)
+(eval x)
+(eval y)
+(eval z)
+")
+smt2_command
 
 # COMMAND ----------
 
-df
-
-# COMMAND ----------
-
-result <- df %>% mutate_all(`%/%`, 1000000) %>% solve()
-
-# COMMAND ----------
-
+result <- smt2(smt2_command)
 result
 
 # COMMAND ----------
 
-# in_range <- sqldf::sqldf("
-# SELECT p.x, p.y, p.z, COUNT(*) AS n_in_range
-# FROM
-#   positions p
-#   JOIN df b ON
-#     ABS(b.x - p.x) + ABS(b.y - p.y) + ABS(b.z - p.z) <= b.r
-# GROUP BY 1, 2, 3
-# ORDER BY n_in_range DESC
-# ")
-
-# COMMAND ----------
-
-# answer <-
-#   in_range %>%
-#   filter(n_in_range == max(n_in_range)) %>%
-#   mutate(d = abs(x) + abs(y) + abs(z)) %>%
-#   pull(d) %>%
-#   min()
-# answer
-
-# COMMAND ----------
-
-# Quadrants
-
-# COMMAND ----------
-
-# solve <- function(df) {
-#   winning_quadrant <- tibble(
-#     min_x = min(df$x - df$r), max_x = max(df$x + df$r),
-#     min_y = min(df$y - df$r), max_y = max(df$y + df$r),
-#     min_z = min(df$z - df$r), max_z = max(df$z + df$r)
-#   )
-#   repeat {
-#     quadrants <-
-#       winning_quadrant %>%
-#       mutate(
-#         mid_x = min_x + (min_x + max_x) %/% 2,
-#         mid_y = min_y + (min_y + max_y) %/% 2,
-#         mid_z = min_z + (min_z + max_z) %/% 2
-#       )
-#   }
-# }
-
-# COMMAND ----------
-
-# winning_quadrant <- tibble(
-#   min_x = min(df$x - df$r), max_x = max(df$x + df$r),
-#   min_y = min(df$y - df$r), max_y = max(df$y + df$r),
-#   min_z = min(df$z - df$r), max_z = max(df$z + df$r)
-# )
-# winning_quadrant
-
-# COMMAND ----------
-
-# quadrants <-
-#       winning_quadrant %>%
-#       mutate(
-#         mid_x = min_x + (min_x + max_x) %/% 2,
-#         mid_y = min_y + (min_y + max_y) %/% 2,
-#         mid_z = min_z + (min_z + max_z) %/% 2
-#       )
-# quadrants
-
-# COMMAND ----------
-
-# quadrants <- bind_rows(
-#   quadrants %>% transmute(min_x = min_x, min_y = min_y, min_z = min_z, max_x = mid_x, max_y = mid_y, max_z = mid_z),
-#   quadrants %>% transmute(min_x = min_x, min_y = min_y, min_z = min_z, max_x = mid_x, max_y = mid_y, max_z = mid_z), #
-#   quadrants %>% transmute(min_x = min_x, min_y = min_y, min_z = min_z, max_x = mid_x, max_y = mid_y, max_z = mid_z), #
-#   quadrants %>% transmute(min_x = mid_x, min_y = mid_y, min_z = mid_z, max_x = max_x, max_y = max_y, max_z = max_z)
-# )
-
-# COMMAND ----------
-
-# winning_quadrant %>% mutate(mid_x = min_x + (min_x + min_y) %/% 2)
-
-# COMMAND ----------
-
-# xs <- seq(from = min(df$x - df$r), to = max(df$x + df$r), by = 1)
-# ys <- seq(from = min(df$y - df$r), to = max(df$y + df$r), by = 1)
-# zs <- seq(from = min(df$z - df$r), to = max(df$z + df$r), by = 1)
-# positions <- crossing(x = xs, y = ys, z = zs)
-
-# COMMAND ----------
-
-# Start with low resolution scan, the filter and do progressively higher resolution scan
-
-# COMMAND ----------
-
-# in_range <- sqldf::sqldf("
-# SELECT p.x, p.y, p.z, COUNT(*) AS n_in_range
-# FROM
-#   positions p
-#   JOIN df b ON
-#     ABS(b.x - p.x) + ABS(b.y - p.y) + ABS(b.z - p.z) <= b.r
-# GROUP BY 1, 2, 3
-# ORDER BY n_in_range DESC
-# ")
-
-# COMMAND ----------
-
-# answer <-
-#   in_range %>%
-#   filter(n_in_range == max(n_in_range)) %>%
-#   mutate(d = abs(x) + abs(y) + abs(z)) %>%
-#   pull(d) %>%
-#   min()
-# answer
+answer <-
+  result %>%
+  tail(3) %>%
+  parse_integer() %>%
+  sum()
+answer
