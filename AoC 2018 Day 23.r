@@ -1105,6 +1105,7 @@ smt2 <- function(commands, bin_path = "z3", args = "-smt2") {
 
 bot_constraints <-
   df %>%
+  # This is essentially ifelse(bot_is_in_range, 1, 0)
   glue::glue_data("(ite
   (<=
     (+
@@ -1119,6 +1120,7 @@ bot_constraints <-
 )") %>%
   str_c(collapse = "\n")
 
+# Find x, y, z that maximizes the number of bots in range and minimizes the distance to the origin.
 smt2_command <- glue::glue("
 (declare-const x Int)
 (declare-const y Int)
@@ -1145,5 +1147,6 @@ answer <-
   result %>%
   tail(3) %>%
   parse_integer() %>%
+  abs() %>%
   sum()
 answer
