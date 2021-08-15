@@ -1,9 +1,9 @@
 # Databricks notebook source
 # MAGIC %md https://adventofcode.com/2020/day/9
-# MAGIC 
-# MAGIC <main>
-# MAGIC <script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
-# MAGIC <article class="day-desc"><h2>--- Day 9: Encoding Error ---</h2><p>With your neighbor happily enjoying their video game, you turn your attention to an open data port on the little screen in the seat in front of you.</p>
+
+# COMMAND ----------
+
+# MAGIC %md <article class="day-desc"><h2>--- Day 9: Encoding Error ---</h2><p>With your neighbor happily enjoying their video game, you turn your attention to an open data port on the little screen in the seat in front of you.</p>
 # MAGIC <p>Though the port is non-standard, you manage to connect it to your computer through the clever use of several paperclips. Upon connection, the port outputs a series of numbers (your puzzle input).</p>
 # MAGIC <p>The data appears to be encrypted with the eXchange-Masking Addition System (<span title="No relation.">XMAS</span>) which, conveniently for you, is an old cypher with an important weakness.</p>
 # MAGIC <p>XMAS starts by transmitting a <em>preamble</em> of 25 numbers. After that, each number you receive should be the sum of any two of the 25 immediately previous numbers. The two numbers will have different values, and there might be more than one such pair.</p>
@@ -45,40 +45,6 @@
 # MAGIC <p>In this example, after the 5-number preamble, almost every number is the sum of two of the previous 5 numbers; the only number that does not follow this rule is <em><code>127</code></em>.</p>
 # MAGIC <p>The first step of attacking the weakness in the XMAS data is to find the first number in the list (after the preamble) which is <em>not</em> the sum of two of the 25 numbers before it. <em>What is the first number that does not have this property?</em></p>
 # MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>675280050</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>The final step in breaking the XMAS encryption relies on the invalid number you just found: you must <em>find a contiguous set of at least two numbers</em> in your list which sum to the invalid number from step 1.</p>
-# MAGIC <p>Again consider the above example:</p>
-# MAGIC <pre><code>35
-# MAGIC 20
-# MAGIC <em>15</em>
-# MAGIC <em>25</em>
-# MAGIC <em>47</em>
-# MAGIC <em>40</em>
-# MAGIC 62
-# MAGIC 55
-# MAGIC 65
-# MAGIC 95
-# MAGIC 102
-# MAGIC 117
-# MAGIC 150
-# MAGIC 182
-# MAGIC 127
-# MAGIC 219
-# MAGIC 299
-# MAGIC 277
-# MAGIC 309
-# MAGIC 576
-# MAGIC </code></pre>
-# MAGIC <p>In this list, adding up all of the numbers from <code>15</code> through <code>40</code> produces the invalid number from step 1, <code>127</code>. (Of course, the contiguous set of numbers in your actual list might be much longer.)</p>
-# MAGIC <p>To find the <em>encryption weakness</em>, add together the <em>smallest</em> and <em>largest</em> number in this contiguous range; in this example, these are <code>15</code> and <code>47</code>, producing <em><code>62</code></em>.</p>
-# MAGIC <p><em>What is the encryption weakness in your XMAS-encrypted list of numbers?</em></p>
-# MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>96081673</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
-# MAGIC <p>At this point, you should <a href="/2020">return to your Advent calendar</a> and try another puzzle.</p>
-# MAGIC <p>If you still want to see it, you can <a href="9/input" target="_blank">get your puzzle input</a>.</p>
-# MAGIC <p>You can also <span class="share">[Share<span class="share-content">on
-# MAGIC   <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Encoding+Error%22+%2D+Day+9+%2D+Advent+of+Code+2020&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F9&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
-# MAGIC   <a href="javascript:void(0);" onclick="var mastodon_instance=prompt('Mastodon Instance / Server Name?'); if(typeof mastodon_instance==='string' &amp;&amp; mastodon_instance.length){this.href='https://'+mastodon_instance+'/share?text=I%27ve+completed+%22Encoding+Error%22+%2D+Day+9+%2D+Advent+of+Code+2020+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F9'}else{return false;}" target="_blank">Mastodon</a></span>]</span> this puzzle.</p>
-# MAGIC </main>
 
 # COMMAND ----------
 
@@ -1092,32 +1058,6 @@ window_size <- 25
 
 # COMMAND ----------
 
-# input <- "35
-# 20
-# 15
-# 25
-# 47
-# 40
-# 62
-# 55
-# 65
-# 95
-# 102
-# 117
-# 150
-# 182
-# 127
-# 219
-# 299
-# 277
-# 309
-# 576
-# "
-
-# window_size <- 5
-
-# COMMAND ----------
-
 nums <-
   input %>% 
   read_lines() %>%
@@ -1130,8 +1070,6 @@ get_prev <- function(x, window_size) {
   map_dfc(seq_len(window_size), lag, x = x) %>%
     asplit(1)
 }
-
-# COMMAND ----------
 
 is_sum <- function(value, prev) {
   if (any(is.na(prev))) {
@@ -1159,11 +1097,38 @@ result <-
   filter(is_answer) %>%
   head(1) %>%
   pull(value)
-result
+answer <- result
+answer
 
 # COMMAND ----------
 
-# MAGIC %md ## Part 2
+# MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>The final step in breaking the XMAS encryption relies on the invalid number you just found: you must <em>find a contiguous set of at least two numbers</em> in your list which sum to the invalid number from step 1.</p>
+# MAGIC <p>Again consider the above example:</p>
+# MAGIC <pre><code>35
+# MAGIC 20
+# MAGIC <em>15</em>
+# MAGIC <em>25</em>
+# MAGIC <em>47</em>
+# MAGIC <em>40</em>
+# MAGIC 62
+# MAGIC 55
+# MAGIC 65
+# MAGIC 95
+# MAGIC 102
+# MAGIC 117
+# MAGIC 150
+# MAGIC 182
+# MAGIC 127
+# MAGIC 219
+# MAGIC 299
+# MAGIC 277
+# MAGIC 309
+# MAGIC 576
+# MAGIC </code></pre>
+# MAGIC <p>In this list, adding up all of the numbers from <code>15</code> through <code>40</code> produces the invalid number from step 1, <code>127</code>. (Of course, the contiguous set of numbers in your actual list might be much longer.)</p>
+# MAGIC <p>To find the <em>encryption weakness</em>, add together the <em>smallest</em> and <em>largest</em> number in this contiguous range; in this example, these are <code>15</code> and <code>47</code>, producing <em><code>62</code></em>.</p>
+# MAGIC <p><em>What is the encryption weakness in your XMAS-encrypted list of numbers?</em></p>
+# MAGIC </article>
 
 # COMMAND ----------
 
@@ -1185,8 +1150,6 @@ find_weakness <- function(nums, result) {
 # COMMAND ----------
 
 weakness <- find_weakness(nums, result)
-
-# COMMAND ----------
-
 w <- nums[weakness$i:weakness$j]
-min(w) + max(w)
+answer <- min(w) + max(w)
+answer
