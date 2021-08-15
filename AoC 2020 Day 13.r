@@ -1,9 +1,9 @@
 # Databricks notebook source
 # MAGIC %md https://adventofcode.com/2020/day/13
-# MAGIC 
-# MAGIC <main>
-# MAGIC <script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
-# MAGIC <article class="day-desc"><h2>--- Day 13: Shuttle Search ---</h2><p>Your ferry can make it safely to a nearby port, but it won't get much further. When you call to book another ship, you discover that no ships embark from that port to your vacation island. You'll need to get from the port to the nearest airport.</p>
+
+# COMMAND ----------
+
+# MAGIC %md <article class="day-desc"><h2>--- Day 13: Shuttle Search ---</h2><p>Your ferry can make it safely to a nearby port, but it won't get much further. When you call to book another ship, you discover that no ships embark from that port to your vacation island. You'll need to get from the port to the nearest airport.</p>
 # MAGIC <p>Fortunately, a shuttle bus service is available to bring you from the sea port to the airport!  Each bus has an ID number that also indicates <em>how often the bus leaves for the airport</em>.</p>
 # MAGIC <p>Bus schedules are defined based on a <em>timestamp</em> that measures the <em>number of minutes</em> since some fixed reference point in the past. At timestamp <code>0</code>, every bus simultaneously departed from the sea port. After that, each bus travels to the airport, then various other locations, and finally returns to the sea port to repeat its journey forever.</p>
 # MAGIC <p>The time this loop takes a particular bus is also its ID number: the bus with ID <code>5</code> departs from the sea port at timestamps <code>0</code>, <code>5</code>, <code>10</code>, <code>15</code>, and so on. The bus with ID <code>11</code> departs at <code>0</code>, <code>11</code>, <code>22</code>, <code>33</code>, and so on. If you are there when the bus departs, you can ride that bus to the airport!</p>
@@ -40,7 +40,43 @@
 # MAGIC <p>The earliest bus you could take is bus ID <code>59</code>. It doesn't depart until timestamp <code>944</code>, so you would need to wait <code>944 - 939 = 5</code> minutes before it departs. Multiplying the bus ID by the number of minutes you'd need to wait gives <em><code>295</code></em>.</p>
 # MAGIC <p><em>What is the ID of the earliest bus you can take to the airport multiplied by the number of minutes you'll need to wait for that bus?</em></p>
 # MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>3246</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>The shuttle company is running a <span title="This is why you should never let me design a contest for a shuttle company.">contest</span>: one gold coin for anyone that can find the earliest timestamp such that the first bus ID departs at that time and each subsequent listed bus ID departs at that subsequent minute. (The first line in your input is no longer relevant.)</p>
+
+# COMMAND ----------
+
+library(tidyverse)
+
+# COMMAND ----------
+
+input <- "1000303
+41,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,37,x,x,x,x,x,541,x,x,x,x,x,x,x,23,x,x,x,x,13,x,x,x,17,x,x,x,x,x,x,x,x,x,x,x,29,x,983,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,19
+"
+
+# COMMAND ----------
+
+lines <- input %>% read_lines()
+earliest_departure <- lines[[1]] %>% parse_integer()
+bus_ids <-
+  lines[[2]] %>%
+  str_split(",") %>%
+  unlist() %>%
+  parse_integer(na = "x")
+
+lst(earliest_departure, bus_ids)
+
+# COMMAND ----------
+
+answer <-
+  tibble(
+    id = bus_ids,
+    soonest = id - (earliest_departure %% id)
+  ) %>%
+  filter(soonest == min(soonest, na.rm = TRUE)) %>%
+  with(id * soonest)
+answer
+
+# COMMAND ----------
+
+# MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>The shuttle company is running a <span title="This is why you should never let me design a contest for a shuttle company.">contest</span>: one gold coin for anyone that can find the earliest timestamp such that the first bus ID departs at that time and each subsequent listed bus ID departs at that subsequent minute. (The first line in your input is no longer relevant.)</p>
 # MAGIC <p>For example, suppose you have the same list of bus IDs as above:</p>
 # MAGIC <pre><code>7,13,x,x,59,x,31,19</code></pre>
 # MAGIC <p>An <code>x</code> in the schedule means there are no constraints on what bus IDs must depart at that time.</p>
@@ -95,54 +131,6 @@
 # MAGIC <p>However, with so many bus IDs in your list, surely the actual earliest timestamp will be larger than <code>100000000000000</code>!</p>
 # MAGIC <p><em>What is the earliest timestamp such that all of the listed bus IDs depart at offsets matching their positions in the list?</em></p>
 # MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>1010182346291467</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
-# MAGIC <p>At this point, you should <a href="/2020">return to your Advent calendar</a> and try another puzzle.</p>
-# MAGIC <p>If you still want to see it, you can <a href="13/input" target="_blank">get your puzzle input</a>.</p>
-# MAGIC <p>You can also <span class="share">[Share<span class="share-content">on
-# MAGIC   <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Shuttle+Search%22+%2D+Day+13+%2D+Advent+of+Code+2020&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F13&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
-# MAGIC   <a href="javascript:void(0);" onclick="var mastodon_instance=prompt('Mastodon Instance / Server Name?'); if(typeof mastodon_instance==='string' &amp;&amp; mastodon_instance.length){this.href='https://'+mastodon_instance+'/share?text=I%27ve+completed+%22Shuttle+Search%22+%2D+Day+13+%2D+Advent+of+Code+2020+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F13'}else{return false;}" target="_blank">Mastodon</a></span>]</span> this puzzle.</p>
-# MAGIC </main>
-
-# COMMAND ----------
-
-library(tidyverse)
-
-# COMMAND ----------
-
-input <- "1000303
-41,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,37,x,x,x,x,x,541,x,x,x,x,x,x,x,23,x,x,x,x,13,x,x,x,17,x,x,x,x,x,x,x,x,x,x,x,29,x,983,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,19
-"
-
-# COMMAND ----------
-
-# input <- "939
-# 7,13,x,x,59,x,31,19
-# "
-
-# COMMAND ----------
-
-lines <- input %>% read_lines()
-earliest_departure <- lines[[1]] %>% parse_integer()
-bus_ids <-
-  lines[[2]] %>%
-  str_split(",") %>%
-  unlist() %>%
-  parse_integer(na = "x")
-
-lst(earliest_departure, bus_ids)
-
-# COMMAND ----------
-
-tibble(
-  id = bus_ids,
-  soonest = id - (earliest_departure %% id)
-) %>%
-  filter(soonest == min(soonest, na.rm = TRUE)) %>%
-  with(id * soonest)
-
-# COMMAND ----------
-
-# MAGIC %md ## Part 2
 
 # COMMAND ----------
 
@@ -156,12 +144,6 @@ mod_values <-
   ) %>%
   filter(!is.na(id))
 mod_values
-
-# COMMAND ----------
-
-# MAGIC %md `numbers::chinese(mod_values$a, mod_values$m)` didn't give the right answer so I had to implement the Chinese remainder theorem myself.
-# MAGIC 
-# MAGIC I modified [this](https://rosettacode.org/wiki/Chinese_remainder_theorem#R) to be able to handle 64 bit integers.
 
 # COMMAND ----------
 
@@ -191,6 +173,8 @@ mul_inv <- function(a, b) {
   x1
 }
 
+# numbers::chinese(mod_values$a, mod_values$m) didn't give the right answer.
+# I modified https://rosettacode.org/wiki/Chinese_remainder_theorem#R to be able to handle 64 bit integers.
 chinese_remainder <- function(a, m) {
   a <- bit64::as.integer64(a)
   m <- bit64::as.integer64(m)
@@ -212,6 +196,5 @@ chinese_remainder <- function(a, m) {
 
 # COMMAND ----------
 
-answer <- chinese_remainder(mod_values$a, mod_values$m)
-answer %>% format(scientific = FALSE)
-#> "1010182346291467"
+answer <- chinese_remainder(mod_values$a, mod_values$m) %>% format(scientific = FALSE)
+answer
