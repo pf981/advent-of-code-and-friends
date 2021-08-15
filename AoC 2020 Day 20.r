@@ -1,9 +1,9 @@
 # Databricks notebook source
 # MAGIC %md https://adventofcode.com/2020/day/20
-# MAGIC 
-# MAGIC <main>
-# MAGIC <script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
-# MAGIC <article class="day-desc"><h2>--- Day 20: Jurassic Jigsaw ---</h2><p>The high-speed train leaves the forest and quickly carries you south. You can even see a desert in the distance! Since you have some spare time, you <span title="Just in case. Maybe they missed something.">might as well</span> see if there was anything interesting in the image the Mythical Information Bureau satellite captured.</p>
+
+# COMMAND ----------
+
+# MAGIC %md <article class="day-desc"><h2>--- Day 20: Jurassic Jigsaw ---</h2><p>The high-speed train leaves the forest and quickly carries you south. You can even see a desert in the distance! Since you have some spare time, you <span title="Just in case. Maybe they missed something.">might as well</span> see if there was anything interesting in the image the Mythical Information Bureau satellite captured.</p>
 # MAGIC <p>After decoding the satellite messages, you discover that the data actually contains many small images created by the satellite's <em>camera array</em>. The camera array consists of many cameras; rather than produce a single square image, they produce many smaller square image <em>tiles</em> that need to be <em>reassembled back into a single image</em>.</p>
 # MAGIC <p>Each camera in the camera array returns a single monochrome <em>image tile</em> with a random unique <em>ID number</em>.  The tiles (your puzzle input) arrived in a random order.</p>
 # MAGIC <p>Worse yet, the camera array appears to be malfunctioning: each image tile has been <em>rotated and flipped to a random orientation</em>. Your first task is to reassemble the original image by orienting the tiles so they fit together.</p>
@@ -159,103 +159,6 @@
 # MAGIC <p>To check that you've assembled the image correctly, multiply the IDs of the four corner tiles together. If you do this with the assembled tiles from the example above, you get <code>1951 * 3079 * 2971 * 1171</code> = <em><code>20899048083289</code></em>.</p>
 # MAGIC <p>Assemble the tiles into an image. <em>What do you get if you multiply together the IDs of the four corner tiles?</em></p>
 # MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>30425930368573</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Now, you're ready to <em>check the image for sea monsters</em>.</p>
-# MAGIC <p>The borders of each tile are not part of the actual image; start by removing them.</p>
-# MAGIC <p>In the example above, the tiles become:</p>
-# MAGIC <pre><code>.#.#..#. ##...#.# #..#####
-# MAGIC ###....# .#....#. .#......
-# MAGIC ##.##.## #.#.#..# #####...
-# MAGIC ###.#### #...#.## ###.#..#
-# MAGIC ##.#.... #.##.### #...#.##
-# MAGIC ...##### ###.#... .#####.#
-# MAGIC ....#..# ...##..# .#.###..
-# MAGIC .####... #..#.... .#......
-# MAGIC 
-# MAGIC #..#.##. .#..###. #.##....
-# MAGIC #.####.. #.####.# .#.###..
-# MAGIC ###.#.#. ..#.#### ##.#..##
-# MAGIC #.####.. ..##..## ######.#
-# MAGIC ##..##.# ...#...# .#.#.#..
-# MAGIC ...#..#. .#.#.##. .###.###
-# MAGIC .#.#.... #.##.#.. .###.##.
-# MAGIC ###.#... #..#.##. ######..
-# MAGIC 
-# MAGIC .#.#.### .##.##.# ..#.##..
-# MAGIC .####.## #.#...## #.#..#.#
-# MAGIC ..#.#..# ..#.#.#. ####.###
-# MAGIC #..####. ..#.#.#. ###.###.
-# MAGIC #####..# ####...# ##....##
-# MAGIC #.##..#. .#...#.. ####...#
-# MAGIC .#.###.. ##..##.. ####.##.
-# MAGIC ...###.. .##...#. ..#..###
-# MAGIC </code></pre>
-# MAGIC <p>Remove the gaps to form the actual image:</p>
-# MAGIC <pre><code>.#.#..#.##...#.##..#####
-# MAGIC ###....#.#....#..#......
-# MAGIC ##.##.###.#.#..######...
-# MAGIC ###.#####...#.#####.#..#
-# MAGIC ##.#....#.##.####...#.##
-# MAGIC ...########.#....#####.#
-# MAGIC ....#..#...##..#.#.###..
-# MAGIC .####...#..#.....#......
-# MAGIC #..#.##..#..###.#.##....
-# MAGIC #.####..#.####.#.#.###..
-# MAGIC ###.#.#...#.######.#..##
-# MAGIC #.####....##..########.#
-# MAGIC ##..##.#...#...#.#.#.#..
-# MAGIC ...#..#..#.#.##..###.###
-# MAGIC .#.#....#.##.#...###.##.
-# MAGIC ###.#...#..#.##.######..
-# MAGIC .#.#.###.##.##.#..#.##..
-# MAGIC .####.###.#...###.#..#.#
-# MAGIC ..#.#..#..#.#.#.####.###
-# MAGIC #..####...#.#.#.###.###.
-# MAGIC #####..#####...###....##
-# MAGIC #.##..#..#...#..####...#
-# MAGIC .#.###..##..##..####.##.
-# MAGIC ...###...##...#...#..###
-# MAGIC </code></pre>
-# MAGIC <p>Now, you're ready to search for sea monsters! Because your image is monochrome, a sea monster will look like this:</p>
-# MAGIC <pre><code>                  # 
-# MAGIC #    ##    ##    ###
-# MAGIC  #  #  #  #  #  #   
-# MAGIC </code></pre>
-# MAGIC <p>When looking for this pattern in the image, <em>the spaces can be anything</em>; only the <code>#</code> need to match. Also, you might need to rotate or flip your image before it's oriented correctly to find sea monsters. In the above image, <em>after flipping and rotating it</em> to the appropriate orientation, there are <em>two</em> sea monsters (marked with <code><em>O</em></code>):</p>
-# MAGIC <pre><code>.####...#####..#...###..
-# MAGIC #####..#..#.#.####..#.#.
-# MAGIC .#.#...#.###...#.##.<em>O</em>#..
-# MAGIC #.<em>O</em>.##.<em>O</em><em>O</em>#.#.<em>O</em><em>O</em>.##.<em>O</em><em>O</em><em>O</em>##
-# MAGIC ..#<em>O</em>.#<em>O</em>#.<em>O</em>##<em>O</em>..<em>O</em>.#<em>O</em>##.##
-# MAGIC ...#.#..##.##...#..#..##
-# MAGIC #.##.#..#.#..#..##.#.#..
-# MAGIC .###.##.....#...###.#...
-# MAGIC #.####.#.#....##.#..#.#.
-# MAGIC ##...#..#....#..#...####
-# MAGIC ..#.##...###..#.#####..#
-# MAGIC ....#.##.#.#####....#...
-# MAGIC ..##.##.###.....#.##..#.
-# MAGIC #...#...###..####....##.
-# MAGIC .#.##...#.##.#.#.###...#
-# MAGIC #.###.#..####...##..#...
-# MAGIC #.###...#.##...#.##<em>O</em>###.
-# MAGIC .<em>O</em>##.#<em>O</em><em>O</em>.###<em>O</em><em>O</em>##..<em>O</em><em>O</em><em>O</em>##.
-# MAGIC ..<em>O</em>#.<em>O</em>..<em>O</em>..<em>O</em>.#<em>O</em>##<em>O</em>##.###
-# MAGIC #.#..##.########..#..##.
-# MAGIC #.#####..#.#...##..#....
-# MAGIC #....##..#.#########..##
-# MAGIC #...#.....#..##...###.##
-# MAGIC #..###....##.#...##.##.#
-# MAGIC </code></pre>
-# MAGIC <p>Determine how rough the waters are in the sea monsters' habitat by counting the number of <code>#</code> that are <em>not</em> part of a sea monster. In the above example, the habitat's water roughness is <em><code>273</code></em>.</p>
-# MAGIC <p><em>How many <code>#</code> are not part of a sea monster?</em></p>
-# MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>2453</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
-# MAGIC <p>At this point, you should <a href="/2020">return to your Advent calendar</a> and try another puzzle.</p>
-# MAGIC <p>If you still want to see it, you can <a href="20/input" target="_blank">get your puzzle input</a>.</p>
-# MAGIC <p>You can also <span class="share">[Share<span class="share-content">on
-# MAGIC   <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Jurassic+Jigsaw%22+%2D+Day+20+%2D+Advent+of+Code+2020&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F20&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
-# MAGIC   <a href="javascript:void(0);" onclick="var mastodon_instance=prompt('Mastodon Instance / Server Name?'); if(typeof mastodon_instance==='string' &amp;&amp; mastodon_instance.length){this.href='https://'+mastodon_instance+'/share?text=I%27ve+completed+%22Jurassic+Jigsaw%22+%2D+Day+20+%2D+Advent+of+Code+2020+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F20'}else{return false;}" target="_blank">Mastodon</a></span>]</span> this puzzle.</p>
-# MAGIC </main>
 
 # COMMAND ----------
 
@@ -1993,119 +1896,7 @@ Tile 1303:
 
 # COMMAND ----------
 
-# input <- "Tile 2311:
-# ..##.#..#.
-# ##..#.....
-# #...##..#.
-# ####.#...#
-# ##.##.###.
-# ##...#.###
-# .#.#.#..##
-# ..#....#..
-# ###...#.#.
-# ..###..###
-
-# Tile 1951:
-# #.##...##.
-# #.####...#
-# .....#..##
-# #...######
-# .##.#....#
-# .###.#####
-# ###.##.##.
-# .###....#.
-# ..#.#..#.#
-# #...##.#..
-
-# Tile 1171:
-# ####...##.
-# #..##.#..#
-# ##.#..#.#.
-# .###.####.
-# ..###.####
-# .##....##.
-# .#...####.
-# #.##.####.
-# ####..#...
-# .....##...
-
-# Tile 1427:
-# ###.##.#..
-# .#..#.##..
-# .#.##.#..#
-# #.#.#.##.#
-# ....#...##
-# ...##..##.
-# ...#.#####
-# .#.####.#.
-# ..#..###.#
-# ..##.#..#.
-
-# Tile 1489:
-# ##.#.#....
-# ..##...#..
-# .##..##...
-# ..#...#...
-# #####...#.
-# #..#.#.#.#
-# ...#.#.#..
-# ##.#...##.
-# ..##.##.##
-# ###.##.#..
-
-# Tile 2473:
-# #....####.
-# #..#.##...
-# #.##..#...
-# ######.#.#
-# .#...#.#.#
-# .#########
-# .###.#..#.
-# ########.#
-# ##...##.#.
-# ..###.#.#.
-
-# Tile 2971:
-# ..#.#....#
-# #...###...
-# #.#.###...
-# ##.##..#..
-# .#####..##
-# .#..####.#
-# #..#.#..#.
-# ..####.###
-# ..#.#.###.
-# ...#.#.#.#
-
-# Tile 2729:
-# ...#.#.#.#
-# ####.#....
-# ..#.#.....
-# ....#..#.#
-# .##..##.#.
-# .#.####...
-# ####.#.#..
-# ##.####...
-# ##..#.##..
-# #.##...##.
-
-# Tile 3079:
-# #.#.#####.
-# .#..######
-# ..#.......
-# ######....
-# ####.#..#.
-# .#...#.##.
-# #.#####.##
-# ..#.###...
-# ..#.......
-# ..#.###..."
-
-# COMMAND ----------
-
 str_rev <- stringi::stri_reverse
-
-# COMMAND ----------
 
 parse_tile <- function(x) {
   l <- read_lines(x)
@@ -2203,7 +1994,7 @@ tiles
 # COMMAND ----------
 
 tiles_exploded <- explode(tiles)
-display(tiles_exploded)
+tiles_exploded
 
 # COMMAND ----------
 
@@ -2279,9 +2070,8 @@ solve <- function(tiles_exploded, debug = FALSE) {
 
 # COMMAND ----------
 
-# Takes 3.6 minutes
 result <- solve(tiles_exploded)
-result
+result # 18 minutes
 
 # COMMAND ----------
 
@@ -2301,12 +2091,100 @@ format(answer, scientific = FALSE)
 
 # COMMAND ----------
 
-# MAGIC %md ## Part 2
+# MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Now, you're ready to <em>check the image for sea monsters</em>.</p>
+# MAGIC <p>The borders of each tile are not part of the actual image; start by removing them.</p>
+# MAGIC <p>In the example above, the tiles become:</p>
+# MAGIC <pre><code>.#.#..#. ##...#.# #..#####
+# MAGIC ###....# .#....#. .#......
+# MAGIC ##.##.## #.#.#..# #####...
+# MAGIC ###.#### #...#.## ###.#..#
+# MAGIC ##.#.... #.##.### #...#.##
+# MAGIC ...##### ###.#... .#####.#
+# MAGIC ....#..# ...##..# .#.###..
+# MAGIC .####... #..#.... .#......
+# MAGIC 
+# MAGIC #..#.##. .#..###. #.##....
+# MAGIC #.####.. #.####.# .#.###..
+# MAGIC ###.#.#. ..#.#### ##.#..##
+# MAGIC #.####.. ..##..## ######.#
+# MAGIC ##..##.# ...#...# .#.#.#..
+# MAGIC ...#..#. .#.#.##. .###.###
+# MAGIC .#.#.... #.##.#.. .###.##.
+# MAGIC ###.#... #..#.##. ######..
+# MAGIC 
+# MAGIC .#.#.### .##.##.# ..#.##..
+# MAGIC .####.## #.#...## #.#..#.#
+# MAGIC ..#.#..# ..#.#.#. ####.###
+# MAGIC #..####. ..#.#.#. ###.###.
+# MAGIC #####..# ####...# ##....##
+# MAGIC #.##..#. .#...#.. ####...#
+# MAGIC .#.###.. ##..##.. ####.##.
+# MAGIC ...###.. .##...#. ..#..###
+# MAGIC </code></pre>
+# MAGIC <p>Remove the gaps to form the actual image:</p>
+# MAGIC <pre><code>.#.#..#.##...#.##..#####
+# MAGIC ###....#.#....#..#......
+# MAGIC ##.##.###.#.#..######...
+# MAGIC ###.#####...#.#####.#..#
+# MAGIC ##.#....#.##.####...#.##
+# MAGIC ...########.#....#####.#
+# MAGIC ....#..#...##..#.#.###..
+# MAGIC .####...#..#.....#......
+# MAGIC #..#.##..#..###.#.##....
+# MAGIC #.####..#.####.#.#.###..
+# MAGIC ###.#.#...#.######.#..##
+# MAGIC #.####....##..########.#
+# MAGIC ##..##.#...#...#.#.#.#..
+# MAGIC ...#..#..#.#.##..###.###
+# MAGIC .#.#....#.##.#...###.##.
+# MAGIC ###.#...#..#.##.######..
+# MAGIC .#.#.###.##.##.#..#.##..
+# MAGIC .####.###.#...###.#..#.#
+# MAGIC ..#.#..#..#.#.#.####.###
+# MAGIC #..####...#.#.#.###.###.
+# MAGIC #####..#####...###....##
+# MAGIC #.##..#..#...#..####...#
+# MAGIC .#.###..##..##..####.##.
+# MAGIC ...###...##...#...#..###
+# MAGIC </code></pre>
+# MAGIC <p>Now, you're ready to search for sea monsters! Because your image is monochrome, a sea monster will look like this:</p>
+# MAGIC <pre><code>                  # 
+# MAGIC #    ##    ##    ###
+# MAGIC  #  #  #  #  #  #   
+# MAGIC </code></pre>
+# MAGIC <p>When looking for this pattern in the image, <em>the spaces can be anything</em>; only the <code>#</code> need to match. Also, you might need to rotate or flip your image before it's oriented correctly to find sea monsters. In the above image, <em>after flipping and rotating it</em> to the appropriate orientation, there are <em>two</em> sea monsters (marked with <code><em>O</em></code>):</p>
+# MAGIC <pre><code>.####...#####..#...###..
+# MAGIC #####..#..#.#.####..#.#.
+# MAGIC .#.#...#.###...#.##.<em>O</em>#..
+# MAGIC #.<em>O</em>.##.<em>O</em><em>O</em>#.#.<em>O</em><em>O</em>.##.<em>O</em><em>O</em><em>O</em>##
+# MAGIC ..#<em>O</em>.#<em>O</em>#.<em>O</em>##<em>O</em>..<em>O</em>.#<em>O</em>##.##
+# MAGIC ...#.#..##.##...#..#..##
+# MAGIC #.##.#..#.#..#..##.#.#..
+# MAGIC .###.##.....#...###.#...
+# MAGIC #.####.#.#....##.#..#.#.
+# MAGIC ##...#..#....#..#...####
+# MAGIC ..#.##...###..#.#####..#
+# MAGIC ....#.##.#.#####....#...
+# MAGIC ..##.##.###.....#.##..#.
+# MAGIC #...#...###..####....##.
+# MAGIC .#.##...#.##.#.#.###...#
+# MAGIC #.###.#..####...##..#...
+# MAGIC #.###...#.##...#.##<em>O</em>###.
+# MAGIC .<em>O</em>##.#<em>O</em><em>O</em>.###<em>O</em><em>O</em>##..<em>O</em><em>O</em><em>O</em>##.
+# MAGIC ..<em>O</em>#.<em>O</em>..<em>O</em>..<em>O</em>.#<em>O</em>##<em>O</em>##.###
+# MAGIC #.#..##.########..#..##.
+# MAGIC #.#####..#.#...##..#....
+# MAGIC #....##..#.#########..##
+# MAGIC #...#.....#..##...###.##
+# MAGIC #..###....##.#...##.##.#
+# MAGIC </code></pre>
+# MAGIC <p>Determine how rough the waters are in the sea monsters' habitat by counting the number of <code>#</code> that are <em>not</em> part of a sea monster. In the above example, the habitat's water roughness is <em><code>273</code></em>.</p>
+# MAGIC <p><em>How many <code>#</code> are not part of a sea monster?</em></p>
+# MAGIC </article>
 
 # COMMAND ----------
 
 rotate <- function(x) apply(t(x), 2, rev)
-# rotate <- function(x) t(apply(x, 2, rev))
 
 get_trimmed_tile <- function(original_tile_id, orientation, is_inverted) {
   m <-
@@ -2369,15 +2247,6 @@ img_m <-
 
 # COMMAND ----------
 
-print_mat <- function(mat) {
-  apply(mat, 1, paste0, collapse = "") %>%
-  paste0(collapse = "\n") %>%
-  cat()
-}
-print_mat(img_m)
-
-# COMMAND ----------
-
 monster <- "                  # 
 #    ##    ##    ###
  #  #  #  #  #  #   " %>%
@@ -2426,4 +2295,5 @@ result
 
 # COMMAND ----------
 
-sum(result == "#")
+answer <- sum(result == "#")
+answer
