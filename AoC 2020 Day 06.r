@@ -1,9 +1,9 @@
 # Databricks notebook source
 # MAGIC %md https://adventofcode.com/2020/day/6
-# MAGIC 
-# MAGIC <main>
-# MAGIC <script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
-# MAGIC <article class="day-desc"><h2>--- Day 6: Custom Customs ---</h2><p>As your flight approaches the regional airport where you'll switch to a much larger plane, <a href="https://en.wikipedia.org/wiki/Customs_declaration" target="_blank">customs declaration forms</a> are distributed to the passengers.</p>
+
+# COMMAND ----------
+
+# MAGIC %md <article class="day-desc"><h2>--- Day 6: Custom Customs ---</h2><p>As your flight approaches the regional airport where you'll switch to a much larger plane, <a href="https://en.wikipedia.org/wiki/Customs_declaration" target="_blank">customs declaration forms</a> are distributed to the passengers.</p>
 # MAGIC <p>The form asks a series of 26 yes-or-no questions marked <code>a</code> through <code>z</code>. All you need to do is identify the questions for which <em>anyone in your group</em> answers "yes". Since your group is just you, this doesn't take very long.</p>
 # MAGIC <p>However, the person sitting next to you seems to be experiencing a language barrier and asks if you can help. For each of the people in their group, you write down the questions for which they answer "yes", one per line.  For example:</p>
 # MAGIC <pre><code>abcx
@@ -39,43 +39,6 @@
 # MAGIC <p>In this example, the sum of these counts is <code>3 + 3 + 3 + 1 + 1</code> = <em><code>11</code></em>.</p>
 # MAGIC <p>For each group, count the number of questions to which anyone answered "yes". <em>What is the sum of those counts?</em></p>
 # MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>6170</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>As you finish the last group's customs declaration, you notice that <span title="Don't worry, nobody ever misreads just one word in real life.">you misread one word</span> in the instructions:</p>
-# MAGIC <p>You don't need to identify the questions to which <em>anyone</em> answered "yes"; you need to identify the questions to which <em>everyone</em> answered "yes"!</p>
-# MAGIC <p>Using the same  example as above:</p>
-# MAGIC <pre><code>abc
-# MAGIC 
-# MAGIC a
-# MAGIC b
-# MAGIC c
-# MAGIC 
-# MAGIC ab
-# MAGIC ac
-# MAGIC 
-# MAGIC a
-# MAGIC a
-# MAGIC a
-# MAGIC a
-# MAGIC 
-# MAGIC b
-# MAGIC </code></pre>
-# MAGIC <p>This list represents answers from five groups:</p>
-# MAGIC <ul>
-# MAGIC <li>In the first group, everyone (all 1 person) answered "yes" to <em><code>3</code></em> questions: <code>a</code>, <code>b</code>, and <code>c</code>.</li>
-# MAGIC <li>In the second group, there is <em>no</em> question to which everyone answered "yes".</li>
-# MAGIC <li>In the third group, everyone answered yes to only <em><code>1</code></em> question, <code>a</code>. Since some people did not answer "yes" to <code>b</code> or <code>c</code>, they don't count.</li>
-# MAGIC <li>In the fourth group, everyone answered yes to only <em><code>1</code></em> question, <code>a</code>.</li>
-# MAGIC <li>In the fifth group, everyone (all 1 person) answered "yes" to <em><code>1</code></em> question, <code>b</code>.</li>
-# MAGIC </ul>
-# MAGIC <p>In this example, the sum of these counts is <code>3 + 0 + 1 + 1 + 1</code> = <em><code>6</code></em>.</p>
-# MAGIC <p>For each group, count the number of questions to which <em>everyone</em> answered "yes". <em>What is the sum of those counts?</em></p>
-# MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>2947</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
-# MAGIC <p>At this point, you should <a href="/2020">return to your Advent calendar</a> and try another puzzle.</p>
-# MAGIC <p>If you still want to see it, you can <a href="6/input" target="_blank">get your puzzle input</a>.</p>
-# MAGIC <p>You can also <span class="share">[Share<span class="share-content">on
-# MAGIC   <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Custom+Customs%22+%2D+Day+6+%2D+Advent+of+Code+2020&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F6&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
-# MAGIC   <a href="javascript:void(0);" onclick="var mastodon_instance=prompt('Mastodon Instance / Server Name?'); if(typeof mastodon_instance==='string' &amp;&amp; mastodon_instance.length){this.href='https://'+mastodon_instance+'/share?text=I%27ve+completed+%22Custom+Customs%22+%2D+Day+6+%2D+Advent+of+Code+2020+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F6'}else{return false;}" target="_blank">Mastodon</a></span>]</span> this puzzle.</p>
-# MAGIC </main>
 
 # COMMAND ----------
 
@@ -2151,7 +2114,8 @@ answers <-
   enframe(name = "group", value = "answer") %>%
   unnest(answer)
 
-answers %>%
+answer <-
+  answers %>%
   group_by(group) %>%
   summarise(
     yes_questions = answer %>%
@@ -2162,15 +2126,45 @@ answers %>%
   ) %>%
   pull(yes_questions) %>%
   sum()
-#> [1] 6170
+answer
 
 # COMMAND ----------
 
-# MAGIC %md ## Part 2
+# MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>As you finish the last group's customs declaration, you notice that <span title="Don't worry, nobody ever misreads just one word in real life.">you misread one word</span> in the instructions:</p>
+# MAGIC <p>You don't need to identify the questions to which <em>anyone</em> answered "yes"; you need to identify the questions to which <em>everyone</em> answered "yes"!</p>
+# MAGIC <p>Using the same  example as above:</p>
+# MAGIC <pre><code>abc
+# MAGIC 
+# MAGIC a
+# MAGIC b
+# MAGIC c
+# MAGIC 
+# MAGIC ab
+# MAGIC ac
+# MAGIC 
+# MAGIC a
+# MAGIC a
+# MAGIC a
+# MAGIC a
+# MAGIC 
+# MAGIC b
+# MAGIC </code></pre>
+# MAGIC <p>This list represents answers from five groups:</p>
+# MAGIC <ul>
+# MAGIC <li>In the first group, everyone (all 1 person) answered "yes" to <em><code>3</code></em> questions: <code>a</code>, <code>b</code>, and <code>c</code>.</li>
+# MAGIC <li>In the second group, there is <em>no</em> question to which everyone answered "yes".</li>
+# MAGIC <li>In the third group, everyone answered yes to only <em><code>1</code></em> question, <code>a</code>. Since some people did not answer "yes" to <code>b</code> or <code>c</code>, they don't count.</li>
+# MAGIC <li>In the fourth group, everyone answered yes to only <em><code>1</code></em> question, <code>a</code>.</li>
+# MAGIC <li>In the fifth group, everyone (all 1 person) answered "yes" to <em><code>1</code></em> question, <code>b</code>.</li>
+# MAGIC </ul>
+# MAGIC <p>In this example, the sum of these counts is <code>3 + 0 + 1 + 1 + 1</code> = <em><code>6</code></em>.</p>
+# MAGIC <p>For each group, count the number of questions to which <em>everyone</em> answered "yes". <em>What is the sum of those counts?</em></p>
+# MAGIC </article>
 
 # COMMAND ----------
 
-answers %>%
+answer <-
+  answers %>%
   group_by(group) %>%
   summarise(
     yes_questions = list(
@@ -2183,4 +2177,4 @@ answers %>%
   count(group) %>%
   pull(n) %>%
   sum()
-#> [1] 2947
+answer
