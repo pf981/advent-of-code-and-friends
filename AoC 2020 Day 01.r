@@ -1,9 +1,9 @@
 # Databricks notebook source
 # MAGIC %md https://adventofcode.com/2020/day/1
-# MAGIC 
-# MAGIC <main>
-# MAGIC <script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
-# MAGIC <article class="day-desc"><h2>--- Day 1: Report Repair ---</h2><p>After saving Christmas <a href="/events">five years in a row</a>, you've decided to take a vacation at a nice resort on a tropical island. <span title="WHAT COULD GO WRONG">Surely</span>, Christmas will go on without you.</p>
+
+# COMMAND ----------
+
+# MAGIC %md <article class="day-desc"><h2>--- Day 1: Report Repair ---</h2><p>After saving Christmas <a href="/events">five years in a row</a>, you've decided to take a vacation at a nice resort on a tropical island. <span title="WHAT COULD GO WRONG">Surely</span>, Christmas will go on without you.</p>
 # MAGIC <p>The tropical island has its own currency and is entirely cash-only.  The gold coins used there have a little picture of a starfish; the locals just call them <em class="star">stars</em>. None of the currency exchanges seem to have heard of them, but somehow, you'll need to find fifty of these coins by the time you arrive so you can pay the deposit on your room.</p>
 # MAGIC <p>To save your vacation, you need to get all <em class="star">fifty stars</em> by December 25th.</p>
 # MAGIC <p>Collect stars by solving puzzles.  Two puzzles will be made available on each day in the Advent calendar; the second puzzle is unlocked when you complete the first.  Each puzzle grants <em class="star">one star</em>. Good luck!</p>
@@ -20,17 +20,6 @@
 # MAGIC <p>In this list, the two entries that sum to <code>2020</code> are <code>1721</code> and <code>299</code>. Multiplying them together produces <code>1721 * 299 = 514579</code>, so the correct answer is <code><em>514579</em></code>.</p>
 # MAGIC <p>Of course, your expense report is much larger. <em>Find the two entries that sum to <code>2020</code>; what do you get if you multiply them together?</em></p>
 # MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>388075</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>The Elves in accounting are thankful for your help; one of them even offers you a starfish coin they had left over from a past vacation. They offer you a second one if you can find <em>three</em> numbers in your expense report that meet the same criteria.</p>
-# MAGIC <p>Using the above example again, the three entries that sum to <code>2020</code> are <code>979</code>, <code>366</code>, and <code>675</code>. Multiplying them together produces the answer, <code><em>241861950</em></code>.</p>
-# MAGIC <p>In your expense report, <em>what is the product of the three entries that sum to <code>2020</code>?</em></p>
-# MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>293450526</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
-# MAGIC <p>At this point, you should <a href="/2020">return to your Advent calendar</a> and try another puzzle.</p>
-# MAGIC <p>If you still want to see it, you can <a href="1/input" target="_blank">get your puzzle input</a>.</p>
-# MAGIC <p>You can also <span class="share">[Share<span class="share-content">on
-# MAGIC   <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Report+Repair%22+%2D+Day+1+%2D+Advent+of+Code+2020&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F1&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
-# MAGIC   <a href="javascript:void(0);" onclick="var mastodon_instance=prompt('Mastodon Instance / Server Name?'); if(typeof mastodon_instance==='string' &amp;&amp; mastodon_instance.length){this.href='https://'+mastodon_instance+'/share?text=I%27ve+completed+%22Report+Repair%22+%2D+Day+1+%2D+Advent+of+Code+2020+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F1'}else{return false;}" target="_blank">Mastodon</a></span>]</span> this puzzle.</p>
-# MAGIC </main>
 
 # COMMAND ----------
 
@@ -242,29 +231,35 @@ input <- "1728
 
 # COMMAND ----------
 
-num <-
+nums <-
   input %>%
   read_lines() %>%
   parse_number()
 
+entries <- nums[(2020 - nums) %in% nums]
+entries
+
 # COMMAND ----------
 
-result <- num[(2020 - num) %in% num]
+answer <- reduce(entries, `*`)
+answer
 
 # COMMAND ----------
 
+# MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>The Elves in accounting are thankful for your help; one of them even offers you a starfish coin they had left over from a past vacation. They offer you a second one if you can find <em>three</em> numbers in your expense report that meet the same criteria.</p>
+# MAGIC <p>Using the above example again, the three entries that sum to <code>2020</code> are <code>979</code>, <code>366</code>, and <code>675</code>. Multiplying them together produces the answer, <code><em>241861950</em></code>.</p>
+# MAGIC <p>In your expense report, <em>what is the product of the three entries that sum to <code>2020</code>?</em></p>
+# MAGIC </article>
+
+# COMMAND ----------
+
+result <-
+  expand_grid(x1 = nums, x2 = nums, x3 = nums) %>%
+  filter(x1 + x2 + x3 == 2020) %>%
+  mutate(prod = x1 * x2 * x3)
 result
 
 # COMMAND ----------
 
-reduce(result, `*`)
-
-# COMMAND ----------
-
-# MAGIC %md ## Part 2
-
-# COMMAND ----------
-
-expand.grid(num, num, num) %>%
-  filter(Var1 + Var2 + Var3 == 2020) %>%
-  mutate(prod = Var1 * Var2 * Var3)
+answer <- result$prod[1]
+answer
