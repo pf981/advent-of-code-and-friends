@@ -1,9 +1,9 @@
 # Databricks notebook source
 # MAGIC %md https://adventofcode.com/2020/day/24
-# MAGIC 
-# MAGIC <main>
-# MAGIC <script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
-# MAGIC <article class="day-desc"><h2>--- Day 24: Lobby Layout ---</h2><p>Your raft makes it to the tropical island; it turns out that the small crab was an excellent navigator. You make your way to the resort.</p>
+
+# COMMAND ----------
+
+# MAGIC %md <article class="day-desc"><h2>--- Day 24: Lobby Layout ---</h2><p>Your raft makes it to the tropical island; it turns out that the small crab was an excellent navigator. You make your way to the resort.</p>
 # MAGIC <p>As you enter the lobby, you discover a small problem: the floor is being renovated. You can't even reach the check-in desk until they've finished installing the <em>new tile floor</em>.</p>
 # MAGIC <p>The tiles are all <em>hexagonal</em>; they need to be arranged in a <a href="https://en.wikipedia.org/wiki/Hexagonal_tiling">hex grid</a> with a very specific color pattern. Not in the mood to wait, you offer to help figure out the pattern.</p>
 # MAGIC <p>The tiles are all <em>white</em> on one side and <em>black</em> on the other. They start with the white side facing up. The lobby is large enough to fit whatever pattern might need to appear there.</p>
@@ -35,45 +35,6 @@
 # MAGIC <p>In the above example, 10 tiles are flipped once (to black), and 5 more are flipped twice (to black, then back to white). After all of these instructions have been followed, a total of <em><code>10</code></em> tiles are <em>black</em>.</p>
 # MAGIC <p>Go through the renovation crew's list and determine which tiles they need to flip. After all of the instructions have been followed, <em>how many tiles are left with the black side up?</em></p>
 # MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>488</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>The tile floor in the lobby is meant to be a <span title="I need one of these!">living art exhibit</span>. Every day, the tiles are all flipped according to the following rules:</p>
-# MAGIC <ul>
-# MAGIC <li>Any <em>black</em> tile with <em>zero</em> or <em>more than 2</em> black tiles immediately adjacent to it is flipped to <em>white</em>.</li>
-# MAGIC <li>Any <em>white</em> tile with <em>exactly 2</em> black tiles immediately adjacent to it is flipped to <em>black</em>.</li>
-# MAGIC </ul>
-# MAGIC <p>Here, <em>tiles immediately adjacent</em> means the six tiles directly touching the tile in question.</p>
-# MAGIC <p>The rules are applied <em>simultaneously</em> to every tile; put another way, it is first determined which tiles need to be flipped, then they are all flipped at the same time.</p>
-# MAGIC <p>In the above example, the number of black tiles that are facing up after the given number of days has passed is as follows:</p>
-# MAGIC <pre><code>Day 1: 15
-# MAGIC Day 2: 12
-# MAGIC Day 3: 25
-# MAGIC Day 4: 14
-# MAGIC Day 5: 23
-# MAGIC Day 6: 28
-# MAGIC Day 7: 41
-# MAGIC Day 8: 37
-# MAGIC Day 9: 49
-# MAGIC Day 10: 37
-# MAGIC 
-# MAGIC Day 20: 132
-# MAGIC Day 30: 259
-# MAGIC Day 40: 406
-# MAGIC Day 50: 566
-# MAGIC Day 60: 788
-# MAGIC Day 70: 1106
-# MAGIC Day 80: 1373
-# MAGIC Day 90: 1844
-# MAGIC Day 100: 2208
-# MAGIC </code></pre>
-# MAGIC <p>After executing this process a total of 100 times, there would be <em><code>2208</code></em> black tiles facing up.</p>
-# MAGIC <p><em>How many tiles will be black after 100 days?</em></p>
-# MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>4118</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
-# MAGIC <p>At this point, you should <a href="/2020">return to your Advent calendar</a> and try another puzzle.</p>
-# MAGIC <p>If you still want to see it, you can <a href="24/input" target="_blank">get your puzzle input</a>.</p>
-# MAGIC <p>You can also <span class="share">[Share<span class="share-content">on
-# MAGIC   <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Lobby+Layout%22+%2D+Day+24+%2D+Advent+of+Code+2020&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F24&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
-# MAGIC   <a href="javascript:void(0);" onclick="var mastodon_instance=prompt('Mastodon Instance / Server Name?'); if(typeof mastodon_instance==='string' &amp;&amp; mastodon_instance.length){this.href='https://'+mastodon_instance+'/share?text=I%27ve+completed+%22Lobby+Layout%22+%2D+Day+24+%2D+Advent+of+Code+2020+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F24'}else{return false;}" target="_blank">Mastodon</a></span>]</span> this puzzle.</p>
-# MAGIC </main>
 
 # COMMAND ----------
 
@@ -649,36 +610,8 @@ nenenesenenwnenwneneneswnwnenenwnenenenw
 
 # COMMAND ----------
 
-# input <- "sesenwnenenewseeswwswswwnenewsewsw
-# neeenesenwnwwswnenewnwwsewnenwseswesw
-# seswneswswsenwwnwse
-# nwnwneseeswswnenewneswwnewseswneseene
-# swweswneswnenwsewnwneneseenw
-# eesenwseswswnenwswnwnwsewwnwsene
-# sewnenenenesenwsewnenwwwse
-# wenwwweseeeweswwwnwwe
-# wsweesenenewnwwnwsenewsenwwsesesenwne
-# neeswseenwwswnwswswnw
-# nenwswwsewswnenenewsenwsenwnesesenew
-# enewnwewneswsewnwswenweswnenwsenwsw
-# sweneswneswneneenwnewenewwneswswnese
-# swwesenesewenwneswnwwneseswwne
-# enesenwswwswneneswsenwnewswseenwsese
-# wnwnesenesenenwwnenwsewesewsesesew
-# nenewswnwewswnenesenwnesewesw
-# eneswnwswnwsenenwnwnwwseeswneewsenese
-# neswnwewnwnwseenwseesewsenwsweewe
-# wseweeenwnesenwwwswnew
-# "
-
-# COMMAND ----------
-
 tiles <- input %>% read_lines() %>% str_extract_all("(e|se|sw|w|nw|ne)")
 tiles
-
-# COMMAND ----------
-
-# MAGIC %md Directions are `x`, `y`
 
 # COMMAND ----------
 
@@ -716,15 +649,43 @@ black_tiles <-
   filter((n %% 2) == 1) %>%
   select(-n)
 
-black_tiles %>% nrow()
+answer <- black_tiles %>% nrow()
+answer
 
 # COMMAND ----------
 
-# MAGIC %md ## Part 2
-
-# COMMAND ----------
-
-black_tiles
+# MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>The tile floor in the lobby is meant to be a <span title="I need one of these!">living art exhibit</span>. Every day, the tiles are all flipped according to the following rules:</p>
+# MAGIC <ul>
+# MAGIC <li>Any <em>black</em> tile with <em>zero</em> or <em>more than 2</em> black tiles immediately adjacent to it is flipped to <em>white</em>.</li>
+# MAGIC <li>Any <em>white</em> tile with <em>exactly 2</em> black tiles immediately adjacent to it is flipped to <em>black</em>.</li>
+# MAGIC </ul>
+# MAGIC <p>Here, <em>tiles immediately adjacent</em> means the six tiles directly touching the tile in question.</p>
+# MAGIC <p>The rules are applied <em>simultaneously</em> to every tile; put another way, it is first determined which tiles need to be flipped, then they are all flipped at the same time.</p>
+# MAGIC <p>In the above example, the number of black tiles that are facing up after the given number of days has passed is as follows:</p>
+# MAGIC <pre><code>Day 1: 15
+# MAGIC Day 2: 12
+# MAGIC Day 3: 25
+# MAGIC Day 4: 14
+# MAGIC Day 5: 23
+# MAGIC Day 6: 28
+# MAGIC Day 7: 41
+# MAGIC Day 8: 37
+# MAGIC Day 9: 49
+# MAGIC Day 10: 37
+# MAGIC 
+# MAGIC Day 20: 132
+# MAGIC Day 30: 259
+# MAGIC Day 40: 406
+# MAGIC Day 50: 566
+# MAGIC Day 60: 788
+# MAGIC Day 70: 1106
+# MAGIC Day 80: 1373
+# MAGIC Day 90: 1844
+# MAGIC Day 100: 2208
+# MAGIC </code></pre>
+# MAGIC <p>After executing this process a total of 100 times, there would be <em><code>2208</code></em> black tiles facing up.</p>
+# MAGIC <p><em>How many tiles will be black after 100 days?</em></p>
+# MAGIC </article>
 
 # COMMAND ----------
 
@@ -738,18 +699,6 @@ adjacent_delta <- tribble(
     1,  -1
 )
 adjacent_delta
-
-# COMMAND ----------
-
-# black_tiles %>%
-#   mutate(delta = list(adjacent_delta)) %>%
-#   unnest(delta) %>%
-#   mutate(
-#     x2 = x + dx,
-#     y2 = y + dy
-#   ) %>%
-#   arrange(x, y, dx, dy) %>%
-#   display()
 
 # COMMAND ----------
 
@@ -802,12 +751,10 @@ plot_tiles <- function(black_tiles) {
     ungroup()
 
   ggplot(mapping = aes(x, y)) +
-    geom_label(data = neighbor_black_count, mapping = aes(label = n), size = 5) +
-    geom_point(data = black_tiles, size = 5, alpha = 0.3, color = "red")
+    geom_label(data = neighbor_black_count, mapping = aes(label = n), size = 2) +
+    geom_point(data = black_tiles, size = 5, alpha = 0.3, color = "red") +
+    theme_void()
 }
-
-# COMMAND ----------
-
 plot_tiles(black_tiles)
 
 # COMMAND ----------
