@@ -1,9 +1,9 @@
 # Databricks notebook source
-# MAGIC %md https://adventofcode.com/2020/day/15
-# MAGIC 
-# MAGIC <main>
-# MAGIC <script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
-# MAGIC <article class="day-desc"><h2>--- Day 15: Rambunctious Recitation ---</h2><p>You catch the airport shuttle and try to book a new flight to your vacation island. Due to the storm, all direct flights have been cancelled, but a route is available to get around the storm. You take it.</p>
+# MAGIC %md %md https://adventofcode.com/2020/day/15
+
+# COMMAND ----------
+
+# MAGIC %md <article class="day-desc"><h2>--- Day 15: Rambunctious Recitation ---</h2><p>You catch the airport shuttle and try to book a new flight to your vacation island. Due to the storm, all direct flights have been cancelled, but a route is available to get around the storm. You take it.</p>
 # MAGIC <p>While you wait for your flight, you decide to check in with the Elves back at the North Pole. They're playing a <em>memory game</em> and are <span title="Of course they are.">ever so excited</span> to explain the rules!</p>
 # MAGIC <p>In this game, the players take turns saying <em>numbers</em>. They begin by taking turns reading from a list of <em>starting numbers</em> (your puzzle input). Then, each turn consists of considering the <em>most recently spoken number</em>:</p>
 # MAGIC <ul>
@@ -37,25 +37,6 @@
 # MAGIC </ul>
 # MAGIC <p>Given your starting numbers, <em>what will be the <code>2020</code>th number spoken?</em></p>
 # MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>1111</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Impressed, the Elves issue you a challenge: determine the <code>30000000</code>th number spoken. For example, given the same starting numbers as above:</p>
-# MAGIC <ul>
-# MAGIC <li>Given <code>0,3,6</code>, the <code>30000000</code>th number spoken is <code>175594</code>.</li>
-# MAGIC <li>Given <code>1,3,2</code>, the <code>30000000</code>th number spoken is <code>2578</code>.</li>
-# MAGIC <li>Given <code>2,1,3</code>, the <code>30000000</code>th number spoken is <code>3544142</code>.</li>
-# MAGIC <li>Given <code>1,2,3</code>, the <code>30000000</code>th number spoken is <code>261214</code>.</li>
-# MAGIC <li>Given <code>2,3,1</code>, the <code>30000000</code>th number spoken is <code>6895259</code>.</li>
-# MAGIC <li>Given <code>3,2,1</code>, the <code>30000000</code>th number spoken is <code>18</code>.</li>
-# MAGIC <li>Given <code>3,1,2</code>, the <code>30000000</code>th number spoken is <code>362</code>.</li>
-# MAGIC </ul>
-# MAGIC <p>Given your starting numbers, <em>what will be the <code>30000000</code>th number spoken?</em></p>
-# MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>48568</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
-# MAGIC <p>At this point, you should <a href="/2020">return to your Advent calendar</a> and try another puzzle.</p>
-# MAGIC <p>Your puzzle input was <code class="puzzle-input">20,9,11,0,1,2</code>.</p>
-# MAGIC <p>You can also <span class="share">[Share<span class="share-content">on
-# MAGIC   <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Rambunctious+Recitation%22+%2D+Day+15+%2D+Advent+of+Code+2020&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F15&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
-# MAGIC   <a href="javascript:void(0);" onclick="var mastodon_instance=prompt('Mastodon Instance / Server Name?'); if(typeof mastodon_instance==='string' &amp;&amp; mastodon_instance.length){this.href='https://'+mastodon_instance+'/share?text=I%27ve+completed+%22Rambunctious+Recitation%22+%2D+Day+15+%2D+Advent+of+Code+2020+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F15'}else{return false;}" target="_blank">Mastodon</a></span>]</span> this puzzle.</p>
-# MAGIC </main>
 
 # COMMAND ----------
 
@@ -67,18 +48,13 @@ input <- "20,9,11,0,1,2"
 
 # COMMAND ----------
 
-# input <- "0,3,6"
-
-# COMMAND ----------
-
 nums <- input %>% str_split(",") %>% unlist() %>% parse_integer()
 nums
 
 # COMMAND ----------
 
-# Use environments as hash map
 simulate <- function(n, init) {
-  last_seen <- new.env(hash = TRUE)
+  last_seen <- new.env(hash = TRUE) # Use environments as hash map
   for (i in seq_along(init)) {
     last_seen[[as.character(init[i])]] <- i
   }
@@ -94,24 +70,28 @@ simulate <- function(n, init) {
 
 # COMMAND ----------
 
-simulate(2020, nums)
+answer <- simulate(2020, nums)
+answer
 
 # COMMAND ----------
 
-# MAGIC %md ## Part 2
+# MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Impressed, the Elves issue you a challenge: determine the <code>30000000</code>th number spoken. For example, given the same starting numbers as above:</p>
+# MAGIC <ul>
+# MAGIC <li>Given <code>0,3,6</code>, the <code>30000000</code>th number spoken is <code>175594</code>.</li>
+# MAGIC <li>Given <code>1,3,2</code>, the <code>30000000</code>th number spoken is <code>2578</code>.</li>
+# MAGIC <li>Given <code>2,1,3</code>, the <code>30000000</code>th number spoken is <code>3544142</code>.</li>
+# MAGIC <li>Given <code>1,2,3</code>, the <code>30000000</code>th number spoken is <code>261214</code>.</li>
+# MAGIC <li>Given <code>2,3,1</code>, the <code>30000000</code>th number spoken is <code>6895259</code>.</li>
+# MAGIC <li>Given <code>3,2,1</code>, the <code>30000000</code>th number spoken is <code>18</code>.</li>
+# MAGIC <li>Given <code>3,1,2</code>, the <code>30000000</code>th number spoken is <code>362</code>.</li>
+# MAGIC </ul>
+# MAGIC <p>Given your starting numbers, <em>what will be the <code>30000000</code>th number spoken?</em></p>
+# MAGIC </article>
 
 # COMMAND ----------
 
-simulate(30000000, nums)
-#> 48568
-
-# COMMAND ----------
-
-# MAGIC %md The R implementation is fine, but it takes 10 minutes. The C++ implementation below takes only 6 seconds.
-
-# COMMAND ----------
-
-# MAGIC %md ### Faster C++ Implementation
+# R implementation works, but takes 10 minutes
+# simulate(30000000, nums)
 
 # COMMAND ----------
 
@@ -138,4 +118,5 @@ int64_t simulate_cpp(int64_t n, std::vector<int64_t> init)
 
 # COMMAND ----------
 
-simulate_cpp(30000000, nums)
+answer <- simulate_cpp(30000000, nums)
+answer
