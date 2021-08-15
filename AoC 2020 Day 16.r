@@ -1,9 +1,9 @@
 # Databricks notebook source
 # MAGIC %md https://adventofcode.com/2020/day/16
-# MAGIC 
-# MAGIC <main>
-# MAGIC <script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
-# MAGIC <article class="day-desc"><h2>--- Day 16: Ticket Translation ---</h2><p>As you're walking to yet another connecting flight, you realize that one of the legs of your re-routed trip coming up is on a high-speed train. However, the train ticket you were given is in a language you don't understand. You should probably figure out what it says before you get to the train station after the next flight.</p>
+
+# COMMAND ----------
+
+# MAGIC %md <article class="day-desc"><h2>--- Day 16: Ticket Translation ---</h2><p>As you're walking to yet another connecting flight, you realize that one of the legs of your re-routed trip coming up is on a high-speed train. However, the train ticket you were given is in a language you don't understand. You should probably figure out what it says before you get to the train station after the next flight.</p>
 # MAGIC <p>Unfortunately, you <span title="This actually happened to me once, but I solved it by just asking someone.">can't actually <em>read</em> the words on the ticket</span>. You can, however, read the numbers, and so you figure out <em>the fields these tickets must have</em> and <em>the valid ranges</em> for values in those fields.</p>
 # MAGIC <p>You collect the <em>rules for ticket fields</em>, the <em>numbers on your ticket</em>, and the <em>numbers on other nearby tickets</em> for the same train service (via the airport security cameras) together into a single document you can reference (your puzzle input).</p>
 # MAGIC <p>The <em>rules for ticket fields</em> specify a list of fields that exist <em>somewhere</em> on the ticket and the <em>valid ranges of values</em> for each field. For example, a rule like <code>class: 1-3 or 5-7</code> means that one of the fields in every ticket is named <code>class</code> and can be any value in the ranges <code>1-3</code> or <code>5-7</code> (inclusive, such that <code>3</code> and <code>5</code> are both valid in this field, but <code>4</code> is not).</p>
@@ -34,31 +34,6 @@
 # MAGIC <p>It doesn't matter which position corresponds to which field; you can identify invalid <em>nearby tickets</em> by considering only whether tickets contain <em>values that are not valid for any field</em>. In this example, the values on the first <em>nearby ticket</em> are all valid for at least one field. This is not true of the other three <em>nearby tickets</em>: the values <code>4</code>, <code>55</code>, and <code>12</code> are are not valid for any field. Adding together all of the invalid values produces your <em>ticket scanning error rate</em>: <code>4 + 55 + 12</code> = <em><code>71</code></em>.</p>
 # MAGIC <p>Consider the validity of the <em>nearby tickets</em> you scanned. <em>What is your ticket scanning error rate?</em></p>
 # MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>30869</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Now that you've identified which tickets contain invalid values, <em>discard those tickets entirely</em>. Use the remaining valid tickets to determine which field is which.</p>
-# MAGIC <p>Using the valid ranges for each field, determine what order the fields appear on the tickets. The order is consistent between all tickets: if <code>seat</code> is the third field, it is the third field on every ticket, including <em>your ticket</em>.</p>
-# MAGIC <p>For example, suppose you have the following notes:</p>
-# MAGIC <pre><code>class: 0-1 or 4-19
-# MAGIC row: 0-5 or 8-19
-# MAGIC seat: 0-13 or 16-19
-# MAGIC 
-# MAGIC your ticket:
-# MAGIC 11,12,13
-# MAGIC 
-# MAGIC nearby tickets:
-# MAGIC 3,9,18
-# MAGIC 15,1,5
-# MAGIC 5,14,9
-# MAGIC </code></pre>
-# MAGIC <p>Based on the <em>nearby tickets</em> in the above example, the first position must be <code>row</code>, the second position must be <code>class</code>, and the third position must be <code>seat</code>; you can conclude that in <em>your ticket</em>, <code>class</code> is <code>12</code>, <code>row</code> is <code>11</code>, and <code>seat</code> is <code>13</code>.</p>
-# MAGIC <p>Once you work out which field is which, look for the six fields on <em>your ticket</em> that start with the word <code>departure</code>. <em>What do you get if you multiply those six values together?</em></p>
-# MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>4381476149273</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
-# MAGIC <p>At this point, you should <a href="/2020">return to your Advent calendar</a> and try another puzzle.</p>
-# MAGIC <p>If you still want to see it, you can <a href="16/input" target="_blank">get your puzzle input</a>.</p>
-# MAGIC <p>You can also <span class="share">[Share<span class="share-content">on
-# MAGIC   <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Ticket+Translation%22+%2D+Day+16+%2D+Advent+of+Code+2020&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F16&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
-# MAGIC   <a href="javascript:void(0);" onclick="var mastodon_instance=prompt('Mastodon Instance / Server Name?'); if(typeof mastodon_instance==='string' &amp;&amp; mastodon_instance.length){this.href='https://'+mastodon_instance+'/share?text=I%27ve+completed+%22Ticket+Translation%22+%2D+Day+16+%2D+Advent+of+Code+2020+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F16'}else{return false;}" target="_blank">Mastodon</a></span>]</span> this puzzle.</p>
-# MAGIC </main>
 
 # COMMAND ----------
 
@@ -337,37 +312,6 @@ nearby tickets:
 
 # COMMAND ----------
 
-# input <- "class: 1-3 or 5-7
-# row: 6-11 or 33-44
-# seat: 13-40 or 45-50
-
-# your ticket:
-# 7,1,14
-
-# nearby tickets:
-# 7,3,47
-# 40,4,50
-# 55,2,20
-# 38,6,12
-# "
-
-# COMMAND ----------
-
-# input <- "class: 0-1 or 4-19
-# row: 0-5 or 8-19
-# seat: 0-13 or 16-19
-
-# your ticket:
-# 11,12,13
-
-# nearby tickets:
-# 3,9,18
-# 15,1,5
-# 5,14,9
-# "
-
-# COMMAND ----------
-
 str_lines <- input %>% str_split("\n\n") %>% unlist() %>% map(read_lines)
 str_lines
 
@@ -386,7 +330,13 @@ constraints
 
 # COMMAND ----------
 
-your_ticket <- str_lines[[2]][[2]] %>% str_split(",") %>% unlist() %>% parse_integer() %>% enframe(name = "type_id2") %>% add_column(ticket_id = 0)
+your_ticket <-
+  str_lines[[2]][[2]] %>%
+  str_split(",") %>%
+  unlist() %>%
+  parse_integer() %>%
+  enframe(name = "type_id2") %>%
+  add_column(ticket_id = 0)
 your_ticket
 
 # COMMAND ----------
@@ -404,11 +354,8 @@ error_values
 
 # COMMAND ----------
 
-sum(error_values)
-
-# COMMAND ----------
-
-# MAGIC %md ## Part 2
+answer <- sum(error_values)
+answer
 
 # COMMAND ----------
 
@@ -434,9 +381,6 @@ sum(error_values)
 # COMMAND ----------
 
 invalid_tickets <- nearby_tickets %>% filter(value %in% error_values) %>% pull(ticket_id)
-
-# COMMAND ----------
-
 valid_tickets <- nearby_tickets %>% filter(!(ticket_id %in% invalid_tickets))
 valid_tickets
 
@@ -449,7 +393,7 @@ type_matches <-
   summarise(tickets = n_distinct(ticket_id)) %>%
   ungroup() %>%
   filter(tickets == max(tickets))
-type_matches %>% display() # FIXME: There should be all type_id2s in this table!
+type_matches
 
 # COMMAND ----------
 
@@ -471,7 +415,7 @@ repeat {
   
   final_matches <- bind_rows(final_matches, new_matches)
 }
-display(final_matches)
+final_matches
 
 # COMMAND ----------
 
