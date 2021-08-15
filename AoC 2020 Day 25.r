@@ -1,9 +1,9 @@
 # Databricks notebook source
 # MAGIC %md https://adventofcode.com/2020/day/25
-# MAGIC 
-# MAGIC <main>
-# MAGIC <style>article *[title]{border-bottom:1px dotted #ffff66;}</style><script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
-# MAGIC <article class="day-desc"><h2>--- Day 25: Combo Breaker ---</h2><p>You finally reach the check-in desk. Unfortunately, their registration systems are currently offline, and they cannot check you in. Noticing the look on your face, they quickly add that tech support is already on the way! They even created all the room keys this morning; you can take yours now and give them your room deposit once the registration system comes back online.</p>
+
+# COMMAND ----------
+
+# MAGIC %md <article class="day-desc"><h2>--- Day 25: Combo Breaker ---</h2><p>You finally reach the check-in desk. Unfortunately, their registration systems are currently offline, and they cannot check you in. Noticing the look on your face, they quickly add that tech support is already on the way! They even created all the room keys this morning; you can take yours now and give them your room deposit once the registration system comes back online.</p>
 # MAGIC <p>The room key is a small <a href="https://en.wikipedia.org/wiki/Radio-frequency_identification" target="_blank">RFID</a> card. Your room is on the 25th floor and the elevators are also temporarily out of service, so it takes what little energy you have left to even climb the stairs and navigate the halls. You finally reach the door to your room, swipe your card, and - <em>beep</em> - the light turns red.</p>
 # MAGIC <p>Examining the card more closely, you discover a phone number for tech support.</p>
 # MAGIC <p>"Hello! How can we help you today?" You explain the situation.</p>
@@ -30,21 +30,6 @@
 # MAGIC <p>At this point, you can use either device's loop size with the other device's public key to calculate the <em>encryption key</em>. Transforming the subject number of <code>17807724</code> (the door's public key) with a loop size of <code>8</code> (the card's loop size) produces the encryption key, <em><code>14897079</code></em>. (Transforming the subject number of <code>5764801</code> (the card's public key) with a loop size of <code>11</code> (the door's loop size) produces the same encryption key: <em><code>14897079</code></em>.)</p>
 # MAGIC <p><em>What encryption key is the handshake trying to establish?</em></p>
 # MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>296776</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p><span title="You notice the brand written on the side of the lock: Diffie, Hellman, and Merkle.">The light turns green and the door unlocks.</span> As you collapse onto the bed in your room, your pager goes off!</p>
-# MAGIC <p>"It's an emergency!" the Elf calling you explains. "The <a href="https://en.wikipedia.org/wiki/Soft_serve" target="_blank">soft serve</a> machine in the cafeteria on sub-basement 7 just failed and you're the only one that knows how to fix it! We've already dispatched a reindeer to your location to pick you up."</p>
-# MAGIC <p>You hear the sound of hooves landing on your balcony.</p>
-# MAGIC <p>The reindeer carefully explores the contents of your room while you figure out how you're going to pay the <em class="star">50 stars</em> you owe the resort before you leave. Noticing that you look concerned, the reindeer wanders over to you; you see that it's carrying a small pouch.</p>
-# MAGIC <p>"Sorry for the trouble," a note in the pouch reads. Sitting at the bottom of the pouch is a gold coin with a little picture of a starfish on it.</p>
-# MAGIC <p>Looks like you only needed <em class="star">49 stars</em> after all.</p>
-# MAGIC </article>
-# MAGIC <form method="post" action="25/answer"><input type="hidden" name="level" value="2"><input type="hidden" name="answer" value="0"><p>If you like, you can <input type="submit" value="[Check On Your Deposit]">.</p></form>
-# MAGIC <p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
-# MAGIC <p>At this point, all that is left is for you to <a href="/2020">admire your Advent calendar</a>.</p>
-# MAGIC <p>If you still want to see it, you can <a href="25/input" target="_blank">get your puzzle input</a>.</p>
-# MAGIC <p>You can also <span class="share">[Share<span class="share-content">on
-# MAGIC   <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Combo+Breaker%22+%2D+Day+25+%2D+Advent+of+Code+2020&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F25&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
-# MAGIC   <a href="javascript:void(0);" onclick="var mastodon_instance=prompt('Mastodon Instance / Server Name?'); if(typeof mastodon_instance==='string' &amp;&amp; mastodon_instance.length){this.href='https://'+mastodon_instance+'/share?text=I%27ve+completed+%22Combo+Breaker%22+%2D+Day+25+%2D+Advent+of+Code+2020+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F25'}else{return false;}" target="_blank">Mastodon</a></span>]</span> this puzzle.</p>
-# MAGIC </main>
 
 # COMMAND ----------
 
@@ -53,17 +38,8 @@ library(tidyverse)
 # COMMAND ----------
 
 input <- "12578151
-5051300"
-
-# COMMAND ----------
-
-# input <- "5764801
-# 17807724"
-
-# COMMAND ----------
-
-public_keys <- read_lines(input)
-public_keys
+5051300
+"
 
 # COMMAND ----------
 
@@ -74,8 +50,6 @@ encrypt <- function(subject_number, loop_size) {
   }
   value
 }
-
-# COMMAND ----------
 
 compute_loop_size <- function(public_key) {
   value <- 1
@@ -92,6 +66,8 @@ compute_loop_size <- function(public_key) {
 
 # COMMAND ----------
 
+public_keys <- input %>% read_lines() %>% parse_integer()
+
 loop_sizes <- c(
   compute_loop_size(public_keys[1]),
   compute_loop_size(public_keys[2])
@@ -100,16 +76,24 @@ loop_sizes
 
 # COMMAND ----------
 
+subject_number <- 7
 encryption_key <- encrypt(
-  encrypt(subject_numbers[1], loop_sizes[1]),
+  encrypt(subject_number, loop_sizes[1]),
   loop_sizes[2]
 )
-encryption_key
+answer <- encryption_key
+answer
 
 # COMMAND ----------
 
-# MAGIC %md ## Part 2
+# MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p><span title="You notice the brand written on the side of the lock: Diffie, Hellman, and Merkle.">The light turns green and the door unlocks.</span> As you collapse onto the bed in your room, your pager goes off!</p>
+# MAGIC <p>"It's an emergency!" the Elf calling you explains. "The <a href="https://en.wikipedia.org/wiki/Soft_serve" target="_blank">soft serve</a> machine in the cafeteria on sub-basement 7 just failed and you're the only one that knows how to fix it! We've already dispatched a reindeer to your location to pick you up."</p>
+# MAGIC <p>You hear the sound of hooves landing on your balcony.</p>
+# MAGIC <p>The reindeer carefully explores the contents of your room while you figure out how you're going to pay the <em class="star">50 stars</em> you owe the resort before you leave. Noticing that you look concerned, the reindeer wanders over to you; you see that it's carrying a small pouch.</p>
+# MAGIC <p>"Sorry for the trouble," a note in the pouch reads. Sitting at the bottom of the pouch is a gold coin with a little picture of a starfish on it.</p>
+# MAGIC <p>Looks like you only needed <em class="star">49 stars</em> after all.</p>
+# MAGIC </article>
 
 # COMMAND ----------
 
-# MAGIC %md Part 2 is just having 50 stars.
+# No puzzle here - just need 49 stars.
