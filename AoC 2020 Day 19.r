@@ -1,9 +1,9 @@
 # Databricks notebook source
 # MAGIC %md https://adventofcode.com/2020/day/19
-# MAGIC 
-# MAGIC <main>
-# MAGIC <script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
-# MAGIC <article class="day-desc"><h2>--- Day 19: Monster Messages ---</h2><p>You land in an airport surrounded by dense forest. As you walk to your high-speed train, the Elves at the <span title="This is a purely fictional organization. Any resemblance to actual organizations, past or present, is purely coincidental.">Mythical Information Bureau</span> contact you again. They think their satellite has collected an image of a <em>sea monster</em>! Unfortunately, the connection to the satellite is having problems, and many of the messages sent back from the satellite have been corrupted.</p>
+
+# COMMAND ----------
+
+# MAGIC %md <article class="day-desc"><h2>--- Day 19: Monster Messages ---</h2><p>You land in an airport surrounded by dense forest. As you walk to your high-speed train, the Elves at the <span title="This is a purely fictional organization. Any resemblance to actual organizations, past or present, is purely coincidental.">Mythical Information Bureau</span> contact you again. They think their satellite has collected an image of a <em>sea monster</em>! Unfortunately, the connection to the satellite is having problems, and many of the messages sent back from the satellite have been corrupted.</p>
 # MAGIC <p>They sent you a list of <em>the rules valid messages should obey</em> and a list of <em>received messages</em> they've collected so far (your puzzle input).</p>
 # MAGIC <p>The <em>rules for valid messages</em> (the top part of your puzzle input) are numbered and build upon each other. For example:</p>
 # MAGIC <pre><code>0: 1 2
@@ -43,87 +43,6 @@
 # MAGIC <p>Your goal is to determine <em>the number of messages that completely match rule <code>0</code></em>. In the above example, <code>ababbb</code> and <code>abbbab</code> match, but <code>bababa</code>, <code>aaabbb</code>, and <code>aaaabbb</code> do not, producing the answer <em><code>2</code></em>. The whole message must match all of rule <code>0</code>; there can't be extra unmatched characters in the message. (For example, <code>aaaabbb</code> might appear to match rule <code>0</code> above, but it has an extra unmatched <code>b</code> on the end.)</p>
 # MAGIC <p><em>How many messages completely match rule <code>0</code>?</em></p>
 # MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>235</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>As you look over the list of messages, you realize your matching rules aren't quite right. To fix them, completely replace rules <code>8: 42</code> and <code>11: 42 31</code> with the following:</p>
-# MAGIC <pre><code>8: 42 | 42 8
-# MAGIC 11: 42 31 | 42 11 31
-# MAGIC </code></pre>
-# MAGIC <p>This small change has a big impact: now, the rules <em>do</em> contain loops, and the list of messages they could hypothetically match is infinite. You'll need to determine how these changes affect which messages are valid.</p>
-# MAGIC <p>Fortunately, many of the rules are unaffected by this change; it might help to start by looking at which rules always match the same set of values and how <em>those</em> rules (especially rules <code>42</code> and <code>31</code>) are used by the new versions of rules <code>8</code> and <code>11</code>.</p>
-# MAGIC <p>(Remember, <em>you only need to handle the rules you have</em>; building a solution that could handle any hypothetical combination of rules would be <a href="https://en.wikipedia.org/wiki/Formal_grammar" target="_blank">significantly more difficult</a>.)</p>
-# MAGIC <p>For example:</p>
-# MAGIC <pre><code>42: 9 14 | 10 1
-# MAGIC 9: 14 27 | 1 26
-# MAGIC 10: 23 14 | 28 1
-# MAGIC 1: "a"
-# MAGIC 11: 42 31
-# MAGIC 5: 1 14 | 15 1
-# MAGIC 19: 14 1 | 14 14
-# MAGIC 12: 24 14 | 19 1
-# MAGIC 16: 15 1 | 14 14
-# MAGIC 31: 14 17 | 1 13
-# MAGIC 6: 14 14 | 1 14
-# MAGIC 2: 1 24 | 14 4
-# MAGIC 0: 8 11
-# MAGIC 13: 14 3 | 1 12
-# MAGIC 15: 1 | 14
-# MAGIC 17: 14 2 | 1 7
-# MAGIC 23: 25 1 | 22 14
-# MAGIC 28: 16 1
-# MAGIC 4: 1 1
-# MAGIC 20: 14 14 | 1 15
-# MAGIC 3: 5 14 | 16 1
-# MAGIC 27: 1 6 | 14 18
-# MAGIC 14: "b"
-# MAGIC 21: 14 1 | 1 14
-# MAGIC 25: 1 1 | 1 14
-# MAGIC 22: 14 14
-# MAGIC 8: 42
-# MAGIC 26: 14 22 | 1 20
-# MAGIC 18: 15 15
-# MAGIC 7: 14 5 | 1 21
-# MAGIC 24: 14 1
-# MAGIC 
-# MAGIC abbbbbabbbaaaababbaabbbbabababbbabbbbbbabaaaa
-# MAGIC bbabbbbaabaabba
-# MAGIC babbbbaabbbbbabbbbbbaabaaabaaa
-# MAGIC aaabbbbbbaaaabaababaabababbabaaabbababababaaa
-# MAGIC bbbbbbbaaaabbbbaaabbabaaa
-# MAGIC bbbababbbbaaaaaaaabbababaaababaabab
-# MAGIC ababaaaaaabaaab
-# MAGIC ababaaaaabbbaba
-# MAGIC baabbaaaabbaaaababbaababb
-# MAGIC abbbbabbbbaaaababbbbbbaaaababb
-# MAGIC aaaaabbaabaaaaababaa
-# MAGIC aaaabbaaaabbaaa
-# MAGIC aaaabbaabbaaaaaaabbbabbbaaabbaabaaa
-# MAGIC babaaabbbaaabaababbaabababaaab
-# MAGIC aabbbbbaabbbaaaaaabbbbbababaaaaabbaaabba
-# MAGIC </code></pre>
-# MAGIC <p>Without updating rules <code>8</code> and <code>11</code>, these rules only match three messages: <code>bbabbbbaabaabba</code>, <code>ababaaaaaabaaab</code>, and <code>ababaaaaabbbaba</code>.</p>
-# MAGIC <p>However, after updating rules <code>8</code> and <code>11</code>, a total of <em><code>12</code></em> messages match:</p>
-# MAGIC <ul>
-# MAGIC <li><code>bbabbbbaabaabba</code></li>
-# MAGIC <li><code>babbbbaabbbbbabbbbbbaabaaabaaa</code></li>
-# MAGIC <li><code>aaabbbbbbaaaabaababaabababbabaaabbababababaaa</code></li>
-# MAGIC <li><code>bbbbbbbaaaabbbbaaabbabaaa</code></li>
-# MAGIC <li><code>bbbababbbbaaaaaaaabbababaaababaabab</code></li>
-# MAGIC <li><code>ababaaaaaabaaab</code></li>
-# MAGIC <li><code>ababaaaaabbbaba</code></li>
-# MAGIC <li><code>baabbaaaabbaaaababbaababb</code></li>
-# MAGIC <li><code>abbbbabbbbaaaababbbbbbaaaababb</code></li>
-# MAGIC <li><code>aaaaabbaabaaaaababaa</code></li>
-# MAGIC <li><code>aaaabbaabbaaaaaaabbbabbbaaabbaabaaa</code></li>
-# MAGIC <li><code>aabbbbbaabbbaaaaaabbbbbababaaaaabbaaabba</code></li>
-# MAGIC </ul>
-# MAGIC <p><em>After updating rules <code>8</code> and <code>11</code>, how many messages completely match rule <code>0</code>?</em></p>
-# MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>379</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
-# MAGIC <p>At this point, you should <a href="/2020">return to your Advent calendar</a> and try another puzzle.</p>
-# MAGIC <p>If you still want to see it, you can <a href="19/input" target="_blank">get your puzzle input</a>.</p>
-# MAGIC <p>You can also <span class="share">[Share<span class="share-content">on
-# MAGIC   <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Monster+Messages%22+%2D+Day+19+%2D+Advent+of+Code+2020&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F19&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
-# MAGIC   <a href="javascript:void(0);" onclick="var mastodon_instance=prompt('Mastodon Instance / Server Name?'); if(typeof mastodon_instance==='string' &amp;&amp; mastodon_instance.length){this.href='https://'+mastodon_instance+'/share?text=I%27ve+completed+%22Monster+Messages%22+%2D+Day+19+%2D+Advent+of+Code+2020+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F19'}else{return false;}" target="_blank">Mastodon</a></span>]</span> this puzzle.</p>
-# MAGIC </main>
 
 # COMMAND ----------
 
@@ -761,22 +680,6 @@ bbaaabbabbbbababaaaabaab
 
 # COMMAND ----------
 
-# input <- '0: 4 1 5
-# 1: 2 3 | 3 2
-# 2: 4 4 | 5 5
-# 3: 4 5 | 5 4
-# 4: "a"
-# 5: "b"
-
-# ababbb
-# bababa
-# abbbab
-# aaabbb
-# aaaabbb
-# '
-
-# COMMAND ----------
-
 split_strs <- input %>% str_split("\n\n") %>% unlist() %>% map(read_lines)
 split_strs
 
@@ -840,10 +743,6 @@ generate_regex <- function(rule) {
 
 # COMMAND ----------
 
-generate_regex(0)
-
-# COMMAND ----------
-
 result <-
   messages %>%
   mutate(is_match = str_detect(value, paste0("^", generate_regex(0), "$")))
@@ -856,7 +755,80 @@ answer
 
 # COMMAND ----------
 
-# MAGIC %md ## Part 2
+# MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>As you look over the list of messages, you realize your matching rules aren't quite right. To fix them, completely replace rules <code>8: 42</code> and <code>11: 42 31</code> with the following:</p>
+# MAGIC <pre><code>8: 42 | 42 8
+# MAGIC 11: 42 31 | 42 11 31
+# MAGIC </code></pre>
+# MAGIC <p>This small change has a big impact: now, the rules <em>do</em> contain loops, and the list of messages they could hypothetically match is infinite. You'll need to determine how these changes affect which messages are valid.</p>
+# MAGIC <p>Fortunately, many of the rules are unaffected by this change; it might help to start by looking at which rules always match the same set of values and how <em>those</em> rules (especially rules <code>42</code> and <code>31</code>) are used by the new versions of rules <code>8</code> and <code>11</code>.</p>
+# MAGIC <p>(Remember, <em>you only need to handle the rules you have</em>; building a solution that could handle any hypothetical combination of rules would be <a href="https://en.wikipedia.org/wiki/Formal_grammar" target="_blank">significantly more difficult</a>.)</p>
+# MAGIC <p>For example:</p>
+# MAGIC <pre><code>42: 9 14 | 10 1
+# MAGIC 9: 14 27 | 1 26
+# MAGIC 10: 23 14 | 28 1
+# MAGIC 1: "a"
+# MAGIC 11: 42 31
+# MAGIC 5: 1 14 | 15 1
+# MAGIC 19: 14 1 | 14 14
+# MAGIC 12: 24 14 | 19 1
+# MAGIC 16: 15 1 | 14 14
+# MAGIC 31: 14 17 | 1 13
+# MAGIC 6: 14 14 | 1 14
+# MAGIC 2: 1 24 | 14 4
+# MAGIC 0: 8 11
+# MAGIC 13: 14 3 | 1 12
+# MAGIC 15: 1 | 14
+# MAGIC 17: 14 2 | 1 7
+# MAGIC 23: 25 1 | 22 14
+# MAGIC 28: 16 1
+# MAGIC 4: 1 1
+# MAGIC 20: 14 14 | 1 15
+# MAGIC 3: 5 14 | 16 1
+# MAGIC 27: 1 6 | 14 18
+# MAGIC 14: "b"
+# MAGIC 21: 14 1 | 1 14
+# MAGIC 25: 1 1 | 1 14
+# MAGIC 22: 14 14
+# MAGIC 8: 42
+# MAGIC 26: 14 22 | 1 20
+# MAGIC 18: 15 15
+# MAGIC 7: 14 5 | 1 21
+# MAGIC 24: 14 1
+# MAGIC 
+# MAGIC abbbbbabbbaaaababbaabbbbabababbbabbbbbbabaaaa
+# MAGIC bbabbbbaabaabba
+# MAGIC babbbbaabbbbbabbbbbbaabaaabaaa
+# MAGIC aaabbbbbbaaaabaababaabababbabaaabbababababaaa
+# MAGIC bbbbbbbaaaabbbbaaabbabaaa
+# MAGIC bbbababbbbaaaaaaaabbababaaababaabab
+# MAGIC ababaaaaaabaaab
+# MAGIC ababaaaaabbbaba
+# MAGIC baabbaaaabbaaaababbaababb
+# MAGIC abbbbabbbbaaaababbbbbbaaaababb
+# MAGIC aaaaabbaabaaaaababaa
+# MAGIC aaaabbaaaabbaaa
+# MAGIC aaaabbaabbaaaaaaabbbabbbaaabbaabaaa
+# MAGIC babaaabbbaaabaababbaabababaaab
+# MAGIC aabbbbbaabbbaaaaaabbbbbababaaaaabbaaabba
+# MAGIC </code></pre>
+# MAGIC <p>Without updating rules <code>8</code> and <code>11</code>, these rules only match three messages: <code>bbabbbbaabaabba</code>, <code>ababaaaaaabaaab</code>, and <code>ababaaaaabbbaba</code>.</p>
+# MAGIC <p>However, after updating rules <code>8</code> and <code>11</code>, a total of <em><code>12</code></em> messages match:</p>
+# MAGIC <ul>
+# MAGIC <li><code>bbabbbbaabaabba</code></li>
+# MAGIC <li><code>babbbbaabbbbbabbbbbbaabaaabaaa</code></li>
+# MAGIC <li><code>aaabbbbbbaaaabaababaabababbabaaabbababababaaa</code></li>
+# MAGIC <li><code>bbbbbbbaaaabbbbaaabbabaaa</code></li>
+# MAGIC <li><code>bbbababbbbaaaaaaaabbababaaababaabab</code></li>
+# MAGIC <li><code>ababaaaaaabaaab</code></li>
+# MAGIC <li><code>ababaaaaabbbaba</code></li>
+# MAGIC <li><code>baabbaaaabbaaaababbaababb</code></li>
+# MAGIC <li><code>abbbbabbbbaaaababbbbbbaaaababb</code></li>
+# MAGIC <li><code>aaaaabbaabaaaaababaa</code></li>
+# MAGIC <li><code>aaaabbaabbaaaaaaabbbabbbaaabbaabaaa</code></li>
+# MAGIC <li><code>aabbbbbaabbbaaaaaabbbbbababaaaaabbaaabba</code></li>
+# MAGIC </ul>
+# MAGIC <p><em>After updating rules <code>8</code> and <code>11</code>, how many messages completely match rule <code>0</code>?</em></p>
+# MAGIC </article>
 
 # COMMAND ----------
 
@@ -889,13 +861,9 @@ generate_regex <- function(rule, depth = 1) {
 
 # COMMAND ----------
 
-regex <- generate_regex(0)
-
-# COMMAND ----------
-
 result <-
   messages %>%
-  mutate(is_match = str_detect(value, paste0("^", regex, "$")))
+  mutate(is_match = str_detect(value, paste0("^", generate_regex(0), "$")))
 result
 
 # COMMAND ----------
