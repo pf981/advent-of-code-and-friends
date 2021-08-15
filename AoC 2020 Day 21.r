@@ -1,9 +1,9 @@
 # Databricks notebook source
 # MAGIC %md https://adventofcode.com/2020/day/21
-# MAGIC 
-# MAGIC <main>
-# MAGIC <script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
-# MAGIC <article class="day-desc"><h2>--- Day 21: Allergen Assessment ---</h2><p>You reach the train's last stop and the closest you can get to your vacation island without getting wet. There aren't even any boats here, but nothing can stop you now: you build a raft. You just need a few days' worth of food for your journey.</p>
+
+# COMMAND ----------
+
+# MAGIC %md <article class="day-desc"><h2>--- Day 21: Allergen Assessment ---</h2><p>You reach the train's last stop and the closest you can get to your vacation island without getting wet. There aren't even any boats here, but nothing can stop you now: you build a raft. You just need a few days' worth of food for your journey.</p>
 # MAGIC <p>You don't speak the local language, so you can't read any ingredients lists. However, sometimes, allergens are listed in a language you <em>do</em> understand. You should be able to use this information to determine which ingredient contains which allergen and <span title="I actually considered doing this once. I do not recommend it.">work out which foods are safe</span> to take with you on your trip.</p>
 # MAGIC <p>You start by compiling a list of foods (your puzzle input), one food per line. Each line includes that food's <em>ingredients list</em> followed by some or all of the allergens the food contains.</p>
 # MAGIC <p>Each allergen is found in exactly one ingredient. Each ingredient contains zero or one allergen. <em>Allergens aren't always marked</em>; when they're listed (as in <code>(contains nuts, shellfish)</code> after an ingredients list), the ingredient that contains each listed allergen will be <em>somewhere in the corresponding ingredients list</em>. However, even if an allergen isn't listed, the ingredient that contains that allergen could still be present: maybe they forgot to label it, or maybe it was labeled in a language you don't know.</p>
@@ -17,23 +17,6 @@
 # MAGIC <p>The first step is to determine which ingredients <em>can't possibly</em> contain any of the allergens in any food in your list. In the above example, none of the ingredients <code>kfcds</code>, <code>nhms</code>, <code>sbzzf</code>, or <code>trh</code> can contain an allergen. Counting the number of times any of these ingredients appear in any ingredients list produces <em><code>5</code></em>: they all appear once each except <code>sbzzf</code>, which appears twice.</p>
 # MAGIC <p>Determine which ingredients cannot possibly contain any of the allergens in your list. <em>How many times do any of those ingredients appear?</em></p>
 # MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>2307</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Now that you've isolated the inert ingredients, you should have enough information to figure out which ingredient contains which allergen.</p>
-# MAGIC <p>In the above example:</p>
-# MAGIC <ul>
-# MAGIC <li><code>mxmxvkd</code> contains <code>dairy</code>.</li>
-# MAGIC <li><code>sqjhc</code> contains <code>fish</code>.</li>
-# MAGIC <li><code>fvjkl</code> contains <code>soy</code>.</li>
-# MAGIC </ul>
-# MAGIC <p>Arrange the ingredients <em>alphabetically by their allergen</em> and separate them by commas to produce your <em>canonical dangerous ingredient list</em>. (There should <em>not be any spaces</em> in your canonical dangerous ingredient list.) In the above example, this would be <em><code>mxmxvkd,sqjhc,fvjkl</code></em>.</p>
-# MAGIC <p>Time to stock your raft with supplies. <em>What is your canonical dangerous ingredient list?</em></p>
-# MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>cljf,frtfg,vvfjj,qmrps,hvnkk,qnvx,cpxmpc,qsjszn</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
-# MAGIC <p>At this point, you should <a href="/2020">return to your Advent calendar</a> and try another puzzle.</p>
-# MAGIC <p>If you still want to see it, you can <a href="21/input" target="_blank">get your puzzle input</a>.</p>
-# MAGIC <p>You can also <span class="share">[Share<span class="share-content">on
-# MAGIC   <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Allergen+Assessment%22+%2D+Day+21+%2D+Advent+of+Code+2020&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F21&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
-# MAGIC   <a href="javascript:void(0);" onclick="var mastodon_instance=prompt('Mastodon Instance / Server Name?'); if(typeof mastodon_instance==='string' &amp;&amp; mastodon_instance.length){this.href='https://'+mastodon_instance+'/share?text=I%27ve+completed+%22Allergen+Assessment%22+%2D+Day+21+%2D+Advent+of+Code+2020+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F21'}else{return false;}" target="_blank">Mastodon</a></span>]</span> this puzzle.</p>
-# MAGIC </main>
 
 # COMMAND ----------
 
@@ -86,18 +69,6 @@ brcnbqc qtsgr vdr rnkbccd bqsngs nchklb kgjm pbvf knfsd kvg trvv xhbzbt hvnkk zf
 
 # COMMAND ----------
 
-# input <- "mxmxvkd kfcds sqjhc nhms (contains dairy, fish)
-# trh fvjkl sbzzf mxmxvkd (contains dairy)
-# sqjhc fvjkl (contains soy)
-# sqjhc mxmxvkd sbzzf (contains fish)
-# "
-
-# COMMAND ----------
-
-# MAGIC %md This could be done with a linear model. Or just union.
-
-# COMMAND ----------
-
 str_to_named_lgl <- function(x) {
   x <- str_split(x, ",? ")
   map(x, function(y) {
@@ -131,15 +102,9 @@ foods <-
   foods %>%
   unnest_wider(ingredients) %>%
   unnest_wider(allergens) %>%
-  #mutate(across(everything(), ~replace_na(.x, FALSE)))
   mutate_all(replace_na, FALSE)
 
 foods
-
-# COMMAND ----------
-
-# allergen => ingredient
-#   dairy is true and ingredient is true or dairy is false
 
 # COMMAND ----------
 
@@ -166,7 +131,16 @@ answer
 
 # COMMAND ----------
 
-# MAGIC %md ## Part 2
+# MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Now that you've isolated the inert ingredients, you should have enough information to figure out which ingredient contains which allergen.</p>
+# MAGIC <p>In the above example:</p>
+# MAGIC <ul>
+# MAGIC <li><code>mxmxvkd</code> contains <code>dairy</code>.</li>
+# MAGIC <li><code>sqjhc</code> contains <code>fish</code>.</li>
+# MAGIC <li><code>fvjkl</code> contains <code>soy</code>.</li>
+# MAGIC </ul>
+# MAGIC <p>Arrange the ingredients <em>alphabetically by their allergen</em> and separate them by commas to produce your <em>canonical dangerous ingredient list</em>. (There should <em>not be any spaces</em> in your canonical dangerous ingredient list.) In the above example, this would be <em><code>mxmxvkd,sqjhc,fvjkl</code></em>.</p>
+# MAGIC <p>Time to stock your raft with supplies. <em>What is your canonical dangerous ingredient list?</em></p>
+# MAGIC </article>
 
 # COMMAND ----------
 
@@ -206,4 +180,9 @@ lst(unconfirmed_allergen_ingredients, confirmed_allergen_ingredients)
 
 # COMMAND ----------
 
-confirmed_allergen_ingredients %>% arrange(allergen) %>% pull(ingredient) %>% str_c(collapse = ",")
+answer <-
+  confirmed_allergen_ingredients %>%
+  arrange(allergen) %>%
+  pull(ingredient) %>%
+  str_c(collapse = ",")
+answer
