@@ -1,9 +1,9 @@
 # Databricks notebook source
 # MAGIC %md https://adventofcode.com/2020/day/12
-# MAGIC 
-# MAGIC <main>
-# MAGIC <script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
-# MAGIC <article class="day-desc"><h2>--- Day 12: Rain Risk ---</h2><p>Your ferry made decent progress toward the island, but the storm came in <span title="At least it wasn't a Category Six!">faster than anyone expected</span>. The ferry needs to take <em>evasive actions</em>!</p>
+
+# COMMAND ----------
+
+# MAGIC %md <article class="day-desc"><h2>--- Day 12: Rain Risk ---</h2><p>Your ferry made decent progress toward the island, but the storm came in <span title="At least it wasn't a Category Six!">faster than anyone expected</span>. The ferry needs to take <em>evasive actions</em>!</p>
 # MAGIC <p>Unfortunately, the ship's navigation computer seems to be malfunctioning; rather than giving a route directly to safety, it produced extremely circuitous instructions. When the captain uses the <a href="https://en.wikipedia.org/wiki/Public_address_system" target="_blank">PA system</a> to ask if anyone can help, you quickly volunteer.</p>
 # MAGIC <p>The navigation instructions (your puzzle input) consists of a sequence of single-character <em>actions</em> paired with integer input <em>values</em>. After staring at them for a few minutes, you work out what they probably mean:</p>
 # MAGIC <ul>
@@ -34,36 +34,6 @@
 # MAGIC <p>At the end of these instructions, the ship's <a href="https://en.wikipedia.org/wiki/Manhattan_distance" target="_blank">Manhattan distance</a> (sum of the absolute values of its east/west position and its north/south position) from its starting position is <code>17 + 8</code> = <em><code>25</code></em>.</p>
 # MAGIC <p>Figure out where the navigation instructions lead. <em>What is the Manhattan distance between that location and the ship's starting position?</em></p>
 # MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>1007</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Before you can give the destination to the captain, you realize that the actual action meanings were printed on the back of the instructions the whole time.</p>
-# MAGIC <p>Almost all of the actions indicate how to move a <em>waypoint</em> which is relative to the ship's position:</p>
-# MAGIC <ul>
-# MAGIC <li>Action <em><code>N</code></em> means to move the waypoint <em>north</em> by the given value.</li>
-# MAGIC <li>Action <em><code>S</code></em> means to move the waypoint <em>south</em> by the given value.</li>
-# MAGIC <li>Action <em><code>E</code></em> means to move the waypoint <em>east</em> by the given value.</li>
-# MAGIC <li>Action <em><code>W</code></em> means to move the waypoint <em>west</em> by the given value.</li>
-# MAGIC <li>Action <em><code>L</code></em> means to rotate the waypoint around the ship <em>left</em> (<em>counter-clockwise</em>) the given number of degrees.</li>
-# MAGIC <li>Action <em><code>R</code></em> means to rotate the waypoint around the ship <em>right</em> (<em>clockwise</em>) the given number of degrees.</li>
-# MAGIC <li>Action <em><code>F</code></em> means to move <em>forward</em> to the waypoint a number of times equal to the given value.</li>
-# MAGIC </ul>
-# MAGIC <p>The waypoint starts <em>10 units east and 1 unit north</em> relative to the ship. The waypoint is relative to the ship; that is, if the ship moves, the waypoint moves with it.</p>
-# MAGIC <p>For example, using the same instructions as above:</p>
-# MAGIC <ul>
-# MAGIC <li><code>F10</code> moves the ship to the waypoint 10 times (a total of <em>100 units east and 10 units north</em>), leaving the ship at <em>east 100, north 10</em>. The waypoint stays 10 units east and 1 unit north of the ship.</li>
-# MAGIC <li><code>N3</code> moves the waypoint 3 units north to <em>10 units east and 4 units north of the ship</em>. The ship remains at <em>east 100, north 10</em>.</li>
-# MAGIC <li><code>F7</code> moves the ship to the waypoint 7 times (a total of <em>70 units east and 28 units north</em>), leaving the ship at <em>east 170, north 38</em>. The waypoint stays 10 units east and 4 units north of the ship.</li>
-# MAGIC <li><code>R90</code> rotates the waypoint around the ship clockwise 90 degrees, moving it to <em>4 units east and 10 units south of the ship</em>. The ship remains at <em>east 170, north 38</em>.</li>
-# MAGIC <li><code>F11</code> moves the ship to the waypoint 11 times (a total of <em>44 units east and 110 units south</em>), leaving the ship at <em>east 214, south 72</em>. The waypoint stays 4 units east and 10 units south of the ship.</li>
-# MAGIC </ul>
-# MAGIC <p>After these operations, the ship's Manhattan distance from its starting position is <code>214 + 72</code> = <em><code>286</code></em>.</p>
-# MAGIC <p>Figure out where the navigation instructions actually lead. <em>What is the Manhattan distance between that location and the ship's starting position?</em></p>
-# MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>41212</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
-# MAGIC <p>At this point, you should <a href="/2020">return to your Advent calendar</a> and try another puzzle.</p>
-# MAGIC <p>If you still want to see it, you can <a href="12/input" target="_blank">get your puzzle input</a>.</p>
-# MAGIC <p>You can also <span class="share">[Share<span class="share-content">on
-# MAGIC   <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Rain+Risk%22+%2D+Day+12+%2D+Advent+of+Code+2020&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F12&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
-# MAGIC   <a href="javascript:void(0);" onclick="var mastodon_instance=prompt('Mastodon Instance / Server Name?'); if(typeof mastodon_instance==='string' &amp;&amp; mastodon_instance.length){this.href='https://'+mastodon_instance+'/share?text=I%27ve+completed+%22Rain+Risk%22+%2D+Day+12+%2D+Advent+of+Code+2020+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F12'}else{return false;}" target="_blank">Mastodon</a></span>]</span> this puzzle.</p>
-# MAGIC </main>
 
 # COMMAND ----------
 
@@ -837,15 +807,6 @@ F37
 
 # COMMAND ----------
 
-# input <- "F10
-# N3
-# F7
-# R90
-# F11
-# "
-
-# COMMAND ----------
-
 directions <-
   read_lines(input) %>%
   as_tibble() %>%
@@ -876,14 +837,38 @@ result <-
       TRUE ~ 0
     )
   )
+result
 
 # COMMAND ----------
 
-abs(sum(result$delta_north)) + abs(sum(result$delta_east))
+answer <- abs(sum(result$delta_north)) + abs(sum(result$delta_east))
+answer
 
 # COMMAND ----------
 
-# MAGIC %md ## Part 2
+# MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Before you can give the destination to the captain, you realize that the actual action meanings were printed on the back of the instructions the whole time.</p>
+# MAGIC <p>Almost all of the actions indicate how to move a <em>waypoint</em> which is relative to the ship's position:</p>
+# MAGIC <ul>
+# MAGIC <li>Action <em><code>N</code></em> means to move the waypoint <em>north</em> by the given value.</li>
+# MAGIC <li>Action <em><code>S</code></em> means to move the waypoint <em>south</em> by the given value.</li>
+# MAGIC <li>Action <em><code>E</code></em> means to move the waypoint <em>east</em> by the given value.</li>
+# MAGIC <li>Action <em><code>W</code></em> means to move the waypoint <em>west</em> by the given value.</li>
+# MAGIC <li>Action <em><code>L</code></em> means to rotate the waypoint around the ship <em>left</em> (<em>counter-clockwise</em>) the given number of degrees.</li>
+# MAGIC <li>Action <em><code>R</code></em> means to rotate the waypoint around the ship <em>right</em> (<em>clockwise</em>) the given number of degrees.</li>
+# MAGIC <li>Action <em><code>F</code></em> means to move <em>forward</em> to the waypoint a number of times equal to the given value.</li>
+# MAGIC </ul>
+# MAGIC <p>The waypoint starts <em>10 units east and 1 unit north</em> relative to the ship. The waypoint is relative to the ship; that is, if the ship moves, the waypoint moves with it.</p>
+# MAGIC <p>For example, using the same instructions as above:</p>
+# MAGIC <ul>
+# MAGIC <li><code>F10</code> moves the ship to the waypoint 10 times (a total of <em>100 units east and 10 units north</em>), leaving the ship at <em>east 100, north 10</em>. The waypoint stays 10 units east and 1 unit north of the ship.</li>
+# MAGIC <li><code>N3</code> moves the waypoint 3 units north to <em>10 units east and 4 units north of the ship</em>. The ship remains at <em>east 100, north 10</em>.</li>
+# MAGIC <li><code>F7</code> moves the ship to the waypoint 7 times (a total of <em>70 units east and 28 units north</em>), leaving the ship at <em>east 170, north 38</em>. The waypoint stays 10 units east and 4 units north of the ship.</li>
+# MAGIC <li><code>R90</code> rotates the waypoint around the ship clockwise 90 degrees, moving it to <em>4 units east and 10 units south of the ship</em>. The ship remains at <em>east 170, north 38</em>.</li>
+# MAGIC <li><code>F11</code> moves the ship to the waypoint 11 times (a total of <em>44 units east and 110 units south</em>), leaving the ship at <em>east 214, south 72</em>. The waypoint stays 4 units east and 10 units south of the ship.</li>
+# MAGIC </ul>
+# MAGIC <p>After these operations, the ship's Manhattan distance from its starting position is <code>214 + 72</code> = <em><code>286</code></em>.</p>
+# MAGIC <p>Figure out where the navigation instructions actually lead. <em>What is the Manhattan distance between that location and the ship's starting position?</em></p>
+# MAGIC </article>
 
 # COMMAND ----------
 
@@ -951,4 +936,5 @@ result <-
 
 # COMMAND ----------
 
-result %>% tail(1) %>% with(abs(ship_abs_east) + abs(ship_abs_north))
+answer <- result %>% tail(1) %>% with(abs(ship_abs_east) + abs(ship_abs_north))
+answer
