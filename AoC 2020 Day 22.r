@@ -1,9 +1,9 @@
 # Databricks notebook source
 # MAGIC %md https://adventofcode.com/2020/day/22
-# MAGIC 
-# MAGIC <main>
-# MAGIC <script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
-# MAGIC <article class="day-desc"><h2>--- Day 22: Crab Combat ---</h2><p>It only takes a few hours of sailing the ocean on a raft for boredom to sink in. Fortunately, you brought a small deck of <a href="/2019/day/22">space cards</a>! You'd like to play a game of <em>Combat</em>, and there's even an opponent available: a small crab that climbed aboard your raft before you left.</p>
+
+# COMMAND ----------
+
+# MAGIC %md <article class="day-desc"><h2>--- Day 22: Crab Combat ---</h2><p>It only takes a few hours of sailing the ocean on a raft for boredom to sink in. Fortunately, you brought a small deck of <a href="/2019/day/22">space cards</a>! You'd like to play a game of <em>Combat</em>, and there's even an opponent available: a small crab that climbed aboard your raft before you left.</p>
 # MAGIC <p>Fortunately, it doesn't take long to teach the crab the rules.</p>
 # MAGIC <p>Before the game starts, split the cards so each player has their own deck (your puzzle input). Then, the game consists of a series of <em>rounds</em>: both players draw their top card, and the player with the higher-valued card wins the round. The winner keeps both cards, placing them on the bottom of their own deck so that the winner's card is above the other card. If this causes a player to have all of the cards, they win, and the game ends.</p>
 # MAGIC <p>For example, consider the following starting decks:</p>
@@ -102,7 +102,109 @@
 # MAGIC <p>So, once the game ends, the winning player's score is <em><code>306</code></em>.</p>
 # MAGIC <p>Play the small crab in a game of Combat using the two decks you just dealt. <em>What is the winning player's score?</em></p>
 # MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>30780</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>You lost to the small crab! Fortunately, crabs aren't very good at recursion. To defend your honor as a Raft Captain, you challenge the small crab to a game of <em><span title="For some reason, nobody wants to play Recursive Twilight Imperium with me.">Recursive</span> Combat</em>.</p>
+
+# COMMAND ----------
+
+library(tidyverse)
+
+# COMMAND ----------
+
+input <- "Player 1:
+43
+36
+13
+11
+20
+25
+37
+38
+4
+18
+1
+8
+27
+23
+7
+22
+10
+5
+50
+40
+45
+26
+15
+32
+33
+
+Player 2:
+21
+29
+12
+28
+46
+9
+44
+6
+16
+39
+19
+24
+17
+14
+47
+48
+42
+34
+31
+3
+41
+35
+2
+30
+49
+"
+
+# COMMAND ----------
+
+players <-
+  input %>%
+  str_split("\n\n") %>%
+  unlist() %>%
+  map(~read_lines(.) %>% tail(-1) %>% parse_integer())
+players
+
+# COMMAND ----------
+
+player1 <- players[[1]]
+player2 <- players[[2]]
+
+round <- 0
+
+while (length(player1) > 0 && length(player2) > 0) {
+  round <- round + 1
+  
+  plays <- c(player1[1], player2[1])
+  player1 <- tail(player1, -1)
+  player2 <- tail(player2, -1)
+  if (plays[1] > plays[2]) {
+    player1 <- c(player1, sort.int(plays, decreasing = TRUE))
+  } else {
+    player2 <- c(player2, sort.int(plays, decreasing = TRUE))
+  }
+}
+lst(player1, player2)
+
+# COMMAND ----------
+
+answer <-
+  enframe(rev(c(player1, player2))) %>%
+  summarise(result = sum(name * value)) %>%
+  pull(result)
+answer
+
+# COMMAND ----------
+
+# MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>You lost to the small crab! Fortunately, crabs aren't very good at recursion. To defend your honor as a Raft Captain, you challenge the small crab to a game of <em><span title="For some reason, nobody wants to play Recursive Twilight Imperium with me.">Recursive</span> Combat</em>.</p>
 # MAGIC <p>Recursive Combat still starts by splitting the cards into two decks (you offer to play with the same starting decks as before - it's only fair). Then, the game consists of a series of <em>rounds</em> with a few changes:</p>
 # MAGIC <ul>
 # MAGIC <li>Before either player deals a card, if there was a previous round in this game that had exactly the same cards in the same order in the same players' decks, the <em>game</em> instantly ends in a win for player 1. Previous rounds from other games are not considered. (This prevents infinite games of Recursive Combat, which everyone agrees is a bad idea.)</li>
@@ -362,157 +464,6 @@
 # MAGIC <p>After the game, the winning player's score is calculated from the cards they have in their original deck using the same rules as regular Combat. In the above game, the winning player's score is <em><code>291</code></em>.</p>
 # MAGIC <p>Defend your honor as Raft Captain by playing the small crab in a game of Recursive Combat using the same two decks as before. <em>What is the winning player's score?</em></p>
 # MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>36621</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
-# MAGIC <p>At this point, you should <a href="/2020">return to your Advent calendar</a> and try another puzzle.</p>
-# MAGIC <p>If you still want to see it, you can <a href="22/input" target="_blank">get your puzzle input</a>.</p>
-# MAGIC <p>You can also <span class="share">[Share<span class="share-content">on
-# MAGIC   <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Crab+Combat%22+%2D+Day+22+%2D+Advent+of+Code+2020&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F22&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
-# MAGIC   <a href="javascript:void(0);" onclick="var mastodon_instance=prompt('Mastodon Instance / Server Name?'); if(typeof mastodon_instance==='string' &amp;&amp; mastodon_instance.length){this.href='https://'+mastodon_instance+'/share?text=I%27ve+completed+%22Crab+Combat%22+%2D+Day+22+%2D+Advent+of+Code+2020+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F22'}else{return false;}" target="_blank">Mastodon</a></span>]</span> this puzzle.</p>
-# MAGIC </main>
-
-# COMMAND ----------
-
-library(tidyverse)
-
-# COMMAND ----------
-
-input <- "Player 1:
-43
-36
-13
-11
-20
-25
-37
-38
-4
-18
-1
-8
-27
-23
-7
-22
-10
-5
-50
-40
-45
-26
-15
-32
-33
-
-Player 2:
-21
-29
-12
-28
-46
-9
-44
-6
-16
-39
-19
-24
-17
-14
-47
-48
-42
-34
-31
-3
-41
-35
-2
-30
-49
-"
-
-# COMMAND ----------
-
-# input <- "Player 1:
-# 9
-# 2
-# 6
-# 3
-# 1
-
-# Player 2:
-# 5
-# 8
-# 4
-# 7
-# 10
-# "
-
-# COMMAND ----------
-
-# input <- "Player 1:
-# 43
-# 19
-
-# Player 2:
-# 2
-# 29
-# 14
-# "
-
-# COMMAND ----------
-
-players <-
-  input %>%
-  str_split("\n\n") %>%
-  unlist() %>%
-  map(~read_lines(.) %>% tail(-1) %>% parse_integer())
-players
-
-# COMMAND ----------
-
-print_round <- function(player1, player2, round) {
-  message(glue::glue("-- Round {round} --
-Player 1's deck: {str_c(player1, collapse = ', ')}
-Player 2's deck: {str_c(player2, collapse = ', ')}
-Player 1 plays: {player1[1]}
-Player 2 plays: {player2[1]}
-Player {which.max(c(player1[1], player2[1]))} wins the round!
-
-"))
-}
-
-# COMMAND ----------
-
-player1 <- players[[1]]
-player2 <- players[[2]]
-
-round <- 0
-
-while (length(player1) > 0 && length(player2) > 0) {
-  round <- round + 1
-  print_round(player1, player2, round)
-  
-  plays <- c(player1[1], player2[1])
-  player1 <- tail(player1, -1)
-  player2 <- tail(player2, -1)
-  if (plays[1] > plays[2]) {
-    player1 <- c(player1, sort.int(plays, decreasing = TRUE))
-  } else {
-    player2 <- c(player2, sort.int(plays, decreasing = TRUE))
-  }
-}
-lst(player1, player2)
-
-# COMMAND ----------
-
-enframe(rev(c(player1, player2))) %>%
-  summarise(result = sum(name * value)) %>%
-  pull(result)
-
-# COMMAND ----------
-
-# MAGIC %md ## Part 2
 
 # COMMAND ----------
 
@@ -522,13 +473,6 @@ recursive_combat <- function(player1, player2, game = 1) {
   seen2 <- NULL
   while (length(player1) > 0 && length(player2) > 0) {
     round <- round + 1
-    
-    message(glue::glue("-- Round {round} (Game {game}) --
-Player 1's deck: {str_c(player1, collapse = ', ')}
-Player 2's deck: {str_c(player2, collapse = ', ')}
-Player 1 plays: {player1[1]}
-Player 2 plays: {player2[1]}
-"))
     
     # Check if state has been seen before
     new_seen1 <- str_c(player1, collapse = ",")
@@ -559,8 +503,6 @@ Player 2 plays: {player2[1]}
     } else {
       player2 <- c(player2, draw2, draw1)
     }
-            
-    message(glue::glue("Player {winner} wins the round!\n\n"))
   }
   
   lst(
@@ -576,20 +518,8 @@ result
 
 # COMMAND ----------
 
-enframe(rev(result$cards)) %>%
+answer <-
+  enframe(rev(result$cards)) %>%
   summarise(answer = sum(name * value)) %>%
   pull(answer)
-
-# COMMAND ----------
-
-# player1 <- c(9, 2, 6, 3, 1)
-# player2 <- c(5, 8, 4, 7, 10)
-
-# recursive_combat(player1, player2)
-
-# COMMAND ----------
-
-# player1 <- c(43, 19)
-# player2 <- c(2, 29, 14)
-
-# recursive_combat(player1, player2)
+answer
