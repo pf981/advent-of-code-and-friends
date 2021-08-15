@@ -1,9 +1,9 @@
 # Databricks notebook source
 # MAGIC %md https://adventofcode.com/2020/day/4
-# MAGIC 
-# MAGIC <main>
-# MAGIC <script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
-# MAGIC <article class="day-desc"><h2>--- Day 4: Passport Processing ---</h2><p>You arrive at the airport only to realize that you grabbed your North Pole Credentials instead of your passport. While these documents are extremely similar, North Pole Credentials aren't issued by a country and therefore aren't actually valid documentation for travel in most of the world.</p>
+
+# COMMAND ----------
+
+# MAGIC %md <article class="day-desc"><h2>--- Day 4: Passport Processing ---</h2><p>You arrive at the airport only to realize that you grabbed your North Pole Credentials instead of your passport. While these documents are extremely similar, North Pole Credentials aren't issued by a country and therefore aren't actually valid documentation for travel in most of the world.</p>
 # MAGIC <p>It seems like you're not the only one having problems, though; a very long line has formed for the automatic passport scanners, and the delay could upset your travel itinerary.</p>
 # MAGIC <p>Due to some questionable network security, you realize you might be able to solve both of these problems at the same time.</p>
 # MAGIC <p>The automatic passport scanners are slow because they're having trouble <em>detecting which passports have all required fields</em>. The expected fields are as follows:</p>
@@ -39,80 +39,6 @@
 # MAGIC <p>According to the above rules, your improved system would report <code><em>2</em></code> valid passports.</p>
 # MAGIC <p>Count the number of <em>valid</em> passports - those that have all required fields. Treat <code>cid</code> as optional. <em>In your batch file, how many passports are valid?</em></p>
 # MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>233</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>The line is moving more quickly now, but you overhear airport security talking about how passports with invalid data are getting through. Better add some data validation, quick!</p>
-# MAGIC <p>You can continue to ignore the <code>cid</code> field, but each other field has <span title="GLORY TO ARSTOTZKA">strict rules</span> about what values are valid for automatic validation:</p>
-# MAGIC <ul>
-# MAGIC <li><code>byr</code> (Birth Year) - four digits; at least <code>1920</code> and at most <code>2002</code>.</li>
-# MAGIC <li><code>iyr</code> (Issue Year) - four digits; at least <code>2010</code> and at most <code>2020</code>.</li>
-# MAGIC <li><code>eyr</code> (Expiration Year) - four digits; at least <code>2020</code> and at most <code>2030</code>.</li>
-# MAGIC <li><code>hgt</code> (Height) - a number followed by either <code>cm</code> or <code>in</code>:
-# MAGIC   <ul>
-# MAGIC   <li>If <code>cm</code>, the number must be at least <code>150</code> and at most <code>193</code>.</li>
-# MAGIC   <li>If <code>in</code>, the number must be at least <code>59</code> and at most <code>76</code>.</li>
-# MAGIC   </ul>
-# MAGIC </li>
-# MAGIC <li><code>hcl</code> (Hair Color) - a <code>#</code> followed by exactly six characters <code>0</code>-<code>9</code> or <code>a</code>-<code>f</code>.</li>
-# MAGIC <li><code>ecl</code> (Eye Color) - exactly one of: <code>amb</code> <code>blu</code> <code>brn</code> <code>gry</code> <code>grn</code> <code>hzl</code> <code>oth</code>.</li>
-# MAGIC <li><code>pid</code> (Passport ID) - a nine-digit number, including leading zeroes.</li>
-# MAGIC <li><code>cid</code> (Country ID) - ignored, missing or not.</li>
-# MAGIC </ul>
-# MAGIC <p>Your job is to count the passports where all required fields are both <em>present</em> and <em>valid</em> according to the above rules. Here are some example values:</p>
-# MAGIC <pre><code>byr valid:   2002
-# MAGIC byr invalid: 2003
-# MAGIC 
-# MAGIC hgt valid:   60in
-# MAGIC hgt valid:   190cm
-# MAGIC hgt invalid: 190in
-# MAGIC hgt invalid: 190
-# MAGIC 
-# MAGIC hcl valid:   #123abc
-# MAGIC hcl invalid: #123abz
-# MAGIC hcl invalid: 123abc
-# MAGIC 
-# MAGIC ecl valid:   brn
-# MAGIC ecl invalid: wat
-# MAGIC 
-# MAGIC pid valid:   000000001
-# MAGIC pid invalid: 0123456789
-# MAGIC </code></pre>
-# MAGIC <p>Here are some invalid passports:</p>
-# MAGIC <pre><code>eyr:1972 cid:100
-# MAGIC hcl:#18171d ecl:amb hgt:170 pid:186cm iyr:2018 byr:1926
-# MAGIC 
-# MAGIC iyr:2019
-# MAGIC hcl:#602927 eyr:1967 hgt:170cm
-# MAGIC ecl:grn pid:012533040 byr:1946
-# MAGIC 
-# MAGIC hcl:dab227 iyr:2012
-# MAGIC ecl:brn hgt:182cm pid:021572410 eyr:2020 byr:1992 cid:277
-# MAGIC 
-# MAGIC hgt:59cm ecl:zzz
-# MAGIC eyr:2038 hcl:74454a iyr:2023
-# MAGIC pid:3556412378 byr:2007
-# MAGIC </code></pre>
-# MAGIC <p>Here are some valid passports:</p>
-# MAGIC <pre><code>pid:087499704 hgt:74in ecl:grn iyr:2012 eyr:2030 byr:1980
-# MAGIC hcl:#623a2f
-# MAGIC 
-# MAGIC eyr:2029 ecl:blu cid:129 byr:1989
-# MAGIC iyr:2014 pid:896056539 hcl:#a97842 hgt:165cm
-# MAGIC 
-# MAGIC hcl:#888785
-# MAGIC hgt:164cm byr:2001 iyr:2015 cid:88
-# MAGIC pid:545766238 ecl:hzl
-# MAGIC eyr:2022
-# MAGIC 
-# MAGIC iyr:2010 hgt:158cm hcl:#b6652a ecl:blu byr:1944 eyr:2021 pid:093154719
-# MAGIC </code></pre>
-# MAGIC <p>Count the number of <em>valid</em> passports - those that have all required fields <em>and valid values</em>. Continue to treat <code>cid</code> as optional. <em>In your batch file, how many passports are valid?</em></p>
-# MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>111</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
-# MAGIC <p>At this point, you should <a href="/2020">return to your Advent calendar</a> and try another puzzle.</p>
-# MAGIC <p>If you still want to see it, you can <a href="4/input" target="_blank">get your puzzle input</a>.</p>
-# MAGIC <p>You can also <span class="share">[Share<span class="share-content">on
-# MAGIC   <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Passport+Processing%22+%2D+Day+4+%2D+Advent+of+Code+2020&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F4&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
-# MAGIC   <a href="javascript:void(0);" onclick="var mastodon_instance=prompt('Mastodon Instance / Server Name?'); if(typeof mastodon_instance==='string' &amp;&amp; mastodon_instance.length){this.href='https://'+mastodon_instance+'/share?text=I%27ve+completed+%22Passport+Processing%22+%2D+Day+4+%2D+Advent+of+Code+2020+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F4'}else{return false;}" target="_blank">Mastodon</a></span>]</span> this puzzle.</p>
-# MAGIC </main>
 
 # COMMAND ----------
 
@@ -1263,32 +1189,100 @@ passport_fields
 
 # COMMAND ----------
 
-passport_fields %>%
+answer <-
+  passport_fields %>%
   filter(key != "cid") %>%
   count(i) %>%
   filter(n == 7) %>%
   nrow()
+answer
 
 # COMMAND ----------
 
-# MAGIC %md ## Part 2
+# MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>The line is moving more quickly now, but you overhear airport security talking about how passports with invalid data are getting through. Better add some data validation, quick!</p>
+# MAGIC <p>You can continue to ignore the <code>cid</code> field, but each other field has <span title="GLORY TO ARSTOTZKA">strict rules</span> about what values are valid for automatic validation:</p>
+# MAGIC <ul>
+# MAGIC <li><code>byr</code> (Birth Year) - four digits; at least <code>1920</code> and at most <code>2002</code>.</li>
+# MAGIC <li><code>iyr</code> (Issue Year) - four digits; at least <code>2010</code> and at most <code>2020</code>.</li>
+# MAGIC <li><code>eyr</code> (Expiration Year) - four digits; at least <code>2020</code> and at most <code>2030</code>.</li>
+# MAGIC <li><code>hgt</code> (Height) - a number followed by either <code>cm</code> or <code>in</code>:
+# MAGIC   <ul>
+# MAGIC   <li>If <code>cm</code>, the number must be at least <code>150</code> and at most <code>193</code>.</li>
+# MAGIC   <li>If <code>in</code>, the number must be at least <code>59</code> and at most <code>76</code>.</li>
+# MAGIC   </ul>
+# MAGIC </li>
+# MAGIC <li><code>hcl</code> (Hair Color) - a <code>#</code> followed by exactly six characters <code>0</code>-<code>9</code> or <code>a</code>-<code>f</code>.</li>
+# MAGIC <li><code>ecl</code> (Eye Color) - exactly one of: <code>amb</code> <code>blu</code> <code>brn</code> <code>gry</code> <code>grn</code> <code>hzl</code> <code>oth</code>.</li>
+# MAGIC <li><code>pid</code> (Passport ID) - a nine-digit number, including leading zeroes.</li>
+# MAGIC <li><code>cid</code> (Country ID) - ignored, missing or not.</li>
+# MAGIC </ul>
+# MAGIC <p>Your job is to count the passports where all required fields are both <em>present</em> and <em>valid</em> according to the above rules. Here are some example values:</p>
+# MAGIC <pre><code>byr valid:   2002
+# MAGIC byr invalid: 2003
+# MAGIC 
+# MAGIC hgt valid:   60in
+# MAGIC hgt valid:   190cm
+# MAGIC hgt invalid: 190in
+# MAGIC hgt invalid: 190
+# MAGIC 
+# MAGIC hcl valid:   #123abc
+# MAGIC hcl invalid: #123abz
+# MAGIC hcl invalid: 123abc
+# MAGIC 
+# MAGIC ecl valid:   brn
+# MAGIC ecl invalid: wat
+# MAGIC 
+# MAGIC pid valid:   000000001
+# MAGIC pid invalid: 0123456789
+# MAGIC </code></pre>
+# MAGIC <p>Here are some invalid passports:</p>
+# MAGIC <pre><code>eyr:1972 cid:100
+# MAGIC hcl:#18171d ecl:amb hgt:170 pid:186cm iyr:2018 byr:1926
+# MAGIC 
+# MAGIC iyr:2019
+# MAGIC hcl:#602927 eyr:1967 hgt:170cm
+# MAGIC ecl:grn pid:012533040 byr:1946
+# MAGIC 
+# MAGIC hcl:dab227 iyr:2012
+# MAGIC ecl:brn hgt:182cm pid:021572410 eyr:2020 byr:1992 cid:277
+# MAGIC 
+# MAGIC hgt:59cm ecl:zzz
+# MAGIC eyr:2038 hcl:74454a iyr:2023
+# MAGIC pid:3556412378 byr:2007
+# MAGIC </code></pre>
+# MAGIC <p>Here are some valid passports:</p>
+# MAGIC <pre><code>pid:087499704 hgt:74in ecl:grn iyr:2012 eyr:2030 byr:1980
+# MAGIC hcl:#623a2f
+# MAGIC 
+# MAGIC eyr:2029 ecl:blu cid:129 byr:1989
+# MAGIC iyr:2014 pid:896056539 hcl:#a97842 hgt:165cm
+# MAGIC 
+# MAGIC hcl:#888785
+# MAGIC hgt:164cm byr:2001 iyr:2015 cid:88
+# MAGIC pid:545766238 ecl:hzl
+# MAGIC eyr:2022
+# MAGIC 
+# MAGIC iyr:2010 hgt:158cm hcl:#b6652a ecl:blu byr:1944 eyr:2021 pid:093154719
+# MAGIC </code></pre>
+# MAGIC <p>Count the number of <em>valid</em> passports - those that have all required fields <em>and valid values</em>. Continue to treat <code>cid</code> as optional. <em>In your batch file, how many passports are valid?</em></p>
+# MAGIC </article>
 
 # COMMAND ----------
 
-passport_fields %>%
+answer <-
+  passport_fields %>%
   filter(key != "cid") %>%
-
-  mutate(num = parse_number(value)) %>%
+  mutate(num = suppressWarnings(parse_number(value))) %>%
   filter(
     coalesce(!(key == "byr" & !(value >= 1920 & value <= 2002)), TRUE),
     coalesce(!(key == "iyr" & !(value >= 2010 & value <= 2020)), TRUE),
     coalesce(!(key == "eyr" & !(value >= 2020 & value <= 2030)), TRUE),
     coalesce(!(key == "hgt" & !( (str_detect(value, "^\\d+cm$") & num >= 150 & num <= 193) | (str_detect(value, "^\\d+in$") & num >= 59 & num <= 76) )), TRUE),
-    coalesce(!(key == "hcl" & !( str_detect(value, "^#[0-9a-f]{6}$") )), TRUE), # THIS
+    coalesce(!(key == "hcl" & !( str_detect(value, "^#[0-9a-f]{6}$") )), TRUE),
     coalesce(!(key == "ecl" & !(value %in% c("amb", "blu", "brn", "gry", "grn", "hzl", "oth"))), TRUE),
     coalesce(!(key == "pid" & !(str_detect(value, "^\\d{9}$"))), TRUE)
   ) %>%
-
   count(i) %>%
   filter(n == 7) %>%
   nrow()
+answer
