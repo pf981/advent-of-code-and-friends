@@ -1,9 +1,9 @@
 # Databricks notebook source
 # MAGIC %md https://adventofcode.com/2020/day/3
-# MAGIC 
-# MAGIC <main>
-# MAGIC <script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
-# MAGIC <article class="day-desc"><h2>--- Day 3: Toboggan Trajectory ---</h2><p>With the toboggan login problems resolved, you set off toward the airport. While travel by toboggan might be easy, it's certainly not safe: there's <span title="It looks like the toboggan steering system even runs on Intcode! Good thing you don't have to modify it.">very minimal steering</span> and the area is covered in trees. You'll need to see which angles will take you near the fewest trees.</p>
+
+# COMMAND ----------
+
+# MAGIC %md <article class="day-desc"><h2>--- Day 3: Toboggan Trajectory ---</h2><p>With the toboggan login problems resolved, you set off toward the airport. While travel by toboggan might be easy, it's certainly not safe: there's <span title="It looks like the toboggan steering system even runs on Intcode! Good thing you don't have to modify it.">very minimal steering</span> and the area is covered in trees. You'll need to see which angles will take you near the fewest trees.</p>
 # MAGIC <p>Due to the local geology, trees in this area only grow on exact integer coordinates in a grid. You make a map (your puzzle input) of the open squares (<code>.</code>) and trees (<code>#</code>) you can see. For example:</p>
 # MAGIC <pre><code>..##.......
 # MAGIC #...#...#..
@@ -49,25 +49,6 @@
 # MAGIC <p>In this example, traversing the map using this slope would cause you to encounter <code><em>7</em></code> trees.</p>
 # MAGIC <p>Starting at the top-left corner of your map and following a slope of right 3 and down 1, <em>how many trees would you encounter?</em></p>
 # MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>195</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Time to check the rest of the slopes - you need to minimize the probability of a sudden arboreal stop, after all.</p>
-# MAGIC <p>Determine the number of trees you would encounter if, for each of the following slopes, you start at the top-left corner and traverse the map all the way to the bottom:</p>
-# MAGIC <ul>
-# MAGIC <li>Right 1, down 1.</li>
-# MAGIC <li>Right 3, down 1. (This is the slope you already checked.)</li>
-# MAGIC <li>Right 5, down 1.</li>
-# MAGIC <li>Right 7, down 1.</li>
-# MAGIC <li>Right 1, down 2.</li>
-# MAGIC </ul>
-# MAGIC <p>In the above example, these slopes would find <code>2</code>, <code>7</code>, <code>3</code>, <code>4</code>, and <code>2</code> tree(s) respectively; multiplied together, these produce the answer <code><em>336</em></code>.</p>
-# MAGIC <p><em>What do you get if you multiply together the number of trees encountered on each of the listed slopes?</em></p>
-# MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>3772314000</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
-# MAGIC <p>At this point, you should <a href="/2020">return to your Advent calendar</a> and try another puzzle.</p>
-# MAGIC <p>If you still want to see it, you can <a href="3/input" target="_blank">get your puzzle input</a>.</p>
-# MAGIC <p>You can also <span class="share">[Share<span class="share-content">on
-# MAGIC   <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Toboggan+Trajectory%22+%2D+Day+3+%2D+Advent+of+Code+2020&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F3&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
-# MAGIC   <a href="javascript:void(0);" onclick="var mastodon_instance=prompt('Mastodon Instance / Server Name?'); if(typeof mastodon_instance==='string' &amp;&amp; mastodon_instance.length){this.href='https://'+mastodon_instance+'/share?text=I%27ve+completed+%22Toboggan+Trajectory%22+%2D+Day+3+%2D+Advent+of+Code+2020+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F3'}else{return false;}" target="_blank">Mastodon</a></span>]</span> this puzzle.</p>
-# MAGIC </main>
 
 # COMMAND ----------
 
@@ -420,11 +401,23 @@ result
 
 # COMMAND ----------
 
-result %>% pull(is_tree) %>% sum()
+answer <- result %>% pull(is_tree) %>% sum()
+answer
 
 # COMMAND ----------
 
-# MAGIC %md ## Part 2
+# MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Time to check the rest of the slopes - you need to minimize the probability of a sudden arboreal stop, after all.</p>
+# MAGIC <p>Determine the number of trees you would encounter if, for each of the following slopes, you start at the top-left corner and traverse the map all the way to the bottom:</p>
+# MAGIC <ul>
+# MAGIC <li>Right 1, down 1.</li>
+# MAGIC <li>Right 3, down 1. (This is the slope you already checked.)</li>
+# MAGIC <li>Right 5, down 1.</li>
+# MAGIC <li>Right 7, down 1.</li>
+# MAGIC <li>Right 1, down 2.</li>
+# MAGIC </ul>
+# MAGIC <p>In the above example, these slopes would find <code>2</code>, <code>7</code>, <code>3</code>, <code>4</code>, and <code>2</code> tree(s) respectively; multiplied together, these produce the answer <code><em>336</em></code>.</p>
+# MAGIC <p><em>What do you get if you multiply together the number of trees encountered on each of the listed slopes?</em></p>
+# MAGIC </article>
 
 # COMMAND ----------
 
@@ -443,13 +436,8 @@ count_trees <- function(trees, n_right, n_down) {
 
 # COMMAND ----------
 
-count_trees(trees, 3, 1)
-
-# COMMAND ----------
-
-counts <- pmap(list(c(1, 3, 5, 7, 1), c(1, 1, 1, 1, 2)), count_trees, trees = trees)
-counts
-
-# COMMAND ----------
-
-(unlist(counts) * 1) %>% reduce(`*`) # I'm not sure why I need *1. Actually - it is because the number exceeds the max integer?
+answer <-
+  # Note that map2_int won't work because of integer overflow
+  map2_dbl(c(1, 3, 5, 7, 1), c(1, 1, 1, 1, 2), count_trees, trees = trees) %>%
+  reduce(`*`)
+answer
