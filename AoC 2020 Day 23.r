@@ -1,9 +1,9 @@
 # Databricks notebook source
 # MAGIC %md https://adventofcode.com/2020/day/23
-# MAGIC 
-# MAGIC <main>
-# MAGIC <script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
-# MAGIC <article class="day-desc"><h2>--- Day 23: Crab Cups ---</h2><p>The small crab challenges <em>you</em> to a game! The crab is going to mix up some cups, and you have to predict where they'll end up.</p>
+
+# COMMAND ----------
+
+# MAGIC %md <article class="day-desc"><h2>--- Day 23: Crab Cups ---</h2><p>The small crab challenges <em>you</em> to a game! The crab is going to mix up some cups, and you have to predict where they'll end up.</p>
 # MAGIC <p>The cups will be arranged in a circle and labeled <em>clockwise</em> (your puzzle input). For example, if your labeling were <code>32415</code>, there would be five cups in the circle; going clockwise around the circle from the first cup, the cups would be labeled <code>3</code>, <code>2</code>, <code>4</code>, <code>1</code>, <code>5</code>, and then back to <code>3</code> again.</p>
 # MAGIC <p>Before the crab starts, it will designate the first cup in your list as the <em>current cup</em>. The crab is then going to do <em>100 moves</em>.</p>
 # MAGIC <p>Each <em>move</em>, the crab does the following actions:</p>
@@ -71,20 +71,6 @@
 # MAGIC <p>After the crab is done, what order will the cups be in? Starting <em>after the cup labeled <code>1</code></em>, collect the other cups' labels clockwise into a single string with no extra characters; each number except <code>1</code> should appear exactly once. In the above example, after 10 moves, the cups clockwise from <code>1</code> are labeled <code>9</code>, <code>2</code>, <code>6</code>, <code>5</code>, and so on, producing <em><code>92658374</code></em>. If the crab were to complete all 100 moves, the order after cup <code>1</code> would be <em><code>67384529</code></em>.</p>
 # MAGIC <p>Using your labeling, simulate 100 moves. <em>What are the labels on the cups after cup <code>1</code>?</em></p>
 # MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>25368479</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Due to what you can only assume is a mistranslation (you're <span title="If I were going for a programming language pun here, I'd say you were a little... RUSTy.">not exactly fluent in Crab</span>), you are quite surprised when the crab starts arranging <em>many</em> cups in a circle on your raft - <em>one million</em> (<code>1000000</code>) in total.</p>
-# MAGIC <p>Your labeling is still correct for the first few cups; after that, the remaining cups are just numbered in an increasing fashion starting from the number after the highest number in your list and proceeding one by one until one million is reached. (For example, if your labeling were <code>54321</code>, the cups would be numbered <code>5</code>, <code>4</code>, <code>3</code>, <code>2</code>, <code>1</code>, and then start counting up from <code>6</code> until one million is reached.) In this way, every number from one through one million is used exactly once.</p>
-# MAGIC <p>After discovering where you made the mistake in translating Crab Numbers, you realize the small crab isn't going to do merely 100 moves; the crab is going to do <em>ten million</em> (<code>10000000</code>) moves!</p>
-# MAGIC <p>The crab is going to hide your <em class="star">stars</em> - one each - under the <em>two cups that will end up immediately clockwise of cup <code>1</code></em>. You can have them if you predict what the labels on those cups will be when the crab is finished.</p>
-# MAGIC <p>In the above example (<code>389125467</code>), this would be <code>934001</code> and then <code>159792</code>; multiplying these together produces <em><code>149245887792</code></em>.</p>
-# MAGIC <p>Determine which two cups will end up immediately clockwise of cup <code>1</code>. <em>What do you get if you multiply their labels together?</em></p>
-# MAGIC </article>
-# MAGIC <p>Your puzzle answer was <code>44541319250</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
-# MAGIC <p>At this point, you should <a href="/2020">return to your Advent calendar</a> and try another puzzle.</p>
-# MAGIC <p>Your puzzle input was <code class="puzzle-input">326519478</code>.</p>
-# MAGIC <p>You can also <span class="share">[Share<span class="share-content">on
-# MAGIC   <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Crab+Cups%22+%2D+Day+23+%2D+Advent+of+Code+2020&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F23&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
-# MAGIC   <a href="javascript:void(0);" onclick="var mastodon_instance=prompt('Mastodon Instance / Server Name?'); if(typeof mastodon_instance==='string' &amp;&amp; mastodon_instance.length){this.href='https://'+mastodon_instance+'/share?text=I%27ve+completed+%22Crab+Cups%22+%2D+Day+23+%2D+Advent+of+Code+2020+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F23'}else{return false;}" target="_blank">Mastodon</a></span>]</span> this puzzle.</p>
-# MAGIC </main>
 
 # COMMAND ----------
 
@@ -93,10 +79,6 @@ library(tidyverse)
 # COMMAND ----------
 
 input <- 326519478
-
-# COMMAND ----------
-
-# input <- 389125467
 
 # COMMAND ----------
 
@@ -170,13 +152,21 @@ std::vector<int64_t> simulate_moves(std::vector<int64_t> cups, int64_t n_cups,in
 
 # COMMAND ----------
 
-simulate_moves(cups, length(cups), 100) %>% str_c(collapse = "")
+answer <- simulate_moves(cups, length(cups), 100) %>% str_c(collapse = "")
+answer
 
 # COMMAND ----------
 
-# MAGIC %md ## Part 2
+# MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Due to what you can only assume is a mistranslation (you're <span title="If I were going for a programming language pun here, I'd say you were a little... RUSTy.">not exactly fluent in Crab</span>), you are quite surprised when the crab starts arranging <em>many</em> cups in a circle on your raft - <em>one million</em> (<code>1000000</code>) in total.</p>
+# MAGIC <p>Your labeling is still correct for the first few cups; after that, the remaining cups are just numbered in an increasing fashion starting from the number after the highest number in your list and proceeding one by one until one million is reached. (For example, if your labeling were <code>54321</code>, the cups would be numbered <code>5</code>, <code>4</code>, <code>3</code>, <code>2</code>, <code>1</code>, and then start counting up from <code>6</code> until one million is reached.) In this way, every number from one through one million is used exactly once.</p>
+# MAGIC <p>After discovering where you made the mistake in translating Crab Numbers, you realize the small crab isn't going to do merely 100 moves; the crab is going to do <em>ten million</em> (<code>10000000</code>) moves!</p>
+# MAGIC <p>The crab is going to hide your <em class="star">stars</em> - one each - under the <em>two cups that will end up immediately clockwise of cup <code>1</code></em>. You can have them if you predict what the labels on those cups will be when the crab is finished.</p>
+# MAGIC <p>In the above example (<code>389125467</code>), this would be <code>934001</code> and then <code>159792</code>; multiplying these together produces <em><code>149245887792</code></em>.</p>
+# MAGIC <p>Determine which two cups will end up immediately clockwise of cup <code>1</code>. <em>What do you get if you multiply their labels together?</em></p>
+# MAGIC </article>
 
 # COMMAND ----------
 
 result <- simulate_moves(cups, 1000000, 10000000)
-result[1] * result[2]
+answer <- result[1] * result[2]
+answer
