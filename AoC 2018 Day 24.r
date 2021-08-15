@@ -401,7 +401,7 @@ void attack(std::vector<Army>& immune, std::vector<Army>& infection, const std::
   }
 }
 
-std::pair<std::string, int> get_winner(std::vector<std::string> army, std::vector<int> units, std::vector<int> hit_points, std::vector<int> attack_damage, std::vector<std::string> attack_type, std::vector<int> initiative, std::vector<std::vector<std::string> > weaknesses, std::vector<std::vector<std::string> > immunities, int boost = 0) {
+std::pair<std::string, int> get_winner(const std::vector<std::string>& army, const std::vector<int>& units, const std::vector<int>& hit_points, const std::vector<int>& attack_damage, const std::vector<std::string>& attack_type, const std::vector<int>& initiative, const std::vector<std::vector<std::string> >& weaknesses, const std::vector<std::vector<std::string> >& immunities, int boost = 0) {
   std::vector<Army> immune;
   std::vector<Army> infection;
 
