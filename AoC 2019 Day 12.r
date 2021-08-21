@@ -315,8 +315,9 @@ int64_t find_period(std::vector<int64_t> positions) {
 # COMMAND ----------
 
 periods <-
-  c("x", "y", "z") %>%
-  map_dbl(~find_period(starting_positions[[.]]))
+  starting_positions %>%
+  select(x, y, z) %>%
+  summarise_all(find_period)
 periods
 
 # COMMAND ----------
