@@ -307,7 +307,7 @@ get_thruster_output2 <- function(instructions, phases, a_input = 0) {
   amp_d <- create_amp(instructions, phases[[4]])
   amp_e <- create_amp(instructions, phases[[5]])
   
-  while (!amp_e$is_halted) { # FIXME: Is it possible for just one amp to halt but not the others?
+  while (!amp_e$is_halted) {
     amp_a <- run_amp(amp_a, a_input)
     amp_b <- run_amp(amp_b, amp_a$output)
     amp_c <- run_amp(amp_c, amp_b$output)
