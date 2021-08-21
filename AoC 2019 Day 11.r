@@ -104,13 +104,11 @@ run_bot <- function(bot, input) {
     op_code <- value %% 100
     p1_index_mode <- value %% 1000 %/% 100
     p2_index_mode <- value %% 10000 %/% 1000
-    p3_index_mode <- value %% 100000 %/% 10000 # Unused
+    p3_index_mode <- value %% 100000 %/% 10000
     
     p1 <- list(bot$i + 1, p1_index_mode)
     p2 <- list(bot$i + 2, p2_index_mode)
     p3 <- list(bot$i + 3, p3_index_mode)
-    
-    # print_state(instructions, input, i, p1, p2, p3, op_code)
     
     if (op_code == 1) {
       bot$instructions[p3] <- bot$instructions[p1] + bot$instructions[p2]
@@ -139,8 +137,7 @@ run_bot <- function(bot, input) {
     } else if (op_code == 8) {
       bot$instructions[p3] <- bot$instructions[p1] == bot$instructions[p2]
     } else if (op_code == 9) {
-      # New instruction: Relative base offset
-      bot$relative_base <- bot$relative_base + bot$instructions[p1]
+      attr(bot$instructions, "relative_base") <- attr(bot$instructions, "relative_base") + bot$instructions[p1]
     } else {
       stop(paste0('Invalid op code: ', op_code, ' at position ', i, '\n', paste0(bot$instructions, collapse = ', ')))
     }
@@ -190,50 +187,56 @@ as.list.hashmap <- function(h) {
 # COMMAND ----------
 
 create_bot <- function(instructions, extra_memory = 1000) {
-  list(
+  bot <- list(
     instructions = structure(c(instructions, numeric(extra_memory)), class = "special_index"),
-    relative_base = 0,
     i = 0,
     is_halted = FALSE,
     output = NULL
   )
+  attr(bot$instructions, "relative_base") <- 0
+  bot
 }
 
 # COMMAND ----------
 
-panels <- hashmap(default = 0)
-bot <- create_bot(sequence)
-position <- c(0, 0)
-direction <- "N"
+paint <- function(instructions, panels = hashmap(default = 0)) {
+  bot <- create_bot(instructions)
+  position <- c(0, 0)
+  direction <- "N"
 
-while (!bot$is_halted) {
-  bot <- run_bot(bot, panels[position])
-  paint_value <- bot$output
-  bot <- run_bot(bot, panels[position])
-  direction_value <- bot$output
-  
-  panels[position] <- paint_value
-  if (direction_value == 0) { # Left
-    direction <- case_when(
-      direction == "N" ~ "W",
-      direction == "E" ~ "N",
-      direction == "S" ~ "E",
-      direction == "W" ~ "S",
-    )
-  } else { # Right
-    direction <- case_when(
-      direction == "N" ~ "E",
-      direction == "E" ~ "S",
-      direction == "S" ~ "W",
-      direction == "W" ~ "N",
+  while (!bot$is_halted) {
+    bot <- run_bot(bot, panels[position])
+    paint_value <- bot$output
+    bot <- run_bot(bot, panels[position])
+    direction_value <- bot$output
+
+    panels[position] <- paint_value
+    if (direction_value == 0) { # Left
+      direction <- case_when(
+        direction == "N" ~ "W",
+        direction == "E" ~ "N",
+        direction == "S" ~ "E",
+        direction == "W" ~ "S",
+      )
+    } else { # Right
+      direction <- case_when(
+        direction == "N" ~ "E",
+        direction == "E" ~ "S",
+        direction == "S" ~ "W",
+        direction == "W" ~ "N",
+      )
+    }
+    position <- c(
+      position[1] + ifelse(direction == "W", -1, 0) + ifelse(direction == "E", 1, 0),
+      position[2] + ifelse(direction == "N", -1, 0) + ifelse(direction == "S", 1, 0)
     )
   }
-  position <- c(
-    position[1] + ifelse(direction == "W", -1, 0) + ifelse(direction == "E", 1, 0),
-    position[2] + ifelse(direction == "N", -1, 0) + ifelse(direction == "S", 1, 0)
-  )
+  panels
 }
 
+# COMMAND ----------
+
+panels <- paint(sequence)
 answer <- length(panels)
 answer
 
@@ -247,429 +250,24 @@ answer
 # COMMAND ----------
 
 panels <- hashmap(default = 0)
-bot <- create_bot(sequence, extra_memory = 10000000)
-position <- c(0, 0)
-direction <- "N"
+panels[c(0, 0)] <- 1
 
-panels[position] <- 1
-
-while (!bot$is_halted) {
-  bot <- run_bot(bot, panels[position])
-  paint_value <- bot$output
-  bot <- run_bot(bot, panels[position])
-  direction_value <- bot$output
-  
-  panels[position] <- paint_value
-  if (direction_value == 0) { # Left
-    direction <- case_when(
-      direction == "N" ~ "W",
-      direction == "E" ~ "N",
-      direction == "S" ~ "E",
-      direction == "W" ~ "S",
-    )
-  } else { # Right
-    direction <- case_when(
-      direction == "N" ~ "E",
-      direction == "E" ~ "S",
-      direction == "S" ~ "W",
-      direction == "W" ~ "N",
-    )
-  }
-  position <- c(
-    position[1] + ifelse(direction == "W", -1, 0) + ifelse(direction == "E", 1, 0),
-    position[2] + ifelse(direction == "N", -1, 0) + ifelse(direction == "S", 1, 0)
-  )
-}
-
-answer <- length(panels)
-answer
+panels <- paint(sequence, panels)
 
 # COMMAND ----------
 
-as.list(panels)
+coords <-
+  panels %>%
+  as.list() %>%
+  keep(~. == 1) %>%
+  names() %>%
+  str_split(",") %>%
+  map(parse_integer) %>%
+  map_dfr(set_names, c("row", "col"))
 
 # COMMAND ----------
 
-# MAGIC %md ## Start WIP
-
-# COMMAND ----------
-
-panels <- hashmap(default = 0)
-bot <- create_bot(sequence, extra_memory = 10000000)
-position <- c(0, 0)
-direction <- "N"
-
-panels[position] <- 1
-
-  bot <- run_bot(bot, panels[position])
-  paint_value <- bot$output
-  bot <- run_bot(bot, panels[position])
-  direction_value <- bot$output
-  
-  panels[position] <- paint_value
-  if (direction_value == 0) { # Left
-    direction <- case_when(
-      direction == "N" ~ "W",
-      direction == "E" ~ "N",
-      direction == "S" ~ "E",
-      direction == "W" ~ "S",
-    )
-  } else { # Right
-    direction <- case_when(
-      direction == "N" ~ "E",
-      direction == "E" ~ "S",
-      direction == "S" ~ "W",
-      direction == "W" ~ "N",
-    )
-  }
-  position <- c(
-    position[1] + ifelse(direction == "W", -1, 0) + ifelse(direction == "E", 1, 0),
-    position[2] + ifelse(direction == "N", -1, 0) + ifelse(direction == "S", 1, 0)
-  )
-
-##################  
-#   bot <- run_bot(bot, panels[position])
-#   paint_value <- bot$output
-#   bot <- run_bot(bot, panels[position])
-#   direction_value <- bot$output
-  
-#   panels[position] <- paint_value
-#   if (direction_value == 0) { # Left
-#     direction <- case_when(
-#       direction == "N" ~ "W",
-#       direction == "E" ~ "N",
-#       direction == "S" ~ "E",
-#       direction == "W" ~ "S",
-#     )
-#   } else { # Right
-#     direction <- case_when(
-#       direction == "N" ~ "E",
-#       direction == "E" ~ "S",
-#       direction == "S" ~ "W",
-#       direction == "W" ~ "N",
-#     )
-#   }
-#   position <- c(
-#     position[1] + ifelse(direction == "W", -1, 0) + ifelse(direction == "E", 1, 0),
-#     position[2] + ifelse(direction == "N", -1, 0) + ifelse(direction == "S", 1, 0)
-#   )
-bot
-
-# COMMAND ----------
-
-run_bot <- function(bot, input) {
-  while (bot$instructions[list(bot$i, 1)] != 99) {
-    value <- bot$instructions[list(bot$i, 1)]
-    
-    op_code <- value %% 100
-    p1_index_mode <- value %% 1000 %/% 100
-    p2_index_mode <- value %% 10000 %/% 1000
-    p3_index_mode <- value %% 100000 %/% 10000 # Unused
-    
-    p1 <- list(bot$i + 1, p1_index_mode)
-    p2 <- list(bot$i + 2, p2_index_mode)
-    p3 <- list(bot$i + 3, p3_index_mode)
-    
-    # print_state(instructions, input, i, p1, p2, p3, op_code)
-    
-    if (op_code == 1) {
-      bot$instructions[p3] <- bot$instructions[p1] + bot$instructions[p2]
-    } else if (op_code == 2) {
-      bot$instructions[p3] <- bot$instructions[p1] * bot$instructions[p2]
-    } else if (op_code == 3) {
-      bot$instructions[p1] <- input
-    } else if (op_code == 4) {
-      bot$output <- bot$instructions[p1]
-      num_params <- 1
-      bot$i <- bot$i + 1 + num_params
-      break
-    } else if (op_code == 5) {
-      if (bot$instructions[p1] != 0) {
-        bot$i <- bot$instructions[p2] 
-        next
-      }
-    } else if (op_code == 6) {
-      if (bot$instructions[p1] == 0) {
-        bot$i = get_index(bot$instructions, p2) - 1
-        bot$i <- bot$instructions[p2] 
-        next
-      }
-    } else if (op_code == 7) {
-      bot$instructions[p3] <- bot$instructions[p1] < bot$instructions[p2]
-    } else if (op_code == 8) {
-      bot$instructions[p3] <- bot$instructions[p1] == bot$instructions[p2]
-    } else if (op_code == 9) {
-      # New instruction: Relative base offset
-      bot$relative_base <- bot$relative_base + bot$instructions[p1]
-    } else {
-      stop(paste0('Invalid op code: ', op_code, ' at position ', i, '\n', paste0(bot$instructions, collapse = ', ')))
-    }
-    
-    num_params <- case_when(
-      op_code %in% c(3, 4, 9) ~ 1,
-      op_code %in% c(5, 6) ~ 2,
-      op_code %in% c(1, 2, 7, 8) ~ 3
-    )
-    bot$i <- bot$i + 1 + num_params
-  }
-  
-  if (bot$instructions[list(bot$i, TRUE)] == 99) {
-    bot$is_halted <- TRUE
-  }
-
-  bot
-}
-
-# COMMAND ----------
-
-# MAGIC %md ## Scratch
-
-# COMMAND ----------
-
-panels <- hashmap(default = 0)
-bot <- create_bot(sequence, extra_memory = 10000000)
-position <- c(0, 0)
-direction <- "N"
-
-panels[position] <- 1
-
-
-
-# COMMAND ----------
-
-#while (!bot$is_halted) {
-  bot <- run_bot(bot, panels[position])
-  paint_value <- bot$output
-  bot <- run_bot(bot, panels[position])
-  direction_value <- bot$output
-  
-  panels[position] <- paint_value
-  if (direction_value == 0) { # Left
-    direction <- case_when(
-      direction == "N" ~ "W",
-      direction == "E" ~ "N",
-      direction == "S" ~ "E",
-      direction == "W" ~ "S",
-    )
-  } else { # Right
-    direction <- case_when(
-      direction == "N" ~ "E",
-      direction == "E" ~ "S",
-      direction == "S" ~ "W",
-      direction == "W" ~ "N",
-    )
-  }
-  position <- c(
-    position[1] + ifelse(direction == "W", -1, 0) + ifelse(direction == "E", 1, 0),
-    position[2] + ifelse(direction == "N", -1, 0) + ifelse(direction == "S", 1, 0)
-  )
-#}
-
-lst(
-  as.list(panels),
-  lst(position, direction)
-)
-
-# COMMAND ----------
-
-panels <- hashmap(default = 0)
-panels[1] <- 1
-as.list(panels)
-
-# COMMAND ----------
-
-ls(panels, all.names = TRUE)
-
-# COMMAND ----------
-
-panels
-
-# COMMAND ----------
-
-attr(panels, "class") <- NULL
-attr(panels, "default") <- NULL
-
-# COMMAND ----------
-
-as.list(panels)
-
-# COMMAND ----------
-
-ls(panels)
-
-# COMMAND ----------
-
-panels <- hashmap(default = 0)
-bot <- create_bot(sequence, extra_memory = 1000000)
-position <- c(0, 0)
-direction <- "N"
-
-panels[position] <- 1
-
-while (!bot$is_halted) {
-  bot <- run_bot(bot, panels[position])
-  paint_value <- bot$output
-  bot <- run_bot(bot, panels[position])
-  direction_value <- bot$output
-  
-  panels[position] <- paint_value
-  if (direction_value == 0) { # Left
-    direction <- case_when(
-      direction == "N" ~ "W",
-      direction == "E" ~ "N",
-      direction == "S" ~ "E",
-      direction == "W" ~ "S",
-    )
-  } else { # Right
-    direction <- case_when(
-      direction == "N" ~ "E",
-      direction == "E" ~ "S",
-      direction == "S" ~ "W",
-      direction == "W" ~ "N",
-    )
-  }
-  position <- c(
-    position[1] + ifelse(direction == "W", -1, 0) + ifelse(direction == "E", 1, 0),
-    position[2] + ifelse(direction == "N", -1, 0) + ifelse(direction == "S", 1, 0)
-  )
-}
-
-# COMMAND ----------
-
-# MAGIC %md ## Scratch
-
-# COMMAND ----------
-
-panels <- hashmap(default = 0)
-bot <- create_bot(sequence)
-position <- c(0, 0)
-direction <- "N"
-
-# COMMAND ----------
-
-#while (!bot$is_halted) {
-  bot <- run_bot(bot, panels[position])
-  paint_value <- bot$output
-  bot <- run_bot(bot, panels[position])
-  direction_value <- bot$output
-  
-  panels[position] <- paint_value
-  if (direction_value == 0) { # Left
-    direction <- case_when(
-      direction == "N" ~ "W",
-      direction == "E" ~ "N",
-      direction == "S" ~ "E",
-      direction == "W" ~ "S",
-    )
-  } else { # Right
-    direction <- case_when(
-      direction == "N" ~ "E",
-      direction == "E" ~ "S",
-      direction == "S" ~ "W",
-      direction == "W" ~ "N",
-    )
-  }
-  position <- c(
-    position[1] + ifelse(direction == "W", -1, 0) + ifelse(direction == "E", 1, 0),
-    position[2] + ifelse(direction == "N", -1, 0) + ifelse(direction == "S", 1, 0)
-  )
-#}
-
-answer <- length(panels)
-answer
-
-# COMMAND ----------
-
-panels[0] <- 1
-panels
-
-# COMMAND ----------
-
-str(panels)
-
-# COMMAND ----------
-
-# MAGIC %md ## Scratch
-
-# COMMAND ----------
-
-panels <- hashmap(default = 0)
-bot <- create_bot(sequence)
-
-while (!bot$is_halted) {
-  bot <- run_bot(bot, panels[position])
-  paint_value <- bot$output
-  bot <- run_bot(bot, panels[position])
-  direction_value <- bot$output
-}
-
-answer <- length(panels)
-answer
-
-# COMMAND ----------
-
-bot <- create_bot(sequence)
-bot
-
-# COMMAND ----------
-
-# MAGIC %md ## Scratch
-
-# COMMAND ----------
-
-h <- hashmap(default = ".")
-h[1] <- 1
-length(h)
-
-# COMMAND ----------
-
-panels <- hashmap(default = ".")
-
-# COMMAND ----------
-
-bot <- list(
-  instructions = structure(instructions, class = "special_index"),
-  i = 0,
-  is_halted = FALSE,
-  output = NULL
-)
-
-while (!bot$is_halted) {
-  bot <- run_bot(bot)
-}
-
-# COMMAND ----------
-
-attr(h, "default")
-
-# COMMAND ----------
-
-h <- hashmap(default = ".")
-h[1]
-
-# COMMAND ----------
-
-h <- hashmap()
-h[1] <- "hello"
-h[1]
-
-# COMMAND ----------
-
-h["asda"]
-
-# COMMAND ----------
-
-simulate <- function(n, init) {
-  last_seen <- new.env(hash = TRUE) # Use environments as hash map
-  for (i in seq_along(init)) {
-    last_seen[[as.character(init[i])]] <- i
-  }
-  
-  v_prev <- last(init)
-  for (i in seq(from = length(init) + 1, n)) {
-    v <- c(i - 1 - last_seen[[as.character(v_prev)]], 0)[1]
-    last_seen[[as.character(v_prev)]] <- i - 1    
-    v_prev <- v
-  }
-  v
-}
+ggplot(coords, aes(row, -col)) +
+  geom_tile() +
+  ylim(-40, 1) +
+  theme_void()
