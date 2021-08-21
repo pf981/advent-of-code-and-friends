@@ -136,37 +136,11 @@ run_instructions <- function(instructions, phase, input) {
 # COMMAND ----------
 
 get_thruster_output <- function(instructions, phases, a_input = 0) {
-  a_phase <- phases[[1]]
-  b_phase <- phases[[2]]
-  c_phase <- phases[[3]]
-  d_phase <- phases[[4]]
-  e_phase <- phases[[5]]
-  
-  a_output <- run_instructions(
-    instructions,
-    phase = a_phase,
-    input = a_input
-  )
-  b_output <- run_instructions(
-    instructions,
-    phase = b_phase,
-    input = a_output
-  )
-  c_output <- run_instructions(
-    instructions,
-    phase = c_phase,
-    input = b_output
-  )
-  d_output <- run_instructions(
-    instructions,
-    phase = d_phase,
-    input = c_output
-  )
-  e_output <- run_instructions(
-    instructions,
-    phase = e_phase,
-    input = d_output
-  )
+  a_output <- run_instructions(instructions, phase = phases[[1]], input = a_input)
+  b_output <- run_instructions(instructions, phase = phases[[2]], input = a_output)
+  c_output <- run_instructions(instructions, phase = phases[[3]], input = b_output)
+  d_output <- run_instructions(instructions, phase = phases[[4]], input = c_output)
+  e_output <- run_instructions(instructions, phase = phases[[5]], input = d_output)
 
   thruster_output <- e_output
   thruster_output
