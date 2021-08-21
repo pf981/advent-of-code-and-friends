@@ -37,6 +37,7 @@ install.packages("gtools")
 
 # COMMAND ----------
 
+library(testthat)
 library(tidyverse)
 
 # COMMAND ----------
@@ -173,11 +174,15 @@ get_thruster_output <- function(instructions, phases, a_input = 0) {
 
 # COMMAND ----------
 
-# MAGIC %md ### Tests
+get_max_thruster_output <- function(instructions) {
+  gtools::permutations(n = 5, r = 5, v = seq(from = 0, to = 4, by = 1)) %>%
+    array_tree() %>%
+    map(unlist) %>%
+    map_dbl(~get_thruster_output(instructions, .)) %>%
+    max()
+}
 
 # COMMAND ----------
-
-library(testthat)
 
 test_that("thruster output works", {
   expect_equal(
@@ -202,28 +207,6 @@ test_that("thruster output works", {
     65210
   )
 })
-
-# COMMAND ----------
-
-# MAGIC %md ### Try All Input Permutations
-
-# COMMAND ----------
-
-p <- gtools::permutations(n = 5, r = 5, v = seq(from = 0, to = 4, by = 1))
-p
-
-# COMMAND ----------
-
-p <- p %>% array_tree() %>% map(unlist)
-p
-
-# COMMAND ----------
-
-get_max_thruster_output <- function(instructions) {
-  p %>%
-    map_dbl(~get_thruster_output2(instructions, .)) %>%
-    max()
-}
 
 # COMMAND ----------
 
@@ -323,7 +306,6 @@ run_amp <- function(amp, input) {
     amp$i <- amp$i + 1 + num_params
   }
   
-  #if (amp$instructions[list(amp$i, TRUE)] == 99) stop("ENDED!")# FIXME: DEBUG
   if (amp$instructions[list(amp$i, TRUE)] == 99) {
     amp$is_halted <- TRUE
   }
@@ -343,27 +325,6 @@ create_amp <- function(instructions, phase) {
     output = NULL
   )
 }
-
-# get_thruster_output2 <- function(instructions, phases, a_input = 0) {
-#   amp_a <- create_amp(instructions, phases[[1]])
-#   amp_b <- create_amp(instructions, phases[[2]])
-#   amp_c <- create_amp(instructions, phases[[3]])
-#   amp_d <- create_amp(instructions, phases[[4]])
-#   amp_e <- create_amp(instructions, phases[[5]])
-  
-#   repeat { # FIXME: Is it possible for just one amp to halt but not the others?
-#     amp_a <- run_amp(amp_a, a_input)     ; if (amp_a$is_halted) break
-#     amp_b <- run_amp(amp_b, amp_a$output); if (amp_b$is_halted) break
-#     amp_c <- run_amp(amp_c, amp_b$output); if (amp_c$is_halted) break
-#     amp_d <- run_amp(amp_d, amp_c$output); if (amp_d$is_halted) break
-#     amp_e <- run_amp(amp_e, amp_d$output); if (amp_e$is_halted) break
-
-#     a_input <- amp_e$output
-#   }
-
-#   thruster_output <- amp_e$output
-#   thruster_output
-# }
 
 get_thruster_output2 <- function(instructions, phases, a_input = 0) {
   amp_a <- create_amp(instructions, phases[[1]])
@@ -388,30 +349,13 @@ get_thruster_output2 <- function(instructions, phases, a_input = 0) {
 
 # COMMAND ----------
 
-# instructions = c(3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5)
-# phases <- c(9, 8, 7, 6, 5)
-# a_input <- 0
-
-# amp_a <- create_amp(instructions, phases[[1]])
-# amp_b <- create_amp(instructions, phases[[2]])
-# amp_c <- create_amp(instructions, phases[[3]])
-# amp_d <- create_amp(instructions, phases[[4]])
-# amp_e <- create_amp(instructions, phases[[5]])
-
-#     amp_a <- run_amp(amp_a, a_input)
-# #     amp_b <- run_amp(amp_b, amp_a$output)
-# #     amp_c <- run_amp(amp_c, amp_b$output)
-# #     amp_d <- run_amp(amp_d, amp_c$output)
-# #     amp_e <- run_amp(amp_e, amp_d$output)
-
-# #     a_input <- amp_e$output
-
-# COMMAND ----------
-
-get_thruster_output2(
-      instructions = c(3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5),
-      c(9, 8, 7, 6, 5)
-    )
+get_max_thruster_output2 <- function(instructions) {
+  gtools::permutations(n = 5, r = 5, v = seq(from = 5, to = 9, by = 1)) %>%
+    array_tree() %>%
+    map(unlist) %>%
+    map_dbl(~get_thruster_output2(instructions, .)) %>%
+    max()
+}
 
 # COMMAND ----------
 
@@ -423,75 +367,33 @@ test_that("part2 thruster output works", {
     ),
     139629729
   )
+  expect_equal(
+    get_thruster_output2(
+      instructions = c(3,52,1001,52,-5,52,3,53,1,52,56,54,1007,54,5,55,1005,55,26,1001,54,-5,54,1105,1,12,1,53,54,53,1008,54,0,55,1001,55,1,55,2,53,55,53,4,53,1001,56,-1,56,1005,56,6,99,0,0,0,0,10),
+      c(9,7,8,5,6)
+    ),
+    18216
+  )
 })
 
 # COMMAND ----------
 
 test_that("part2 max thruster output works", {
   expect_equal(
-    get_max_thruster_output(c(3,15,3,16,1002,16,10,16,1,16,15,15,4,15,99,0,0)),
-    43210
+    get_max_thruster_output2(
+      instructions = c(3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5)
+    ),
+    139629729
+  )
+  expect_equal(
+    get_max_thruster_output2(
+      instructions = c(3,52,1001,52,-5,52,3,53,1,52,56,54,1007,54,5,55,1005,55,26,1001,54,-5,54,1105,1,12,1,53,54,53,1008,54,0,55,1001,55,1,55,2,53,55,53,4,53,1001,56,-1,56,1005,56,6,99,0,0,0,0,10)
+    ),
+    18216
   )
 })
 
 # COMMAND ----------
 
-get_thruster_output2 <- function(instructions, a_phase, b_phase, c_phase, d_phase, e_phase, a_input = 0) {
-  a_output <- run_instructions(
-    instructions,
-    phase = a_phase,
-    input = a_input
-  )
-  b_output <- run_instructions(
-    instructions,
-    phase = b_phase,
-    input = a_output
-  )
-  c_output <- run_instructions(
-    instructions,
-    phase = c_phase,
-    input = b_output
-  )
-  d_output <- run_instructions(
-    instructions,
-    phase = d_phase,
-    input = c_output
-  )
-  e_output <- run_instructions(
-    instructions,
-    phase = e_phase,
-    input = d_output
-  )
-
-  thruster_output <- e_output
-  thruster_output
-}
-
-get_thruster_output2 <- function(instructions, phases, a_input = 0) {
-  get_thruster_output(instructions, phases[[1]], phases[[2]], phases[[3]], phases[[4]], phases[[5]], a_input)
-}
-
-# COMMAND ----------
-
-test_instructions <- c(3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5)
-
-get_thruster_output2(test_instructions, c(9,8,7,6,5))
-
-# COMMAND ----------
-
-o <- get_thruster_output2(test_instructions, list(166689759, NULL, NULL, NULL, NULL), a_input = NULL)
-o
-
-# COMMAND ----------
-
-o2 <- get_thruster_output2(test_instructions, list(o, NULL, NULL, NULL, NULL), a_input = NULL)
-o2
-
-# COMMAND ----------
-
-get_thruster_output2(test_instructions, list(o2, NULL, NULL, NULL, NULL), a_input = NULL)
-
-# COMMAND ----------
-
-166689759
-139629729
+answer <- get_max_thruster_output2(sequence)
+answer
