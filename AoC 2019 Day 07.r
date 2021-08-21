@@ -33,6 +33,10 @@
 
 # COMMAND ----------
 
+install.packages("gtools")
+
+# COMMAND ----------
+
 library(tidyverse)
 
 # COMMAND ----------
@@ -66,12 +70,11 @@ get_index <- function(df, i) {
 
 # COMMAND ----------
 
-run_instructions <- function(instructions, input = 1, second_input = NULL) {
+run_instructions <- function(instructions, phase, input) {
   instructions <- structure(instructions, class = "special_index")
-  input <- first(c(second_input, input)) # This is coalesce
   
   i <- 0
-  input_count <- 0
+  first_input <- TRUE
   
   while (instructions[list(i, TRUE)] != 99) {
     value <- instructions[list(i, TRUE)]
@@ -85,19 +88,18 @@ run_instructions <- function(instructions, input = 1, second_input = NULL) {
     p2 <- list(i + 2, p2_is_immediate)
     p3 <- list(i + 3, p3_is_immediate)
     
-    # print_state(instructions, input, i, p1, p2, p3, op_code)
-    
     if (op_code == 1) {
       instructions[p3] <- instructions[p1] + instructions[p2]
     } else if (op_code == 2) {
       instructions[p3] <- instructions[p1] * instructions[p2]
     } else if (op_code == 3) {
-      input_count <- input_count + 1
-      if (input_count == 2) {
-        # This is coalesce
-        input <- first(c(second_input, input))
+      # The first input instruction (opcode 3) is the phase setting
+      if (first_input) {
+        instructions[p1] <- phase
+        first_input <- FALSE
+      } else {
+        instructions[p1] <- input
       }
-      instructions[p1] <- input
     } else if (op_code == 4) {
       input <- instructions[p1]
     } else if (op_code == 5) {
@@ -135,31 +137,32 @@ run_instructions <- function(instructions, input = 1, second_input = NULL) {
 get_thruster_output <- function(instructions, a_phase, b_phase, c_phase, d_phase, e_phase, a_input = 0) {
   a_output <- run_instructions(
     instructions,
-    input = a_phase,
-    second_input = a_input
+    phase = a_phase,
+    input = a_input
   )
   b_output <- run_instructions(
     instructions,
-    input = b_phase,
-    second_input = a_output
+    phase = b_phase,
+    input = a_output
   )
   c_output <- run_instructions(
     instructions,
-    input = c_phase,
-    second_input = b_output
+    phase = c_phase,
+    input = b_output
   )
   d_output <- run_instructions(
     instructions,
-    input = d_phase,
-    second_input = c_output
+    phase = d_phase,
+    input = c_output
   )
   e_output <- run_instructions(
     instructions,
-    input = e_phase,
-    second_input = d_output
+    phase = e_phase,
+    input = d_output
   )
-  # lst(a_output, b_output, c_output, d_output, e_output)
-  e_output
+
+  thruster_output <- e_output
+  thruster_output
 }
 
 get_thruster_output2 <- function(instructions, phases, a_input = 0) {
@@ -169,21 +172,6 @@ get_thruster_output2 <- function(instructions, phases, a_input = 0) {
 # COMMAND ----------
 
 # MAGIC %md ### Tests
-
-# COMMAND ----------
-
-run_instructions(
-    instructions = c(3,15,3,16,1002,16,10,16,1,16,15,15,4,15,99,0,0),
-    input = 4,
-    second_input = 0
-  )
-
-# COMMAND ----------
-
-get_thruster_output2(
-  instructions = c(3,15,3,16,1002,16,10,16,1,16,15,15,4,15,99,0,0),
-  c(4, 3, 2, 1, 0)
-)
 
 # COMMAND ----------
 
@@ -219,10 +207,6 @@ test_that("thruster output works", {
 
 # COMMAND ----------
 
-install.packages("gtools")
-
-# COMMAND ----------
-
 p <- gtools::permutations(n = 5, r = 5, v = seq(from = 0, to = 4, by = 1))
 p
 
@@ -233,14 +217,6 @@ p
 
 # COMMAND ----------
 
-# get_max_thruster_output <- function(instructions) {
-#   tibble(p = p) %>%
-#     mutate(
-#       thruster_output = p %>% map_dbl(~get_thruster_output2(instructions, .))
-#     ) %>%
-#     pull(thruster_output) %>%
-#     max()
-# }
 get_max_thruster_output <- function(instructions) {
   p %>%
     map_dbl(~get_thruster_output2(instructions, .)) %>%
@@ -258,7 +234,8 @@ test_that("max thruster output works", {
 
 # COMMAND ----------
 
- get_max_thruster_output(sequence)
+answer <- get_max_thruster_output(sequence)
+answer
 
 # COMMAND ----------
 
