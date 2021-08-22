@@ -145,14 +145,20 @@ plot_df <-
   )
 
 ggplot(plot_df, aes(x, y, fill = as.factor(value), label = value)) +
-  geom_tile() +
+  geom_tile(height = 0.8) +
   geom_text(size = 2) +
   scale_fill_manual(values = c("red", "grey", "green")) +
   scale_x_continuous(breaks = seq_len(50), expand = c(0, 0)) +
   scale_y_reverse(breaks = seq_len(50), expand = c(0, 0)) +
+  labs(
+    x = "Coefficient",
+    y = "Step"
+  ) +
   theme_void() +
   theme(
     axis.text = element_text(size = rel(0.5)),
+    axis.title.x = element_text(size = rel(0.9)),
+    axis.title.y = element_text(angle = 90, size = rel(0.9)),
     legend.position = "none"
   )
 
