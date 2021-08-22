@@ -76,14 +76,6 @@ input <- "5971509197666097784768618047217898827486887424891289192788177050641612
 
 # COMMAND ----------
 
-# input <- "12345678"
-
-# COMMAND ----------
-
-# input <- "80871224585914546619083218645595"
-
-# COMMAND ----------
-
 nums <- input %>% str_split("") %>% unlist() %>% parse_integer()
 nums
 
@@ -138,4 +130,42 @@ answer
 
 # COMMAND ----------
 
-# WIP
+m <- map(seq_len(50), create_pattern, 50) %>% simplify2array() %>% t()
+m
+
+# COMMAND ----------
+
+plot_df <-
+  m %>%
+  as_tibble() %>%
+  mutate(y = row_number()) %>%
+  pivot_longer(-y, names_to = "x") %>%
+  mutate(
+    x = str_extract(x, "\\d+") %>% parse_integer()
+  )
+
+ggplot(plot_df, aes(x, y, fill = as.factor(value), label = value)) +
+  geom_tile() +
+  geom_text(size = 2) +
+  scale_fill_manual(values = c("red", "grey", "green")) +
+  scale_x_continuous(breaks = seq_len(50), expand = c(0, 0)) +
+  scale_y_reverse(breaks = seq_len(50), expand = c(0, 0)) +
+  theme_void() +
+  theme(
+    axis.text = element_text(size = rel(0.5)),
+    legend.position = "none"
+  )
+
+# COMMAND ----------
+
+step <- function(x) x %>% rev() %>% cumsum() %>% `%%`(10) %>% rev()
+
+offset <- head(nums, 7) %>% str_c(collapse = "") %>% parse_integer()
+
+new_nums <- tail(rep(nums, 10000), -offset)
+for (i in seq_len(100)) {
+  new_nums <- step(new_nums)
+}
+
+answer <- head(new_nums, 8)
+answer %>% str_c(collapse = "")
