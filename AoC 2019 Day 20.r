@@ -476,10 +476,6 @@ answer
 
 # COMMAND ----------
 
-coords
-
-# COMMAND ----------
-
 Rcpp::cppFunction('
 int solve_cpp2(std::vector<int> rows, std::vector<int> cols, std::vector<std::string> values, std::vector<int> to_rows, std::vector<int> to_cols, std::vector<int> depth_changes) {
   using State = std::tuple<int, int, std::string, int, int>; // row, col, value, d, depth
