@@ -209,70 +209,6 @@ NW....#.....#.#.#.#.#...#.#...#.#..MI                                           
 
 # COMMAND ----------
 
-# input <- "         A           
-#          A           
-#   #######.#########  
-#   #######.........#  
-#   #######.#######.#  
-#   #######.#######.#  
-#   #######.#######.#  
-#   #####  B    ###.#  
-# BC...##  C    ###.#  
-#   ##.##       ###.#  
-#   ##...DE  F  ###.#  
-#   #####    G  ###.#  
-#   #########.#####.#  
-# DE..#######...###.#  
-#   #.#########.###.#  
-# FG..#########.....#  
-#   ###########.#####  
-#              Z       
-#              Z       
-# "
-
-# COMMAND ----------
-
-# input <- "                   A               
-#                    A               
-#   #################.#############  
-#   #.#...#...................#.#.#  
-#   #.#.#.###.###.###.#########.#.#  
-#   #.#.#.......#...#.....#.#.#...#  
-#   #.#########.###.#####.#.#.###.#  
-#   #.............#.#.....#.......#  
-#   ###.###########.###.#####.#.#.#  
-#   #.....#        A   C    #.#.#.#  
-#   #######        S   P    #####.#  
-#   #.#...#                 #......VT
-#   #.#.#.#                 #.#####  
-#   #...#.#               YN....#.#  
-#   #.###.#                 #####.#  
-# DI....#.#                 #.....#  
-#   #####.#                 #.###.#  
-# ZZ......#               QG....#..AS
-#   ###.###                 #######  
-# JO..#.#.#                 #.....#  
-#   #.#.#.#                 ###.#.#  
-#   #...#..DI             BU....#..LF
-#   #####.#                 #.#####  
-# YN......#               VT..#....QG
-#   #.###.#                 #.###.#  
-#   #.#...#                 #.....#  
-#   ###.###    J L     J    #.#.###  
-#   #.....#    O F     P    #.#...#  
-#   #.###.#####.#.#####.#####.###.#  
-#   #...#.#.#...#.....#.....#.#...#  
-#   #.#####.###.###.#.#.#########.#  
-#   #...#.#.....#...#.#.#.#.....#.#  
-#   #.###.#####.###.###.#.#.#######  
-#   #.#.........#...#.............#  
-#   #########.###.###.#############  
-#            B   J   C               
-#            U   P   P               
-# "
-
-# COMMAND ----------
-
 m <-
   read_lines(input) %>%
   str_split("") %>%
@@ -360,11 +296,10 @@ Rcpp::cppFunction('
 int solve_cpp(std::vector<int> rows, std::vector<int> cols, std::vector<std::string> values, std::vector<int> to_rows, std::vector<int> to_cols) {
   using State = std::tuple<int, int, std::string, int>; // row, col, value, d
 
-  std::map<std::pair<int, int>, std::string> coords;
-  std::set<std::pair<int, int>> visited;
+  std::map<std::pair<int, int>, std::string> coords; // row, col -> value
+  std::set<std::pair<int, int>> visited; // row, col
   std::vector<State> states;
-  std::map<std::pair<int, int>, std::pair<int, int>> portals;
-  std::set<std::pair<int, int>> portal_locations;
+  std::map<std::pair<int, int>, std::pair<int, int>> portals; // row, col -> row, col
 
   auto comp = [](const State& lhs, const State& rhs){ return std::get<3>(rhs) < std::get<3>(lhs); };
 
@@ -375,10 +310,7 @@ int solve_cpp(std::vector<int> rows, std::vector<int> cols, std::vector<std::str
       states.push_back(std::make_tuple(rows[i], cols[i], values[i], 0));
     }
 
-    auto from_pair = std::make_pair(rows[i], cols[i]);
-    auto to_pair = std::make_pair(to_rows[i], to_cols[i]);
-    portals[from_pair] = to_pair;
-    if (from_pair != to_pair) portal_locations.insert(from_pair);
+    portals[std::make_pair(rows[i], cols[i])] = std::pair(to_rows[i], to_cols[i]);
   }
 
   while (states.size()) {
@@ -386,7 +318,7 @@ int solve_cpp(std::vector<int> rows, std::vector<int> cols, std::vector<std::str
     std::pop_heap(states.begin(), states.end(), comp);
     states.pop_back();
 
-    auto state_id = std::make_pair(row, col);
+    auto state_id = std::pair(row, col);
     if (visited.find(state_id) != visited.end()) continue;
     visited.insert(state_id);
 
@@ -396,16 +328,13 @@ int solve_cpp(std::vector<int> rows, std::vector<int> cols, std::vector<std::str
         col + (direction == \'E\') - (direction == \'W\')
       )];
       std::string new_value = coords[std::make_pair(new_row, new_col)];
-      int new_d = d + 1 + (portal_locations.find(std::make_pair(new_row, new_col)) != portal_locations.end());
+      int new_d = d + 1 + (value != "." && value != "#");
 
-      if (new_value == "ZZ") return new_d;
+      if (new_value == "ZZ") return new_d - 1;
+      if (new_value == "" || new_value == "#") continue;
 
-      if (new_value == "") new_value = "#";
-
-      if (new_value != "#") {
-        states.push_back(std::make_tuple(new_row, new_col, new_value, new_d));
-        std::push_heap(states.begin(), states.end(), comp);
-      }
+      states.push_back(std::make_tuple(new_row, new_col, new_value, new_d));
+      std::push_heap(states.begin(), states.end(), comp);
     }
   }
 
@@ -417,7 +346,13 @@ int solve_cpp(std::vector<int> rows, std::vector<int> cols, std::vector<std::str
 
 # COMMAND ----------
 
-answer <- solve_cpp(coords$row, coords$col, coords$value, coords$row_to, coords$col_to)
+answer <- solve_cpp(
+  rows = coords$row,
+  cols = coords$col, 
+  values = coords$value,
+  to_rows = coords$row_to,
+  to_cols = coords$col_to
+)
 answer
 
 # COMMAND ----------
@@ -538,3 +473,101 @@ answer
 # MAGIC <p>This path takes a total of <em>396</em> steps to move from <code>AA</code> at the outermost layer to <code>ZZ</code> at the outermost layer.</p>
 # MAGIC <p>In your maze, when accounting for recursion, <em>how many steps does it take to get from the open tile marked <code>AA</code> to the open tile marked <code>ZZ</code>, both at the outermost layer?</em></p>
 # MAGIC </article>
+
+# COMMAND ----------
+
+coords <-
+  which(m != "", arr.ind = TRUE) %>%
+  as_tibble() %>%
+  mutate(value = c(m)) %>%
+  filter(value != " ")
+
+coords <-
+  left_join(
+    coords,
+    coords %>% filter(!(value %in% c("#", "."))),
+    by = "value",
+    suffix = c("", "_to")
+  ) %>%
+  filter(value %in% c("AA", "ZZ") | is.na(row_to) | !(row == row_to & col == col_to)) %>%
+  mutate(
+    row_to = coalesce(row_to, row),
+    col_to = coalesce(col_to, col),
+    depth_change = case_when(
+      str_length(value) == 1 ~ 0,
+      pmin(row, col, max(row) - row, max(col) - col) <= 3 ~ -1,
+      TRUE ~ 1
+    )
+  )
+
+coords
+
+# COMMAND ----------
+
+Rcpp::cppFunction('
+int solve_cpp2(std::vector<int> rows, std::vector<int> cols, std::vector<std::string> values, std::vector<int> to_rows, std::vector<int> to_cols, std::vector<int> depth_changes) {
+  using State = std::tuple<int, int, std::string, int, int>; // row, col, value, d, depth
+
+  std::map<std::pair<int, int>, std::string> coords; // row, col -> value
+  std::set<std::tuple<int, int, int>> visited; // row, col, depth
+  std::vector<State> states;
+  std::map<std::pair<int, int>, std::tuple<int, int, int>> portals; // row, col -> row, col, depth_change
+
+  auto comp = [](const State& lhs, const State& rhs){ return std::get<3>(rhs) < std::get<3>(lhs); };
+
+  for (int i = 0; i < rows.size(); ++i) {
+    coords[std::make_pair(rows[i], cols[i])] = values[i];
+
+    if (values[i] == "AA") {
+      states.push_back(std::make_tuple(rows[i], cols[i], values[i], 0, 0));
+    }
+
+    portals[std::make_pair(rows[i], cols[i])] = std::make_tuple(to_rows[i], to_cols[i], depth_changes[i]);
+  }
+
+  while (states.size()) {
+    auto [row, col, value, d, depth] = states.front();
+    std::pop_heap(states.begin(), states.end(), comp);
+    states.pop_back();
+
+    auto state_id = std::make_tuple(row, col, depth);
+    if (visited.find(state_id) != visited.end()) continue;
+    visited.insert(state_id);
+
+    for (char direction : {\'N\', \'E\', \'S\', \'W\'}) {
+      auto [new_row, new_col, depth_change] = portals[std::make_pair(
+        row + (direction == \'S\') - (direction == \'N\'),
+        col + (direction == \'E\') - (direction == \'W\')
+      )];
+      std::string new_value = coords[std::make_pair(new_row, new_col)];
+      int new_d = d + 1 + (value != "." && value != "#");
+      int new_depth = depth + depth_change;
+
+      if (new_value == "ZZ" && depth == 0) return new_d - 1;
+
+      if (new_value == "ZZ" || new_value == "AA") continue;
+      if (new_value == "" || new_value == "#") continue;
+      if (new_depth < 0) continue;
+
+      states.push_back(std::make_tuple(new_row, new_col, new_value, new_d, new_depth));
+      std::push_heap(states.begin(), states.end(), comp);
+    }
+  }
+
+  Rcpp::stop("Unable to find solution");
+}
+',
+  plugins = "cpp17" # For structured bindings
+)
+
+# COMMAND ----------
+
+answer <- solve_cpp2(
+  rows = coords$row,
+  cols = coords$col, 
+  values = coords$value,
+  to_rows = coords$row_to,
+  to_cols = coords$col_to,
+  depth_changes = coords$depth_change
+)
+answer
