@@ -308,7 +308,6 @@ result %>% cat()
 #   C: L,12,R,12,L,6,
 #   C: L,12,R,12,L,6
 
-# Note that I need to end in "y" as using "n" gives me an error for some reason.
 input_sequence_str <- "A,B,A,B,C,B,C,A,C,C
 R,12,L,10,L,10
 L,6,L,12,R,12,L,4
