@@ -199,6 +199,28 @@ coords
 
 # COMMAND ----------
 
+plot_maze <- function(coords) {
+  coords %>%
+    mutate(
+      fill = case_when(
+        value %in% letters ~ "#F6AE2D",
+        value %in% LETTERS ~ "#A0522D",
+        value == "#" ~ "#2F4858",
+        value == "@" ~ "#F26419"
+      ),
+      label = ifelse(str_detect(value, "\\w"), value, NA)
+    ) %>%
+    ggplot(aes(col, row, fill = I(fill), label = label)) +
+      geom_tile() +
+      geom_text(size = 2.5) +
+      scale_y_reverse() +
+      theme_void()
+}
+
+plot_maze(coords)
+
+# COMMAND ----------
+
 # # This is too slow - took 3 hours
 
 # install.packages("datastructures")
@@ -502,24 +524,6 @@ quadrants[[4]] <- coords2 %>% filter(row >= mid[1], col >= mid[2])
 
 install.packages("patchwork")
 library(patchwork)
-
-plot_maze <- function(coords) {
-  coords %>%
-    mutate(
-      fill = case_when(
-        value %in% letters ~ "#F6AE2D",
-        value %in% LETTERS ~ "#A0522D",
-        value == "#" ~ "#2F4858",
-        value == "@" ~ "#F26419"
-      ),
-      label = ifelse(str_detect(value, "\\w"), value, NA)
-    ) %>%
-    ggplot(aes(col, row, fill = I(fill), label = label)) +
-      geom_tile() +
-      geom_text(size = 2.5) +
-      scale_y_reverse() +
-      theme_void()
-}
 
 (plot_maze(quadrants[[2]]) + plot_maze(quadrants[[1]])) / (plot_maze(quadrants[[3]]) + plot_maze(quadrants[[4]]))
 
