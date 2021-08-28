@@ -92,11 +92,11 @@
 
 # COMMAND ----------
 
-install.packages("patchwork")
+# install.packages("patchwork")
 
 # COMMAND ----------
 
-install.packages("datastructures")
+# install.packages("datastructures")
 
 # COMMAND ----------
 
@@ -190,24 +190,6 @@ input <- "######################################################################
 
 # COMMAND ----------
 
-# input <- "#########
-# #b.A.@.a#
-# #########
-# "
-
-# COMMAND ----------
-
-# input <- "###############
-# #d.ABC.#.....a#
-# ######@#@######
-# ###############
-# ######@#@######
-# #b.....#.....c#
-# ###############
-# "
-
-# COMMAND ----------
-
 m <-
   read_lines(input) %>%
   str_split("") %>%
@@ -244,8 +226,6 @@ as.list.hashmap <- function(h) {
 to_hashmap <- function(inds, default = "#") {
   result <- hashmap(default = default)
   for (i in seq_len(nrow(inds))) {
-    # cur_row <- inds %>% slice(i)
-    # result[c(cur_row$row, cur_row$col)] <- cur_row
     result[c(inds$row[i], inds$col[i])] <- inds$value[i]
   }
   result
@@ -261,61 +241,406 @@ coords
 
 # COMMAND ----------
 
-sort_string <- function(s) {
-  s %>%
-    str_split("") %>%
-    unlist() %>%
-    str_sort() %>%
-    str_c(collapse = "")
-}
+# # This is too slow - took 3 hours
 
-solve <- function(coords) {
-  target <- coords$value %>% unique() %>% keep(str_detect, "[a-z]") %>% unlist() %>% str_sort() %>% str_c(collapse = "")
-  visited <- hashmap(default = FALSE)
-  states <- datastructures::fibonacci_heap("numeric")
+# solve <- function(coords) {
+#   target_length <- coords$value %>% unique() %>% keep(str_detect, "[a-z]") %>% length()
+#   visited <- hashmap(default = FALSE)
+#   states <- datastructures::fibonacci_heap("numeric")
   
-  datastructures::insert(states, 0, coords %>% filter(value == "@") %>% mutate(keys = "", d = 0))
+#   datastructures::insert(states, 0, coords %>% filter(value == "@") %>% mutate(keys = "", d = 0))
   
-  coords <- to_hashmap(coords)
+#   coords <- to_hashmap(coords)
   
 
-  repeat {
-    state <- datastructures::pop(states)[[1]]
+#   repeat {
+#     state <- datastructures::pop(states)[[1]]
     
-    if (visited[c(state$row, state$col, state$keys)]) next
-    visited[c(state$row, state$col, state$keys)] <- TRUE
+#     if (visited[c(state$row, state$col, state$keys)]) next
+#     visited[c(state$row, state$col, state$keys)] <- TRUE
 
-    # Key
-    if (state$value %in% letters) {
-      if (!str_detect(state$keys, state$value)) state$keys <- sort_string(str_c(state$keys, state$value))
-      if (state$keys == target) return(state$d)
-    }
+#     # Key
+#     if (state$value %in% letters) {
+#       if (!str_detect(state$keys, state$value)) state$keys <- str_c(state$keys, state$value)
+#       if (str_length(state$keys) == target_length) return(state$d)
+#     }
 
-    # Lock
-    if (state$value %in% LETTERS) {
-      if (!str_detect(str_to_upper(state$keys), state$value)) next
-    }
+#     # Lock
+#     if (state$value %in% LETTERS) {
+#       if (!str_detect(str_to_upper(state$keys), state$value)) next
+#     }
     
-    for (direction in c("N", "E", "S", "W")) {
-      new_state <- tibble(
-        row = state$row + (direction == "S") - (direction == "N"),
-        col = state$col + (direction == "E") - (direction == "W"),
-        value = coords[c(row, col)],
-        keys = state$keys,
-        d = state$d + 1
-      )
+#     for (direction in c("N", "E", "S", "W")) {
+#       new_state <- tibble(
+#         row = state$row + (direction == "S") - (direction == "N"),
+#         col = state$col + (direction == "E") - (direction == "W"),
+#         value = coords[c(row, col)],
+#         keys = state$keys,
+#         d = state$d + 1
+#       )
       
-      if (new_state$value != "#") {
-        datastructures::insert(states, new_state$d, new_state)
+#       if (new_state$value != "#") {
+#         datastructures::insert(states, new_state$d, new_state)
+#       }
+#     }
+#   }
+# }
+
+# COMMAND ----------
+
+Rcpp::cppFunction("
+int solve_cpp(std::vector<int> rows, std::vector<int> cols, std::vector<std::string> values) {
+  using State = std::tuple<int, int, char, int, std::set<char>>;
+
+  std::map<std::pair<int, int>, char> coords;
+  std::set<std::tuple<int, int, std::set<char>>> visited; // row, col, keys
+  int target_n_keys = 0;
+  std::vector<State> states; // row, col, value, d, keys
+
+  auto comp = [](const State& lhs, const State& rhs){return std::get<3>(rhs) < std::get<3>(lhs); };
+
+  for (int i = 0; i < rows.size(); ++i) {
+    coords[std::make_pair(rows[i], cols[i])] = values[i][0];
+
+    if (values[i][0] >= 'a' && values[i][0] <= 'z') {
+      ++target_n_keys;
+    }
+
+    if (values[i][0] == '@') {
+      states.push_back(std::make_tuple(rows[i], cols[i], values[i][0], 0, std::set<char>()));
+    }
+  }
+
+  while (states.size()) {
+    auto [row, col, value, d, keys] = states.front();
+    std::pop_heap(states.begin(), states.end(), comp);
+    states.pop_back();
+
+    auto state_id = std::make_tuple(row, col, keys);
+    if (visited.find(state_id) != visited.end()) continue;
+    visited.insert(state_id);
+
+    // Key
+    if (value >= 'a' && value <= 'z') {
+      keys.insert(value);
+      if (keys.size() == target_n_keys) return d;
+    }
+
+    // Lock
+    if (value >= 'A' && value <= 'Z') {
+      if (keys.find(tolower(value)) == keys.end()) continue;
+    }
+
+    for (char direction : {'N', 'E', 'S', 'W'}) {
+      int new_row = row + (direction == 'S') - (direction == 'N');
+      int new_col = col + (direction == 'E') - (direction == 'W');
+      char new_value = coords[std::make_pair(new_row, new_col)];
+      int new_d = d + 1;
+
+      if (new_value == 0) new_value = '#';
+
+      if (new_value != '#') {
+        states.push_back(std::make_tuple(new_row, new_col, new_value, new_d, keys));
+        std::push_heap(states.begin(), states.end(), comp);
       }
     }
   }
+
+  Rcpp::stop(\"Unable to find all keys\");
 }
+",
+  plugins = "cpp17" # For structured bindings
+)
+
+# COMMAND ----------
+
+answer <- solve_cpp(coords$row, coords$col, coords$value)
+answer
+
+# COMMAND ----------
+
+
+
+# COMMAND ----------
+
+coords %>% filter(row == 40, col == 41)
+
+# COMMAND ----------
+
+Rcpp::cppFunction('
+void test_cpp17() {
+  auto [row, col, value, d] = std::make_tuple(1, 2, 3, 4);
+}
+',
+  plugins = "cpp17" # For structured bindings
+)
+
+# COMMAND ----------
+
+
+// [[Rcpp::plugins(cpp17)]]
 
 # COMMAND ----------
 
 answer <- solve(coords)
 answer # 3hrs
+
+# COMMAND ----------
+
+# Rcpp::cppFunction("
+# int solve_cpp(std::vector<int> rows, std::vector<int> cols, std::vector<std::string> values) {
+#   std::map<std::pair<int, int>, char> coords;
+#   std::set<std::tuple<int, int, std::set<char>>> visited; // row, col, keys
+#   int target_n_keys = 0;
+#   std::vector<std::tuple<int, int, char, int, std::set<char>>> states; // row, col, value, d, keys
+
+#   for (int i = 0; i < rows.size(); ++i) {
+#     coords[std::make_pair(rows[i], cols[i])] = values[i][0];
+
+#     if (values[i][0] >= 'a' && values[i][0] <= 'z') {
+#       ++target_n_keys;
+#     }
+
+#     if (values[i][0] == '@') {
+#       states.push_back(std::make_tuple(rows[i], cols[i], values[i][0], 0, std::set<char>()));
+#     }
+#   }
+
+#   while (states.size()) {
+#     auto [row, col, value, d, keys] = states.front();
+#     std::pop_heap(states.begin(), states.end());
+#     states.pop_back();
+
+#     auto state_id = std::make_tuple(row, col, keys);
+#     if (visited.find(state_id) != visited.end()) continue;
+#     visited.insert(state_id);
+
+#     // Key
+#     if (value >= 'a' && value <= 'z') {
+#       keys.insert(value);
+#       if (keys.size() == target_n_keys) return d;
+#     }
+
+#     // Lock
+#     if (value >= 'A' && value <= 'Z') {
+#       if (keys.find(tolower(value)) == keys.end()) continue;
+#     }
+
+#     for (char direction : {'N', 'E', 'S', 'W'}) {
+#       int new_row = row + (direction == 'S') - (direction == 'N');
+#       int new_col = col + (direction == 'E') - (direction == 'W');
+#       char new_value = coords[std::make_pair(new_row, new_col)];
+#       int new_d = d + 1;
+
+#       if (new_value == 0) new_value = '#';
+
+#       if (new_value != '#') {
+#         states.push_back(std::make_tuple(new_row, new_col, new_value, new_d, keys));
+#         std::push_heap(states.begin(), states.end());
+#       }
+#     }
+#   }
+
+#   Rcpp::stop(\"Unable to find all keys\");
+# }
+# ",
+#   plugins = "cpp17" # For structured bindings
+# )
+
+# COMMAND ----------
+
+# Rcpp::cppFunction("
+# int solve_cpp(std::vector<int> rows, std::vector<int> cols, std::vector<std::string> values) {
+#   std::map<std::pair<int, int>, char> coords;
+#   std::set<std::tuple<int, int, std::set<char>>> visited; // row, col, keys
+#   int target_n_keys = 0;
+#   std::vector<std::tuple<int, int, char, int, std::set<char>>> states; // row, col, value, d, keys
+
+#   for (int i = 0; i < rows.size(); ++i) {
+#     coords[std::make_pair(rows[i], cols[i])] = values[i][0];
+
+#     if (values[i][0] >= 'a' && values[i][0] <= 'z') {
+#       ++target_n_keys;
+#     }
+
+#     if (values[i][0] == '@') {
+#       states.push_back(std::make_tuple(rows[i], cols[i], values[i][0], 0, std::set<char>()));
+#     }
+#   }
+
+#   std::cout << \"coords size: \" << coords.size() << std::endl;
+
+#   while (states.size()) {
+#     auto [row, col, value, d, keys] = states.front();
+#     std::pop_heap(states.begin(), states.end());
+#     states.pop_back();
+
+#     std::cout << row << \", \" << col << \": \" << value << \"; \" << d << std::endl;
+
+#     auto state_id = std::make_tuple(row, col, keys);
+#     if (visited.find(state_id) != visited.end()) continue;
+#     visited.insert(state_id);
+
+#     // Key
+#     if (value >= 'a' && value <= 'z') {
+#       keys.insert(value);
+#       if (keys.size() == target_n_keys) return d;
+#     }
+
+#     // Lock
+#     if (value >= 'A' && value <= 'Z') {
+#       if (keys.find(tolower(value)) == keys.end()) continue;
+#     }
+
+#     for (char direction : {'N', 'E', 'S', 'W'}) {
+#       int new_row = row + (direction == 'S') - (direction == 'N');
+#       int new_col = col + (direction == 'E') - (direction == 'W');
+#       char new_value = coords[std::make_pair(new_row, new_col)];
+#       int new_d = d + 1;
+
+#       if (new_value == 0) new_value = '#';
+#       std::cout << new_row << \" \" << new_col << \": \" << new_value << std::endl;
+
+#       if (new_value != '#') {
+#         states.push_back(std::make_tuple(new_row, new_col, new_value, new_d, keys));
+#         std::push_heap(states.begin(), states.end());
+#       }
+#     }
+#   }
+
+#   Rcpp::stop(\"Unable to find all keys\");
+# }
+# ",
+#   plugins = "cpp17" # For structured bindings
+# )
+
+# COMMAND ----------
+
+# Rcpp::cppFunction('
+# int solve_cpp(std::vector<int> rows, std::vector<int> cols, std::vector<std::string> values) {
+#   std::map<std::pair<int, int>, char> coords;
+#   std::set<std::tuple<int, int, std::string>> visited; // row, col, keys
+#   int target_n_keys = 0;
+#   std::vector<std::tuple<int, int, char, int, std::string>> states; // row, col, value, d, keys
+
+#   for (int i = 0; i < rows.size(); ++i) {
+#     coords[std::make_pair(rows[i], cols[i])] = values[i][0];
+
+#     if (values[i][0] >= \'a\' && values[i][0] <= \'z\') {
+#       ++target_n_keys;
+#     }
+
+#     if (values[i][0] == \'@\') {
+#       states.push_back(std::make_tuple(rows[i], cols[i], values[i][0], 0, ""));
+#     }
+#   }
+
+#   while (states.size()) {
+#     auto [row, col, value, d, keys] = states.front();
+#     std::pop_heap(states.begin(), states.end());
+#     states.pop_back();
+
+#     auto state_id = std::make_tuple(row, col, keys);
+#     if (visited.find(state_id) != visited.end()) continue;
+#     visited.insert(state_id);
+
+#     // Key
+#     if (value >= \'a\' && value <= \'z\') {
+#       // if (!str_detect(state$keys, state$value)) state$keys <- str_c(state$keys, state$value)
+#       // if (str_length(state$keys) == target_length) return(state$d)
+#     }
+
+#     // # Lock
+#     // if (state$value %in% LETTERS) {
+#     //   if (!str_detect(str_to_upper(state$keys), state$value)) next
+#     // }
+    
+#     // for (direction in c("N", "E", "S", "W")) {
+#     //   new_state <- tibble(
+#     //     row = state$row + (direction == "S") - (direction == "N"),
+#     //     col = state$col + (direction == "E") - (direction == "W"),
+#     //     value = coords[c(row, col)],
+#     //     keys = state$keys,
+#     //     d = state$d + 1
+#     //   )
+#     //   
+#     //   if (new_state$value != "#") {
+#     //     datastructures::insert(states, new_state$d, new_state)
+#     //   }
+#     // }
+
+
+#   }
+
+#   Rcpp::stop("Unable to find all keys");
+# }
+# ',
+#   plugins = "cpp17" # For structured bindings
+# )
+
+# COMMAND ----------
+
+# Rcpp::cppFunction('
+# int solve_cpp(std::vector<int> rows, std::vector<int> cols, std::vector<std::string> values) {
+#   std::map<std::pair<int, int>, char> coords;
+#   std::set<std::tuple<int, int, std::string>> visited; // row, col, keys
+#   int target_n_keys = 0;
+#   std::vector<std::tuple<int, int, int, int, std::string>> states; // row, col, value, d, keys
+
+#   for (int i = 0; i < rows.size(); ++i) {
+#     coords[std::make_pair(rows[i], cols[i])] = values[i][0];
+
+#     if (values[i][0] >= \'a\' && values[i][0] <= \'z\') {
+#       ++target_n_keys;
+#     }
+
+#     if (values[i][0] == \'@\') {
+#       states.push_back(std::make_tuple(rows[i], cols[i], values[i][0], 0, ""));
+#     }
+#   }
+
+#   while (states.size()) {
+#     auto [row, col, value, d, keys] = states.front();
+#     std::pop_heap(states.begin(), states.end());
+#     states.pop_back();
+
+#     auto state_id = std::make_tuple(row, col, keys);
+#     if (visited.find(state_id) != visited.end()) continue;
+#     visited.insert(state_id);
+
+#     // Key
+#     if (value[0] >= \'a\' && value[0] <= \'z\') {
+#       if (!str_detect(state$keys, state$value)) state$keys <- str_c(state$keys, state$value)
+#       if (str_length(state$keys) == target_length) return(state$d)
+#     }
+
+#     // # Lock
+#     // if (state$value %in% LETTERS) {
+#     //   if (!str_detect(str_to_upper(state$keys), state$value)) next
+#     // }
+    
+#     // for (direction in c("N", "E", "S", "W")) {
+#     //   new_state <- tibble(
+#     //     row = state$row + (direction == "S") - (direction == "N"),
+#     //     col = state$col + (direction == "E") - (direction == "W"),
+#     //     value = coords[c(row, col)],
+#     //     keys = state$keys,
+#     //     d = state$d + 1
+#     //   )
+#     //   
+#     //   if (new_state$value != "#") {
+#     //     datastructures::insert(states, new_state$d, new_state)
+#     //   }
+#     // }
+
+
+#   }
+
+#   Rcpp::stop("Unable to find all keys");
+# }
+# ',
+#   plugins = "cpp17" # For structured bindings
+# )
 
 # COMMAND ----------
 
@@ -470,10 +795,9 @@ quadrants[[4]] <- coords2 %>% filter(row >= mid[1], col >= mid[2])
 plot_maze <- function(coords) {
   coords %>%
     mutate(
-      # https://coolors.co/55dde0-33658a-2f4858-f6ae2d-f26419
       fill = case_when(
         value %in% letters ~ "#F6AE2D",
-        value %in% LETTERS ~ "#33658A",
+        value %in% LETTERS ~ "#A0522D",
         value == "#" ~ "#2F4858",
         value == "@" ~ "#F26419"
       ),
@@ -490,20 +814,15 @@ plot_maze <- function(coords) {
 
 # COMMAND ----------
 
-# Observe that for any given letter, no quadrant contains both the key and lock. This means that, for each quadrant, we just need to collect all the keys ignoring the locks.
-
-# COMMAND ----------
-
-collect_keys <- function(coords) {
-  target_n_keys <- coords$value %>% unique() %>% keep(str_detect, "[a-z]") %>% length()
+get_paths_to_keys <- function(coords) {
+  paths_to_keys <- list()
+  
   visited <- hashmap(default = FALSE)
   states <- datastructures::fibonacci_heap("numeric")
   
-  datastructures::insert(states, 0, coords %>% filter(value == "@") %>% mutate(keys = "", d = 0))
+  datastructures::insert(states, 0, coords %>% filter(value == "@") %>% mutate(passed = "", d = 0))
   
   coords <- to_hashmap(coords)
-  
-  message(target_n_keys)
   
   while (datastructures::size(states) > 0) {
     state <- datastructures::pop(states)[[1]]
@@ -513,22 +832,21 @@ collect_keys <- function(coords) {
 
     # Key
     if (state$value %in% letters) {
-      if (!str_detect(state$keys, state$value)) state$keys <- str_c(state$keys, state$value)
-      if (str_length(state$keys) == target_n_keys) return(state$d)
-      message(state$keys)
+      paths_to_keys[[state$value]] <- state$passed
+      state$passed  <- str_c(state$passed, state$value)
     }
 
-    # Lock - ignore all locks
-    # if (state$value %in% LETTERS) {
-    #   if (!str_detect(str_to_upper(state$keys), state$value)) next
-    # }
+    # Lock
+    if (state$value %in% LETTERS) {
+      state$passed  <- str_c(state$passed, state$value)
+    }
     
     for (direction in c("N", "E", "S", "W")) {
       new_state <- tibble(
         row = state$row + (direction == "S") - (direction == "N"),
         col = state$col + (direction == "E") - (direction == "W"),
         value = coords[c(row, col)],
-        keys = state$keys,
+        passed = state$passed,
         d = state$d + 1
       )
       
@@ -537,33 +855,9 @@ collect_keys <- function(coords) {
       }
     }
   }
-  stop("Could not find all keys")
+  
+  paths_to_keys
 }
-
-# COMMAND ----------
-
-collect_keys(quadrants[[1]])
-
-# COMMAND ----------
-
-quadrants[[1]]$value %>% keep(str_detect, "[a-z]")# %>% length()
-
-# COMMAND ----------
-
-collect_keys(quadrants[[2]])
-
-# COMMAND ----------
-
-collect_keys(quadrants[[3]])
-
-# COMMAND ----------
-
-collect_keys(quadrants[[4]])
-
-# COMMAND ----------
-
-answer <- quadrants %>% map_dbl(collect_keys) %>% sum()
-answer
 
 # COMMAND ----------
 
@@ -634,841 +928,13 @@ keys <- c()
 for (key in key_order) {
   quadrant <- which(map_lgl(quadrants, ~key %in% .$value))
   
-  state[[quadrant]] <- get_key(coords = quadrants[[quadrant]], target_key = key, keys = keys, start_state = state[[quadrant]])
+  state[[quadrant]] <- get_key(
+    coords = quadrants[[quadrant]],
+    target_key = key,
+    keys = keys,
+    start_state = state[[quadrant]]
+  )
   keys <- c(keys, key)
 }
 answer <- state %>% map_dbl("d") %>% sum()
 answer
-
-# COMMAND ----------
-
-# 2038 too high
-
-# I Think just find the shortest path that collects all the keys. What about back tracking? Maybe there isn't any! No key from the same maze is required to unlock a lock from the same maze!
-
-# COMMAND ----------
-
-# MAGIC %md ## Scratch
-
-# COMMAND ----------
-
-# collect_keys <- function(coords) {
-#   target_n_keys <- coords$value %>% unique() %>% keep(str_detect, "[a-z]") %>% length()
-#   visited <- hashmap(default = FALSE)
-#   states <- datastructures::fibonacci_heap("numeric")
-  
-#   datastructures::insert(states, 0, coords %>% filter(value == "@") %>% mutate(keys = "", d = 0))
-  
-#   coords <- to_hashmap(coords)
-  
-#   message(target_n_keys)
-  
-#   while (datastructures::size(states) > 0) {
-#     state <- datastructures::pop(states)[[1]]
-    
-#     if (visited[c(state$row, state$col)]) next
-#     visited[c(state$row, state$col)] <- TRUE
-
-#     # Key
-#     if (state$value %in% letters) {
-#       state$keys <- str_c(state$keys, state$value)
-#       if (str_length(state$keys) == target_n_keys) return(state$d)
-#       message(state$keys)
-#     }
-
-#     # Lock - ignore all locks
-#     # if (state$value %in% LETTERS) {
-#     #   if (!str_detect(str_to_upper(state$keys), state$value)) next
-#     # }
-    
-#     for (direction in c("N", "E", "S", "W")) {
-#       new_state <- tibble(
-#         row = state$row + (direction == "S") - (direction == "N"),
-#         col = state$col + (direction == "E") - (direction == "W"),
-#         value = coords[c(row, col)],
-#         keys = state$keys,
-#         d = state$d + 1
-#       )
-      
-#       if (new_state$value != "#") {
-#         datastructures::insert(states, new_state$d, new_state)
-#       }
-#     }
-#   }
-#   stop("Could not find all keys")
-# }
-
-# COMMAND ----------
-
-get_paths_to_keys <- function(coords) {
-  paths_to_keys <- list()
-  
-  visited <- hashmap(default = FALSE)
-  states <- datastructures::fibonacci_heap("numeric")
-  
-  start_coords <- coords %>% filter(value == "@") %>% mutate(passed = "", d = 0)
-  for (i in seq_len(nrow(start_coords))) {
-    datastructures::insert(states, 0, start_coords[i,])
-  }
-  
-  coords <- to_hashmap(coords)
-  
-  while (datastructures::size(states) > 0) {
-    state <- datastructures::pop(states)[[1]]
-    
-    if (visited[c(state$row, state$col, state$keys)]) next
-    visited[c(state$row, state$col, state$keys)] <- TRUE
-
-    # Key
-    if (state$value %in% letters) {
-      paths_to_keys[[state$value]] <- state$passed
-      state$passed  <- str_c(state$passed, state$value)
-    }
-
-    # Lock
-    if (state$value %in% LETTERS) {
-      state$passed  <- str_c(state$passed, state$value)
-    }
-    
-    for (direction in c("N", "E", "S", "W")) {
-      new_state <- tibble(
-        row = state$row + (direction == "S") - (direction == "N"),
-        col = state$col + (direction == "E") - (direction == "W"),
-        value = coords[c(row, col)],
-        passed = state$passed,
-        d = state$d + 1
-      )
-      
-      if (new_state$value != "#") {
-        datastructures::insert(states, new_state$d, new_state)
-      }
-    }
-  }
-  
-  paths_to_keys
-}
-
-# COMMAND ----------
-
-key_order <- "abcd" %>% str_split("") %>% unlist()
-key_order
-
-# COMMAND ----------
-
-# The keys can be collected in this order:
-#     q1:   m    tin        hexsdwq
-#     q2: go               k       j
-#     q3:    buvr   cya
-#     q4:              fzpl
-key_order <- tribble(
-  ~quadrant, ~key,
-          2,  "g",
-          2,  "o",
-          1,  "m",
-          3,  "b",
-          3,  "u",
-          3,  "v",
-          3,  "r",
-          1,  "t",
-          1,  "i",
-          1,  "n",
-          3,  "c",
-          3,  "y",
-          3,  "a",
-          4,  "f",
-          4,  "z",
-          4,  "p",
-          4,  "l",
-          2,  "k",
-          3,  "h",
-          3,  "e",
-          3,  "x",
-          3,  "s",
-          3,  "d",
-          3,  "w",
-          3,  "a",
-          2,  "j"
-)
-
-# COMMAND ----------
-
-state <- list(NULL, NULL, NULL, NULL)
-keys <- c()
-for (i in seq_len(nrow(key_order))) {
-  quadrant <- key_order$quadrant[i]
-  key <- key_order$key[i]
-  
-  state[[quadrant]] <- get_key(coords = coords, target_key = key, keys = keys, start_state = state[[quadrant]])
-  keys <- c(keys, key)
-}
-answer <- state %>% map_dbl(d) %>% sum()
-answer
-
-# COMMAND ----------
-
-state %>% map_dbl(d)
-
-# COMMAND ----------
-
-key_order
-
-# COMMAND ----------
-
-names(paths_to_keys)
-
-# COMMAND ----------
-
-# I think just get shortest path from @ to all keys. The path will contain a bunch of locks. You should be able to figure out the order of keys from that
-
-# COMMAND ----------
-
-# needs to be solved as a graph
-# get distance between all pairs
-# a node includes the keys possessed. Actually, a node is JUST the keys possessed in order
-
-# COMMAND ----------
-
-
-
-# COMMAND ----------
-
-# MAGIC %md ## Scratch
-
-# COMMAND ----------
-
-coords_quad1 %>%
-  mutate(
-    # https://coolors.co/55dde0-33658a-2f4858-f6ae2d-f26419
-    fill = case_when(
-      value %in% letters ~ "#F6AE2D",
-      value %in% LETTERS ~ "#33658A",
-      value == "#" ~ "#2F4858",
-      value == "@" ~ "#F26419"
-    ),
-    label = ifelse(str_detect(value, "\\w"), value, NA)
-  ) %>%
-  ggplot(aes(col, row, fill = I(fill), label = label)) +
-    geom_tile() +
-    geom_text(size = 2.5) +
-    scale_y_reverse() +
-    theme_void()
-
-# COMMAND ----------
-
-coords2 %>%
-  mutate(
-    # https://coolors.co/55dde0-33658a-2f4858-f6ae2d-f26419
-    fill = case_when(
-      value %in% letters ~ "#F6AE2D",
-      value %in% LETTERS ~ "#33658A",
-      value == "#" ~ "#2F4858",
-      value == "@" ~ "#F26419"
-    ),
-    label = ifelse(str_detect(value, "\\w"), value, NA)
-  ) %>%
-  ggplot(aes(col, row, fill = I(fill), label = label)) +
-    geom_tile() +
-    geom_text(size = 2.5) +
-    scale_y_reverse() +
-    theme_void()
-
-# COMMAND ----------
-
-# get_key <- function(coords, key) {
-#   visited <- hashmap(default = FALSE)
-#   states <- datastructures::fibonacci_heap("numeric")
-  
-#   start_coords <- coords %>% filter(value == "@") %>% mutate(keys = "", d = 0)
-#   for (i in seq_len(nrow(start_coords))) {
-#     datastructures::insert(states, 0, start_coords[i,])
-#   }
-  
-#   coords <- to_hashmap(coords)
-  
-#   while (TRUE) {
-#     state <- datastructures::pop(states)[[1]]
-    
-#     if (visited[c(state$row, state$col, state$keys)]) next
-#     visited[c(state$row, state$col, state$keys)] <- TRUE
-
-#     # Key
-#     if (state$value %in% letters) {
-#       if (state$value != key) next
-#       state$keys  <- str_c(state$keys, state$value)
-#       return(state)
-#       # visited <- hashmap(default = FALSE)
-#       # key_order <- key_order[-1]
-#       # if (length(key_order) == 0) return(state$d)
-#     }
-
-#     # Lock
-#     if (state$value %in% LETTERS) {
-#       if (str_detect(state$value, state$keys)) next
-#     }
-    
-#     for (direction in c("N", "E", "S", "W")) {
-#       new_state <- tibble(
-#         row = state$row + (direction == "S") - (direction == "N"),
-#         col = state$col + (direction == "E") - (direction == "W"),
-#         value = coords[c(row, col)],
-#         locks_passed = state$locks_passed,
-#         d = state$d + 1
-#       )
-      
-#       if (new_state$value != "#") {
-#         datastructures::insert(states, new_state$d, new_state)
-#       }
-#     }
-#   }
-# }
-
-# COMMAND ----------
-
-h <- hashmap()
-h[c(1,1)] <- "@"
-h[c(1,1)]
-
-# COMMAND ----------
-
-# sort_string <- function(s) {
-#   s %>%
-#     str_split("") %>%
-#     unlist() %>%
-#     str_sort() %>%
-#     str_c(collapse = "")
-# }
-
-# solve <- function(coords) {
-#   target <- coords$value %>% unique() %>% keep(str_detect, "[a-z]") %>% unlist() %>% str_sort() %>% str_c(collapse = "")
-#   visited <- hashmap(default = FALSE)
-#   states <- datastructures::fibonacci_heap("numeric")
-  
-#   datastructures::insert(states, 0, coords %>% filter(value == "@") %>% mutate(keys = "", d = 0))
-  
-#   coords <- to_hashmap(coords)
-  
-
-#   repeat {
-#     state <- datastructures::pop(states)[[1]]
-#     message(glue::glue("nrow: {nrow(state)}\n\n"))
-#     message(glue::glue("cls: {class(state$value)}\n\n"))
-#     message(glue::glue("{state$row},{state$col}: {state$value} ({state$d})\n\n"))
-    
-#     if (visited[c(state$row, state$col, state$keys)]) next
-#     visited[c(state$row, state$col, state$keys)] <- TRUE
-
-#     # Key
-#     if (state$value %in% letters) {
-#       if (!str_detect(state$keys, state$value)) state$keys <- sort_string(str_c(state$keys, state$value))
-#       if (state$keys == target) return(state$d)
-#     }
-
-#     # Lock
-#     if (state$value %in% LETTERS) {
-#       if (!str_detect(str_to_upper(state$keys), state$value)) next
-#     }
-    
-#     for (direction in c("N", "E", "S", "W")) {
-#       new_state <- tibble(
-#         row = state$row + (direction == "S") - (direction == "N"),
-#         col = state$col + (direction == "E") - (direction == "W"),
-#         value = coords[c(row, col)],
-#         keys = state$keys,
-#         d = state$d + 1
-#       )
-      
-#       if (new_state$value != "#") {
-#         datastructures::insert(states, new_state$d, new_state)
-#       }
-#     }
-#   }
-# }
-
-# COMMAND ----------
-
-h <- to_hashmap(coords)
-h[c(1,2)]
-
-# COMMAND ----------
-
-start_pos <- coords %>% filter(value == "@")
-start_pos
-
-# COMMAND ----------
-
-coords$value %>% unique() %>% keep(str_detect, "[a-z]") %>% unlist() %>% str_sort() %>% str_c(collapse = "")
-
-# COMMAND ----------
-
-states <- datastructures::fibonacci_heap("numeric")
-
-# COMMAND ----------
-
-datastructures::insert(states, 0, list(row = start_pos$row, col = start_pos$col, value = 1, keys = ""))
-
-# COMMAND ----------
-
-datastructures::insert(states, 0, list(row = start_pos$row, col = start_pos$col, value = 1, keys = ""))
-a <- datastructures::pop(states)
-a
-
-# COMMAND ----------
-
-?datastructures::pop
-
-# COMMAND ----------
-
-a[[1]]
-
-# COMMAND ----------
-
-states <- datastructures::fibonacci_heap("numeric")
-  
-datastructures::insert(states, 0, list(row = start_pos$row, col = start_pos$col, value = coords[c(start_pos$row, start_pos$col)], keys = ""))
-
-# COMMAND ----------
-
-answer <- solve(start_pos, coords)
-answer
-
-# COMMAND ----------
-
-sort_string <- function(s) {
-  s %>%
-    str_split("") %>%
-    unlist() %>%
-    str_sort() %>%
-    str_c(collapse = "")
-}
-
-target <- m[m %in% letters] %>% str_c(collapse = "") %>% sort_string()
-target
-
-# COMMAND ----------
-
-
-
-# COMMAND ----------
-
-answer <- solve(start_pos, coords)
-answer
-
-# COMMAND ----------
-
-# MAGIC %md ## Scratch
-
-# COMMAND ----------
-
-
-
-# as.hashmap <- function(x, ...) UseMethod("as.hashmap", x)
-
-# COMMAND ----------
-
-Rcpp::sourceCpp(code = '
-#include <Rcpp.h>
-
-struct state {
-  int64_t d;
-  int row;
-  int col;
-  std::string keys;
-};
-
-struct pair_hash {
-  template <class T1, class T2>
-  std::size_t operator () (const std::pair<T1,T2> &p) const {
-    auto h1 = std::hash<T1>{}(p.first);
-    auto h2 = std::hash<T2>{}(p.second);
-
-    return h1 ^ h2;  
-  }
-};
-
-// [[Rcpp::export]]
-int64_t solve_cpp(int start_row, int start_col, std::vector<int> rows, std::vector<int> cols, std::string values) {
-  std::unordered_map<std::pair<int, int>, char, pair_hash> coords;
-
-  islower(\'a\');
-  // int target_key_length = count_if(s.begin(), s.end(), [](unsigned char ch) { return islower(ch); });
-  int target_key_length = count_if(values.begin(), values.end(), &std::islower);
-
-  std::string target = values;
-  target.erase(std::remove(target.begin(), target.end(), \'a\'), target.end());
-  sort(target.begin(), target.end());
-  std::cout << target << std::endl;
-
-  return 0;
-}
-')
-
-# COMMAND ----------
-
-solve_cpp(
-  start_row = 0,
-  start_col = 0,
-  rows = 1,
-  cols = 1,
-  values = "helloa"
-)
-
-# COMMAND ----------
-
-Rcpp::sourceCpp(code = '
-#include <Rcpp.h>
-
-// struct state {
-//   int64_t d;
-//   int row;
-//   int col;
-//   std::string keys;
-// };
-
-// [[Rcpp::export]]
-//int64_t solve_cpp(int start_row, int start_col, std::vector<int> rows, std::vector<int> cols, std::vector<char> values) {
-int solve_cpp() {
-  // std::unordered_map<std::pair<int, int>, char> coords;
-
-  return 0;
-}
-')
-
-# COMMAND ----------
-
-# MAGIC %md ## asd
-
-# COMMAND ----------
-
-c(m)
-
-# COMMAND ----------
-
-arrayInd(which(m != ""), dim(m), dimnames(m), useNames = TRUE)
-
-# COMMAND ----------
-
-keys <-
-  which(m %in% letters) %>%
-  arrayInd(dim(m), dimnames(m), useNames = TRUE) %>%
-  as_tibble() %>%
-  mutate(value = m[m %in% letters]) %>%
-  create_coord(default = FALSE)
-str(keys)
-
-# COMMAND ----------
-
-locks <-
-  which(m %in% LETTERS) %>%
-  arrayInd(dim(m), dimnames(m), useNames = TRUE) %>%
-  as_tibble() %>%
-  mutate(value = m[m %in% LETTERS]) %>%
-  create_coord(default = FALSE)
-str(locks)
-
-# COMMAND ----------
-
-available_coords <-
-  which(m != "#", arr.ind = TRUE) %>%
-  as_tibble() %>%
-  mutate(value = TRUE) %>%
-  create_coord(default = FALSE)
-str(available_coords)
-
-# COMMAND ----------
-
-x <- m
-wh = c(1,1)
-arrayInd(wh, dim(x), dimnames(x), useNames = TRUE)
-
-# COMMAND ----------
-
-which
-
-# COMMAND ----------
-
-
-  result <- list()
- # if (!is.null(inds)) {
-    result <- as.list(inds$value)
-    names(inds) <- hash(inds$row, inds$col)
- # }
-result
-
-# COMMAND ----------
-
-inds
-
-# COMMAND ----------
-
-inds <-
-  which(m != "#", arr.ind = TRUE) %>%
-  as_tibble() %>%
-  mutate(value = TRUE)
-inds
-
-# COMMAND ----------
-
-create_coord(a, default = FALSE)
-
-# COMMAND ----------
-
-start_pos <- which(m == "@", arr.ind = TRUE)
-start_pos
-
-# COMMAND ----------
-
-which(str_is_upper(m), arr.ind = TRUE)
-
-# COMMAND ----------
-
-which(m %in% c("#"), arr.ind = TRUE)
-
-# COMMAND ----------
-
-m[m %in% c("#")]
-
-# COMMAND ----------
-
-str_to_upper(m)
-
-# COMMAND ----------
-
-items <-
-  which(m != "#", arr.ind = TRUE) %>%
-  as_tibble() %>%
-  mutate(value = TRUE) %>%
-  create_coord(default = FALSE)
-
-# COMMAND ----------
-
-available_coords <-
-  which(m != "#", arr.ind = TRUE) %>%
-  as_tibble() %>%
-  mutate(value = TRUE) %>%
-  create_coord(default = FALSE)
-available_coords
-
-# COMMAND ----------
-
-items <-
-
-# COMMAND ----------
-
-available_coords <- which(m != "#", arr.ind = TRUE)
-available_coords
-
-# COMMAND ----------
-
-#djkstra but visited includes items held
-
-# COMMAND ----------
-
-Rcpp::sourceCpp(code = '
-#include <Rcpp.h>
-
-struct State {
-  int64_t d;
-  int row;
-  int col;
-  std::string keys;
-};
-
-struct PairHash {
-  template <class T1, class T2>
-  std::size_t operator () (const std::pair<T1,T2> &p) const {
-    auto h1 = std::hash<T1>{}(p.first);
-    auto h2 = std::hash<T2>{}(p.second);
-
-    return h1 ^ h2;  
-  }
-};
-
-// [[Rcpp::export]]
-int64_t solve_cpp(std::vector<int> rows, std::vector<int> cols, std::string values) {
-  int target_key_length = std::count_if(values.begin(), values.end(), [](unsigned char c){ return std::islower(c); });
-  std::unordered_map<std::pair<int, int>, char, PairHash> coords;
-
-  //auto comp = [](const State& lhs, const State& rhs) { return lhs.row < rhs.row ? true : (lhs.col < rhs.col ? true : lhs.keys < rhs.keys); };
-  //auto visited  = std::unordered_set<State, decltype(comp)>(comp);
-
-  
-  auto hash = [](const Point& p) { return p.X + 10 * p.Y; };
-  auto equal = [](const Point& p1, const Point& p2) { return p1.X == p2.X && p1.Y == p2.Y; };
-  auto visited  = std::unordered_set<State, decltype(hash)>(hash), decltype(equal)>(equal);
-
-  int start_row;
-  int start_col;
-
-
-  for (int i = 0; i < rows.size(); ++i) {
-    if (values[i] == \'@\') {
-      // State s = {1, 1, 1, ""};
-      // visited.insert(s);
-      //visited.insert({0, rows[i], cols[i], ""});
-    }
-    coords[std::make_pair(rows[i], cols[i])] = values[i];
-  }
-  
-
-
-  return 0;
-}
-')
-
-# COMMAND ----------
-
-solve_cpp(
-  rows = coords$row,
-  cols = coords$col,
-  values = str_c(coords$value, collapse = "")
-)
-
-# COMMAND ----------
-
-# Rcpp::sourceCpp(code = '
-# #include <Rcpp.h>
-
-# struct State {
-#   int64_t d;
-#   int row;
-#   int col;
-#   std::string keys;
-# };
-
-# struct pair_hash {
-#   template <class T1, class T2>
-#   std::size_t operator () (const std::pair<T1,T2> &p) const {
-#     auto h1 = std::hash<T1>{}(p.first);
-#     auto h2 = std::hash<T2>{}(p.second);
-
-#     return h1 ^ h2;  
-#   }
-# };
-
-# // [[Rcpp::export]]
-# int64_t solve_cpp(std::vector<int> rows, std::vector<int> cols, std::string values) {
-#   int target_key_length = std::count_if(values.begin(), values.end(), [](unsigned char c){ return std::islower(c); });
-#   std::unordered_map<std::pair<int, int>, char, pair_hash> coords;
-
-#   auto comp = [](const State& lhs, const State& rhs) { return lhs.row < rhs.row ? true : (lhs.col < rhs.col ? true : lhs.keys < rhs.keys); };
-#   auto visited  = std::set<State, decltype(comp)>(comp);
-
-#   int start_row;
-#   int start_col;
-
-
-#   for (int i = 0; i < rows.size(); ++i) {
-#     if (values[i] == \'@\') {
-#       // State s = {1, 1, 1, ""};
-#       // visited.insert(s);
-#       visited.insert({0, rows[i], cols[i], ""});
-#     }
-#     coords[std::make_pair(rows[i], cols[i])] = values[i];
-#   }
-  
-
-
-#   return 0;
-# }
-# ')
-
-# COMMAND ----------
-
-# Rcpp::sourceCpp(code = '
-# #include <Rcpp.h>
-
-# struct State {
-#   int64_t d;
-#   int row;
-#   int col;
-#   std::string keys;
-# };
-
-# struct pair_hash {
-#   template <class T1, class T2>
-#   std::size_t operator () (const std::pair<T1,T2> &p) const {
-#     auto h1 = std::hash<T1>{}(p.first);
-#     auto h2 = std::hash<T2>{}(p.second);
-
-#     return h1 ^ h2;  
-#   }
-# };
-
-# // [[Rcpp::export]]
-# int64_t solve_cpp(std::vector<int> rows, std::vector<int> cols, std::string values) {
-#   int target_key_length = std::count_if(values.begin(), values.end(), [](unsigned char c){ return std::islower(c); });
-#   std::unordered_map<std::pair<int, int>, char, pair_hash> coords;
-#   // std::set<State, > visited;
-#   // auto visited = std::make_set<State>([](const State& lhs, const State& rhs) { lhs.row == rhs.row && lhs.col == rhs.col && lhs.keys == rhs.keys; });
-
-
-#    auto comp = [](const State& lhs, const State& rhs) { lhs.row == rhs.row && lhs.col == rhs.col && lhs.keys == rhs.keys; };
-#    auto set  = std::set<State, decltype(comp)>(comp);
-
-#   int start_row;
-#   int start_col;
-
-
-#   for (int i = 0; i < rows.size(); ++i) {
-#     if (values[i] == \'@\') {
-#       start_row = rows[i];
-#       start_col = cols[i];
-#     }
-#     coords[std::make_pair(rows[i], cols[i])] = values[i];
-#   }
-  
-
-
-#   return 0;
-# }
-# ')
-
-# COMMAND ----------
-
-# Rcpp::sourceCpp(code = '
-# #include <Rcpp.h>
-
-# struct State {
-#   int row;
-#   int col;
-#   std::string keys;
-# };
-
-# struct pair_hash {
-#   template <class T1, class T2>
-#   std::size_t operator () (const std::pair<T1,T2> &p) const {
-#     auto h1 = std::hash<T1>{}(p.first);
-#     auto h2 = std::hash<T2>{}(p.second);
-
-#     return h1 ^ h2;  
-#   }
-# };
-
-# // [[Rcpp::export]]
-# int64_t solve_cpp(std::vector<int> rows, std::vector<int> cols, std::string values) {
-#   int target_key_length = std::count_if(values.begin(), values.end(), [](unsigned char c){ return std::islower(c); });
-#   std::unordered_map<std::pair<int, int>, char, pair_hash> coords;
-#   std::set<State> visited;
-
-#   int start_row;
-#   int start_col;
-
-
-#   for (int i = 0; i < rows.size(); ++i) {
-#     if (values[i] == \'@\') {
-#       visited.insert({rows[i], cols[i], ""});
-#     }
-#     coords[std::make_pair(rows[i], cols[i])] = values[i];
-#   }
-  
-
-
-#   return 0;
-# }
-# ')
-
-# COMMAND ----------
-
-  which(m != "", arr.ind = TRUE) %>%
-  as_tibble() %>%
-  mutate(value = c(m))
