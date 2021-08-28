@@ -476,30 +476,6 @@ answer
 
 # COMMAND ----------
 
-coords <-
-  which(m != "", arr.ind = TRUE) %>%
-  as_tibble() %>%
-  mutate(value = c(m)) %>%
-  filter(value != " ")
-
-coords <-
-  left_join(
-    coords,
-    coords %>% filter(!(value %in% c("#", "."))),
-    by = "value",
-    suffix = c("", "_to")
-  ) %>%
-  filter(value %in% c("AA", "ZZ") | is.na(row_to) | !(row == row_to & col == col_to)) %>%
-  mutate(
-    row_to = coalesce(row_to, row),
-    col_to = coalesce(col_to, col),
-    depth_change = case_when(
-      str_length(value) == 1 ~ 0,
-      pmin(row, col, max(row) - row, max(col) - col) <= 3 ~ -1,
-      TRUE ~ 1
-    )
-  )
-
 coords
 
 # COMMAND ----------
@@ -559,6 +535,19 @@ int solve_cpp2(std::vector<int> rows, std::vector<int> cols, std::vector<std::st
 ',
   plugins = "cpp17" # For structured bindings
 )
+
+# COMMAND ----------
+
+coords <-
+  coords %>%
+  mutate(
+    depth_change = case_when(
+      str_length(value) == 1 ~ 0,
+      pmin(row, col, max(row) - row, max(col) - col) <= 3 ~ -1,
+      TRUE ~ 1
+    )
+  )
+coords
 
 # COMMAND ----------
 
