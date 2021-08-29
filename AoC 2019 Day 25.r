@@ -223,14 +223,13 @@ go("take space heater")
 go("north") #  ES   - Crew Quarters
 go("east") # E W - Security Checkpoint
 
-# Go east to try to get through security.
 # Too heavy: mutex, loom, tambourine, space heater, antenna
 # Too heavy:        loom, tambourine, space heater, antenna
 # Too heavy:              tambourine, space heater, antenna
 # Too light:                          space heater, antenna
 # Too heavy:        loom,             space heater, antenna
 # Too heavy:        loom,                           antenna
-# Too heavy:        loom,                                    - definitely no loom     
+# Too heavy:        loom,                                      
 # Too heavy: mutex,       tambourine,               antenna   
 # Too heavy:              tambourine,               antenna
 # Too light:                                        antenna
@@ -240,76 +239,13 @@ go("east") # E W - Security Checkpoint
 # Too heavy: mutex,                   space heater, antenna, astronaut ice cream,
 # Too light: mutex,                   space heater, antenna,                      mug,
 # Too light: mutex,                   space heater, antenna,                      mug, hologram
+# Correct:                            space heater, antenna, astronaut ice cream,      hologram
 
-# COMMAND ----------
-
-for (i in seq_len(100)) {
-  for (j in seq_len(5)) {
-    action <- sample(c("take", "drop"), 1)
-    item <- sample(c("mutex", "loom", "tambourine", "space heater", "antenna", "astronaut ice cream", "mug", "hologram"), 1)
-    go(str_c(action, " ", item))
-  }
-  go("east")
-}
-
-# COMMAND ----------
-
-items <- c("mutex", "loom", "tambourine", "space heater", "antenna", "astronaut ice cream", "mug", "hologram")
-
-# COMMAND ----------
-
-go("drop loom")
 go("drop mutex")
+go("drop loom")
 go("drop tambourine")
-# go("drop hologram")
 go("drop mug")
-go("take space heater")
-go("take antenna")
-go("take astronaut ice cream")
 go("east")
-
-# COMMAND ----------
-
-go("inv")
-
-# COMMAND ----------
-
-# Holodeck -> North to Arcade
-go("north")  # NES  - Arcade
-go("north")  # N S  - Engineering
-go("north")  # N S  - Hot Chocolate Fountain | space heater
-go("take space heater")
-go("north") #  ES   - Crew Quarters
-go("east") # E W - Security Checkpoint
-
-# COMMAND ----------
-
-# go("south") # N - Navigation | mug
-go("take mug")
-go("north") # N SW - Sick Bay
-go("west") #  E   - Gift Wrapping Center | astronaut ice cream
-go("take astronaut ice cream")
-
-# COMMAND ----------
-
-# go("drop mutex")
-# go("drop loom")
-# go("drop tambourine")
-# go("take loom")
-# go("drop space heater")
-# go("drop antenna")
-# go("drop loom")
-# go("take mutex")
-# go("take antenna")
-# go("take tambourine")
-# go("drop mutex")
-# go("drop tambourine")
-go("take space heater")
-go("east")
-
-# COMMAND ----------
-
-go("inv")
 
 # COMMAND ----------
 
@@ -319,3 +255,7 @@ go("inv")
 # MAGIC <p>Santa just smiles and nods his head toward the window.  There, in the distance, you can see the center of the Solar System: the Sun!</p>
 # MAGIC <p>The navigation console beeps again.</p>
 # MAGIC </article>
+
+# COMMAND ----------
+
+# No puzzle here - just need 49 stars.
