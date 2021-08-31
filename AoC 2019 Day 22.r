@@ -289,6 +289,34 @@ answer
 
 # COMMAND ----------
 
+# MAGIC %md ## Start test
+
+# COMMAND ----------
+
+n_cards <- 10007
+shuffle_coefs <- get_shuffle_coefficients(df, n_cards)
+
+A <- modular_exponentiation(shuffle_coefs$a, 1, n_cards)
+B <- (shuffle_coefs$b * (A - 1) * inverse(shuffle_coefs$a - 1)) %% n_cards
+
+# COMMAND ----------
+
+(shuffle_coefs$a * 2019 + shuffle_coefs$b) %% n_cards # Expect 4775
+
+# COMMAND ----------
+
+(A * 2019 + B) %% n_cards # Expect 4775
+
+# COMMAND ----------
+
+(inverse(A) * (4775 - B)) %% n_cards # Expect 2019
+
+# COMMAND ----------
+
+# MAGIC %md ## End test
+
+# COMMAND ----------
+
 # MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>After a while, you realize your shuffling skill won't improve much more with merely a single deck of cards.  You ask every 3D printer on the ship to make you some more cards while you check on the ship repairs.  While reviewing the work the droids have finished so far, you think you see <a href="https://en.wikipedia.org/wiki/Halley%27s_Comet">Halley's Comet</a> fly past!</p>
 # MAGIC <p>When you get back, you discover that the 3D printers have combined their power to create for you a single, giant, brand new, <em>factory order</em> deck of <em><code>119315717514047</code> space cards</em>.</p>
 # MAGIC <p>Finally, a deck of cards worthy of shuffling!</p>
@@ -299,10 +327,100 @@ answer
 
 # COMMAND ----------
 
+library(VeryLargeIntegers)
+
+# COMMAND ----------
+
 # Both 119315717514047 and 101741582076661 are prime.
-n_cards <- 119315717514047
-n_shuffles <- 101741582076661
-target_position <- 2020
+n_cards <- as.vli("119315717514047")
+n_shuffles <- as.vli("101741582076661")
+target_position <- as.vli("2020")
+
+# COMMAND ----------
+
+get_coefs_deal <- function(n_cards, increment, coefs) {
+  if (is.na(increment)) {
+    coefs$a <- mulmod(coefs$a, -1, n_cards)
+    coefs$b <- submod(n_cards - 1, coefs$b, n_cards)
+  } else {
+    coefs$a <- mulmod(coefs$a, increment, n_cards)
+    coefs$b <- mulmod(coefs$b, increment, n_cards)
+  }
+  coefs
+}
+
+get_coefs_cut <- function(n_cards, n, coefs) {
+  coefs$b <- submod(coefs$b, n, n_cards)
+  coefs
+}
+
+# Find a and b such that
+#   position_after_shuffle = a * position_before_shuffle + b MOD n
+get_shuffle_coefficients <- function(df, n_cards) {
+  # Start with identity
+  coefs <- list(a = as.vli("1"), b = as.vli("0"))
+  
+  for (i in seq_len(nrow(df))) {
+    f <- get(str_c("get_coefs_", df$action[i]))
+    coefs <- f(n_cards, df$value[i], coefs)
+  }
+  coefs
+}
+
+# COMMAND ----------
+
+shuffle_coefs <- get_shuffle_coefficients(df, n_cards)
+A <- powmod(shuffle_coefs$a, n_shuffles, n_cards)
+
+B <- mulmod(shuffle_coefs$b * (A - 1), invmod(shuffle_coefs$a - 1, n_cards), n_cards)
+# answer <- mulmod(invmod(A, n_cards), (2020 - B), n_cards)
+# answer
+
+# COMMAND ----------
+
+shuffle_coefs <- get_shuffle_coefficients(df, n_cards)
+
+# A and B are the coefficients after 101741582076661 applications of a*x + b
+
+# We have
+#   a*x + b
+# Which after one iteration, goes to
+#   a*(a*x + b) + b = a^2*x + b + b*a
+# After two iterations
+#  a^2*(a*x + b) + b + ab = a^3*x + b + b*a + b*a^2
+# After n iterations
+#  a^n*x + b + b*a + b*a^2 + ... + b*a^(n-1) = A*x + B where A = a^n and B = sum of i from 0 to n-1 of b*a^i
+#
+# B is a geometric series which can be evaluated as
+#  b * (a^n - 1) * (a - 1)' = b*(A-1)*(a-1)'
+#
+# n is prime so we can invert any number, k, from Fermat's Little Theorem
+#       k^(n-1) = 1       MOD n
+#  => k*k^(n-2) = 1       MOD n 
+#  =>        k' = k^(n-2) MOD n
+A <- powmod(shuffle_coefs$a, n_shuffles, n_cards)
+B <- mulmod(shuffle_coefs$b * (A - 1), invmod(shuffle_coefs$a - 1, n_cards), n_cards)
+
+# We need to find x such that
+#      A*x + B = 2020          MOD n
+#   =>       x = A'*(2020 - B) MOD n
+answer <- mulmod(invmod(A, n_cards), (2020 - B), n_cards)
+answer
+
+# COMMAND ----------
+
+VeryLargeIntegers::
+
+# COMMAND ----------
+
+lst(
+  invmod(shuffle_coefs$a %>% format(scientific = FALSE) %>% as.vli(), n_cards),
+  powmod(shuffle_coefs$a %>% format(scientific = FALSE) %>% as.vli(), n_cards - 2, n_cards)
+)
+
+# COMMAND ----------
+
+# MAGIC %md ## Old
 
 # COMMAND ----------
 
@@ -337,20 +455,29 @@ get_shuffle_coefficients <- function(df, n_cards) {
 
 # COMMAND ----------
 
+# modular_exponentiation <- function(n, k, m) {
+#   if (k == 0) return(1)
+#   if (n == 0) return(0)
+#   b <- n %% m
+#   r <- 1
+#   while (k != 0) {
+#     if (k %% 2 == 1) {
+#       r <- (b * r) %% m
+#       k <- k - 1
+#     }
+#     k <- k / 2
+#     b <- (b * b) %% m
+#   }
+#   return(r)
+# }
 modular_exponentiation <- function(n, k, m) {
-  if (k == 0) return(1)
-  if (n == 0) return(0)
-  b <- n %% m
-  r <- 1
-  while (k != 0) {
-    if (k %% 2 == 1) {
-      r <- (b * r) %% m
-      k <- k - 1
-    }
-    k <- k / 2
-    b <- (b * b) %% m
-  }
-  return(r)
+  VeryLargeIntegers::powmod(
+    VeryLargeIntegers::as.vli(format(n, scientific = FALSE)),
+    VeryLargeIntegers::as.vli(format(k, scientific = FALSE)), 
+    VeryLargeIntegers::as.vli(format(m, scientific = FALSE))
+  ) %>%
+    as.character() %>%
+    as.numeric()
 }
 
 # COMMAND ----------
@@ -377,133 +504,47 @@ shuffle_coefs <- get_shuffle_coefficients(df, n_cards)
 #  =>        k' = k^(n-2) MOD n
 inverse <- function(k) modular_exponentiation(k, n_cards - 2, n_cards)
 A <- modular_exponentiation(shuffle_coefs$a, n_shuffles, n_cards)
-B <- shuffle_coefs$b * (A - 1) * inverse(shuffle_coefs$a - 1)
+B <- (shuffle_coefs$b * (A - 1) * inverse(shuffle_coefs$a - 1)) %% n_cards # FIXME: Is this mod here correct? I think so
 
 # We need to find x such that
 #      A*x + B = 2020          MOD n
 #   =>       x = A'*(2020 - B) MOD n
 answer <- (inverse(A) * (2020 - B)) %% n_cards
-answer
+format(answer, scientific = FALSE)
 
 # COMMAND ----------
 
-B
+install.packages("VeryLargeIntegers")
 
 # COMMAND ----------
 
-numbers::modpower
+modular_exponentiation(A, n_cards - 2, n_cards) %>% format(scientific = FALSE)
 
 # COMMAND ----------
 
-install.packages("numbers")
+x=VeryLargeIntegers::as.vli("111")
 
 # COMMAND ----------
 
-# get_coefs_deal <- function(n_cards, increment) {
-#   if (is.na(increment)) return(rev(cards))
-  
-#   inds <- (increment * seq(from = 0, length.out = length(cards))) %% length(cards)
-#   cards[inds + 1] <- cards
-#   lst(a, b)
-# }
-
-# get_coefs_cut <- function(n_cards, n) {
-#   c(tail(cards, -n), head(cards, n))
-#   lst(a, b)
-# }
-
-# # Find a and b such that
-# #   position_after_shuffle = a * position_before_shuffle + b MOD n
-# get_shuffle_coefficients <- function(df, n_cards) {
-#   # Start with identity
-#   a <- 1
-#   b <- 0
-  
-#   for (i in seq_len(nrow(df))) {
-#     f <- get(str_c("get_coefs_", df$action[i]))
-#     op_coefs <- f(n_cards, df$value[i])
-#     a <- (a * op_coefs$a) %% n_cards
-#     b <- (b * op_coefs$a + op_coefs$b) %% n_cards
-#   }
-#   lst(a, b)
-# }
+as.character(x) %>% as.numeric()
 
 # COMMAND ----------
 
-# MAGIC %md ## Scratch
+x=VeryLargeIntegers::powmod(
+  VeryLargeIntegers::as.vli(format(A, scientific = FALSE)),
+  VeryLargeIntegers::as.vli(format(n_cards - 2, scientific = FALSE)), 
+  VeryLargeIntegers::as.vli(format(n_cards, scientific = FALSE))
+)
 
 # COMMAND ----------
 
-# Why don't I just calculate it forwards, then invert it?
+shuffle_coefs
 
 # COMMAND ----------
 
-Reverse the operations and simplify as
-position_before_shuffle = A * position_after_shuffle + B
-
-Repeatedly applying this gives
-position_before_2_shuffles = A * (A * position_after_shuffles + B) + B
-                           = A^2 * position_after_shuffles + AB + B
-position_before_3_shuffles = A^2 * (A * position_after_shuffles + B) + AB + B
-                           = A^3 * position_after_shuffles + A^2 * B + AB + B
-position_before_4_shuffles = A^3 * (A * position_after_shuffles + B) + A^2 * B + AB + B
-                           = A^4 * x + A^3*B + A^2*B + AB + B
+# 73372000059392 too high
+# 30179661447168 too low
 
 # COMMAND ----------
 
-# WIP
-
-# COMMAND ----------
-
-# Check for cycles
-start_cards <- seq(from = 0, length.out = n_cards)
-cards <- start_cards
-i <- 1
-repeat {
-  cards <- shuffle(df, cards)
-  if (all(cards == start_cards)) break
-  i <- i + 1
-}
-i
-
-# COMMAND ----------
-
-# get_coefs_deal <- function(n_cards, increment) {
-#   if (is.na(increment)) return(rev(cards))
-  
-#   inds <- (increment * seq(from = 0, length.out = length(cards))) %% length(cards)
-#   cards[inds + 1] <- cards
-#   lst(a, b)
-# }
-
-# get_coefs_cut <- function(n_cards, n) {
-#   c(tail(cards, -n), head(cards, n))
-#   lst(a, b)
-# }
-
-# # Reverse the operations and simplify as
-# #   position_before_shuffle = a * position_after_shuffle + b MOD n
-# get_unshuffle_coefficients <- function(df, n_cards) {
-#   # Start with identity
-#   a <- 1
-#   b <- 0
-  
-#   for (i in seq_len(nrow(df))) {
-#     f <- get(str_c("get_coefs_", df$action[i]))
-#     op_coefs <- f(n_cards, df$value[i])
-#     a <- (a * op_coefs$a) %% n_cards
-#     b <- (b * op_coefs$a + op_coefs$b) %% n_cards
-#   }
-#   cards
-#   lst(a, b)
-# }
-
-# COMMAND ----------
-
-# Looks like it cycles every n - 1 shuffles. But how is that helpful when n is bigger than the number of shuffles?
-
-# COMMAND ----------
-
-# 119315717514047 cards
-# 101741582076661 shuffles
-# position 2020
+install.packages("VeryLargeIntegers")
