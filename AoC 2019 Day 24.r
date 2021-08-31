@@ -73,15 +73,6 @@ input <- ".....
 
 # COMMAND ----------
 
-# input <- "....#
-# #..#.
-# #..##
-# ..#..
-# #....
-# "
-
-# COMMAND ----------
-
 start_m <-
   read_lines(input) %>%
   str_split("") %>%
