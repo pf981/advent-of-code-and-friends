@@ -372,11 +372,9 @@ n_minutes <- 200
 
 m <- start_m
 m[] <- FALSE
-m[ceiling(nrow(m) / 2), ceiling(ncol(m) / 2)] <- NA
 
 ms <- rep(list(m), n_minutes * 2 + 1)
 ms[[ceiling(length(ms) / 2)]] <- start_m
-ms[[ceiling(length(ms) / 2)]][ceiling(nrow(m) / 2), ceiling(ncol(m) / 2)] <- NA
 ms
 
 # COMMAND ----------
