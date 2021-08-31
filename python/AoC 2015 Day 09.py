@@ -57,7 +57,6 @@ AlphaCentauri to Arbre = 46'''
 
 from collections import defaultdict
 from itertools import permutations
-import sys
 
 ds = defaultdict(dict)
 
