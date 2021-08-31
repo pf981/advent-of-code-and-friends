@@ -331,7 +331,7 @@ get_coefs_cut <- function(n_cards, n, coefs) {
 }
 
 # Find a and b such that
-#   position_after_shuffle = a * position_before_shuffle + b MOD n
+#     position_after_shuffle = a * position_before_shuffle + b MOD n
 get_shuffle_coefficients <- function(df, n_cards) {
   # Start with identity
   coefs <- list(a = as.vli("1"), b = as.vli("0"))
@@ -346,22 +346,24 @@ get_shuffle_coefficients <- function(df, n_cards) {
 # COMMAND ----------
 
 # Find a and b such that
-#   position_after_shuffle = a * position_before_shuffle + b MOD n
+#     position_after_shuffle = a * position_before_shuffle + b MOD n
 shuffle_coefs <- get_shuffle_coefficients(df, n_cards)
 
 # Let A and B be the coefficients after 101741582076661 applications of a*x + b
 
 # We have
-#   a*x + b
+#     a*x + b
 # Which after one iteration, goes to
-#   a*(a*x + b) + b = a^2*x + b + b*a
+#     a*(a*x + b) + b = a^2*x + b + b*a
 # After two iterations
-#  a^2*(a*x + b) + b + ab = a^3*x + b + b*a + b*a^2
+#    a^2*(a*x + b) + b + ab = a^3*x + b + b*a + b*a^2
 # After n iterations
-#  a^n*x + b + b*a + b*a^2 + ... + b*a^(n-1) = A*x + B where A = a^n and B = sum of i from 0 to n-1 of b*a^i
+#    a^n*x + b + b*a + b*a^2 + ... + b*a^(n-1) = A*x + B where
+#    A = a^n, and
+#    B = sum of i from 0 to n-1 of b*a^i
 #
 # B is a geometric series which can be evaluated as
-#  b * (a^n - 1) * (a - 1)' = b*(A-1)*(a-1)'
+#    B = b * (a^n - 1) * (a - 1)' = b*(A-1)*(a-1)'
 A <- powmod(shuffle_coefs$a, n_shuffles, n_cards)
 B <- mulmod(shuffle_coefs$b * (A - 1), invmod(shuffle_coefs$a - 1, n_cards), n_cards)
 
