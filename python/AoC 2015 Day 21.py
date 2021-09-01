@@ -85,20 +85,20 @@ shop = [[[int(x) for x in re.findall(r'(?<= )\d+', line[1:])] for line in table.
 # COMMAND ----------
 
 from itertools import chain, combinations
-from queue import PriorityQueue
+from heapq import heappush, heappop
 
 def comb(l, take_min, take_max):
   return chain.from_iterable(combinations(l, r) for r in range(take_min, take_max+1))
 
-loadouts = PriorityQueue()
-loadouts_rev = PriorityQueue()
+loadouts = []
+loadouts_rev = []
 
 for weapons in comb(shop[0], 1, 1):
   for armors in comb(shop[1], 0, 1):
     for rings in comb(shop[2], 0, 2):
       cost, damage, armor = [sum(x) for x in zip(*(weapons + armors + rings))]
-      loadouts.put((cost, damage, armor))
-      loadouts_rev.put((-cost, damage, armor))
+      heappush(loadouts, (cost, damage, armor))
+      heappush(loadouts_rev, (-cost, damage, armor))
 
 # COMMAND ----------
 
@@ -120,7 +120,7 @@ def does_win(loadout, boss):
       return False
 
 while True:
-  loadout = loadouts.get()
+  loadout = heappop(loadouts)
   if does_win(loadout, boss):
     break
 
@@ -136,7 +136,7 @@ answer
 # COMMAND ----------
 
 while True:
-  loadout = loadouts_rev.get()
+  loadout = heappop(loadouts_rev)
   if not does_win(loadout, boss):
     break
 
