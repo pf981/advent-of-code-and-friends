@@ -2055,7 +2055,7 @@ def is_ssl(ip_address):
   outsides = re.findall(r'(\w+)(?:$|\[)', ip_address)
 
   for outside in outsides:
-    for aba in re.finditer(r'(?=((\w)(?!\2).\2))', outside):
+    for aba in re.finditer(r'(?=((\w)[^\2]\2))', outside):
       bab = aba.group(1)[1:] + aba.group(1)[1]
       if any(bab in x for x in insides):
         return True
