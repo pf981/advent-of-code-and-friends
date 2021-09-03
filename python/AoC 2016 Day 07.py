@@ -2050,17 +2050,14 @@ answer
 
 # COMMAND ----------
 
-def findall_with_overlap(regex, s, match_len = 3):
-  return [s[it.start():it.start()+match_len] for it in re.finditer(f'(?={regex})', s)]
-
 def is_ssl(ip_address):
   insides = re.findall(r'\[(\w+)\]', ip_address)
   outsides = re.findall(r'(\w+)(?:$|\[)', ip_address)
 
   for outside in outsides:
-    for aba in findall_with_overlap(r'(\w)(?!\1).\1', outside):
-      bab = aba[1:] + aba[1]
-      if any(re.search(bab, x) for x in insides):
+    for aba in re.finditer(r'(?=((\w)(?!\2).\2))', outside):
+      bab = aba.group(1)[1:] + aba.group(1)[1]
+      if any(bab in x for x in insides):
         return True
 
   return False
