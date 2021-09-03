@@ -1,4 +1,8 @@
 # Databricks notebook source
+# MAGIC %md https://adventofcode.com/2016/day/12
+
+# COMMAND ----------
+
 # MAGIC %md <article class="day-desc"><h2>--- Day 12: Leonardo's Monorail ---</h2><p>You finally reach the top floor of this building: a garden with a slanted glass ceiling. Looks like there are no more stars to be had.</p>
 # MAGIC <p>While sitting on a nearby bench amidst some <a href="https://www.google.com/search?q=tiger+lilies&amp;tbm=isch">tiger lilies</a>, you manage to decrypt some of the files you extracted from the servers downstairs.</p>
 # MAGIC <p>According to these documents, Easter Bunny HQ isn't just this building - it's a collection of buildings in the nearby area. They're all connected by a local monorail, and there's another building not far from here! Unfortunately, being night, the monorail is currently not operating.</p>

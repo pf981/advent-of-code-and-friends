@@ -1,4 +1,8 @@
 # Databricks notebook source
+# MAGIC %md https://adventofcode.com/2016/day/24
+
+# COMMAND ----------
+
 # MAGIC %md <article class="day-desc"><h2>--- Day 24: Air Duct Spelunking ---</h2><p>You've finally met your match; the doors that provide access to the roof are locked tight, and all of the controls and related electronics are inaccessible. You simply can't reach them.</p>
 # MAGIC <p>The robot that cleans the air ducts, however, <em>can</em>.</p>
 # MAGIC <p>It's not a very fast <span title="The Brave Little Air Duct Cleaning Robot That Could">little robot</span>, but you reconfigure it to be able to interface with some of the exposed wires that have been routed through the <a href="https://en.wikipedia.org/wiki/HVAC">HVAC</a> system. If you can direct it to each of those locations, you should be able to bypass the security controls.</p>

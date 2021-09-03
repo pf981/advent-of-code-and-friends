@@ -1,4 +1,8 @@
 # Databricks notebook source
+# MAGIC %md https://adventofcode.com/2016/day/22
+
+# COMMAND ----------
+
 # MAGIC %md <article class="day-desc"><h2>--- Day 22: Grid Computing ---</h2><p>You gain access to a massive storage cluster arranged in a grid; each storage node is only connected to the four nodes directly adjacent to it (three if the node is on an edge, two if it's in a corner).</p>
 # MAGIC <p>You can directly access data <em>only</em> on node <code>/dev/grid/node-x0-y0</code>, but you can perform some limited actions on the other nodes:</p>
 # MAGIC <ul>

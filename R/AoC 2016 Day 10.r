@@ -1,4 +1,8 @@
 # Databricks notebook source
+# MAGIC %md https://adventofcode.com/2016/day/10
+
+# COMMAND ----------
+
 # MAGIC %md <article class="day-desc"><h2>--- Day 10: Balance Bots ---</h2><p>You come upon a factory in which many robots are <a href="https://www.youtube.com/watch?v=JnkMyfQ5YfY&amp;t=40">zooming around</a> handing small microchips to each other.</p>
 # MAGIC <p>Upon closer examination, you notice that each bot only proceeds when it has <em>two</em> microchips, and once it does, it gives each one to a different bot or puts it in a marked "output" bin. Sometimes, bots take microchips from "input" bins, too.</p>
 # MAGIC <p>Inspecting one of the microchips, it seems like they each contain a single number; the bots must use some logic to decide what to do with each chip. You access the local control computer and download the bots' instructions (your puzzle input).</p>

@@ -1,4 +1,8 @@
 # Databricks notebook source
+# MAGIC %md https://adventofcode.com/2016/day/17
+
+# COMMAND ----------
+
 # MAGIC %md <article class="day-desc"><h2>--- Day 17: Two Steps Forward ---</h2><p>You're trying to access a secure vault protected by a <code>4x4</code> grid of small rooms connected by doors. You start in the top-left room (marked <code>S</code>), and you can access the vault (marked <code>V</code>) once you reach the bottom-right room:</p>
 # MAGIC <pre><code>#########
 # MAGIC #S| | | #

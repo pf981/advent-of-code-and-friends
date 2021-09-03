@@ -1,4 +1,8 @@
 # Databricks notebook source
+# MAGIC %md https://adventofcode.com/2016/day/15
+
+# COMMAND ----------
+
 # MAGIC %md <article class="day-desc"><h2>--- Day 15: Timing is Everything ---</h2><p>The halls open into an interior plaza containing a large kinetic sculpture. The sculpture is in a sealed enclosure and seems to involve a set of identical spherical capsules that are carried to the top and allowed to <a href="https://youtu.be/IxDoO9oODOk?t=177">bounce through the maze</a> of spinning pieces.</p>
 # MAGIC <p>Part of the sculpture is even interactive! When a button is pressed, a capsule is dropped and tries to fall through slots in a set of rotating discs to finally go through a little hole at the bottom and come out of the sculpture. If any of the slots aren't aligned with the capsule as it passes, the capsule bounces off the disc and soars away. You feel compelled to <span title="These machines are everywhere in Japan, but on a MUCH smaller scale.">get one of those capsules</span>.</p>
 # MAGIC <p>The discs pause their motion each second and come in different sizes; they seem to each have a fixed number of positions at which they stop.  You decide to call the position with the slot <code>0</code>, and count up for each position it reaches next.</p>

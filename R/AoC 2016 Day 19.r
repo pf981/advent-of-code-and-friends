@@ -1,4 +1,8 @@
 # Databricks notebook source
+# MAGIC %md https://adventofcode.com/2016/day/19
+
+# COMMAND ----------
+
 # MAGIC %md <article class="day-desc"><h2>--- Day 19: An Elephant Named Joseph ---</h2><p>The Elves contact you over a highly secure emergency channel. Back at the North Pole, the Elves are busy <span title="Eggnoggedly misunderstanding them, actually.">misunderstanding</span> <a href="https://en.wikipedia.org/wiki/White_elephant_gift_exchange">White Elephant parties</a>.</p>
 # MAGIC <p>Each Elf brings a present. They all sit in a circle, numbered starting with position <code>1</code>. Then, starting with the first Elf, they take turns stealing all the presents from the Elf to their left.  An Elf with no presents is removed from the circle and does not take turns.</p>
 # MAGIC <p>For example, with five Elves (numbered <code>1</code> to <code>5</code>):</p>

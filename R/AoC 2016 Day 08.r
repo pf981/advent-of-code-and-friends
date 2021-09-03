@@ -1,4 +1,8 @@
 # Databricks notebook source
+# MAGIC %md https://adventofcode.com/2016/day/8
+
+# COMMAND ----------
+
 # MAGIC %md <article class="day-desc"><h2>--- Day 8: Two-Factor Authentication ---</h2><p>You come across a door implementing what you can only assume is an implementation of <a href="https://en.wikipedia.org/wiki/Multi-factor_authentication">two-factor authentication</a> after a long game of <a href="https://en.wikipedia.org/wiki/Requirement">requirements</a> <a href="https://en.wikipedia.org/wiki/Chinese_whispers">telephone</a>.</p>
 # MAGIC <p>To get past the door, you first swipe a keycard (no problem; there was one on a nearby desk). Then, it displays a code on a <a href="https://www.google.com/search?q=tiny+lcd&amp;tbm=isch">little screen</a>, and you type that code on a keypad. Then, presumably, the door unlocks.</p>
 # MAGIC <p>Unfortunately, the screen has been <span title="BUT BY WHOM?!">smashed</span>. After a few minutes, you've taken everything apart and figured out how it works. Now you just have to work out what the screen <em>would</em> have displayed.</p>

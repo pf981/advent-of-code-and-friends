@@ -1,4 +1,8 @@
 # Databricks notebook source
+# MAGIC %md https://adventofcode.com/2016/day/7
+
+# COMMAND ----------
+
 # MAGIC %md <article class="day-desc"><h2>--- Day 7: Internet Protocol Version 7 ---</h2><p>While snooping around the local network of EBHQ, you compile a list of <a href="https://en.wikipedia.org/wiki/IP_address">IP addresses</a> (they're IPv7, of course; <a href="https://en.wikipedia.org/wiki/IPv6">IPv6</a> is much too limited). You'd like to figure out which IPs support <em>TLS</em> (transport-layer snooping).</p>
 # MAGIC <p>An IP supports TLS if it has an Autonomous Bridge Bypass Annotation, or <span title="Any similarity to the pattern it describes is purely coincidental."><em>ABBA</em></span>.  An ABBA is any four-character sequence which consists of a pair of two different characters followed by the reverse of that pair, such as <code>xyyx</code> or <code>abba</code>.  However, the IP also must not have an ABBA within any hypernet sequences, which are contained by <em>square brackets</em>.</p>
 # MAGIC <p>For example:</p>

@@ -1,4 +1,8 @@
 # Databricks notebook source
+# MAGIC %md https://adventofcode.com/2016/day/16
+
+# COMMAND ----------
+
 # MAGIC %md <article class="day-desc"><h2>--- Day 16: Dragon Checksum ---</h2><p>You're done scanning this part of the network, but you've left traces of your presence. You need to <span title="If I ever find one of my disks overwritten with a dragon curve, I'll know it was you.">overwrite some disks</span> with random-looking data to cover your tracks and update the local security system with a new checksum for those disks.</p>
 # MAGIC <p>For the data to not be suspicious, it needs to have certain properties; purely random data will be detected as tampering. To generate appropriate random data, you'll need to use a modified <a href="https://en.wikipedia.org/wiki/Dragon_curve">dragon curve</a>.</p>
 # MAGIC <p>Start with an appropriate initial state (your puzzle input). Then, so long as you don't have enough data yet to fill the disk, repeat the following steps:</p>
