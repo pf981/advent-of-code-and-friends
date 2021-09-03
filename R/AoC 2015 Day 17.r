@@ -1,4 +1,8 @@
 # Databricks notebook source
+# MAGIC %md https://adventofcode.com/2015/day/17
+
+# COMMAND ----------
+
 # MAGIC %md <article class="day-desc"><h2>--- Day 17: No Such Thing as Too Much ---</h2><p>The elves bought too much eggnog again - <code>150</code> liters this time.  To fit it all into your refrigerator, you'll need to move it into smaller containers.  You take an inventory of the capacities of the available containers.</p>
 # MAGIC <p>For example, suppose you have containers of size <code>20</code>, <code>15</code>, <code>10</code>, <code>5</code>, and <code>5</code> liters.  If you need to store <code>25</code> liters, there are four ways to do it:</p>
 # MAGIC <ul>

@@ -1,4 +1,8 @@
 # Databricks notebook source
+# MAGIC %md https://adventofcode.com/2015/day/9
+
+# COMMAND ----------
+
 # MAGIC %md <article class="day-desc"><h2>--- Day 9: All in a Single Night ---</h2><p>Every year, Santa manages to deliver all of his presents in a single night.</p>
 # MAGIC <p>This year, however, he has some <span title="Bonus points if you recognize all of the locations.">new locations</span> to visit; his elves have provided him the distances between every pair of locations.  He can start and end at any two (different) locations he wants, but he must visit each location exactly once.  What is the <em>shortest distance</em> he can travel to achieve this?</p>
 # MAGIC <p>For example, given the following distances:</p>

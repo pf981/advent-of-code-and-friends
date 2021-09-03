@@ -1,4 +1,8 @@
 # Databricks notebook source
+# MAGIC %md https://adventofcode.com/2015/day/19
+
+# COMMAND ----------
+
 # MAGIC %md <article class="day-desc"><h2>--- Day 19: Medicine for Rudolph ---</h2><p>Rudolph the Red-Nosed Reindeer is sick!  His nose isn't shining very brightly, and he needs medicine.</p>
 # MAGIC <p>Red-Nosed Reindeer biology isn't similar to regular reindeer biology; Rudolph is going to need custom-made medicine.  Unfortunately, Red-Nosed Reindeer chemistry isn't similar to regular reindeer chemistry, either.</p>
 # MAGIC <p>The North Pole is equipped with a Red-Nosed Reindeer nuclear fusion/fission plant, capable of constructing any Red-Nosed Reindeer molecule you need.  It works by starting with some input molecule and then doing a series of <em>replacements</em>, one per step, until it has the right molecule.</p>

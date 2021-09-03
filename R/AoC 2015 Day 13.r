@@ -1,4 +1,8 @@
 # Databricks notebook source
+# MAGIC %md https://adventofcode.com/2015/day/13
+
+# COMMAND ----------
+
 # MAGIC %md <article class="day-desc"><h2>--- Day 13: Knights of the Dinner Table ---</h2><p>In years past, the holiday feast with your family hasn't gone so well.  Not everyone gets along!  This year, you resolve, will be different.  You're going to find the <em>optimal seating arrangement</em> and avoid all those awkward conversations.</p>
 # MAGIC <p>You start by writing up a list of everyone invited and the amount their happiness would increase or decrease if they were to find themselves sitting next to each other person.  You have a circular table that will be just big enough to fit everyone comfortably, and so each person will have exactly two neighbors.</p>
 # MAGIC <p>For example, suppose you have only four attendees planned, and you <span title="Finding a method to calculate happiness units is left as an exercise for the reader.">calculate</span> their potential happiness as follows:</p>

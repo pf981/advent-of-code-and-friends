@@ -1,4 +1,8 @@
 # Databricks notebook source
+# MAGIC %md https://adventofcode.com/2015/day/15
+
+# COMMAND ----------
+
 # MAGIC %md <article class="day-desc"><h2>--- Day 15: Science for Hungry People ---</h2><p>Today, you set out on the task of perfecting your milk-dunking cookie recipe.  All you have to do is find the right balance of ingredients.</p>
 # MAGIC <p>Your recipe leaves room for exactly <code>100</code> teaspoons of ingredients.  You make a list of the <em>remaining ingredients you could use to finish the recipe</em> (your puzzle input) and their <em>properties per teaspoon</em>:</p>
 # MAGIC <ul>

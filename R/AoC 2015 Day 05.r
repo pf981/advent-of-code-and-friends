@@ -1,4 +1,8 @@
 # Databricks notebook source
+# MAGIC %md https://adventofcode.com/2015/day/5
+
+# COMMAND ----------
+
 # MAGIC %md <article class="day-desc"><h2>--- Day 5: Doesn't He Have Intern-Elves For This? ---</h2><p>Santa needs help figuring out which strings in his text file are naughty or nice.</p>
 # MAGIC <p>A <em>nice string</em> is one with all of the following properties:</p>
 # MAGIC <ul>

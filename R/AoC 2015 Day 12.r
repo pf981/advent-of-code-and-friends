@@ -1,4 +1,8 @@
 # Databricks notebook source
+# MAGIC %md https://adventofcode.com/2015/day/12
+
+# COMMAND ----------
+
 # MAGIC %md <article class="day-desc"><h2>--- Day 12: JSAbacusFramework.io ---</h2><p>Santa's Accounting-Elves need help balancing the books after a recent order.  Unfortunately, their accounting software uses a peculiar storage format.  That's where you come in.</p>
 # MAGIC <p>They have a <a href="http://json.org/">JSON</a> document which contains a variety of things: arrays (<code>[1,2,3]</code>), objects (<code>{"a":1, "b":2}</code>), numbers, and strings.  Your first job is to simply find all of the <em>numbers</em> throughout the document and add them together.</p>
 # MAGIC <p>For example:</p>

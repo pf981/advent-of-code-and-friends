@@ -1,4 +1,8 @@
 # Databricks notebook source
+# MAGIC %md https://adventofcode.com/2015/day/10
+
+# COMMAND ----------
+
 # MAGIC %md <article class="day-desc"><h2>--- Day 10: Elves Look, Elves Say ---</h2><p>Today, the Elves are playing a game called <a href="https://en.wikipedia.org/wiki/Look-and-say_sequence">look-and-say</a>.  They take turns making sequences by reading aloud the previous sequence and using that reading as the next sequence.  For example, <code>211</code> is read as "one two, two ones", which becomes <code>1221</code> (<code>1</code> <code>2</code>, <code>2</code> <code>1</code>s).</p>
 # MAGIC <p>Look-and-say sequences are generated iteratively, using the previous value as input for the next step.  For each step, take the previous value, and replace each run of digits (like <code>111</code>) with the number of digits (<code>3</code>) followed by the digit itself (<code>1</code>).</p>
 # MAGIC <p>For example:</p>

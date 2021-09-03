@@ -1,4 +1,8 @@
 # Databricks notebook source
+# MAGIC %md https://adventofcode.com/2015/day/8
+
+# COMMAND ----------
+
 # MAGIC %md <article class="day-desc"><h2>--- Day 8: Matchsticks ---</h2><p>Space on the sleigh is limited this year, and so Santa will be bringing his list as a digital copy. He needs to know how much space it will take up when stored.</p>
 # MAGIC <p>It is common in many programming languages to provide a way to <span title="It is common for many programmers to try to escape from string escaping.  No such luck here.">escape</span> special characters in strings.  For example, <a href="https://en.wikipedia.org/wiki/Escape_sequences_in_C">C</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">JavaScript</a>, <a href="http://perldoc.perl.org/perlop.html#Quote-and-Quote-like-Operators">Perl</a>, <a href="https://docs.python.org/2.0/ref/strings.html">Python</a>, and even <a href="http://php.net/manual/en/language.types.string.php#language.types.string.syntax.double">PHP</a> handle special characters in very similar ways.</p>
 # MAGIC <p>However, it is important to realize the difference between the number of characters <em>in the code representation of the string literal</em> and the number of characters <em>in the in-memory string itself</em>.</p>

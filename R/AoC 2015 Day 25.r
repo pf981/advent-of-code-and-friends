@@ -1,4 +1,12 @@
 # Databricks notebook source
+
+
+# COMMAND ----------
+
+# MAGIC %md https://adventofcode.com/2015/day/25
+
+# COMMAND ----------
+
 # MAGIC %md <article class="day-desc"><h2>--- Day 25: Let It Snow ---</h2><p>Merry Christmas!  Santa is booting up his weather machine; looks like you might get a <a href="1">white Christmas</a> after all.</p>
 # MAGIC <p>The weather machine beeps!  On the console of the machine is a copy protection message asking you to <a href="https://en.wikipedia.org/wiki/Copy_protection#Early_video_games">enter a code from the instruction manual</a>.  Apparently, it refuses to run unless you give it that code.  No problem; you'll just look up the code in the--</p>
 # MAGIC <p>"Ho ho ho", Santa ponders aloud.  "I can't seem to find the manual."</p>

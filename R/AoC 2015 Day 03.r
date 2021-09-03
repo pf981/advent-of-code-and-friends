@@ -1,4 +1,8 @@
 # Databricks notebook source
+# MAGIC %md https://adventofcode.com/2015/day/3
+
+# COMMAND ----------
+
 # MAGIC %md <article class="day-desc"><h2>--- Day 3: Perfectly Spherical Houses in a Vacuum ---</h2><p>Santa is delivering presents to an infinite two-dimensional grid of houses.</p>
 # MAGIC <p>He begins by delivering a present to the house at his starting location, and then an elf at the North Pole calls him via radio and tells him where to move next.  Moves are always exactly one house to the north (<code>^</code>), south (<code>v</code>), east (<code>&gt;</code>), or west (<code>&lt;</code>).  After each move, he delivers another present to the house at his new location.</p>
 # MAGIC <p>However, the elf back at the north pole has had a little too much eggnog, and so his directions are a little off, and Santa ends up visiting some houses more than once.  How many houses receive <em>at least one present</em>?</p>

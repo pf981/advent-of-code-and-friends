@@ -1,4 +1,8 @@
 # Databricks notebook source
+# MAGIC %md https://adventofcode.com/2015/day/24
+
+# COMMAND ----------
+
 # MAGIC %md <article class="day-desc"><h2>--- Day 24: It Hangs in the Balance ---</h2><p>It's Christmas Eve, and Santa is loading up the sleigh for this year's deliveries.  However, there's one small problem: he can't get the sleigh to balance.  If it isn't balanced, he can't defy physics, and nobody gets presents this year.</p>
 # MAGIC <p>No pressure.</p>
 # MAGIC <p>Santa has provided you a list of the weights of every package he needs to fit on the sleigh.  The packages need to be split into <em>three groups of exactly the same weight</em>, and every package has to fit.  The first group goes in the passenger compartment of the sleigh, and the second and third go in containers on either side.  Only when all three groups weigh exactly the same amount will the sleigh be able to fly.  Defying physics has rules, you know!</p>

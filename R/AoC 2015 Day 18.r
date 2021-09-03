@@ -1,4 +1,8 @@
 # Databricks notebook source
+# MAGIC %md https://adventofcode.com/2015/day/18
+
+# COMMAND ----------
+
 # MAGIC %md <article class="day-desc"><h2>--- Day 18: Like a GIF For Your Yard ---</h2><p>After the <a href="6">million lights incident</a>, the fire code has gotten stricter: now, at most <span title="This is an outrage!  We're going to the next town hall meeting.">ten thousand lights</span> are allowed.  You arrange them in a 100x100 grid.</p>
 # MAGIC <p>Never one to let you down, Santa again mails you instructions on the ideal lighting configuration.  With so few lights, he says, you'll have to resort to <em>animation</em>.</p>
 # MAGIC <p>Start by setting your lights to the included initial configuration (your puzzle input).  A <code>#</code> means "on", and a <code>.</code> means "off".</p>

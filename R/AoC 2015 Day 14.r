@@ -1,4 +1,8 @@
 # Databricks notebook source
+# MAGIC %md https://adventofcode.com/2015/day/14
+
+# COMMAND ----------
+
 # MAGIC %md <article class="day-desc"><h2>--- Day 14: Reindeer Olympics ---</h2><p>This year is the Reindeer Olympics!  Reindeer can fly at high speeds, but must rest occasionally to recover their energy.  Santa would like to know which of his reindeer is fastest, and so he has them race.</p>
 # MAGIC <p>Reindeer can only either be <em>flying</em> (always at their top speed) or <em>resting</em> (not moving at all), and always spend whole seconds in either state.</p>
 # MAGIC <p>For example, suppose you have the following Reindeer:</p>
