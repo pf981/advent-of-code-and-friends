@@ -46,7 +46,6 @@ inp = 1364
 
 # COMMAND ----------
 
-from dataclasses import dataclass
 from heapq import heappop, heappush
 
 def is_open(x, y):
