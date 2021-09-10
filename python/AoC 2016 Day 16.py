@@ -57,10 +57,9 @@ def grow_bits(bits, length_out):
   return bits[:length_out]
 
 def checksum(bits):
-  while True:
+  while len(bits) % 2 != 1:
     bits = [a == b for a, b in zip(*[iter(bits)] * 2)]
-    if len(bits) % 2 == 1:
-      return bits
+  return bits
 
 def solve(bits, length_out):
   bits = grow_bits(bits, length_out)
