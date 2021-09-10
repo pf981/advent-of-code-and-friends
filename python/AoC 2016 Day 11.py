@@ -1,4 +1,8 @@
 # Databricks notebook source
+# WIP
+
+# COMMAND ----------
+
 # MAGIC %md https://adventofcode.com/2016/day/11
 
 # COMMAND ----------
