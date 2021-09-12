@@ -1040,7 +1040,7 @@ Filesystem              Size  Used  Avail  Use%
 df <-
   read_table(input, skip = 1) %>%
   mutate_all(~str_remove(., "T|%") %>% parse_guess()) %>%
-  janitor::clean_names() %>%
+  rename_all(~str_remove(str_to_lower(.), '[^a-z]')) %>%
   mutate(
     x = str_extract(filesystem, "(?<=x)\\d+") %>% parse_integer(),
     y = str_extract(filesystem, "(?<=y)\\d+") %>% parse_integer()
