@@ -1,8 +1,4 @@
 # Databricks notebook source
-# WIP
-
-# COMMAND ----------
-
 # MAGIC %md https://adventofcode.com/2016/day/11
 
 # COMMAND ----------
@@ -98,26 +94,13 @@ The fourth floor contains nothing relevant.'''
 
 # COMMAND ----------
 
-# inp = '''The first floor contains a hydrogen-compatible microchip and a lithium-compatible microchip.
-# The second floor contains a hydrogen generator.
-# The third floor contains a lithium generator.
-# The fourth floor contains nothing relevant.'''
-
-# COMMAND ----------
-
-import re
-
-start_floors = [set(re.findall(r'([\w+-]+?)(?:-compatible)?(?: )(microchip|generator)', line)) for line in inp.split('\n')]
-
-# COMMAND ----------
-
-from collections import Counter
-from copy import deepcopy
-from heapq import heappop, heappush
-from itertools import chain, combinations
+import collections
+import copy
+import heapq
+import itertools
 
 def comb(l, take_min, take_max):
-  return chain.from_iterable(combinations(l, r) for r in range(take_min, take_max+1))
+  return itertools.chain.from_iterable(itertools.combinations(l, r) for r in range(take_min, take_max+1))
 
 def is_valid(floors):
   for floor in floors:
@@ -135,177 +118,49 @@ def is_valid(floors):
   
   return True
 
-def score(floors):
-  return 100 * len(floors[0]) + 10 * len(floors[1])  + len(floors[2])
+def hashable_floors(floors):
+  d = collections.defaultdict(lambda: [None]*2)
+  for i, floor in enumerate(floors):
+    for element, object_type in floor:
+      d[element][object_type == 'microchip'] = i
+  return tuple(sorted(tuple(x) for x in d.values()))
 
-def hash_floors(floors):
-  return tuple(frozenset(x) for x in floors) # FIXME: I need to ignore the names!
-  # What if I just count the object types? NO that doesn't work
-  #return tuple(tuple(Counter(object_type for _, object_type in floor).most_common()) for floor in start_floors)
-  
-  # TODO: How do I get it to ignore names?
-
-def solve(start_floors, n_tries = 5):
-  visited = set() # FIXME: I need to ignore the names!
-  states = [(score(start_floors), 0, deepcopy(start_floors), 0)]
+def solve(start_floors):
+  visited = set((hashable_floors(start_floors), 0))
+  states = [(0, copy.deepcopy(start_floors), 0)]
   min_solution = float('inf')
   
   while states:
-    _, n_moves, floors, elevator = heappop(states)
-    
-    visited.add((hash_floors(floors), elevator))
-    
+    n_moves, floors, elevator = heapq.heappop(states)
+
     for new_elevator in (elevator - 1, elevator + 1):
       if new_elevator < 0 or new_elevator >= len(floors):
         continue
       
       for items in comb(floors[elevator], 1, 2):
-        new_floors = deepcopy(floors)
+        new_floors = copy.deepcopy(floors)
         for item in items:
           new_floors[elevator].remove(item)
           new_floors[new_elevator].add(item)
         
-        if not is_valid(new_floors) or (hash_floors(new_floors), new_elevator) in visited:
+        if not is_valid(new_floors) or (hashable_floors(new_floors), new_elevator) in visited:
           continue
+        visited.add((hashable_floors(new_floors), new_elevator))
         
         if all(len(floor) == 0 for floor in new_floors[:-1]):
-          print(f'Solution: {n_moves + 1} {new_floors}')
           min_solution = min(n_moves + 1, min_solution)
-          n_tries -= 1
-          if n_tries == 0:
-            return min_solution
         
-        heappush(states, (score(new_floors), n_moves + 1, new_floors, new_elevator))
-        # You should move the marking visited step here. This will result in more and earlier pruning
+        heapq.heappush(states, (n_moves + 1, new_floors, new_elevator))
+  return min_solution
 
 # COMMAND ----------
 
-answer = solve(start_floors, n_tries = 100)
-# If this only finds the 39 solution, then something is wrong.... it should find multiple solutions
+import re
 
-# COMMAND ----------
+start_floors = [set(re.findall(r'([\w+-]+?)(?:-compatible)?(?: )(microchip|generator)', line)) for line in inp.split('\n')]
 
-
-
-# COMMAND ----------
-
-a = [[[]]]
-b = deepcopy(a)
-a[0][0] += [1]
-b
-# a
-
-# The reason is because the elevvator MUST CONTAIN ONE ITEM
-
-# COMMAND ----------
-
-start_floors
-
-# COMMAND ----------
-
-start_floors[:-1]
-
-# COMMAND ----------
-
-
-#answer # Huh? This only printed one solution That means it went through ALL combinations!?
-# I think because you need to handle ZERO things to cary
-
-# Since I added ZERO, it is getting incorrect solutions.
-
-# Maye my is_valid is wrong? Seems right to me, though. But that's the only reason that I can think for my solution to be too small...?
-#  - Or if I'm modifying a floor reference or something? Or my moving objects code is wrong?
-# Wait, it's right for the example!
-
-# COMMAND ----------
-
-list(comb(start_floors[0], 0, 2))
-
-# COMMAND ----------
-
-is_valid
-
-# COMMAND ----------
-
-x = deepcopy(start_floors)
-x
-
-# COMMAND ----------
-
-x[0].add(('lithium', 'generator'))
-is_valid(x)
-
-# COMMAND ----------
-
-# from collections import Counter
-# from copy import deepcopy
-# from heapq import heappop, heappush
-# from itertools import chain, combinations
-
-# def comb(l, take_min, take_max):
-#   return chain.from_iterable(combinations(l, r) for r in range(take_min, take_max+1))
-
-# def is_valid(floors):
-#   for floor in floors:
-#     contains_generator = False
-#     contains_exposed_microchip = False
-    
-#     for element, object_type in floor:
-#       if object_type == 'generator':
-#         contains_generator = True
-#       if object_type == 'microchip' and (element, 'generator') not in floor:
-#         contains_exposed_microchip = True
-      
-#     if contains_generator and contains_exposed_microchip:
-#       return False
-  
-#   return True
-
-# def score(floors):
-#   return 100 * len(floors[0]) + 10 * len(floors[1])  + len(floors[2])
-
-# def hash_floors(floors):
-#   return tuple(frozenset(x) for x in floors) # FIXME: I need to ignore the names!
-#   # What if I just count the object types?
-#   #return tuple(tuple(Counter(object_type for _, object_type in floor).most_common()) for floor in start_floors)
-
-# def solve(start_floors, n_tries = 5):
-#   visited = set() # FIXME: I need to ignore the names!
-#   states = [(score(start_floors), 0, deepcopy(start_floors), 0)]
-#   min_solution = float('inf')
-  
-#   while states:
-#     _, n_moves, floors, elevator = heappop(states)
-    
-#     visited.add((hash_floors(floors), elevator))
-    
-#     for new_elevator in (elevator - 1, elevator + 1):
-#       if new_elevator < 0 or new_elevator >= len(floors):
-#         continue
-      
-#       for items in comb(floors[elevator], 1, 2):
-#         new_floors = deepcopy(floors)
-#         for item in items:
-#           new_floors[elevator].remove(item)
-#           new_floors[new_elevator].add(item)
-        
-#         if not is_valid(new_floors) or (hash_floors(new_floors), new_elevator) in visited:
-#           continue
-        
-#         if all(len(floor) == 0 for floor in new_floors[:-1]):
-#           print(f'Solution: {n_moves + 1}')
-#           min_solution = min(n_moves + 1, min_solution)
-#           n_tries -= 1
-#           if n_tries == 0:
-#             return min_solution
-        
-#         heappush(states, (score(new_floors), n_moves + 1, new_floors, new_elevator))
-
-# COMMAND ----------
-
-from collections import Counter
-
-tuple(tuple(Counter(object_type for _, object_type in floor).most_common()) for floor in start_floors)
+answer = solve(start_floors)
+answer
 
 # COMMAND ----------
 
@@ -323,75 +178,10 @@ tuple(tuple(Counter(object_type for _, object_type in floor).most_common()) for 
 
 # COMMAND ----------
 
-start_floors[0].add(('elerium'. 'generator'))
+start_floors[0].add(('elerium', 'generator'))
 start_floors[0].add(('elerium', 'microchip'))
 start_floors[0].add(('dilithium', 'generator'))
 start_floors[0].add(('dilithium', 'microchip'))
 
-answer = solve(start_floors, n_tries = 100) # Make it 100, but change it when you find out solution
+answer = solve(start_floors)
 answer
-
-# COMMAND ----------
-
-# from copy import deepcopy
-# from heapq import heappop, heappush
-# from itertools import chain, combinations
-
-# def comb(l, take_min, take_max):
-#   return chain.from_iterable(combinations(l, r) for r in range(take_min, take_max+1))
-
-# def is_valid(floors):
-#   for floor in floors:
-#     contains_generator = False
-#     contains_exposed_microchip = False
-    
-#     for element, object_type in floor:
-#       if object_type == 'generator':
-#         contains_generator = True
-#       if object_type == 'microchip' and (element, 'generator') not in floor:
-#         contains_exposed_microchip = True
-      
-#     if contains_generator and contains_exposed_microchip:
-#       return False
-  
-#   return True
-
-# def score(floors):
-#   return 100 * len(floors[0]) + 10 * len(floors[1])  + len(floors[2])
-
-# def hash_floors(floors):
-#   #return tuple(frozenset(x) for x in floors) # FIXME: I need to ignore the names!
-#   # What if I just count the object types?
-#   return tuple(tuple(Counter(object_type for _, object_type in floor).most_common()) for floor in start_floors)
-
-# def solve(start_floors, n_tries = 5):
-#   visited = set() # FIXME: I need to ignore the names!
-#   states = [(score(start_floors), 0, deepcopy(start_floors), 0)]
-#   min_solution = float('inf')
-  
-#   while states:
-#     _, n_moves, floors, elevator = heappop(states)
-    
-#     visited.add((hash_floors(floors), elevator))
-    
-#     for new_elevator in (elevator - 1, elevator + 1):
-#       if new_elevator < 0 or new_elevator >= len(floors):
-#         continue
-      
-#       for items in comb(floors[elevator], 1, 2):
-#         new_floors = deepcopy(floors)
-#         for item in items:
-#           new_floors[elevator].remove(item)
-#           new_floors[new_elevator].add(item)
-        
-#         if not is_valid(new_floors) or (hash_floors(new_floors), new_elevator) in visited:
-#           continue
-        
-#         if all(len(floor) == 0 for floor in new_floors[:-1]):
-#           print(f'Solution: {n_moves + 1}')
-#           min_solution = min(n_moves + 1, min_solution)
-#           n_tries -= 1
-#           if n_tries == 0:
-#             return min_solution
-        
-#         heappush(states, (score(new_floors), n_moves + 1, new_floors, new_elevator))
