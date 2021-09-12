@@ -128,7 +128,6 @@ def hashable_floors(floors):
 def solve(start_floors):
   visited = set((hashable_floors(start_floors), 0))
   states = [(0, copy.deepcopy(start_floors), 0)]
-  min_solution = float('inf')
   
   while states:
     n_moves, floors, elevator = heapq.heappop(states)
@@ -143,15 +142,18 @@ def solve(start_floors):
           new_floors[elevator].remove(item)
           new_floors[new_elevator].add(item)
         
-        if not is_valid(new_floors) or (hashable_floors(new_floors), new_elevator) in visited:
+        if not is_valid(new_floors):
           continue
-        visited.add((hashable_floors(new_floors), new_elevator))
+          
+        h = hashable_floors(new_floors)
+        if (h, new_elevator) in visited:
+          continue
+        visited.add((h, new_elevator))
         
         if all(len(floor) == 0 for floor in new_floors[:-1]):
-          min_solution = min(n_moves + 1, min_solution)
+          return n_moves + 1
         
         heapq.heappush(states, (n_moves + 1, new_floors, new_elevator))
-  return min_solution
 
 # COMMAND ----------
 
