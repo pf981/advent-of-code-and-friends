@@ -49,7 +49,7 @@ def count_cycles(block_counts):
 
         redistribute(block_counts)
 
-block_counts = [int(x) for x in inp.split("\t")]
+block_counts = [int(x) for x in inp.split('\t')]
 cycles, loop_size = count_cycles(block_counts)
 
 answer = cycles
