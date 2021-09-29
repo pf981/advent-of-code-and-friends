@@ -270,9 +270,8 @@ def get_winner(squads, boost=0):
   total_units = sum(squad.units for squad in squads.values())
   
   for immune in squads.values():
-    if immune.army != 'Immune System':
-      continue
-    immune.attack_damage += boost
+    if immune.army == 'Immune System':
+      immune.attack_damage += boost
 
   while len({squad.army for squad in squads.values()}) == 2:
     attack_pairs = target_selection(squads)
