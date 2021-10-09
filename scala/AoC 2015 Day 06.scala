@@ -346,19 +346,19 @@ val lights: Map[(Int, Int), Light] =
   input.split("\n").foldLeft(Map[(Int, Int), Light]().withDefaultValue(Light(false, 0))) {
     (m, line) =>
       val inst: Instruction = parseLine(line)
-      val positions = for {
+      val positions: Seq[(Int, Int)] = for {
         row <- inst.rowStart to inst.rowEnd
         col <- inst.colStart to inst.colEnd
       } yield (row, col)
 
-      positions.foldLeft(m) { (new_m, position) =>
+      positions.foldLeft(m) { (mNew, position) =>
         inst.action match {
           case "turn on" =>
-            new_m + (position -> Light(true, new_m(position).brightness + 1))
+            mNew + (position -> Light(true, mNew(position).brightness + 1))
           case "toggle" =>
-            new_m + (position -> Light(!new_m(position).isLit, new_m(position).brightness + 2))
+            mNew + (position -> Light(!mNew(position).isLit, mNew(position).brightness + 2))
           case "turn off" =>
-            new_m + (position -> Light(false, math.max(new_m(position).brightness - 1, 0)))
+            mNew + (position -> Light(false, math.max(mNew(position).brightness - 1, 0)))
         }
       }
   }
