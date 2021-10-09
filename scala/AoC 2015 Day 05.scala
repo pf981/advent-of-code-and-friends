@@ -1027,14 +1027,14 @@ yzsmlbnftftgwadz"""
 // COMMAND ----------
 
 def isNice(s: String): Boolean = {
-  val hasThreeVowels: Boolean = "[aeiou]".r.findAllIn(s).length >= 3
+  val containsThreeVowels: Boolean = "[aeiou]".r.findAllIn(s).length >= 3
   val containsDouble: Boolean = raw"(.)\1".r.findFirstMatchIn(s).isDefined
   val containsBadStrings: Boolean = "ab|cd|pq|xy".r.findFirstMatchIn(s).isDefined
-  hasThreeVowels && containsDouble && !containsBadStrings
+  containsThreeVowels && containsDouble && !containsBadStrings
 }
 
-val answer: Int = input.split("\n").filter(isNice).length
-println(answer)
+val answer1: Int = input.split("\n").filter(isNice).length
+println(answer1)
 
 // COMMAND ----------
 
