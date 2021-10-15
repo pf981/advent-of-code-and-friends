@@ -47,7 +47,23 @@ inp = '1,0,0,3,1,1,2,3,1,3,4,3,1,5,0,3,2,13,1,19,1,19,9,23,1,5,23,27,1,27,9,31,1
 
 # COMMAND ----------
 
+import itertools
+import operator
+
+def run_instructions(nums, a, b):
+  nums = nums.copy()
+  nums[1] = a
+  nums[2] = b
+  for i in itertools.count(step=4):
+    if nums[i] == 99:
+      return nums[0]
+    fn = operator.add if (nums[i] == 1) else operator.mul
+    nums[nums[i + 3]] = fn(nums[nums[i + 1]], nums[nums[i + 2]])
+
 nums = [int(x) for x in inp.split(',')]
+
+answer = run_instructions(nums, 12, 2)
+print(answer)
 
 # COMMAND ----------
 
@@ -62,3 +78,13 @@ nums = [int(x) for x in inp.split(',')]
 # MAGIC <p>Find the input <em>noun</em> and <em>verb</em> that cause the program to produce the output <code>19690720</code>. <em>What is <code>100 * noun + verb</code>?</em> (For example, if <code>noun=12</code> and <code>verb=2</code>, the answer would be <code>1202</code>.)</p>
 # MAGIC </article>
 
+# COMMAND ----------
+
+def solve(nums):
+  for a in range(100):
+    for b in range(100):
+      if run_instructions(nums, a, b) == 19690720:
+        return 100 * a + b
+
+answer = solve(nums)
+print(answer)
