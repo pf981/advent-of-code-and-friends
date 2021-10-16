@@ -244,7 +244,7 @@ run_instructions <- function(instructions, input = 1) {
       }
     } else if (op_code == 6) {
       if (instructions[p1] == 0) {
-        i = get_index(instructions, p2) - 1
+        # i = get_index(instructions, p2) - 1
         i <- instructions[p2] 
         next
       }
