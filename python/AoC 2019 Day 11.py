@@ -63,7 +63,6 @@ inp = '3,8,1005,8,358,1106,0,11,0,0,0,104,1,104,0,3,8,102,-1,8,10,1001,10,1,10,4
 import collections
 import dataclasses
 import enum
-import itertools
 
 class State(enum.Enum):
   READY = enum.auto()
@@ -192,3 +191,8 @@ for y in range(y_max + 1):
   print()
   for x in range(x_max + 1):
     print('#' if panels[(x, y)] else ' ', end='')
+
+# COMMAND ----------
+
+answer = 'HGEHJHUZ'
+print(answer)
