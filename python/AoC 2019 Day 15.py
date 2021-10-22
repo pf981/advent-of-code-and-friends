@@ -76,7 +76,6 @@ inp = '3,1033,1008,1033,1,1032,1005,1032,31,1008,1033,2,1032,1005,1032,58,1008,1
 import collections
 import dataclasses
 import enum
-import itertools
 
 class State(enum.Enum):
   READY = enum.auto()
