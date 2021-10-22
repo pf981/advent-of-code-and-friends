@@ -171,16 +171,14 @@ import heapq
 
 def create_area_map(instructions):
   states = [(0, 0, 0, Computer(instructions))]
-  visited = set()
   area_map = set()
   d_to_oxygen = oxygen_x = oxygen_y = None
   
   while states:
     d, x, y, bot = heapq.heappop(states)
     
-    if (x, y) in visited:
+    if (x, y) in area_map:
       continue
-    visited.add((x, y))
     area_map.add((x, y))
     
     for direction in range(1, 5):
@@ -192,7 +190,6 @@ def create_area_map(instructions):
       output = new_bot.run().output_values.pop()
       
       if output == 0: # Wall
-        visited.add((new_x, new_y))
         continue
       elif output == 1: # Move
         heapq.heappush(states, (d + 1, new_x, new_y, new_bot))
