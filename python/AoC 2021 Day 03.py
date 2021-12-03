@@ -1031,7 +1031,7 @@ inp = '''000011001000
 
 nums = inp.splitlines()
 
-gamma_b = ''.join([max('01', key = l.count) for l in zip(*nums)])
+gamma_b = ''.join(max('01', key = digits.count) for digits in zip(*nums))
 epsilon_b = ''.join('1' if x == '0' else '0' for x in gamma_b)
 
 gamma = int(gamma_b, 2)
@@ -1080,7 +1080,7 @@ def get_rate(nums, f, default):
   nums = nums.copy()
   for i in range(len(nums[0])):
     digits = [num[i] for num in nums]
-    counts = [digits.count(num) for num in '01']
+    counts = [digits.count(digit) for digit in '01']
     keep = default if counts[0] == counts[1] else f('01', key = digits.count)
     nums = [num for num in nums if num[i] == keep]
 
