@@ -542,13 +542,10 @@ inp = '''299,462 -> 299,747
 
 import collections
 
-def is_horizontal_or_vertical(x1, y1, x2, y2):
-  return x1 == x2 or y1 == y2
-
-def count_overlap(segments, validation_f):
+def count_overlap(segments, include_diagonals):
   points = collections.defaultdict(int)
   for x1, y1, x2, y2 in segments:
-    if not validation_f(x1, y1, x2, y2):
+    if not include_diagonals and x1 != x2 and y1 != y2:
       continue
 
     dx = dy = 0
@@ -571,7 +568,7 @@ def count_overlap(segments, validation_f):
 
 segments = [[int(num) for nums in line.split(' -> ') for num in nums.split(',')] for line in inp.splitlines()]
 
-answer = count_overlap(segments, is_horizontal_or_vertical)
+answer = count_overlap(segments, False)
 print(answer)
 
 # COMMAND ----------
@@ -600,8 +597,5 @@ print(answer)
 
 # COMMAND ----------
 
-def is_horizontal_or_vertical_or_diagonal(x1, y1, x2, y2):
-  return is_horizontal_or_vertical(x1, y1, x2, y2) or abs(x2 - x1) == abs(y2 - y1)
-
-answer = count_overlap(segments, is_horizontal_or_vertical_or_diagonal)
+answer = count_overlap(segments, True)
 print(answer)
