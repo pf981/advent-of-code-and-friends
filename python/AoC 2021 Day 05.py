@@ -567,7 +567,7 @@ def count_overlap(segments, validation_f):
       x += dx
       y += dy
     
-  return sum(1 for num in points.values() if num >= 2)
+  return sum(num >= 2 for num in points.values())
 
 segments = [[int(num) for nums in line.split(' -> ') for num in nums.split(',')] for line in inp.splitlines()]
 
