@@ -263,12 +263,9 @@ ecgfdab gcefb bcfa af cgfdbe aegbf ebadg eacgfd gbecaf afg | aedbg bafc acfb dgf
 
 import re
 
-def sort_string(s):
-  return ''.join(sorted(s))
-
 displ = [
     [
-        [sort_string(s) for s in re.findall(r'[a-g]+', part)]
+        [frozenset(s) for s in re.findall(r'[a-g]+', part)]
         for part in line.split(' | ')
     ]
     for line in inp.splitlines()
@@ -333,30 +330,32 @@ answer
 
 import itertools
 
+def map_segments(segments, mapping):
+  return [frozenset(mapping[c] for c in s) for s in segments]
+
 base_mapping = {
-  'acedgfb': 8,
-  'cdfbe': 5,
-  'gcdfa': 2,
-  'fbcad': 3,
-  'dab': 7,
-  'cefabd': 9,
-  'cdfgeb': 6,
-  'eafb': 4,
-  'cagedb': 0,
-  'ab': 1
+  frozenset('acedgfb'): 8,
+  frozenset('cdfbe'): 5,
+  frozenset('gcdfa'): 2,
+  frozenset('fbcad'): 3,
+  frozenset('dab'): 7,
+  frozenset('cefabd'): 9,
+  frozenset('cdfgeb'): 6,
+  frozenset('eafb'): 4,
+  frozenset('cagedb'): 0,
+  frozenset('ab'): 1
 }
-base_mapping = {sort_string(s): number for s, number in base_mapping.items()}
 
 output_total = 0
 for segments_in, segments_out in displ:
   strings = set(segments_in + segments_out)
   
   for replacement_letters in itertools.permutations('abcdefg', 7):
-    character_mapping = {k: v for k, v in zip('abcdefg', replacement_letters)}
-    new_strings = [sort_string(''.join(character_mapping[c] for c in s)) for s in strings]
+    mapping = {k: v for k, v in zip('abcdefg', replacement_letters)}
+    new_strings = map_segments(strings, mapping)
     
     if all(new_string in base_mapping for new_string in new_strings):
-      new_output_strings = [sort_string(''.join(character_mapping[c] for c in s)) for s in segments_out]
+      new_output_strings = map_segments(segments_out, mapping)
       output_total += int(''.join(str(base_mapping[s]) for s in new_output_strings))
       break
 
