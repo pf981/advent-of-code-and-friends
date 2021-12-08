@@ -353,7 +353,7 @@ for segments_in, segments_out in displ:
     new_segments_in = map_segments(segments_in, mapping)
     new_segments_out = map_segments(segments_out, mapping)
     
-    if set(new_segments_in + new_segments_out).issuperset(base_mapping):
+    if set(new_segments_in + new_segments_out).issubset(base_mapping):
       output_total += int(''.join(str(base_mapping[s]) for s in new_segments_out))
       break
 
