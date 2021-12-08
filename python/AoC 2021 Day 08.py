@@ -348,15 +348,13 @@ base_mapping = {
 
 output_total = 0
 for segments_in, segments_out in displ:
-  strings = set(segments_in + segments_out)
-  
   for replacement_letters in itertools.permutations('abcdefg', 7):
-    mapping = {k: v for k, v in zip('abcdefg', replacement_letters)}
-    new_strings = map_segments(strings, mapping)
+    mapping = dict(zip('abcdefg', replacement_letters))
+    new_segments_in = map_segments(segments_in, mapping)
+    new_segments_out = map_segments(segments_out, mapping)
     
-    if all(new_string in base_mapping for new_string in new_strings):
-      new_output_strings = map_segments(segments_out, mapping)
-      output_total += int(''.join(str(base_mapping[s]) for s in new_output_strings))
+    if set(new_segments_in + new_segments_out).issuperset(base_mapping):
+      output_total += int(''.join(str(base_mapping[s]) for s in new_segments_out))
       break
 
 answer = output_total
