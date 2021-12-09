@@ -122,14 +122,22 @@ inp = '''57967986212379954987654345679875429997656799875456791098789998778997898
 
 import collections
 
-heatmap = collections.defaultdict(lambda: 9, {(row, col): int(value) for row, line in enumerate(inp.splitlines()) for col, value in enumerate(line)})
+heatmap = collections.defaultdict(
+  lambda: 9,
+  {
+    (row, col): int(value)
+    for row, line in enumerate(inp.splitlines())
+    for col, value in enumerate(line)
+  }
+)
 
-risk_level = 0
-for (row, col), value in heatmap.copy().items():
-  if all(heatmap[(row + dr, col + dc)] > value for dr, dc in [(0, -1), (0, 1), (-1, 0), (1, 0)]):
-    risk_level += value + 1
+low_points = {
+  (row, col): value
+  for (row, col), value in heatmap.copy().items()
+  if all(heatmap[(row + dr, col + dc)] > value for dr, dc in [(0, -1), (0, 1), (-1, 0), (1, 0)])
+}
 
-answer = risk_level
+answer = sum(value + 1 for value in low_points.values())
 print(answer)
 
 # COMMAND ----------
@@ -171,43 +179,15 @@ print(answer)
 
 # COMMAND ----------
 
-def get_basins(heatmap):
-  basins = {}
-  for start_row, start_col in heatmap.copy():
-    if (start_row, start_col) in basins:
-      continue
+def get_basin_size(row, col, heatmap, visited):
+  if (row, col) in visited or heatmap[(row, col)] == 9:
+    return 0
+  
+  visited.add((row, col))
+  return 1 + sum(get_basin_size(row + dr, col + dc, heatmap, visited) for dr, dc in [(0, -1), (0, 1), (-1, 0), (1, 0)])
 
-    visited = set()
-    positions = [(start_row, start_col)]
-    basin_id = None
-
-    while positions:
-      row, col = positions.pop()
-
-      if (row, col) in visited or heatmap[(row, col)] == 9:
-        continue
-
-      visited.add((row, col))
-
-      if (row, col) in basins:
-        basin_id = basins[(row, col)]
-
-      for dr, dc in [(0, -1), (0, 1), (-1, 0), (1, 0)]:
-        new_row = row + dr
-        new_col = col + dc
-
-        positions.append((new_row, new_col))
-
-    basin_id = basin_id or (max(basins.values()) + 1 if basins else 0)
-
-    for row, col in visited:
-      basins[(row, col)] = basin_id
-      
-  return basins
-
-basins = get_basins(heatmap)
-
-largest_basin_sizes = sorted(collections.Counter(basins.values()).values())[-3:]
+basin_sizes = [get_basin_size(row, col, heatmap, set()) for row, col in low_points]
+largest_basin_sizes = sorted(basin_sizes)[-3:]
 
 answer = largest_basin_sizes[0] * largest_basin_sizes[1] * largest_basin_sizes[2]
 print(answer)
