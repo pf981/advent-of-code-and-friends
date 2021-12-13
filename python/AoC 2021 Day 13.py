@@ -954,10 +954,7 @@ dots, folds = inp.split('\n\n')
 dots = {tuple(int(coord) for coord in line.split(',')) for line in dots.splitlines()}
 folds = [(lhs[-1], int(rhs)) for lhs, rhs in [line.split('=') for line in folds.splitlines()]]
 
-along, position = folds[0]
-result = do_fold(dots, along, position)
-
-answer = len(result)
+answer = len(do_fold(dots, *folds[0]))
 print(answer)
 
 # COMMAND ----------
@@ -968,14 +965,13 @@ print(answer)
 
 # COMMAND ----------
 
-result = dots
 for along, position in folds:
-  result = do_fold(result, along, position)
+  dots = do_fold(dots, along, position)
 
-max_x, max_y = [max(dim) + 1 for dim in zip(*result)]
+max_x, max_y = [max(dim) + 1 for dim in zip(*dots)]
 for y in range(max_y):
   for x in range(max_x):
-    print('#' if (x, y) in result else ' ', end='')
+    print('#' if (x, y) in dots else ' ', end='')
   print()
 
 # COMMAND ----------
