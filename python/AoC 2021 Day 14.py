@@ -160,14 +160,18 @@ inserts = collections.defaultdict(str, dict(x.split(' -> ') for x in inserts.spl
 
 @functools.lru_cache(maxsize=None)
 def get_counts(polymer, n_steps):
-  if n_steps == 0 or len(polymer) <= 1:
+  if n_steps == 0 or len(polymer) < 2:
     return collections.Counter(polymer)
   
   if len(polymer) == 2:
     middle = inserts[polymer]
-    return get_counts(polymer[0] + middle, n_steps - 1) + get_counts(middle + polymer[1], n_steps - 1) - collections.Counter(middle)
+    left, right = polymer
+    n_steps -= 1
+  else:
+    left, middle, *right = polymer
+    right = ''.join(right)
     
-  return get_counts(polymer[0:2], n_steps) + get_counts(polymer[1:], n_steps) - collections.Counter(polymer[1])
+  return get_counts(left + middle, n_steps) + get_counts(middle + right, n_steps) - collections.Counter(middle)
 
 
 def solve(polymer, n_steps):
@@ -175,6 +179,8 @@ def solve(polymer, n_steps):
   most_common, *_, least_common = (count for _, count in counts.most_common())
   return most_common - least_common
 
+
+get_counts.cache_clear()
 
 answer = solve(starting_polymer, 10)
 print(answer)
