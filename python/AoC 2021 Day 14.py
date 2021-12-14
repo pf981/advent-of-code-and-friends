@@ -155,7 +155,7 @@ import collections
 import functools
 
 starting_polymer, mapping = inp.split('\n\n')
-mapping = dict([x.split(' -> ') for x in mapping.splitlines()])
+mapping = dict(x.split(' -> ') for x in mapping.splitlines())
 
 
 @functools.lru_cache(maxsize=None)
