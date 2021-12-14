@@ -155,12 +155,12 @@ import collections
 import functools
 
 starting_polymer, inserts = inp.split('\n\n')
-inserts = collections.defaultdict(str, dict(line.split(' -> ') for line in inserts.splitlines()))
+inserts = dict(line.split(' -> ') for line in inserts.splitlines())
 
 
 @functools.lru_cache(maxsize=None)
 def get_counts(polymer, n_steps):
-  if n_steps == 0 or len(polymer) < 2:
+  if n_steps == 0:
     return collections.Counter(polymer)
   
   if len(polymer) == 2:
