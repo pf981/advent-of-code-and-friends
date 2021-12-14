@@ -155,7 +155,7 @@ import collections
 import functools
 
 starting_polymer, inserts = inp.split('\n\n')
-inserts = collections.defaultdict(str, dict(x.split(' -> ') for x in inserts.splitlines()))
+inserts = collections.defaultdict(str, dict(line.split(' -> ') for line in inserts.splitlines()))
 
 
 @functools.lru_cache(maxsize=None)
