@@ -154,35 +154,27 @@ NO -> S'''
 import collections
 import functools
 
-starting_polymer, mapping = inp.split('\n\n')
-mapping = dict(x.split(' -> ') for x in mapping.splitlines())
+starting_polymer, inserts = inp.split('\n\n')
+inserts = collections.defaultdict(str, dict(x.split(' -> ') for x in inserts.splitlines()))
 
 
 @functools.lru_cache(maxsize=None)
-def get_counts_from_pair(pair, n_steps):
-  if pair not in mapping or n_steps == 0:
-    return collections.Counter(pair)
-
-  middle_character = mapping[pair]
-  left_pair = pair[0] + middle_character
-  right_pair =  middle_character + pair[1]
-
-  left_counts = get_counts_from_pair(left_pair, n_steps - 1)
-  right_counts = get_counts_from_pair(right_pair, n_steps - 1)
-
-  return left_counts + right_counts
+def get_counts(polymer, n_steps):
+  if n_steps == 0 or len(polymer) <= 1:
+    return collections.Counter(polymer)
+  
+  if len(polymer) == 2:
+    middle = inserts[polymer]
+    return get_counts(polymer[0] + middle, n_steps - 1) + get_counts(middle + polymer[1], n_steps - 1) - collections.Counter(middle)
+    
+  return get_counts(polymer[0:2], n_steps) + get_counts(polymer[1:], n_steps) - collections.Counter(polymer[1])
 
 
 def solve(polymer, n_steps):
-  letter_counts_doubled = sum(
-    (get_counts_from_pair(''.join(pair), n_steps) for pair in zip(polymer[:-1], polymer[1:])),
-    collections.Counter(polymer[0] + polymer[-1])
-  )
-  most_common, *_, least_common = (count_doubled // 2 for _, count_doubled in letter_counts_doubled.most_common())
+  counts = get_counts(polymer, n_steps)
+  most_common, *_, least_common = (count for _, count in counts.most_common())
   return most_common - least_common
 
-
-get_counts_from_pair.cache_clear()
 
 answer = solve(starting_polymer, 10)
 print(answer)
