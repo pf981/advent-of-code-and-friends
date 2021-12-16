@@ -126,11 +126,7 @@ def parse_operator_n_bits(binary):
 def parse_operator_n_subpackets(binary):
   n_subpackets = take_int(binary, 11)
   
-  result = []
-  for _ in range(n_subpackets):
-    result.append(parse_packet(binary))
-
-  return result
+  return [parse_packet(binary) for _ in range(n_subpackets)]
 
 
 def parse_packet(binary):
