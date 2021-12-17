@@ -124,8 +124,8 @@ target_x1, target_x2, target_y1, target_y2 = (int(x) for x in re.findall(r'-?\d+
 
 global_highest_y = 0
 total = 0
-for dx in range(500):
-  for dy in range(-500, 3000):
+for dx in range(target_x2 + 1):
+  for dy in range(target_y1, 3000):
     highest_y = get_highest_success_y(dx, dy, target_x1, target_x2, target_y1, target_y2)
     
     if highest_y is not None:
