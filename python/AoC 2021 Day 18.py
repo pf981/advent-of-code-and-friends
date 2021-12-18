@@ -336,6 +336,7 @@ def get_magnitude_impl(l):
     return l
   return 3 * get_magnitude_impl(l[0]) + 2 * get_magnitude_impl(l[1])
 
+
 def get_magnitude(l):
   return get_magnitude_impl(eval(''.join(str(s) for s in l)))
   
