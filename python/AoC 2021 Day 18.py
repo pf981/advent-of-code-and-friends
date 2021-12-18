@@ -261,7 +261,7 @@ def parse_line(s):
   return l
 
 
-def sailfish_add(a, b):
+def snailfish_add(a, b):
   return snailfish_reduce(['['] + a + [','] + b + [']'])
 
 
@@ -343,7 +343,7 @@ def get_magnitude(l):
 
 addends = [parse_line(line) for line in inp.splitlines()]
 
-answer = get_magnitude(functools.reduce(sailfish_add, addends))
+answer = get_magnitude(functools.reduce(snailfish_add, addends))
 print(answer)
 
 # COMMAND ----------
@@ -370,7 +370,7 @@ print(answer)
 # COMMAND ----------
 
 largest_magnitude = max(
-  get_magnitude(sailfish_add(left, right))
+  get_magnitude(snailfish_add(left, right))
   for left in addends
   for right in addends
   if left != right
