@@ -1046,43 +1046,28 @@ inp = '''--- scanner 0 ---
 import re
 import itertools
 
-signs = (
-  (-1, -1, -1),
-  (-1, -1, 1),
-  (-1, 1, -1),
-  (-1, 1, 1),
-  (1, -1, -1),
-  (1, -1, 1),
-  (1, 1, -1),
-  (1, 1, 1)
-)
-indices = list(itertools.permutations(range(3)))
-orientations = list(itertools.product(signs, indices))
-
-
-def rotate_one(position, rotation):
-  return tuple(sign * position[index] for sign, index in zip(*orientations[rotation]))
-
 
 def rotations(scanner):
-  for rotation in range(len(orientations)):
-    yield {rotate_one((x, y, z), rotation) for x, y, z in scanner}
+  for signs in itertools.product(*([[-1, 1]] * 3)):
+    for indices in itertools.permutations(range(3)):
+      yield {
+        tuple(sign * position[index] for sign, index in zip(signs, indices))
+        for position in scanner
+      }
                     
 
-def try_orient(scanner, beacon_positions):
-  s = scanner.copy()
-  best_n_overlap = 0
-  best = None
-  for s in rotations(s):
-    for x,y,z in s:
+def find_position(scanner, beacon_positions):
+  for rotated_scanner in rotations(scanner):
+    for x, y, z in rotated_scanner:
       for bx, by, bz in beacon_positions:
-        dx, dy, dz = x-bx, y-by, z-bz
+        dx, dy, dz = x - bx, y - by, z - bz
 
-        oriented_s = {(x-dx,y-dy,z-dz) for x,y,z in s}
+        positioned_scanner = {(x - dx, y - dy, z - dz) for x, y, z in rotated_scanner}
 
-        n_overlap = len(beacon_positions.intersection(oriented_s))
+        n_overlap = len(beacon_positions.intersection(positioned_scanner))
         if n_overlap >= 12:
-          return oriented_s, dx, dy, dz
+          return positioned_scanner, (dx, dy, dz)
+
   return None, None
         
         
@@ -1095,11 +1080,11 @@ def get_positions(scanners):
       if i in done:
         continue
 
-      new_orientation, *pos = try_orient(scanner, beacon_positions)
-      if new_orientation:
-        beacon_positions.update(new_orientation)
+      positioned_scanner, position = find_position(scanner, beacon_positions)
+      if positioned_scanner:
+        beacon_positions.update(positioned_scanner)
         done.add(i)
-        scanner_positions += [pos]
+        scanner_positions.append(position)
         
   return scanner_positions, beacon_positions
 
