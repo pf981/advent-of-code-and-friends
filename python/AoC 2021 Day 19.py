@@ -1080,11 +1080,11 @@ def get_positions(scanners):
       if i in done:
         continue
 
-      positioned_scanner, position = find_position(scanner, beacon_positions)
-      if positioned_scanner:
-        beacon_positions.update(positioned_scanner)
+      new_beacon_positions, scanner_position = find_position(scanner, beacon_positions)
+      if new_beacon_positions:
+        beacon_positions.update(new_beacon_positions)
+        scanner_positions.append(scanner_position)
         done.add(i)
-        scanner_positions.append(position)
         
   return scanner_positions, beacon_positions
 
