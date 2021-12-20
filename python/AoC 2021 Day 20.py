@@ -218,6 +218,7 @@ def step(img, algorithm):
       
   return new_img
 
+
 def count_lit(img, algorithm, n_steps):
   for _ in range(n_steps):
     img = step(img, algorithm)
