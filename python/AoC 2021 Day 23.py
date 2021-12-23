@@ -95,17 +95,12 @@ inp = '''#############
 
 import heapq
 
-
 goals = {
   'A': 2,
   'B': 4,
   'C': 6,
   'D': 8
 }
-
-    
-def hashable_amphipods(amphipods):
-  return tuple(sorted(item for item in amphipods.items()))
 
 
 def is_solved(amphipods):
@@ -160,7 +155,7 @@ def smallest_energy_path(amphipods):
     if is_solved(amphipods):
       return energy
     
-    h = hashable_amphipods(amphipods)
+    h = frozenset(amphipods.items())
     if h in visited:
       continue
     visited.add(h)
