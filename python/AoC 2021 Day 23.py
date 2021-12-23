@@ -140,31 +140,26 @@ def update_state(amphipod, move_to, energy, amphipods):
 
   cost_per_move = {'A': 1, 'B': 10, 'C': 100, 'D': 1000}[letter]
   
-  return (energy + cost_per_move * n_moves, tie_break(), amphipods)
-
-
-def tie_break():
-  tie_break.counter = getattr(tie_break, 'counter', 0) + 1
-  return tie_break.counter
+  return (energy + cost_per_move * n_moves, frozenset(amphipods.items()))
 
 
 def smallest_energy_path(amphipods):
   rooms_y = sorted(set(y for _, y in amphipods))
   
-  states = [(0, tie_break(), amphipods)]
+  states = [(0, frozenset(amphipods.items()))]
   visited = set()
 
   while states:
-    energy, _, amphipods = heapq.heappop(states)
+    energy, amphipods = heapq.heappop(states)
+    
+    if amphipods in visited:
+      continue
+    visited.add(amphipods)
+    amphipods = dict(amphipods)
     
     if is_solved(amphipods):
       return energy
     
-    h = frozenset(amphipods.items())
-    if h in visited:
-      continue
-    visited.add(h)
-
     # Find if any can move to their target room
     found_goal = False
     invalid_goals = {x for x in [2, 4, 6, 8] for y in rooms_y if (x, y) in amphipods and goals[amphipods[(x, y)]] != x}
