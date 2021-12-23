@@ -107,9 +107,9 @@ def is_solved(amphipods):
   return all(x == goals[letter] for (x, y), letter in amphipods.items())
 
 
-def get_cost(amphipod, to, amphipods):
-  (x, y), letter = amphipod
-  tx, ty = to
+def update_state(amphipod, move_to, energy, amphipods):
+  (start_x, start_y), letter = amphipod
+  x, y = start_x, start_y
   n_moves = 0
   
   # Go to hall
@@ -120,22 +120,27 @@ def get_cost(amphipod, to, amphipods):
       return None
     
   # Go to x
-  dx = 1 if x < tx else -1
-  while x != tx:
+  dx = 1 if x < move_to[0] else -1
+  while x != move_to[0]:
     x += dx
     n_moves += 1
     if (x, y) in amphipods:
       return None
   
   # Go to room
-  while y != ty:
+  while y != move_to[1]:
     y += 1
     n_moves += 1
     if (x, y) in amphipods:
       return None
-  
+    
+  amphipods = amphipods.copy()
+  del amphipods[(start_x, start_y)]
+  amphipods[(x, y)] = letter
+
   cost_per_move = {'A': 1, 'B': 10, 'C': 100, 'D': 1000}[letter]
-  return cost_per_move * n_moves
+  
+  return (energy + cost_per_move * n_moves, tie_break(), amphipods)
 
 
 def tie_break():
@@ -170,12 +175,10 @@ def smallest_energy_path(amphipods):
         continue
       
       goal_y = next(y for y in rooms_y[::-1] if (goal_x, y) not in amphipods)
-      cost = get_cost(((x, y), letter), (goal_x, goal_y), amphipods)
-      if cost:
-        new_amphipods = amphipods.copy()
-        del new_amphipods[(x, y)]
-        new_amphipods[(goal_x, goal_y)] = letter
-        heapq.heappush(states, (energy+cost, tie_break(), new_amphipods))
+      
+      new_state = update_state(((x, y), letter), (goal_x, goal_y), energy, amphipods)
+      if new_state:
+        heapq.heappush(states, new_state)
         found_goal = True
     
     # Don't bother making other moves if you found a move to a room
@@ -190,12 +193,9 @@ def smallest_energy_path(amphipods):
         if y == 0:
           continue
 
-        cost = get_cost(((x, y), letter), pos, amphipods)
-        if cost:
-          new_amphipods = amphipods.copy()
-          del new_amphipods[(x, y)]
-          new_amphipods[pos] = letter
-          heapq.heappush(states, (energy+cost, tie_break(), new_amphipods))
+        new_state = update_state(((x, y), letter), pos, energy, amphipods)
+        if new_state:
+          heapq.heappush(states, new_state)
 
           
 amphipods = {(x - 1, y - 1): letter for y, line in enumerate(inp.splitlines()) for x, letter in enumerate(line) if letter not in '.# '}
