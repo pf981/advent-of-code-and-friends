@@ -109,10 +109,7 @@ def hashable_amphipods(amphipods):
 
 
 def is_solved(amphipods):
-  for (x, y), letter in amphipods.items():
-    if x != goals[letter]:
-      return False
-  return True
+  return all(x == goals[letter] for (x, y), letter in amphipods.items())
 
 
 def get_cost(amphipod, to, amphipods):
