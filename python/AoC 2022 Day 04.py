@@ -1050,7 +1050,7 @@ inp = '''49-51,31-50
 pairs = [[elf.split('-') for elf in line.split(',')] for line in inp.splitlines()]
 set_pairs = [[set(range(int(start), int(end) + 1)) for start, end in pair] for pair in pairs]
 
-answer = sum(not a.difference(b) or not b.difference(a) for a, b in set_pairs)
+answer = sum(a.issubset(b) or b.issubset(a) for a, b in set_pairs)
 print(answer)
 
 # COMMAND ----------
