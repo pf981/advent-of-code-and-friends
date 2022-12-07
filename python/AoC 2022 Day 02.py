@@ -2535,7 +2535,7 @@ names = {
   'C': 'Scissors',
   'X': 'Rock',
   'Y': 'Paper',
-  'Z': 'Scissors',
+  'Z': 'Scissors'
 }
 
 result_score = {
