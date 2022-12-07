@@ -1157,7 +1157,7 @@ while i < len(lines):
       else:
         out = int(out.split(' ')[0])
       
-      objects[tuple(wd)].append(out)
+      objects[wd].append(out)
       
 
 answer = 0
