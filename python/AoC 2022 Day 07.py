@@ -1151,13 +1151,14 @@ while i < len(lines):
       wd += (args[1],)
   elif args[0] == 'ls':
     objects[wd] = objects.get(wd, [])
-    for out in output:
-      if out.startswith('dir'):
-        out = wd + (out.split(' ')[1],)
+    for output_line in output:
+      parts = output_line.split(' ')
+      if parts[0] == 'dir':
+        parsed = wd + (parts[1],)
       else:
-        out = int(out.split(' ')[0])
+        parsed = int(parts[0])
       
-      objects[wd].append(out)
+      objects[wd].append(parsed)
       
 
 answer = 0
@@ -1165,6 +1166,7 @@ for path in objects:
   size = get_size(path)
   if size <= 100000:
     answer += size
+
 print(answer)
 
 # COMMAND ----------
