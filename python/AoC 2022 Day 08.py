@@ -132,27 +132,20 @@ inp = '''20020022102311131313103331412114201310343214514235121233423242321010134
 
 # COMMAND ----------
 
-def count_in_direction(row, col, dr, dc, max_height, trees):
-  row += dr
-  col += dc
-  if (row, col) not in trees:
-    return 0, True
-  
-  if trees[(row, col)] >= max_height:
-    return 1, False
-  
-  n, is_outside = count_in_direction(row, col, dr, dc, max_height, trees)
-  
-  return 1 + n, is_outside
+def is_visible(pos, delta, max_height, trees):
+  pos = (pos[0] + delta[0], pos[1] + delta[1])
+  if pos not in trees:
+    return True
+
+  return trees[pos] < max_height and is_visible(pos, delta, max_height, trees)
 
 
 trees = {(row, col): int(c) for row, line in enumerate(inp.splitlines()) for col, c in enumerate(line)}
 
 visible = 0
-for row, col in trees:
-  for dr, dc in [(-1, 0), (0, -1), (1, 0), (0, 1)]:
-    _, is_outside = count_in_direction(row, col, dr, dc, trees[(row, col)], trees)
-    if is_outside:
+for pos in trees:
+  for delta in [(-1, 0), (0, -1), (1, 0), (0, 1)]:
+    if is_visible(pos, delta, trees[pos], trees):
       visible += 1
       break
 
@@ -197,12 +190,22 @@ print(answer)
 
 # COMMAND ----------
 
+def count_in_direction(pos, delta, max_height, trees):
+  pos = (pos[0] + delta[0], pos[1] + delta[1])
+  if pos not in trees:
+    return 0
+  
+  if trees[pos] >= max_height:
+    return 1
+  
+  return 1 + count_in_direction(pos, delta, max_height, trees)
+
+
 best = 0
-for row, col in trees:
+for pos in trees:
   product = 1
-  for dr, dc in [(-1, 0), (0, -1), (1, 0), (0, 1)]:
-    n, _ = count_in_direction(row, col, dr, dc, trees[(row, col)], trees)
-    product *= n
+  for delta in [(-1, 0), (0, -1), (1, 0), (0, 1)]:
+    product *= count_in_direction(pos, delta, trees[pos], trees)
   best = max(best, product)
 
 answer = best
