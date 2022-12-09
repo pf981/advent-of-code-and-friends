@@ -132,25 +132,81 @@ inp = '''20020022102311131313103331412114201310343214514235121233423242321010134
 
 # COMMAND ----------
 
-def is_visible(pos, delta, max_height, trees):
-  pos = (pos[0] + delta[0], pos[1] + delta[1])
-  if pos not in trees:
-    return True
+def move(pos, direction):
+  while True:
+    pos = (
+      pos[0] + (direction == 'S') - (direction == 'N'),
+      pos[1] + (direction == 'E') - (direction == 'W')
+    )
+    yield pos
 
-  return trees[pos] < max_height and is_visible(pos, delta, max_height, trees)
+
+def is_visible(pos, direction, trees):
+  max_height = trees[pos]
+  for pos in move(pos, direction):
+    if pos not in trees:
+      return True
+    if trees[pos] >= max_height:
+      return False
 
 
 trees = {(row, col): int(c) for row, line in enumerate(inp.splitlines()) for col, c in enumerate(line)}
 
 visible = 0
 for pos in trees:
-  for delta in [(-1, 0), (0, -1), (1, 0), (0, 1)]:
-    if is_visible(pos, delta, trees[pos], trees):
+  for direction in 'NESW':
+    if is_visible(pos, direction, trees):
       visible += 1
       break
 
 answer = visible
 print(answer)
+
+# COMMAND ----------
+
+# def is_visible(pos, delta, trees):
+#   max_height = trees[pos]
+#   while True:
+#     pos = (pos[0] + delta[0], pos[1] + delta[1])
+#     if pos not in trees:
+#       return True
+#     if trees[pos] >= max_height:
+#       return False
+
+
+# trees = {(row, col): int(c) for row, line in enumerate(inp.splitlines()) for col, c in enumerate(line)}
+
+# visible = 0
+# for pos in trees:
+#   for delta in [(-1, 0), (0, -1), (1, 0), (0, 1)]:
+#     if is_visible(pos, delta, trees):
+#       visible += 1
+#       break
+
+# answer = visible
+# print(answer)
+
+# COMMAND ----------
+
+# def is_visible(pos, delta, max_height, trees):
+#   pos = (pos[0] + delta[0], pos[1] + delta[1])
+#   if pos not in trees:
+#     return True
+
+#   return trees[pos] < max_height and is_visible(pos, delta, max_height, trees)
+
+
+# trees = {(row, col): int(c) for row, line in enumerate(inp.splitlines()) for col, c in enumerate(line)}
+
+# visible = 0
+# for pos in trees:
+#   for delta in [(-1, 0), (0, -1), (1, 0), (0, 1)]:
+#     if is_visible(pos, delta, trees[pos], trees):
+#       visible += 1
+#       break
+
+# answer = visible
+# print(answer)
 
 # COMMAND ----------
 
@@ -190,23 +246,70 @@ print(answer)
 
 # COMMAND ----------
 
-def count_in_direction(pos, delta, max_height, trees):
-  pos = (pos[0] + delta[0], pos[1] + delta[1])
-  if pos not in trees:
-    return 0
-  
-  if trees[pos] >= max_height:
-    return 1
-  
-  return 1 + count_in_direction(pos, delta, max_height, trees)
+def count_in_direction(pos, direction, trees):
+  max_height = trees[pos]
+  count = 0
+  for pos in move(pos, direction):
+    if pos not in trees:
+      return count
+    count += 1
+    if trees[pos] >= max_height:
+      return count
 
 
 best = 0
 for pos in trees:
   product = 1
-  for delta in [(-1, 0), (0, -1), (1, 0), (0, 1)]:
-    product *= count_in_direction(pos, delta, trees[pos], trees)
+  for direction in 'NESW':
+    product *= count_in_direction(pos, direction, trees)
   best = max(best, product)
 
 answer = best
 print(answer)
+
+# COMMAND ----------
+
+# def count_in_direction(pos, delta, trees):
+#   max_height = trees[pos]
+#   count = 0
+#   while True:
+#     pos = (pos[0] + delta[0], pos[1] + delta[1])
+#     if pos not in trees:
+#       return count
+#     count += 1
+#     if trees[pos] >= max_height:
+#       return count
+
+
+# best = 0
+# for pos in trees:
+#   product = 1
+#   for delta in [(-1, 0), (0, -1), (1, 0), (0, 1)]:
+#     product *= count_in_direction(pos, delta, trees)
+#   best = max(best, product)
+
+# answer = best
+# print(answer)
+
+# COMMAND ----------
+
+# def count_in_direction(pos, delta, max_height, trees):
+#   pos = (pos[0] + delta[0], pos[1] + delta[1])
+#   if pos not in trees:
+#     return 0
+  
+#   if trees[pos] >= max_height:
+#     return 1
+  
+#   return 1 + count_in_direction(pos, delta, max_height, trees)
+
+
+# best = 0
+# for pos in trees:
+#   product = 1
+#   for delta in [(-1, 0), (0, -1), (1, 0), (0, 1)]:
+#     product *= count_in_direction(pos, delta, trees[pos], trees)
+#   best = max(best, product)
+
+# answer = best
+# print(answer)
