@@ -2255,7 +2255,7 @@ def count_tail_visits(rope_length, instructions):
   visited = {(0, 0)}
   
   for direction, d in instructions:
-    for _ in range(d):
+    for _ in range(int(d)):
       rope[0][0] += (direction == 'D') - (direction == 'U')
       rope[0][1] += (direction == 'R') - (direction == 'L')
       
@@ -2278,7 +2278,7 @@ def count_tail_visits(rope_length, instructions):
   return len(visited)
 
 
-instructions = [(line.split(' ')[0], int(line.split(' ')[1])) for line in inp.splitlines()]
+instructions = [line.split(' ') for line in inp.splitlines()]
 
 answer = count_tail_visits(2, instructions)
 print(answer)
