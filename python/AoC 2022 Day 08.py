@@ -164,52 +164,6 @@ print(answer)
 
 # COMMAND ----------
 
-# def is_visible(pos, delta, trees):
-#   max_height = trees[pos]
-#   while True:
-#     pos = (pos[0] + delta[0], pos[1] + delta[1])
-#     if pos not in trees:
-#       return True
-#     if trees[pos] >= max_height:
-#       return False
-
-
-# trees = {(row, col): int(c) for row, line in enumerate(inp.splitlines()) for col, c in enumerate(line)}
-
-# visible = 0
-# for pos in trees:
-#   for delta in [(-1, 0), (0, -1), (1, 0), (0, 1)]:
-#     if is_visible(pos, delta, trees):
-#       visible += 1
-#       break
-
-# answer = visible
-# print(answer)
-
-# COMMAND ----------
-
-# def is_visible(pos, delta, max_height, trees):
-#   pos = (pos[0] + delta[0], pos[1] + delta[1])
-#   if pos not in trees:
-#     return True
-
-#   return trees[pos] < max_height and is_visible(pos, delta, max_height, trees)
-
-
-# trees = {(row, col): int(c) for row, line in enumerate(inp.splitlines()) for col, c in enumerate(line)}
-
-# visible = 0
-# for pos in trees:
-#   for delta in [(-1, 0), (0, -1), (1, 0), (0, 1)]:
-#     if is_visible(pos, delta, trees[pos], trees):
-#       visible += 1
-#       break
-
-# answer = visible
-# print(answer)
-
-# COMMAND ----------
-
 # MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Content with the amount of tree cover available, the Elves just need to know the best spot to build their tree house: they would like to be able to see a lot of <em>trees</em>.</p>
 # MAGIC <p>To measure the viewing distance from a given tree, look up, down, left, and right from that tree; stop if you reach an edge or at the first tree that is the same height or taller than the tree under consideration. (If a tree is right on the edge, at least one of its viewing distances will be zero.)</p>
 # MAGIC <p>The Elves don't care about distant trees taller than those found by the rules above; the proposed tree house has large <a href="https://en.wikipedia.org/wiki/Eaves" target="_blank">eaves</a> to keep it dry, so they wouldn't be able to see higher than the tree house anyway.</p>
@@ -266,50 +220,3 @@ for pos in trees:
 
 answer = best
 print(answer)
-
-# COMMAND ----------
-
-# def count_in_direction(pos, delta, trees):
-#   max_height = trees[pos]
-#   count = 0
-#   while True:
-#     pos = (pos[0] + delta[0], pos[1] + delta[1])
-#     if pos not in trees:
-#       return count
-#     count += 1
-#     if trees[pos] >= max_height:
-#       return count
-
-
-# best = 0
-# for pos in trees:
-#   product = 1
-#   for delta in [(-1, 0), (0, -1), (1, 0), (0, 1)]:
-#     product *= count_in_direction(pos, delta, trees)
-#   best = max(best, product)
-
-# answer = best
-# print(answer)
-
-# COMMAND ----------
-
-# def count_in_direction(pos, delta, max_height, trees):
-#   pos = (pos[0] + delta[0], pos[1] + delta[1])
-#   if pos not in trees:
-#     return 0
-  
-#   if trees[pos] >= max_height:
-#     return 1
-  
-#   return 1 + count_in_direction(pos, delta, max_height, trees)
-
-
-# best = 0
-# for pos in trees:
-#   product = 1
-#   for delta in [(-1, 0), (0, -1), (1, 0), (0, 1)]:
-#     product *= count_in_direction(pos, delta, trees[pos], trees)
-#   best = max(best, product)
-
-# answer = best
-# print(answer)
