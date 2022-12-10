@@ -2243,11 +2243,7 @@ U 8'''
 # COMMAND ----------
 
 def to_unit(x):
-  if x > 0:
-    return 1
-  if x < 0:
-    return -1
-  return 0
+  return (x > 0) - (x < 0)
 
 
 def count_tail_visits(rope_length, instructions):
@@ -2263,13 +2259,7 @@ def count_tail_visits(rope_length, instructions):
         dr = head[0] - tail[0]
         dc = head[1] - tail[1]
         
-        if abs(dr) <= 1 and abs(dc) <= 1:
-          pass
-        elif dr == 0:
-          tail[1] += to_unit(dc)
-        elif dc == 0:
-          tail[0] += to_unit(dr)
-        else:
+        if abs(dr) > 1 or abs(dc) > 1:
           tail[0] += to_unit(dr)
           tail[1] += to_unit(dc)
 
