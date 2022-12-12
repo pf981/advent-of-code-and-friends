@@ -75,8 +75,8 @@ abccccccccccccccccccccccccccccccccaaaaaaaacccccccccccccccccccccaaaaaaaacaaaaaaaa
 import string
 import collections
 
-def find_shortest(start, target, m):
-  queue = collections.deque([(start, 0)])
+def find_shortest(starts, target, m):
+  queue = collections.deque((start, 0) for start in starts)
   visited = set()
   while queue:
     pos, steps = queue.popleft()
@@ -106,7 +106,7 @@ m = {p: string.ascii_lowercase.index(c) for p, c in grid.items() if c not in 'SE
 m[start] = 0
 m[target] = 25
 
-answer = find_shortest(start, target, m)
+answer = find_shortest([start], target, m)
 print(answer)
 
 # COMMAND ----------
@@ -133,5 +133,5 @@ print(answer)
 
 # COMMAND ----------
 
-answer = min(find_shortest(start2, target, m) for start2, elevation in m.items() if elevation == 0)
+answer = find_shortest([start for start, elevation in m.items() if elevation == 0], target, m)
 print(answer)
