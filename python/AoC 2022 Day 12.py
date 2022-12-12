@@ -133,7 +133,5 @@ print(answer)
 
 # COMMAND ----------
 
-starts = [pos for pos, elevation in m.items() if elevation == 0]
-starts.append(start)
-answer = min(find_shortest(start2, target, m) for start2 in starts)
+answer = min(find_shortest(start2, target, m) for start2, elevation in m.items() if elevation == 0)
 print(answer)
