@@ -634,12 +634,12 @@ print(answer)
 
 import functools
 
-packages = [packet for pair in pairs for packet in pair]
-packages.append([[2]])
-packages.append([[6]])
+packets = [packet for pair in pairs for packet in pair]
+packets.append([[2]])
+packets.append([[6]])
 
 cmp = lambda a, b : 1 if is_right_order(a, b) else -1 if is_right_order(b, a) else 0
-packages.sort(key=functools.cmp_to_key(cmp), reverse=True)
+packets.sort(key=functools.cmp_to_key(cmp), reverse=True)
 
-answer = (packages.index([[2]]) + 1) * (packages.index([[6]]) + 1)
+answer = (packets.index([[2]]) + 1) * (packets.index([[6]]) + 1)
 print(answer)
