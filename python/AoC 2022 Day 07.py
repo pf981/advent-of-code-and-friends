@@ -1118,17 +1118,6 @@ $ ls
 import functools
 
 
-def process(i, lines):
-  args = lines[i].split(' ')[1:]
-  output = []
-  i += 1
-  while i < len(lines) and not lines[i].startswith('$'):
-    output.append(lines[i])
-    i += 1
-  
-  return i, args, output
-
-
 @functools.cache
 def get_size(path):
   if isinstance(path, int):
@@ -1139,9 +1128,9 @@ def get_size(path):
 lines = inp.splitlines()
 wd = tuple()
 objects = {}
-i = 0
-while i < len(lines):
-  i, args, output = process(i, lines)
+while lines:
+  args = lines.pop(0).split(' ')[1:]
+  
   if args[0] == 'cd':
     if args[1] == '/':
       wd = tuple()
@@ -1151,22 +1140,11 @@ while i < len(lines):
       wd += (args[1],)
   elif args[0] == 'ls':
     objects[wd] = objects.get(wd, [])
-    for output_line in output:
-      parts = output_line.split(' ')
-      if parts[0] == 'dir':
-        parsed = wd + (parts[1],)
-      else:
-        parsed = int(parts[0])
-      
-      objects[wd].append(parsed)
-      
+    while lines and lines[0][0] != '$':
+      first, second = lines.pop(0).split(' ')
+      objects[wd].append(wd + (second,) if first == 'dir' else int(first))
 
-answer = 0
-for path in objects:
-  size = get_size(path)
-  if size <= 100000:
-    answer += size
-
+answer = sum(size for path in objects if (size := get_size(path)) <= 100000)
 print(answer)
 
 # COMMAND ----------
@@ -1190,10 +1168,5 @@ print(answer)
 unused = 70000000 - get_size(tuple())
 need = 30000000 - unused
 
-answer = float('inf')
-for path in objects:
-  size = get_size(path)
-  if size >= need:
-    answer = min(answer, size)
-
+answer = min(size for path in objects if (size := get_size(path)) >= need)
 print(answer)
