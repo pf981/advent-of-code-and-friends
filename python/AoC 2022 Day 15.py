@@ -141,8 +141,6 @@ target_y = 2000000
 target_in_range = set()
 target_beacons = set()
 for x, y, bx, by in sensors:
-  if y == target_y:
-    target_in_range.add(x)
   if by == target_y:
     target_beacons.add(bx)
     
