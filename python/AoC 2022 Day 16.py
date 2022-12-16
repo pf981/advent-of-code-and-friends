@@ -234,7 +234,7 @@ def maximize_pressure(pos, time_left, available_valves):
   for destination in available_valves:
     dt = min(shortest_path(pos, destination) + 1, time_left)
     new_time_left = time_left - dt
-    pressure = new_time_left * valves[destination][0] + maximize_pressure(destination, new_time_left, available_valves.difference({destination}))
+    pressure = new_time_left * valves[destination][0] + maximize_pressure(destination, new_time_left, available_valves - {destination})
     max_pressure = max(max_pressure, pressure)
 
   return max_pressure
@@ -335,10 +335,10 @@ import itertools
 
 best = 0
 for length in range(len(available_valves) // 2 + 1):
-  for s1 in itertools.combinations(available_valves, length):
-    s1 = frozenset(s1)
-    s2 = available_valves.difference(s1)
-    total_pressure = maximize_pressure('AA', 26, s1) + maximize_pressure('AA', 26, s2)
+  for my_valves in itertools.combinations(available_valves, length):
+    my_valves = frozenset(my_valves)
+    elephant_valves = available_valves.difference(my_valves)
+    total_pressure = maximize_pressure('AA', 26, my_valves) + maximize_pressure('AA', 26, elephant_valves)
     best = max(best, total_pressure)
 
 answer = best
