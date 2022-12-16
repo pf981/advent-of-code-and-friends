@@ -202,7 +202,6 @@ Valve UG has flow rate=21; tunnels lead to valves TI, NR'''
 
 import collections
 import functools
-import heapq
 import re
 
 
@@ -229,29 +228,16 @@ def shortest_path(start, end):
 
 
 @functools.cache
-def maximize_pressure(useful_valves, max_time):
-  heap = [(0, 0, 'AA', 0, useful_valves)] # t, neg_total_pressure, pos, rate, valves_off
-  visited = set()
-  while heap:
-    state = heapq.heappop(heap)
-    t, neg_total_pressure, pos, rate, valves_off = state
+def maximize_pressure(pos, time_left, available_valves):
+  max_pressure = 0
 
-    if state in visited:
-      continue
-    visited.add(state)
-    
-    if t == max_time:
-      return -neg_total_pressure
-    
-    for destination in valves_off:
-      dt = shortest_path(pos, destination) + 1
-      if t + dt > max_time:
-        dt = max_time - t
-      heapq.heappush(heap, (t + dt, neg_total_pressure - rate * dt, destination, rate + valves[destination][0], valves_off.difference({destination})))
+  for destination in available_valves:
+    dt = min(shortest_path(pos, destination) + 1, time_left)
+    new_time_left = time_left - dt
+    pressure = new_time_left * valves[destination][0] + maximize_pressure(destination, new_time_left, available_valves.difference({destination}))
+    max_pressure = max(max_pressure, pressure)
 
-    if not valves_off:
-      dt = max_time - t
-      heapq.heappush(heap, (t + dt, neg_total_pressure - rate * dt, '', 0, 0))
+  return max_pressure
 
 
 valves = {}
@@ -260,10 +246,10 @@ for line in inp.splitlines():
   flow = re.findall(r'\d+', line)[0]
   valves[valve] = (int(flow), tunnel_to)
 
-useful_valves = frozenset({valve for valve, (pressure, _) in valves.items() if pressure > 0})
+available_valves = frozenset({valve for valve, (pressure, _) in valves.items() if pressure > 0})
   
-answer = maximize_pressure(useful_valves, 30)
-answer # 14 seconds
+answer = maximize_pressure('AA', 30, available_valves)
+answer # 6 seconds
 
 # COMMAND ----------
 
@@ -348,12 +334,12 @@ import itertools
 
 
 best = 0
-for length in range(len(useful_valves) // 2 + 1):
-  for s1 in itertools.combinations(useful_valves, length):
+for length in range(len(available_valves) // 2 + 1):
+  for s1 in itertools.combinations(available_valves, length):
     s1 = frozenset(s1)
-    s2 = useful_valves.difference(s1)
-    total_pressure = maximize_pressure(s1, 26) + maximize_pressure(s2, 26)
+    s2 = available_valves.difference(s1)
+    total_pressure = maximize_pressure('AA', 26, s1) + maximize_pressure('AA', 26, s2)
     best = max(best, total_pressure)
 
 answer = best
-print(answer) # 30 minutes
+print(answer) # 1 minute
