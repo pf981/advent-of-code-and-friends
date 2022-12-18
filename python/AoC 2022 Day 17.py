@@ -340,19 +340,18 @@ import itertools
 def can_move(rock, pos, direction, occupied):
   if pos[0] == 0 and direction == 'v':
     return False
+
   new_pos = (
     pos[0] - (direction == 'v'),
     pos[1] + (direction == '>') - (direction == '<'),
   )
+
   for r, c in rock:
     r = r + new_pos[0]
     c = c + new_pos[1]
-    if c < 0:
+    if c < 0 or c >= 7 or (r, c) in occupied:
       return False
-    if c >= 7:
-      return False
-    if (r, c) in occupied:
-      return False
+
   return True
 
 
