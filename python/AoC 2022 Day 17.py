@@ -397,19 +397,20 @@ print(answer)
 
 # COMMAND ----------
 
-def is_cycle(l, period):
-  prev_seq = l[:period]
-  for i in range(period, len(l) - period, period):
-    cur_seq = l[i:i + period]
-    if cur_seq != prev_seq:
-      return False
-    prev_seq = cur_seq
-
-  return True
+def find_period(l):
+  for period in range(1, len(l)):
+    prev_seq = l[:period]
+    for i in range(period, len(l) - period, period):
+      cur_seq = l[i:i + period]
+      if cur_seq != prev_seq:
+        break
+      prev_seq = cur_seq
+    else:
+      return period
 
 
 deltas = [cur - prev for cur, prev in zip(heights[1:], heights[:-1])]
-period = next(period for period in range(1, 5000) if is_cycle(deltas[3000:], period))
+period = find_period(deltas[3000:])
 
 period_start = 1000000000000 - (1000000000000 - 3000) // period * period
 height_per_period = heights[period_start + period] - heights[period_start]
