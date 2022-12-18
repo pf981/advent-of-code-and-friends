@@ -399,9 +399,9 @@ print(answer)
 
 def is_cycle(l, period):
   prev_seq = l[:period]
-  for i in range(period, len(l), period):
+  for i in range(period, len(l) - period, period):
     cur_seq = l[i:i + period]
-    if len(cur_seq) == len(prev_seq) and cur_seq != prev_seq:
+    if cur_seq != prev_seq:
       return False
     prev_seq = cur_seq
 
