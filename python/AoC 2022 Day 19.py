@@ -285,7 +285,7 @@ def maximize_geodes(time_remaining: int, mats: Mats, robots: Mats, blueprint: Bl
   return max(outcomes)
 
 
-blueprints = [Blueprint(*nums) for nums in [[int(x) for x in re.findall(r'\d+', line)] for line in inp.splitlines()]]
+blueprints = [Blueprint(*(int(x) for x in re.findall(r'\d+', line))) for line in inp.splitlines()]
 quality = [blueprint.id * maximize_geodes(24, Mats(0, 0, 0, 0), Mats(1, 0, 0, 0), blueprint) for blueprint in blueprints]
 
 answer = sum(quality)
