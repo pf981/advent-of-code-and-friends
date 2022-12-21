@@ -3,7 +3,7 @@
 
 # COMMAND ----------
 
-# MAGIC %md https://adventofcode.com/2022/day/20
+# MAGIC %md https://adventofcode.com/2022/day/21
 
 # COMMAND ----------
 
