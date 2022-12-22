@@ -1,9 +1,70 @@
 # Databricks notebook source
-#%pip install z3-solver
+# MAGIC %md https://adventofcode.com/2022/day/22
 
 # COMMAND ----------
 
-# MAGIC %md https://adventofcode.com/2022/day/22
+# MAGIC %md <article class="day-desc"><h2>--- Day 22: Monkey Map ---</h2><p>The monkeys take you on a surprisingly easy trail through the jungle. They're even going in roughly the right direction according to your handheld device's Grove Positioning System.</p>
+# MAGIC <p>As you walk, the monkeys explain that the grove is protected by a <em>force field</em>. To pass through the force field, you have to enter a password; doing so involves tracing a specific <em>path</em> on a strangely-shaped board.</p>
+# MAGIC <p>At least, you're pretty sure that's what you have to do; the elephants aren't exactly fluent in monkey.</p>
+# MAGIC <p>The monkeys give you notes that they took when they last saw the password entered (your puzzle input).</p>
+# MAGIC <p>For example:</p>
+# MAGIC <pre><code>        ...#
+# MAGIC         .#..
+# MAGIC         #...
+# MAGIC         ....
+# MAGIC ...#.......#
+# MAGIC ........#...
+# MAGIC ..#....#....
+# MAGIC ..........#.
+# MAGIC         ...#....
+# MAGIC         .....#..
+# MAGIC         .#......
+# MAGIC         ......#.
+# MAGIC 
+# MAGIC 10R5L5R10L4R5L5
+# MAGIC </code></pre>
+# MAGIC <p>The first half of the monkeys' notes is a <em>map of the board</em>. It is comprised of a set of <em>open tiles</em> (on which you can move, drawn <code>.</code>) and <em>solid walls</em> (tiles which you cannot enter, drawn <code>#</code>).</p>
+# MAGIC <p>The second half is a description of <em>the path you must follow</em>. It consists of alternating numbers and letters:</p>
+# MAGIC <ul>
+# MAGIC <li>A <em>number</em> indicates the <em>number of tiles to move</em> in the direction you are facing. If you run into a wall, you stop moving forward and continue with the next instruction.</li>
+# MAGIC <li>A <em>letter</em> indicates whether to turn 90 degrees <em>clockwise</em> (<code>R</code>) or <em><span title="Or &quot;anticlockwise&quot;, if you're anti-counterclockwise.">counterclockwise</span></em> (<code>L</code>). Turning happens in-place; it does not change your current tile.</li>
+# MAGIC </ul>
+# MAGIC <p>So, a path like <code>10R5</code> means "go forward 10 tiles, then turn clockwise 90 degrees, then go forward 5 tiles".</p>
+# MAGIC <p>You begin the path in the leftmost open tile of the top row of tiles. Initially, you are facing <em>to the right</em> (from the perspective of how the map is drawn).</p>
+# MAGIC <p>If a movement instruction would take you off of the map, you <em>wrap around</em> to the other side of the board. In other words, if your next tile is off of the board, you should instead look in the direction opposite of your current facing as far as you can until you find the opposite edge of the board, then reappear there.</p>
+# MAGIC <p>For example, if you are at <code>A</code> and facing to the right, the tile in front of you is marked <code>B</code>; if you are at <code>C</code> and facing down, the tile in front of you is marked <code>D</code>:</p>
+# MAGIC <pre><code>        ...#
+# MAGIC         .#..
+# MAGIC         #...
+# MAGIC         ....
+# MAGIC ...#.<em>D</em>.....#
+# MAGIC ........#...
+# MAGIC <em>B</em>.#....#...<em>A</em>
+# MAGIC .....<em>C</em>....#.
+# MAGIC         ...#....
+# MAGIC         .....#..
+# MAGIC         .#......
+# MAGIC         ......#.
+# MAGIC </code></pre>
+# MAGIC <p>It is possible for the next tile (after wrapping around) to be a <em>wall</em>; this still counts as there being a wall in front of you, and so movement stops before you actually wrap to the other side of the board.</p>
+# MAGIC <p>By drawing the <em>last facing you had</em> with an arrow on each tile you visit, the full path taken by the above example looks like this:</p>
+# MAGIC <pre><code>        &gt;&gt;v#    
+# MAGIC         .#v.    
+# MAGIC         #.v.    
+# MAGIC         ..v.    
+# MAGIC ...#...v..v#    
+# MAGIC &gt;&gt;&gt;v...<em>&gt;</em>#.&gt;&gt;    
+# MAGIC ..#v...#....    
+# MAGIC ...&gt;&gt;&gt;&gt;v..#.    
+# MAGIC         ...#....
+# MAGIC         .....#..
+# MAGIC         .#......
+# MAGIC         ......#.
+# MAGIC </code></pre>
+# MAGIC <p>To finish providing the password to this strange input device, you need to determine numbers for your final <em>row</em>, <em>column</em>, and <em>facing</em> as your final position appears from the perspective of the original map. Rows start from <code>1</code> at the top and count downward; columns start from <code>1</code> at the left and count rightward. (In the above example, row 1, column 1 refers to the empty space with no tile on it in the top-left corner.) Facing is <code>0</code> for right (<code>&gt;</code>), <code>1</code> for down (<code>v</code>), <code>2</code> for left (<code>&lt;</code>), and <code>3</code> for up (<code>^</code>). The <em>final password</em> is the sum of 1000 times the row, 4 times the column, and the facing.</p>
+# MAGIC <p>In the above example, the final row is <code>6</code>, the final column is <code>8</code>, and the final facing is <code>0</code>. So, the final password is 1000 * 6 + 4 * 8 + 0: <code><em>6032</em></code>.</p>
+# MAGIC <p>Follow the path given in the monkeys' notes. <em>What is the final password?</em></p>
+# MAGIC </article>
 
 # COMMAND ----------
 
@@ -212,502 +273,182 @@ inp = '''                                                  ..........#.#........
 
 # COMMAND ----------
 
-# inp = '''        ...#
-#         .#..
-#         #...
-#         ....
-# ...#.......#
-# ........#...
-# ..#....#....
-# ..........#.
-#         ...#....
-#         .....#..
-#         .#......
-#         ......#.
-
-# 10R5L5R10L4R5L5'''
-
-# COMMAND ----------
-
 import re
 
-m, path = inp.split('\n\n')
-m = {(row, col): c for row, line in enumerate(m.splitlines()) for col, c in enumerate(line) if c != ' '}
 
-path = re.findall(r'\d+|.', path)
-
-m, path
-
-# COMMAND ----------
-
-import functools
-
-@functools.cache
-def wrap(row, col, heading):
-  if (row, col) in m:
-    return row, col
-  
-  if heading == '>':
-    col = min(c for r, c in m if r == row)
-  elif heading == '<':
-    col = max(c for r, c in m if r == row)
-  elif heading == '^':
-    row = max(r for r, c in m if c == col)
-  elif heading == 'v':
-    row = min(r for r, c in m if c == col)
-  
-  return row, col
-
-# COMMAND ----------
-
-start_row = min(row for (row, _), c in m.items() if c == '.')
-start_col = min(col for (row, col), c in m.items() if c == '.' and row == start_row)
-
-turn_right = {
-  '^': '>',
-  '>': 'v',
-  'v': '<',
-  '<': '^',
-}
-turn_left = {
-  '^': '<',
-  '>': '^',
-  'v': '>',
-  '<': 'v',
-}
-
-row, col = start_row, start_col
-heading = '>'
-for op in path:
-  #print(f'{row}, {col}: {heading} -> {op}')
-  if op.isdigit():
-    for _ in range(int(op)):
-      #print(f'Moving forward {op}: {row} {col}')
-      row2 = row + (heading == 'v') - (heading == '^')
-      col2 = col + (heading == '>') - (heading == '<')
-      row2, col2 = wrap(row2, col2, heading)
-      if m[(row2, col2)] == '#':
-        #print('{row2}, {col2} is wall')
-        break
-      row, col = row2, col2
-  elif op == 'R':
-    heading = turn_right[heading]
-  elif op == 'L':
-    heading = turn_left[heading]
-  else:
-    print('???', op)
-    
-
-# COMMAND ----------
-
-facing = '>v<^'.index(heading)
-password = 1000 * (row + 1) + 4 * (col + 1) + facing
-password # 31568
-
-# COMMAND ----------
-
-start_col
-
-# COMMAND ----------
-
-# import functools
-
-# @functools.cache
-# def wrap(row, col, heading):
-#   if (row, col) in m:
-#     return row, col, heading
-  
-#   # 1 up
-#   if row == -1 and col < 100 and heading == '^':
-#     assert(heading == '^')
-#     print('1 up')
-#     # 6 on left side going right
-#     return 150 + col - 50, 0, '>'
-  
-#   # 1 left
-#   if col == 49 and row < 50 and heading == '<':
-#     print('1 left')
-#     assert(heading == '<')
-#     # 4 on left side going right
-#     return 100 + row, 0, '>'
-  
-  
-#   # 2 up
-#   if row == -1 and col >= 100 and heading == '^':
-#     assert(heading == '^')
-#     print('2 up')
-#     # 6 on bottom side going up
-#     return 199, col - 100, '^'
-  
-#   # 2 right
-#   if col == 150 and heading == '>':
-#     assert(heading == '>')
-#     print('2 right')
-#     # 5 on right side going left
-#     return 99 - row, 99, '<'
-  
-#   # 2 down
-#   if row == 50 and col >= 100 and heading == 'v':
-#     assert(heading == 'v')
-#     print('2 down')
-#     # 3 on right side going left
-#     return 50 + (col - 100), 49, '<'
-  
-  
-#   # 3 left
-#   if col == 49 and row >= 50 and heading == '<':
-#     assert(heading == '<')
-#     print('3 left')
-#     # 4 on top side going down
-#     return 100, row - 50, 'v'
-  
-#   # 3 right
-#   if col == 100 and row < 100 and heading == '>':
-#     assert(heading == '>')
-#     print('3 right')
-#     # 2 on bottom side going up
-#     return 49, 100 + (row - 50), '^'
-  
-  
-#   # 4 up
-#   if row == 99 and col < 50 and heading == '^':
-#     assert(heading == '^')
-#     print('4 up')
-#     # 3 on left side going right
-#     return 50 + col, 50, '>'
-  
-#   # 4 left
-#   if col == -1 and row < 150 and heading == '<':
-#     assert(heading == '<')
-#     print('4 left')
-#     # 1 on left side going right
-#     return 49 - (row - 100), 50, '>'
-  
-  
-#   # 5 right
-#   if col == 100 and row >= 100 and heading == '>':
-#     assert(heading == '>')
-#     print('5 right')
-#     # 2 on right side going left
-#     return 49 - (row - 100), 149, '<'
-  
-#   # 5 down
-#   if row == 150 and col >= 50 and heading == 'v':
-#     assert(heading == 'v')
-#     print('5 down')
-#     # 6 on right side going left
-#     return 150 + (col - 50), 49, '<'
-  
-  
-#   # 6 left
-#   if col == -1 and row >= 150 and heading == '<':
-#     assert(heading == '<')
-#     print('6 left')
-#     # 1 on top side going down
-#     return 0, 50 + (row - 150), 'v'
-  
-#   # 6 right
-#   if col == 50 and row >= 150 and heading == '>':
-#     assert(heading == '>')
-#     print('6 right')
-#     # 5 on bottom side going up
-#     return 149, 50 + (row - 150), '^'
-  
-#   # 6 down
-#   if row == 200 and heading == 'v':
-#     assert(heading == 'v')
-#     print('6 down')
-#     # 2 on top side going down
-#     return 0, 100 + (col), 'v'
-  
-  
-#   print('?????', row, col, heading)
-
-
-# start_row = min(row for (row, _), c in m.items() if c == '.')
-# start_col = min(col for (row, col), c in m.items() if c == '.' and row == start_row)
-
-# turn_right = {
-#   '^': '>',
-#   '>': 'v',
-#   'v': '<',
-#   '<': '^',
-# }
-# turn_left = {
-#   '^': '<',
-#   '>': '^',
-#   'v': '>',
-#   '<': 'v',
-# }
-
-# row, col = start_row, start_col
-# heading = '>'
-# for op in path:
-#   print(f'{row}, {col}: {heading} -> {op}')
-#   if op.isdigit():
-#     for _ in range(int(op)):
-#       #print(f'Moving forward {op}: {row} {col}')
-#       row2 = row + (heading == 'v') - (heading == '^')
-#       col2 = col + (heading == '>') - (heading == '<')
-#       row2, col2, heading2 = wrap(row2, col2, heading)
-#       if m[(row2, col2)] == '#':
-#         #print('{row2}, {col2} is wall')
-#         break
-#       row, col, heading = row2, col2, heading2
-#   elif op == 'R':
-#     heading = turn_right[heading]
-#   elif op == 'L':
-#     heading = turn_left[heading]
-#   else:
-#     print('???', op)
-    
-    
-# facing = '>v<^'.index(heading)
-# password = 1000 * (row + 1) + 4 * (col + 1) + facing
-# password # 124020 not right
-
-# COMMAND ----------
-
-import functools
-
-@functools.cache
-def wrap(row, col, heading):
-  if (row, col) in m:
+def wrap(row, col, heading, grid):
+  if (row, col) in grid:
     return row, col, heading
   
-  # 1 up
+  if heading == '>':
+    col = min(c for r, c in grid if r == row)
+  elif heading == '<':
+    col = max(c for r, c in grid if r == row)
+  elif heading == '^':
+    row = max(r for r, c in grid if c == col)
+  elif heading == 'v':
+    row = min(r for r, c in grid if c == col)
+  
+  return row, col, heading
+
+
+def get_password(grid, path, wrap_fn):
+  turn_right = {
+    '^': '>',
+    '>': 'v',
+    'v': '<',
+    '<': '^',
+  }
+  turn_left = {
+    '^': '<',
+    '>': '^',
+    'v': '>',
+    '<': 'v',
+  }
+
+  row = min(r for (r, _), value in grid.items() if value == '.')
+  col = min(c for (r, c), value in grid.items() if value == '.' and r == row)
+  heading = '>'
+  for op in path:
+    if op.isdigit():
+      for _ in range(int(op)):
+        row2, col2, heading2 = wrap_fn(
+          row + (heading == 'v') - (heading == '^'),
+          col + (heading == '>') - (heading == '<'),
+          heading,
+          grid
+        )
+        if grid[(row2, col2)] == '#':
+          break
+        row, col, heading = row2, col2, heading2
+    elif op == 'R':
+      heading = turn_right[heading]
+    elif op == 'L':
+      heading = turn_left[heading]
+
+  return 1000 * (row + 1) + 4 * (col + 1) + '>v<^'.index(heading)
+
+
+grid, path = inp.split('\n\n')
+grid = {(row, col): c for row, line in enumerate(grid.splitlines()) for col, c in enumerate(line) if c != ' '}
+path = re.findall(r'\d+|.', path)
+
+answer = get_password(grid, path, wrap)
+print(answer)
+
+# COMMAND ----------
+
+# MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>As you reach the force field, you think you hear some Elves in the distance. Perhaps they've already arrived?</p>
+# MAGIC <p>You approach the strange <em>input device</em>, but it isn't quite what the monkeys drew in their notes. Instead, you are met with a large <em>cube</em>; each of its six faces is a square of 50x50 tiles.</p>
+# MAGIC <p>To be fair, the monkeys' map <em>does</em> have six 50x50 regions on it. If you were to <em>carefully fold the map</em>, you should be able to shape it into a cube!</p>
+# MAGIC <p>In the example above, the six (smaller, 4x4) faces of the cube are:</p>
+# MAGIC <pre><code>        1111
+# MAGIC         1111
+# MAGIC         1111
+# MAGIC         1111
+# MAGIC 222233334444
+# MAGIC 222233334444
+# MAGIC 222233334444
+# MAGIC 222233334444
+# MAGIC         55556666
+# MAGIC         55556666
+# MAGIC         55556666
+# MAGIC         55556666
+# MAGIC </code></pre>
+# MAGIC <p>You still start in the same position and with the same facing as before, but the <em>wrapping</em> rules are different. Now, if you would walk off the board, you instead <em>proceed around the cube</em>. From the perspective of the map, this can look a little strange. In the above example, if you are at A and move to the right, you would arrive at B facing down; if you are at C and move down, you would arrive at D facing up:</p>
+# MAGIC <pre><code>        ...#
+# MAGIC         .#..
+# MAGIC         #...
+# MAGIC         ....
+# MAGIC ...#.......#
+# MAGIC ........#..<em>A</em>
+# MAGIC ..#....#....
+# MAGIC .<em>D</em>........#.
+# MAGIC         ...#..<em>B</em>.
+# MAGIC         .....#..
+# MAGIC         .#......
+# MAGIC         ..<em>C</em>...#.
+# MAGIC </code></pre>
+# MAGIC <p>Walls still block your path, even if they are on a different face of the cube. If you are at E facing up, your movement is blocked by the wall marked by the arrow:</p>
+# MAGIC <pre><code>        ...#
+# MAGIC         .#..
+# MAGIC      <em>--&gt;#</em>...
+# MAGIC         ....
+# MAGIC ...#..<em>E</em>....#
+# MAGIC ........#...
+# MAGIC ..#....#....
+# MAGIC ..........#.
+# MAGIC         ...#....
+# MAGIC         .....#..
+# MAGIC         .#......
+# MAGIC         ......#.
+# MAGIC </code></pre>
+# MAGIC <p>Using the same method of drawing the <em>last facing you had</em> with an arrow on each tile you visit, the full path taken by the above example now looks like this:</p>
+# MAGIC <pre><code>        &gt;&gt;v#    
+# MAGIC         .#v.    
+# MAGIC         #.v.    
+# MAGIC         ..v.    
+# MAGIC ...#..<em>^</em>...v#    
+# MAGIC .&gt;&gt;&gt;&gt;&gt;^.#.&gt;&gt;    
+# MAGIC .^#....#....    
+# MAGIC .^........#.    
+# MAGIC         ...#..v.
+# MAGIC         .....#v.
+# MAGIC         .#v&lt;&lt;&lt;&lt;.
+# MAGIC         ..v...#.
+# MAGIC </code></pre>
+# MAGIC <p>The final password is still calculated from your final position and facing from the perspective of the map. In this example, the final row is <code>5</code>, the final column is <code>7</code>, and the final facing is <code>3</code>, so the final password is 1000 * 5 + 4 * 7 + 3 = <code><em>5031</em></code>.</p>
+# MAGIC <p>Fold the map into a cube, <em>then</em> follow the path given in the monkeys' notes. <em>What is the final password?</em></p>
+# MAGIC </article>
+
+# COMMAND ----------
+
+def wrap_cube(row, col, heading, grid):
+  if (row, col) in grid:
+    return row, col, heading
+  
   if row == -1 and col < 100 and heading == '^':
-    assert(heading == '^')
-    print('1 up')
-    # 6 on left side going right
     return 150 + col - 50, 0, '>'
   
-  # 1 left
   if col == 49 and row < 50 and heading == '<':
-    print('1 left')
-    assert(heading == '<')
-    # 4 on left side going right
     return 149 - row, 0, '>'
   
-  
-  # 2 up
   if row == -1 and col >= 100 and heading == '^':
-    assert(heading == '^')
-    print('2 up')
-    # 6 on bottom side going up
     return 199, col - 100, '^'
   
-  # 2 right
   if col == 150 and heading == '>':
-    assert(heading == '>')
-    print('2 right')
-    # 5 on right side going left
     return 149 - row, 99, '<'
-  
-  # 2 down
+
   if row == 50 and col >= 100 and heading == 'v':
-    assert(heading == 'v')
-    print('2 down')
-    # 3 on right side going left
     return 50 + (col - 100), 99, '<'
-  
-  
-  # 3 left
+
   if col == 49 and row >= 50 and heading == '<':
-    assert(heading == '<')
-    print('3 left')
-    # 4 on top side going down
     return 100, (row - 50), 'v'
-  
-  # 3 right
+
   if col == 100 and row < 100 and heading == '>':
-    assert(heading == '>')
-    print('3 right')
-    # 2 on bottom side going up
     return 49, 100 + (row - 50), '^'
-  
-  
-  # 4 up
+
   if row == 99 and col < 50 and heading == '^':
-    assert(heading == '^')
-    print('4 up')
-    # 3 on left side going right
     return 50 + col, 50, '>'
-  
-  # 4 left
+
   if col == -1 and row < 150 and heading == '<':
-    assert(heading == '<')
-    print('4 left')
-    # 1 on left side going right
     return 49 - (row - 100), 50, '>'
-  
-  
-  # 5 right
+
   if col == 100 and row >= 100 and heading == '>':
-    assert(heading == '>')
-    print('5 right')
-    # 2 on right side going left
     return 49 - (row - 100), 149, '<'
-  
-  # 5 down
+
   if row == 150 and col >= 50 and heading == 'v':
-    assert(heading == 'v')
-    print('5 down')
-    # 6 on right side going left
     return 150 + (col - 50), 49, '<'
-  
-  
-  # 6 left
+
   if col == -1 and row >= 150 and heading == '<':
-    assert(heading == '<')
-    print('6 left')
-    # 1 on top side going down
     return 0, 50 + (row - 150), 'v'
-  
-  # 6 right
+
   if col == 50 and row >= 150 and heading == '>':
-    assert(heading == '>')
-    print('6 right')
-    # 5 on bottom side going up
-    return 149, 50 + (row - 150), '^' # To check
-  
-  # 6 down
+    return 149, 50 + (row - 150), '^'
+
   if row == 200 and heading == 'v':
-    assert(heading == 'v')
-    print('6 down')
-    # 2 on top side going down
-    return 0, 149 - (col), 'v' # I think this is right now
-  
-  
-  print('?????', row, col, heading)
+    return 0, 149 - (col), 'v'
 
 
-start_row = min(row for (row, _), c in m.items() if c == '.')
-start_col = min(col for (row, col), c in m.items() if c == '.' and row == start_row)
-
-turn_right = {
-  '^': '>',
-  '>': 'v',
-  'v': '<',
-  '<': '^',
-}
-turn_left = {
-  '^': '<',
-  '>': '^',
-  'v': '>',
-  '<': 'v',
-}
-
-p = [list(line) for line in inp.splitlines()]
-f = open('/dbfs/FileStore/aoc.txt', 'w')
-
-row, col = start_row, start_col
-heading = '>'
-for op in path:
-  print(f'{row}, {col}: {heading} -> {op}')
-  if op.isdigit():
-    for _ in range(int(op)):
-      p[row][col] = heading
-      #f.write(f'Moving forward {op}: {row} {col}\n')
-      row2 = row + (heading == 'v') - (heading == '^')
-      col2 = col + (heading == '>') - (heading == '<')
-      row2, col2, heading2 = wrap(row2, col2, heading)
-      if m[(row2, col2)] == '#':
-        #print('{row2}, {col2} is wall')
-        break
-      row, col, heading = row2, col2, heading2
-    print_grid2(p, f)
-  elif op == 'R':
-    heading = turn_right[heading]
-  elif op == 'L':
-    heading = turn_left[heading]
-  else:
-    print('???', op)
-    
-    
-f.close()
-    
-facing = '>v<^'.index(heading)
-password = 1000 * (row + 1) + 4 * (col + 1) + facing
-password # 123199 too high; 129119 too high; 14446 too low; 36540 answer
-
-# COMMAND ----------
-
-password
-
-# COMMAND ----------
-
-p = [list(line) for line in inp.splitlines()]
-f = open('/dbfs/FileStore/aoc.txt', 'w')
-
-# row, col = start_row, start_col
-# heading = '^' # Looks correct
-# heading = '>' # Looks correct
-# heading = 'v' # Looks correct
-# heading = '<' # Looks correct
-
-row, col = start_row, 100
-# heading = '^' # Looks correct
-heading = 'v' # Looks correct
-# heading = '>' # Looks correct
-# heading = '<' # Looks correct
-for _ in range(1000):
-  p[row][col] = heading
-  row = row + (heading == 'v') - (heading == '^')
-  col = col + (heading == '>') - (heading == '<')
-  row, col, heading = wrap(row, col, heading)
-
-print_grid2(p, f)
-f.close()
-
-# COMMAND ----------
-
-# MAGIC %md https://vgw-dna-prod.cloud.databricks.com/files/aoc.txt
-
-# COMMAND ----------
-
-import unittest
-
-class TestWrap(unittest.TestCase):
-  def test_1up(self):
-    self.assertEqual(wrap(-1, 55, '^'), (155, 0, '>'))
-    
-  def test_1left(self):
-    self.assertEqual(wrap(5, 49, '<'), (144, 0, '>'))
-    
-#   def test_2up(self):
-#     self.assertEqual(wrap(, , ''), (, , ''))
-    
-#   def test_2right(self):
-#     self.assertEqual(wrap(, , ''), (, , ''))
-    
-#   def test_2down(self):
-#     self.assertEqual(wrap(, , ''), (, , ''))
-
-
-suite = unittest.TestSuite()
-suite.addTest(unittest.makeSuite(TestWrap))
-runner = unittest.TextTestRunner()
-result = runner.run(suite)
-
-# COMMAND ----------
-
-wrap(50, 129, 'v')
-
-# COMMAND ----------
-
-m[(79, 49)]
-
-# COMMAND ----------
-
-p[79][49]
-
-# COMMAND ----------
-
-def print_grid(p):
-  for line in p:
-    print(*line, sep='')
-def print_grid2(p, f):
-  for line in p:
-    f.write(''.join(line) + '\n')
-# print_grid(p)
+answer = get_password(grid, path, wrap_cube)
+print(answer)
