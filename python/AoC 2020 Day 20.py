@@ -1919,7 +1919,6 @@ def generate_configs(tile_id: int):
   return configs
 
 
-# FIXME: This doesn't work!!!???
 @functools.cache
 def get_active(config: Config):
   tile_definition = tiles[config.tile_id]
