@@ -312,19 +312,16 @@ def simulate(elves, round_num):
       moved.add(pos)
   new_elves.update(elves - moved)
 
-  return new_elves, is_done
+  return frozenset(new_elves), is_done
 
 
-elves = {(row, col) for row, line in enumerate(inp.splitlines()) for col, c in enumerate(line) if c == '#'}
+start_elves = frozenset({(row, col) for row, line in enumerate(inp.splitlines()) for col, c in enumerate(line) if c == '#'})
+elves = start_elves
 for round_num in range(10):
   elves, _ = simulate(elves, round_num)
 
-min_row = min(x for (x, _) in elves)
-max_row = max(x for (x, _) in elves)
-min_col = min(x for (_, x) in elves)
-max_col = max(x for (_, x) in elves)
-
-answer = (1 + max_row - min_row) * (1 + max_col - min_col) - len(elves)
+side_lengths = [(1 + max(dim) - min(dim)) for dim in zip(*elves)]
+answer = side_lengths[0] * side_lengths[1] - len(elves)
 print(answer)
 
 # COMMAND ----------
@@ -351,7 +348,7 @@ print(answer)
 
 import itertools
 
-elves = {(row, col) for row, line in enumerate(inp.splitlines()) for col, c in enumerate(line) if c == '#'}
+elves = start_elves
 for round_num in itertools.count():
   elves, is_done = simulate(elves, round_num)
   if is_done:
