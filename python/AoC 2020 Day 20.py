@@ -1893,17 +1893,55 @@ Tile 1303:
 
 # COMMAND ----------
 
+import dataclasses
+import enum
+import functools
 import math
 
-def get_connecting_tiles(tile_id, side_str, direction):
-  return {tile_id2 for tile_id2, *_ in side_to_tiles[(side_str, direction)] if tile_id2 != tile_id}
 
-def get_rotations(sides, tile_id, h_flipped, v_flipped):
-  result = {}
+Side = enum.IntEnum('Side', ['UP', 'RIGHT', 'DOWN', 'LEFT'], start=0)
+
+
+@dataclasses.dataclass(frozen=True)
+class Config:
+  tile_id: int
+  rotation: int
+  h_flipped: bool
+  v_flipped: bool
+
+
+def generate_configs(tile_id: int):
+  configs = []
   for rotation in range(4):
-    result[(tile_id, rotation, h_flipped, v_flipped)] = sides
-    sides = (sides[1], sides[2][::-1], sides[3], sides[0][::-1])
-  return result
+    for h_flipped in [False, True]:
+      for v_flipped in [False, True]:
+        configs.append(Config(tile_id, rotation, h_flipped, v_flipped))
+  return configs
+
+
+# FIXME: This doesn't work!!!???
+@functools.cache
+def get_active(config: Config):
+  tile_definition = tiles[config.tile_id]
+  if config.h_flipped:
+    tile_definition = [line[::-1] for line in tile_definition]
+  if config.v_flipped:
+    tile_definition = tile_definition[::-1]
+  for _ in range(config.rotation):
+    tile_definition = list(zip(*(line[::-1] for line in tile_definition)))
+    
+  return frozenset({(row, col) for row, line in enumerate(tile_definition) for col, c in enumerate(line) if c == '#'})
+
+
+@functools.cache
+def get_edges(config: Config):
+  active = get_active(config)
+  return (
+    frozenset({col for row, col in active if row == 0}), # Up
+    frozenset({row for row, col in active if col == 9}), # Right
+    frozenset({col for row, col in active if row == 9}), # Down
+    frozenset({row for row, col in active if col == 0})  # Left
+  )
 
 
 tiles = {}
@@ -1911,47 +1949,20 @@ for tile_string in inp.split('\n\n'):
   tile_id, *tile_definition = tile_string.splitlines()
   tile_id = int(tile_id[5:-1])
   tiles[tile_id] = tile_definition
-  
-up, right, down, left = range(4)
 
-edges = {} # (tile_id, rotation, h_flipped, v_flipped): [side_string, ...]
-for tile_id, tile_definition in tiles.items():
-  sides = (
-    tile_definition[0],
-    ''.join(line[-1] for line in tile_definition),
-    tile_definition[-1],
-    ''.join(line[0] for line in tile_definition)
-  )
-  edges.update(get_rotations(sides, tile_id, False, False))
+connectivity = {} # tile_id: (max number of sides that could be connected at once)
+for tile_id in tiles:
+  edges = get_edges(Config(tile_id, 0, False, False))
   
-  # Flipped horizontally
-  h_sides = (sides[0][::-1], sides[3], sides[2][::-1], sides[1])
-  edges.update(get_rotations(h_sides, tile_id, True, False))
-  
-  # Flipped vertically
-  v_sides = (sides[2], sides[1][::-1], sides[0], sides[3][::-1])
-  edges.update(get_rotations(v_sides, tile_id, False, True))
-  
-  # Flipped both
-  hv_sides = (v_sides[0][::-1], v_sides[3], v_sides[2][::-1], v_sides[1])
-  edges.update(get_rotations(hv_sides, tile_id, True, True))
+  edges_other = set()
+  for tile_id_other in tiles:
+    if tile_id_other == tile_id:
+      continue
 
-side_to_tiles = {} # (side_string, side): [(tile_id, rotation, h_flipped, v_flipped)]
-for (tile_id, rotation, h_flipped, v_flipped), sides in edges.items():
-  for side_id, s in enumerate(sides):
-    side_to_tiles[(s, side_id)] = side_to_tiles.get((s, side_id), set())
-    side_to_tiles[(s, side_id)].add((tile_id, rotation, h_flipped, v_flipped))
-  
-connectivity = {tile_id: 0 for tile_id in tiles} # tile_id: (max number of sides that could be connected at once)
-for (tile_id, rotation, _, _), side_strs in edges.items():
-  if rotation != 0:
-    continue
-  connections_up = get_connecting_tiles(tile_id, side_strs[up], down)
-  connections_right = get_connecting_tiles(tile_id, side_strs[right], left)
-  connections_down = get_connecting_tiles(tile_id, side_strs[down], up)
-  connections_left = get_connecting_tiles(tile_id, side_strs[left], right)
-  cur_connectivity = sum(bool(connections) for connections in [connections_up, connections_right, connections_down, connections_left])
-  connectivity[tile_id] = max(connectivity[tile_id], cur_connectivity)
+    for config_other in generate_configs(tile_id_other):
+      edges_other.update(get_edges(config_other))
+    
+  connectivity[tile_id] = sum(edge in edges_other for edge in edges)
 
 corner_tile_ids = {tile_id for tile_id, connections in connectivity.items() if connections == 2}
 answer = math.prod(corner_tile_ids)
@@ -2052,76 +2063,66 @@ print(answer)
 
 # COMMAND ----------
 
-result = {}
-def try_place(row, col, remaining_tile_ids, tiles_per_side):
-  if row == tiles_per_side:
-    return result
+def place(row, col, remaining_tile_ids, arrangement):
+  if row == len(arrangement):
+    return True
 
-  # Constraints
-  possibilities = set(edges)
-  if row > 0:
-    above_tile = result[(row - 1, col)]
-    above_tile_side = (edges[above_tile][down], up)
-    possibilities = possibilities.intersection(side_to_tiles[above_tile_side])
-  if col > 0:
-    left_tile = result[(row, col - 1)]
-    left_tile_side = (edges[left_tile][right], left)
-    possibilities = possibilities.intersection(side_to_tiles[left_tile_side])
-  
   col2 = col + 1
   row2 = row
-  if col2 == tiles_per_side:
+  if col2 == len(arrangement[0]):
     col2 = 0
     row2 += 1
-  
-  for tile_id, rotation, h_flipped, v_flipped in possibilities:
-    if row in [0, tiles_per_side - 1] and col in [0, tiles_per_side - 1] and tile_id not in corner_tile_ids: # Corner
-      continue
-
-    if tile_id not in remaining_tile_ids:
-      continue
-    result[(row, col)] = (tile_id, rotation, h_flipped, v_flipped)
-    if (complete := try_place(row2, col2, remaining_tile_ids - {tile_id}, tiles_per_side)):
-      return complete
     
-tiles_per_side = int(math.sqrt(len(tiles)))
+  possible_tiles = set(remaining_tile_ids)
+  
+  # Corner position must be a corner tile ID
+  if row in [0, len(arrangement) - 1] and col in [0, len(arrangement[0]) - 1]:
+    possible_tiles.intersection_update(corner_tile_ids)
 
-arrangement = try_place(0, 0, frozenset(tiles), tiles_per_side)
+  possible_configs = {config for tile_id in possible_tiles for config in generate_configs(tile_id)}
+  
+  # Sides must align with the tile above and the tile to the left
+  if col > 0:
+    possible_configs.intersection_update(side_to_config[(get_edges(arrangement[row][col - 1])[Side.RIGHT], Side.LEFT)])
+  if row > 0:
+    possible_configs.intersection_update(side_to_config[(get_edges(arrangement[row - 1][col])[Side.DOWN], Side.UP)])
+
+  for config in possible_configs:
+    arrangement[row][col] = config
+    if place(row2, col2, remaining_tile_ids - {config.tile_id}, arrangement):
+      return True
+
+  return False
+
+
+side_to_config = {} # (edge, side): [config, ...]
+for tile_id in tiles:
+  for config in generate_configs(tile_id):
+    for edges, side in zip(get_edges(config), Side):
+      side_to_config[(edges, side)] = side_to_config.get((edges, side), frozenset()).union({config})
+
+tiles_per_side = int(math.sqrt(len(tiles)))
+arrangement = [[None for _ in range(tiles_per_side)] for _ in range(tiles_per_side)]
+place(0, 0, frozenset(tiles), arrangement) # < 1 second
 
 # COMMAND ----------
 
-def mutate(tile, rotation, h_flipped, v_flipped):
-  if h_flipped:
-    tile = [line[::-1] for line in tile]
-  if v_flipped:
-    tile = tile[::-1]
-  for _ in range(rotation):
-    tile = list(zip(*(line[::-1] for line in tile)))
-  return tile
-
-
 active = set()
-for (row, col), (tile_id, rotation, h_flipped, v_flipped) in arrangement.items():
-  tile = mutate(tiles[tile_id], rotation, h_flipped, v_flipped)
-  for r in range(1, 9):
-    for c in range(1, 9):
-      if tile[r][c] == '#':
-        active.add((8 * row + r - 1, 8 * col + c - 1))
+for row, line in enumerate(arrangement):
+  for col, config in enumerate(line):
+    active.update({(r - 1 + 8 * row, c - 1 + 8 * col) for r, c in get_active(config) if r not in [0, 9] and c not in [0, 9]})
 
-target = '''                  # 
+tiles['monster'] = '''                  # 
 #    ##    ##    ###
- #  #  #  #  #  #   '''
-targets = []
-for rotation in range(4):
-  for h_flipped in [True, False]:
-    for v_flipped in [True, False]:
-      grid = mutate(target.splitlines(), rotation, h_flipped, v_flipped)
-      targets.append({(row, col) for row, line in enumerate(grid) for col, c in enumerate(line) if c == '#'})
+ #  #  #  #  #  #   '''.splitlines()
+
+target_configs = generate_configs('monster')
+target_actives = [get_active(config) for config in target_configs]
 
 monster = set()
 for row in range(tiles_per_side * 8):
   for col in range(tiles_per_side * 8):
-    for target in targets:
+    for target in target_actives:
       offset_target = {(r + row, c + col) for r, c in target}
       if offset_target.issubset(active):
         monster.update(offset_target)
