@@ -343,7 +343,6 @@ import itertools
 
 elves = start_elves
 for round_num in itertools.count():
-  #print(elves)
   elves, is_done = simulate(elves, round_num)
   if is_done:
     break
