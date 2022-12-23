@@ -293,24 +293,17 @@ def get_proposal(row, col, round_num, elves):
 
 def simulate(elves, round_num):
   is_done = True
-  proposal_counts = collections.Counter()
-  proposals = {}
+  proposals = {} # new_pos: old_pos
   for row, col in elves:
     if not needs_to_move(row, col, elves):
       continue
     is_done = False
 
     if proposal := get_proposal(row, col, round_num, elves):
-      proposal_counts[proposal] += 1
-      proposals[(row, col)] = proposal
+      proposals[proposal] = (row, col) if proposal not in proposals else None
 
-  new_elves = set()
-  moved = set()
-  for pos, proposal in proposals.items():
-    if proposal_counts[proposal] == 1:
-      new_elves.add(proposal)
-      moved.add(pos)
-  new_elves.update(elves - moved)
+  new_elves = {new_pos for new_pos, old_pos in proposals.items() if old_pos}
+  new_elves.update(elves - set(proposals.values()))
 
   return frozenset(new_elves), is_done
 
@@ -350,9 +343,10 @@ import itertools
 
 elves = start_elves
 for round_num in itertools.count():
+  #print(elves)
   elves, is_done = simulate(elves, round_num)
   if is_done:
     break
 
 answer = round_num + 1
-print(answer) # 13 seconds
+print(answer) # 12 seconds
