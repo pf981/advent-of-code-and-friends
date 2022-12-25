@@ -194,6 +194,7 @@ inp = '''212===
 # COMMAND ----------
 
 import functools
+import math
 
 
 to_num = {
@@ -231,7 +232,8 @@ def make_string(target, digits):
 
 
 target = sum(get_value(line) for line in inp.splitlines())
-answer = make_string(target, 20)
+digits_upper_bound = int(math.log(target, 5) + 2)
+answer = make_string(target, digits_upper_bound).lstrip('0')
 print(answer)
 
 # COMMAND ----------
