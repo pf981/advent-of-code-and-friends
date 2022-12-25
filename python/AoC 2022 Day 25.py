@@ -214,7 +214,7 @@ to_string = {
 
 
 def get_value(s):
-  return sum((5**exponent) * to_num[c] for exponent, c in enumerate(s[::-1]))
+  return sum((5 ** exponent) * to_num[c] for exponent, c in enumerate(s[::-1]))
 
 
 @functools.cache
@@ -222,13 +222,14 @@ def make_string(target, digits):
   if digits == 1:
     return to_string.get(target)
 
-  if abs(target) > 5**digits:
+  if abs(target) > 5 ** digits:
     return None
   
-  coef = 5**(digits-1)
+  coef = 5 ** (digits - 1)
   for value, c in to_string.items():
     if (result := make_string(target - value*coef, digits - 1)) is not None:
       return c + result
+  return None
 
 
 target = sum(get_value(line) for line in inp.splitlines())
