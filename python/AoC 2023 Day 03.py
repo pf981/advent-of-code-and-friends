@@ -171,50 +171,38 @@ inp = '''....401.............425.......323......791......697...............963..
 
 # COMMAND ----------
 
-import dataclasses
+import collections
+import math
 
 
-@dataclasses.dataclass(frozen=True)
-class Number:
-    row: int
-    start_col: int
-    end_col: int
-    value: int
+grid = ['.' + line + '.' for line in inp.splitlines()]
+grid = ['.' * len(grid[0])] + grid + ['.' * len(grid[0])]
+gears = collections.defaultdict(list)
+answer1 = 0
 
+for row, line in enumerate(grid):
+    num = 0
+    has_neighbor = False
+    gear_neighbors = set()
+    for col, c in enumerate(line):
+        if c.isdigit():
+            num = 10 * num + int(c)
+            for dr in range(-1, 2):
+                for dc in range(-1, 2):
+                    if grid[row + dr][col + dc] not in '1234567890.':
+                        has_neighbor = True
+                    if grid[row + dr][col + dc] == '*':
+                        gear_neighbors.add((row + dr, col + dc))
+        else:
+            if num and has_neighbor:
+                answer1 += num
+                for gear in gear_neighbors:
+                    gears[gear].append(num)
+            num = 0
+            has_neighbor = False
+            gear_neighbors = set()
 
-def get_number(pos, digits):
-    start_col = pos[1]
-    while (pos[0], start_col - 1) in digits:
-        start_col -= 1
-
-    end_col = pos[1]
-    while (pos[0], end_col + 1) in digits:
-        end_col += 1
-
-    return Number(
-        row=pos[0],
-        start_col=start_col,
-        end_col=end_col,
-        value=int(''.join(digits[pos[0], col] for col in range(start_col, end_col + 1)))
-    )
-
-
-m = {(row, col): c for row, line in enumerate(inp.splitlines()) for col, c in enumerate(line)}
-symbols = {pos for pos, c in m.items() if c not in '0123456789.'}
-digits = {pos: c for pos, c in m.items() if c in '0123456789'}
-
-numbers = {}
-for pos, c in digits.items():
-    if pos in numbers:
-        continue
-
-    number = get_number(pos, digits)
-    for col in range(number.start_col, number.end_col + 1):
-        numbers[(number.row, col)] = number
-
-valid_numbers = {numbers[(row + dr, col + dc)] for row, col in symbols for dr in range(-1, 2) for dc in range(-1, 2) if (row + dr, col + dc) in numbers}
-answer = sum(number.value for number in valid_numbers)
-print(answer)
+print(answer1)
 
 # COMMAND ----------
 
@@ -241,15 +229,5 @@ print(answer)
 
 # COMMAND ----------
 
-import math
-
-
-gears = {pos for pos, c in m.items() if c == '*'}
-gear_ratios = 0
-for row, col in gears:
-    neighbors = {numbers[row + dr, col + dc] for dr in range(-1, 2) for dc in range(-1, 2) if (row + dr, col + dc) in numbers}
-    if len(neighbors) == 2:
-        gear_ratios += math.prod(number.value for number in neighbors)
-
-answer = gear_ratios
-print(answer)
+answer2 = sum(math.prod(nums) for nums in gears.values() if len(nums) == 2)
+print(answer2)
