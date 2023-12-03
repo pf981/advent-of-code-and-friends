@@ -175,29 +175,35 @@ import collections
 import math
 
 
-grid = ['.' + line + '.' for line in inp.splitlines()]
-grid = ['.' * len(grid[0])] + grid + ['.' * len(grid[0])]
+lines = inp.splitlines()
+m = collections.defaultdict(
+    lambda: '.',
+    {(row, col): c for row, line in enumerate(lines) for col, c in enumerate(line)}
+)
 gears = collections.defaultdict(list)
 answer1 = 0
 
-for row, line in enumerate(grid):
+for row in range(len(lines) + 1):
     num = 0
     has_neighbor = False
     gear_neighbors = set()
-    for col, c in enumerate(line):
-        if c.isdigit():
-            num = 10 * num + int(c)
+
+    for col in range(len(lines[0]) + 2):
+        if m[(row, col)].isdigit():
+            num = 10 * num + int(m[(row, col)])
             for dr in range(-1, 2):
                 for dc in range(-1, 2):
-                    if grid[row + dr][col + dc] not in '1234567890.':
-                        has_neighbor = True
-                    if grid[row + dr][col + dc] == '*':
-                        gear_neighbors.add((row + dr, col + dc))
+                    if m[(row + dr, col + dc)] != '.':
+                        if not m[(row + dr, col + dc)].isdigit():
+                            has_neighbor = True
+                        if m[(row + dr, col + dc)] == '*':
+                            gear_neighbors.add((row + dr, col + dc))
         else:
             if num and has_neighbor:
                 answer1 += num
                 for gear in gear_neighbors:
                     gears[gear].append(num)
+
             num = 0
             has_neighbor = False
             gear_neighbors = set()
