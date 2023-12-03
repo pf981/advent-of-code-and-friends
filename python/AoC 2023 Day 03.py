@@ -27,20 +27,6 @@
 
 # COMMAND ----------
 
-inp = '''467..114..
-...*......
-..35..633.
-......#...
-617*......
-.....+.58.
-..592.....
-......755.
-...$.*....
-.664.598..
-'''
-
-# COMMAND ----------
-
 inp = '''....401.............425.......323......791......697...............963............................................420........................
 ...*..................................%......#.....*....290.........................492.............656...@953.....................+830.....
 ..159...........823...33.717.....572.......806...896......-.....335....834......815.............791....*..............776...................
@@ -185,54 +171,50 @@ inp = '''....401.............425.......323......791......697...............963..
 
 # COMMAND ----------
 
+import dataclasses
+
+
+@dataclasses.dataclass(frozen=True)
+class Number:
+    row: int
+    start_col: int
+    end_col: int
+    value: int
+
+
+def get_number(pos, digits):
+    start_col = pos[1]
+    while (pos[0], start_col - 1) in digits:
+        start_col -= 1
+
+    end_col = pos[1]
+    while (pos[0], end_col + 1) in digits:
+        end_col += 1
+
+    return Number(
+        row=pos[0],
+        start_col=start_col,
+        end_col=end_col,
+        value=int(''.join(digits[pos[0], col] for col in range(start_col, end_col + 1)))
+    )
+
+
 m = {(row, col): c for row, line in enumerate(inp.splitlines()) for col, c in enumerate(line)}
 symbols = {pos for pos, c in m.items() if c not in '0123456789.'}
-nums = {pos: c for pos, c in m.items() if c in '0123456789'}
+digits = {pos: c for pos, c in m.items() if c in '0123456789'}
 
-# COMMAND ----------
-
-valid = set()
-for row, col in symbols:
-    for dr in range(-1, 2):
-        for dc in range(-1, 2):
-            if (row + dr, col + dc) in nums:
-                valid.add((row + dr, col + dc))
-valid
-
-# COMMAND ----------
-
-seen = set()
-s = 0
-for row, col in valid:
-    if (row, col) in seen:
+numbers = {}
+for pos, c in digits.items():
+    if pos in numbers:
         continue
-    seen.add((row, col))
 
-    cur = nums[(row, col)]
-    #print(f'{cur=}')
+    number = get_number(pos, digits)
+    for col in range(number.start_col, number.end_col + 1):
+        numbers[(number.row, col)] = number
 
-    dc = 1
-    while (row, col - dc) in nums:
-        # print(f'{nums[(row - dr, col)]=}')
-        cur = nums[(row, col - dc)] + cur
-        seen.add((row, col - dc))
-        dc += 1
-
-    dc = 1
-    while (row, col + dc) in nums:
-        # print(f'{nums[(row + dr, col)]=}')
-        cur = cur + nums[(row, col + dc)]
-        seen.add((row, col+dc))
-        dc += 1
-    
-    print(f'{cur=}')
-    s += int(cur)
-s
-
-# COMMAND ----------
-
-s
-
+valid_numbers = {numbers[(row + dr, col + dc)] for row, col in symbols for dr in range(-1, 2) for dc in range(-1, 2) if (row + dr, col + dc) in numbers}
+answer = sum(number.value for number in valid_numbers)
+print(answer)
 
 # COMMAND ----------
 
@@ -260,34 +242,14 @@ s
 # COMMAND ----------
 
 import math
-def get_num(start_pos, end_col):
-    s = ''
-    row = start_pos[0]
-    for col in range(start_pos[1], end_col + 1):
-        s += nums[row, col]
-    return int(s)
 
-def get_start_end(row, col):
-    dc = 1
-    while (row, col - dc) in nums:
-        dc += 1
-    dc2 = 1
-    while (row, col + dc2) in nums:
-        dc2 += 1
-    
-    start_pos = (row, col - dc + 1)
-    end_col = col + dc2 - 1
-    return start_pos, end_col
 
 gears = {pos for pos, c in m.items() if c == '*'}
-
-result = 0
+gear_ratios = 0
 for row, col in gears:
-    neighbors = set(get_start_end(row + dr, col + dc) for dr in range(-1, 2) for dc in range(-1, 2) if (row + dr, col + dc) in nums)
-    print((row, col), neighbors)
+    neighbors = {numbers[row + dr, col + dc] for dr in range(-1, 2) for dc in range(-1, 2) if (row + dr, col + dc) in numbers}
     if len(neighbors) == 2:
-        result += math.prod(get_num(*neighbor) for neighbor in neighbors)
+        gear_ratios += math.prod(number.value for number in neighbors)
 
-# COMMAND ----------
-
-result
+answer = gear_ratios
+print(answer)
