@@ -300,10 +300,7 @@ def count_scratchcards(i):
   if i > len(n_wins):
     return 0
 
-  scratch_cards = 1
-  for j in range(n_wins[i]):
-    scratch_cards += count_scratchcards(i + j + 1)
-  return scratch_cards
+  return 1 + sum(count_scratchcards(i + j + 1) for j in range(n_wins[i]))
 
 
 answer = sum(count_scratchcards(i) for i in range(len(n_wins)))
