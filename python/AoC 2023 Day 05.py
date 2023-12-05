@@ -330,12 +330,30 @@ print(answer)
 
 # COMMAND ----------
 
+def insert_missing_ranges(maps):
+    maps.sort(key=lambda e: e[1])
+    first_val = maps[0][1]
+    if first_val != 0:
+        maps.insert(0, [0, 0, first_val])
+    
+    last_val = maps[-1][1] + maps[-1][2]
+    maps.append([last_val, last_val, 10_000_000_000])
+
+    for i in range(len(maps) - 1):
+        end = maps[i][1] + maps[i][2]
+        start = maps[i+1][1]
+        if end != start:
+            maps.append((end, end, start - end))
+
+    maps.sort(key=lambda e: e[1])
+
+
 def get_smallest_range(i, in_start, in_range_len):
-    if i == len(maps):
+    if i == len(maps_list):
         return in_start
 
     output_ranges = [] # (out_start, out_range_len) pairs
-    for dest_start, source_start, range_len in maps[i]:
+    for dest_start, source_start, range_len in maps_list[i]:
         # No overlap
         if source_start + range_len <= in_start or source_start >= in_start + in_range_len:
             continue
@@ -361,29 +379,9 @@ def get_smallest_range(i, in_start, in_range_len):
 
 
 
-maps = [[[int(x) for x in re.findall('\d+', line)] for line in m.splitlines()[1:]] for m in inp.split('\n\n')[1:]]
-for m in maps:
-    m.sort(key=lambda e: e[1])
-for m in maps:
-    if m[0][1] != 0:
-        m.insert(0, [0, 0, m[0][1]])
-    
-    last_val = m[-1][1] + m[-1][2]
-    m.append([last_val, last_val, 10_000_000_000])
-
-    for i in range(len(m) - 1):
-        end = m[i][1] + m[i][2]
-        start = m[i+1][1]
-        if end != start:
-            m.append((end, end, start - end))
-
-    m.sort(key=lambda e: e[1])
+for maps in maps_list:
+    insert_missing_ranges(maps)
 
 starting_ranges = [seeds[i:i+2] for i in range(0, len(seeds), 2)]
-result = []
-for in_start, in_range_len in starting_ranges:
-    result.append(get_smallest_range(0, in_start, in_range_len))
-result
-
-
-print(min(result))
+answer = min(get_smallest_range(0, in_start, in_range_len) for in_start, in_range_len in starting_ranges)
+print(answer)
