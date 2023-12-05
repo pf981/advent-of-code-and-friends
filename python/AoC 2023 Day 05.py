@@ -369,14 +369,13 @@ def get_smallest_range(i, in_start, in_range_len):
         else: # Source starts to right of input start
             overlap_start = source_start
             overlap_end = min(source_start + range_len, in_start + in_range_len)
-            overlap_range_len = overlap_end - source_start # overlap_range_len = overlap_end - in_start
+            overlap_range_len = overlap_end - source_start
 
         overlap_start = overlap_start - source_start +  dest_start
         output_ranges.append((overlap_start, overlap_range_len))
 
     outputs = [get_smallest_range(i + 1, out_start, out_range_len) for out_start, out_range_len in output_ranges]
     return min(outputs) if outputs else float('inf')
-
 
 
 for maps in maps_list:
