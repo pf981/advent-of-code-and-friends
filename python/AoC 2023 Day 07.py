@@ -45,15 +45,6 @@
 
 # COMMAND ----------
 
-inp = '''32T3K 765
-T55J5 684
-KK677 28
-KTJJT 220
-QQQJA 483
-'''
-
-# COMMAND ----------
-
 inp = '''T33AA 613
 J5JJ5 411
 J4444 240
@@ -1058,140 +1049,31 @@ K7773 61
 
 # COMMAND ----------
 
-# import collections
-# def get_strength(z):
-#   count = collections.Counter(z)
-
-#   # five
-#   if count.most_common(1)[0][1] == 5:
-#     return (100, count.most_common(1)[0][0])
-
-#   # four
-#   if count.most_common(1)[0][1] == 4:
-#     return (90, count.most_common(1)[0][0], count.most_common(2)[1][0])
-  
-#   # full
-#   if count.most_common(1)[0][1] == 3 and count.most_common(2)[1][1] == 2:
-#     return (80, count.most_common(1)[0][0], count.most_common(2)[1][0])
-
-#   # three
-#   if count.most_common(1)[0][1] == 3:
-#     return (70, count.most_common(1)[0][0], *sorted([x for x in z if x != count.most_common(1)[0][0]], reverse=True))
-
-#   # two
-#   if count.most_common(1)[0][1] == 2 and count.most_common(2)[1][1] == 2:
-#     return (60, max(count.most_common(1)[0][0], count.most_common(2)[1][0]), min(count.most_common(1)[0][0], count.most_common(2)[1][0]), count.most_common(3)[2][0])
-
-#   # one
-#   if count.most_common(1)[0][1] == 2:
-#     return (50, count.most_common(1)[0][0], *sorted([x for x in z if x != count.most_common(1)[0][0]], reverse=True))
-  
-#   # high
-#   return (40, *sorted([x for x in z], reverse=True))
-
-# m = 'AKQJT98765432'[::-1]
-# l = [([m.index(z) for z in a], int(b)) for a, b in [line.split(' ') for line in inp.splitlines()]]
-# # l.sort(key=get_strength)
-# # get_strength(l[0][0])
-
-# COMMAND ----------
-
 import collections
-def get_strength(z):
-  count = collections.Counter(z)
 
-  # five
-  if count.most_common(1)[0][1] == 5:
-    return (100, *z)
 
-  # four
-  if count.most_common(1)[0][1] == 4:
-    return (90, *z)
-  
-  # full
-  if count.most_common(1)[0][1] == 3 and count.most_common(2)[1][1] == 2:
-    return (80, *z)
+def get_strength(hand):
+  count = collections.Counter(hand)
 
-  # three
-  if count.most_common(1)[0][1] == 3:
-    return (70, *z)
+  return (
+    count.most_common(1)[0][1] == 5,
+    count.most_common(1)[0][1] == 4,
+    count.most_common(1)[0][1] == 3 and count.most_common(2)[1][1] == 2,
+    count.most_common(1)[0][1] == 3,
+    count.most_common(1)[0][1] == 2 and count.most_common(2)[1][1] == 2,
+    count.most_common(1)[0][1] == 2
+  )
 
-  # two
-  if count.most_common(1)[0][1] == 2 and count.most_common(2)[1][1] == 2:
-    return (60, *z)
 
-  # one
-  if count.most_common(1)[0][1] == 2:
-    return (50, *z)
-  
-  # high
-  return (40, *z)
+def hand_bid_order(hand_bid):
+  hand, bid = hand_bid
+  return get_strength(hand), *[-'AKQJT98765432'.index(card) for card in hand]
 
-m = 'AKQJT98765432'[::-1]
-l = [([m.index(z) for z in a], int(b)) for a, b in [line.split(' ') for line in inp.splitlines()]]
-# l.sort(key=get_strength)
-# get_strength(l[0][0])
 
-# COMMAND ----------
-
-l2 = [(get_strength(hand), hand, cost) for hand, cost in l]
-l2.sort()
-answer = sum(i * cost for i, (_, _, cost) in enumerate(l2, 1))
+hands_bids = [line.split(' ') for line in inp.splitlines()]
+hands_bids.sort(key=hand_bid_order)
+answer = sum(i * int(bid) for i, (_, bid) in enumerate(hands_bids, 1))
 print(answer)
-
-# COMMAND ----------
-
-
-def get_strength2(z):
-  return (max(get_strength(rr if num == m.index('J') else num for num in z) for rr, _ in enumerate(m))[0], *[-100 if x == m.index('J') else x for x in z])
-  # return max(get_strength(z.replace('J', rr)) for rr in 'AKQJT98765432')
-
-l2 = [(get_strength2(hand), hand, cost) for hand, cost in l]
-l2.sort()
-answer = sum(i * cost for i, (_, _, cost) in enumerate(l2, 1))
-print(answer)
-
-# COMMAND ----------
-
-m.index('J')
-
-# COMMAND ----------
-
-get_strength2((3, 3, 3, 9, 10))
-
-# COMMAND ----------
-
-
-# def get_strength2(z):
-#   return (max(get_strength(rr if num == m.index('J')[1] else num for num in z) for rr, _ in enumerate(m)), *z)
-#   # return max(get_strength(z.replace('J', rr)) for rr in 'AKQJT98765432')
-
-# l2 = [(get_strength2(hand), hand, cost) for hand, cost in l]
-# l2.sort()
-# answer = sum(i * cost for i, (_, _, cost) in enumerate(l2, 1))
-# print(answer)
-
-# COMMAND ----------
-
-# 255783389 is not right!!??
-
-# COMMAND ----------
-
-l2
-
-# COMMAND ----------
-
-for p in l:
-  print(get_strength(p[0]))
-
-# COMMAND ----------
-
-import collections
-collections.Counter('aabcac').most_common(2)
-
-# COMMAND ----------
-
-collections.Counter('aabbc').most_common()
 
 # COMMAND ----------
 
@@ -1213,3 +1095,14 @@ collections.Counter('aabbc').most_common()
 # MAGIC <p>With the new joker rule, the total winnings in this example are <code><em>5905</em></code>.</p>
 # MAGIC <p>Using the new joker rule, find the rank of every hand in your set. <em>What are the new total winnings?</em></p>
 # MAGIC </article>
+
+# COMMAND ----------
+
+def hand_bid_order2(hand_bid):
+  hand, bid = hand_bid
+  return max(get_strength(hand.replace('J', c)) for c in 'AKQT98765432'), *[-'AKQT98765432J'.index(card) for card in hand]
+
+
+hands_bids.sort(key=hand_bid_order2)
+answer = sum(i * int(bid) for i, (_, bid) in enumerate(hands_bids, 1))
+print(answer)
