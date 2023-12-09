@@ -55,7 +55,7 @@ def count_ways(T, D):
     # =>  zeroes at (-T +- sqrt(T**2 - 4*(-1)*(-D))) / 2*(-1)  (quadratic formula)
     upper = (-T - math.sqrt(T ** 2 - 4 * (-1) * (-D))) / 2 * (-1)
     lower = (-T + math.sqrt(T ** 2 - 4 * (-1) * (-D))) / 2 * (-1)
-    return math.floor(upper) - math.ceil(lower) + 1
+    return math.ceil(upper) - math.floor(lower) - 1
 
 
 times, distances = [[int(x) for x in re.findall(r'\d+', line)] for line in inp.splitlines()]
