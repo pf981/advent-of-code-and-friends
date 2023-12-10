@@ -1,27 +1,93 @@
 # Databricks notebook source
-# %pip install z3-solver
+# MAGIC %md https://adventofcode.com/2023/day/10
 
 # COMMAND ----------
 
-inp = '''7-F7-
-.FJ|7
-SJLL7
-|F--J
-LJ.LJ
-'''
-
-# COMMAND ----------
-
-inp = '''...........
-.S-------7.
-.|F-----7|.
-.||.....||.
-.||.....||.
-.|L-7.F-J|.
-.|..|.|..|.
-.L--J.L--J.
-...........
-'''
+# MAGIC %md <article class="day-desc"><h2>--- Day 10: Pipe Maze ---</h2><p>You use the hang glider to ride the hot air from Desert Island all the way up to the floating metal island. This island is surprisingly cold and there definitely aren't any thermals to glide on, so you leave your hang glider behind.</p>
+# MAGIC <p>You wander around for a while, but you don't find any people or animals. However, you do occasionally find signposts labeled "<a href="https://en.wikipedia.org/wiki/Hot_spring" target="_blank">Hot Springs</a>" pointing in a seemingly consistent direction; maybe you can find someone at the hot springs and ask them where the desert-machine parts are made.</p>
+# MAGIC <p>The landscape here is alien; even the flowers and trees are made of metal. As you stop to admire some metal grass, you notice something metallic scurry away in your peripheral vision and jump into a big pipe! It didn't look like any animal you've ever seen; if you want a better look, you'll need to get ahead of it.</p>
+# MAGIC <p>Scanning the area, you discover that the entire field you're standing on is <span title="Manufactured by Hamilton and Hilbert Pipe Company">densely packed with pipes</span>; it was hard to tell at first because they're the same metallic silver color as the "ground". You make a quick sketch of all of the surface pipes you can see (your puzzle input).</p>
+# MAGIC <p>The pipes are arranged in a two-dimensional grid of <em>tiles</em>:</p>
+# MAGIC <ul>
+# MAGIC <li><code>|</code> is a <em>vertical pipe</em> connecting north and south.</li>
+# MAGIC <li><code>-</code> is a <em>horizontal pipe</em> connecting east and west.</li>
+# MAGIC <li><code>L</code> is a <em>90-degree bend</em> connecting north and east.</li>
+# MAGIC <li><code>J</code> is a <em>90-degree bend</em> connecting north and west.</li>
+# MAGIC <li><code>7</code> is a <em>90-degree bend</em> connecting south and west.</li>
+# MAGIC <li><code>F</code> is a <em>90-degree bend</em> connecting south and east.</li>
+# MAGIC <li><code>.</code> is <em>ground</em>; there is no pipe in this tile.</li>
+# MAGIC <li><code>S</code> is the <em>starting position</em> of the animal; there is a pipe on this tile, but your sketch doesn't show what shape the pipe has.</li>
+# MAGIC </ul>
+# MAGIC <p>Based on the acoustics of the animal's scurrying, you're confident the pipe that contains the animal is <em>one large, continuous loop</em>.</p>
+# MAGIC <p>For example, here is a square loop of pipe:</p>
+# MAGIC <pre><code>.....
+# MAGIC .F-7.
+# MAGIC .|.|.
+# MAGIC .L-J.
+# MAGIC .....
+# MAGIC </code></pre>
+# MAGIC <p>If the animal had entered this loop in the northwest corner, the sketch would instead look like this:</p>
+# MAGIC <pre><code>.....
+# MAGIC .<em>S</em>-7.
+# MAGIC .|.|.
+# MAGIC .L-J.
+# MAGIC .....
+# MAGIC </code></pre>
+# MAGIC <p>In the above diagram, the <code>S</code> tile is still a 90-degree <code>F</code> bend: you can tell because of how the adjacent pipes connect to it.</p>
+# MAGIC <p>Unfortunately, there are also many pipes that <em>aren't connected to the loop</em>! This sketch shows the same loop as above:</p>
+# MAGIC <pre><code>-L|F7
+# MAGIC 7S-7|
+# MAGIC L|7||
+# MAGIC -L-J|
+# MAGIC L|-JF
+# MAGIC </code></pre>
+# MAGIC <p>In the above diagram, you can still figure out which pipes form the main loop: they're the ones connected to <code>S</code>, pipes those pipes connect to, pipes <em>those</em> pipes connect to, and so on. Every pipe in the main loop connects to its two neighbors (including <code>S</code>, which will have exactly two pipes connecting to it, and which is assumed to connect back to those two pipes).</p>
+# MAGIC <p>Here is a sketch that contains a slightly more complex main loop:</p>
+# MAGIC <pre><code>..F7.
+# MAGIC .FJ|.
+# MAGIC SJ.L7
+# MAGIC |F--J
+# MAGIC LJ...
+# MAGIC </code></pre>
+# MAGIC <p>Here's the same example sketch with the extra, non-main-loop pipe tiles also shown:</p>
+# MAGIC <pre><code>7-F7-
+# MAGIC .FJ|7
+# MAGIC SJLL7
+# MAGIC |F--J
+# MAGIC LJ.LJ
+# MAGIC </code></pre>
+# MAGIC <p>If you want to <em>get out ahead of the animal</em>, you should find the tile in the loop that is <em>farthest</em> from the starting position. Because the animal is in the pipe, it doesn't make sense to measure this by direct distance. Instead, you need to find the tile that would take the longest number of steps <em>along the loop</em> to reach from the starting point - regardless of which way around the loop the animal went.</p>
+# MAGIC <p>In the first example with the square loop:</p>
+# MAGIC <pre><code>.....
+# MAGIC .S-7.
+# MAGIC .|.|.
+# MAGIC .L-J.
+# MAGIC .....
+# MAGIC </code></pre>
+# MAGIC <p>You can count the distance each tile in the loop is from the starting point like this:</p>
+# MAGIC <pre><code>.....
+# MAGIC .012.
+# MAGIC .1.3.
+# MAGIC .23<em>4</em>.
+# MAGIC .....
+# MAGIC </code></pre>
+# MAGIC <p>In this example, the farthest point from the start is <code><em>4</em></code> steps away.</p>
+# MAGIC <p>Here's the more complex loop again:</p>
+# MAGIC <pre><code>..F7.
+# MAGIC .FJ|.
+# MAGIC SJ.L7
+# MAGIC |F--J
+# MAGIC LJ...
+# MAGIC </code></pre>
+# MAGIC <p>Here are the distances for each tile on that loop:</p>
+# MAGIC <pre><code>..45.
+# MAGIC .236.
+# MAGIC 01.7<em>8</em>
+# MAGIC 14567
+# MAGIC 23...
+# MAGIC </code></pre>
+# MAGIC <p>Find the single giant loop starting at <code>S</code>. <em>How many steps along the loop does it take to get from the starting position to the point farthest from the starting position?</em></p>
+# MAGIC </article>
 
 # COMMAND ----------
 
@@ -170,15 +236,16 @@ J.FJ|LLJLL-|-.LL-L-|LJ-LL-L-JLL-.-JJL7-7J|LJJ7.-|JJ--L-J.FLJ-|L7--.-J-L--JLLFJL-
 # COMMAND ----------
 
 import collections
-m = collections.defaultdict(lambda: '.', {(row, col): c for row, line in enumerate(inp.splitlines()) for col, c in enumerate(line)})
 
+
+m = collections.defaultdict(lambda: '.', {(row, col): c for row, line in enumerate(inp.splitlines()) for col, c in enumerate(line)})
 start_pos = next(pos for pos, c in m.items() if c == 'S')
-m[start_pos] = 'F' # Hard coded
+m[start_pos] = 'F' # Hard coded based on input
 q = collections.deque([(start_pos, 0)])
 distances = {}
+
 while q:
     pos, d = q.popleft()
-    #print(d)
     if pos in distances:
         continue
     distances[pos] = d
@@ -193,323 +260,190 @@ while q:
     if m[pos] in '-J7': # W
         q.append(((pos[0], pos[1] - 1), d))
 
-max(distances.values())
+answer = max(distances.values())
+print(answer)
 
 # COMMAND ----------
 
-# Traverse the loop and seed right
-internal = set()
+# MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>You quickly reach the farthest point of the loop, but the animal never emerges. Maybe its nest is <em>within the area enclosed by the loop</em>?</p>
+# MAGIC <p>To determine whether it's even worth taking the time to search for such a nest, you should calculate how many tiles are contained within the loop. For example:</p>
+# MAGIC <pre><code>...........
+# MAGIC .S-------7.
+# MAGIC .|F-----7|.
+# MAGIC .||.....||.
+# MAGIC .||.....||.
+# MAGIC .|L-7.F-J|.
+# MAGIC .|..|.|..|.
+# MAGIC .L--J.L--J.
+# MAGIC ...........
+# MAGIC </code></pre>
+# MAGIC <p>The above loop encloses merely <em>four tiles</em> - the two pairs of <code>.</code> in the southwest and southeast (marked <code>I</code> below). The middle <code>.</code> tiles (marked <code>O</code> below) are <em>not</em> in the loop. Here is the same loop again with those regions marked:</p>
+# MAGIC <pre><code>...........
+# MAGIC .S-------7.
+# MAGIC .|F-----7|.
+# MAGIC .||<em>OOOOO</em>||.
+# MAGIC .||<em>OOOOO</em>||.
+# MAGIC .|L-7<em>O</em>F-J|.
+# MAGIC .|<em>II</em>|<em>O</em>|<em>II</em>|.
+# MAGIC .L--J<em>O</em>L--J.
+# MAGIC .....<em>O</em>.....
+# MAGIC </code></pre>
+# MAGIC <p>In fact, there doesn't even need to be a full tile path to the outside for tiles to count as outside the loop - squeezing between pipes is also allowed! Here, <code>I</code> is still within the loop and <code>O</code> is still outside the loop:</p>
+# MAGIC <pre><code>..........
+# MAGIC .S------7.
+# MAGIC .|F----7|.
+# MAGIC .||<em>OOOO</em>||.
+# MAGIC .||<em>OOOO</em>||.
+# MAGIC .|L-7F-J|.
+# MAGIC .|<em>II</em>||<em>II</em>|.
+# MAGIC .L--JL--J.
+# MAGIC ..........
+# MAGIC </code></pre>
+# MAGIC <p>In both of the above examples, <code><em>4</em></code> tiles are enclosed by the loop.</p>
+# MAGIC <p>Here's a larger example:</p>
+# MAGIC <pre><code>.F----7F7F7F7F-7....
+# MAGIC .|F--7||||||||FJ....
+# MAGIC .||.FJ||||||||L7....
+# MAGIC FJL7L7LJLJ||LJ.L-7..
+# MAGIC L--J.L7...LJS7F-7L7.
+# MAGIC ....F-J..F7FJ|L7L7L7
+# MAGIC ....L7.F7||L7|.L7L7|
+# MAGIC .....|FJLJ|FJ|F7|.LJ
+# MAGIC ....FJL-7.||.||||...
+# MAGIC ....L---J.LJ.LJLJ...
+# MAGIC </code></pre>
+# MAGIC <p>The above sketch has many random bits of ground, some of which are in the loop (<code>I</code>) and some of which are outside it (<code>O</code>):</p>
+# MAGIC <pre><code><em>O</em>F----7F7F7F7F-7<em>OOOO</em>
+# MAGIC <em>O</em>|F--7||||||||FJ<em>OOOO</em>
+# MAGIC <em>O</em>||<em>O</em>FJ||||||||L7<em>OOOO</em>
+# MAGIC FJL7L7LJLJ||LJ<em>I</em>L-7<em>OO</em>
+# MAGIC L--J<em>O</em>L7<em>III</em>LJS7F-7L7<em>O</em>
+# MAGIC <em>OOOO</em>F-J<em>II</em>F7FJ|L7L7L7
+# MAGIC <em>OOOO</em>L7<em>I</em>F7||L7|<em>I</em>L7L7|
+# MAGIC <em>OOOOO</em>|FJLJ|FJ|F7|<em>O</em>LJ
+# MAGIC <em>OOOO</em>FJL-7<em>O</em>||<em>O</em>||||<em>OOO</em>
+# MAGIC <em>OOOO</em>L---J<em>O</em>LJ<em>O</em>LJLJ<em>OOO</em>
+# MAGIC </code></pre>
+# MAGIC <p>In this larger example, <code><em>8</em></code> tiles are enclosed by the loop.</p>
+# MAGIC <p>Any tile that isn't part of the main loop can count as being enclosed by the loop. Here's another example with many bits of junk pipe lying around that aren't connected to the main loop at all:</p>
+# MAGIC <pre><code>FF7FSF7F7F7F7F7F---7
+# MAGIC L|LJ||||||||||||F--J
+# MAGIC FL-7LJLJ||||||LJL-77
+# MAGIC F--JF--7||LJLJ7F7FJ-
+# MAGIC L---JF-JLJ.||-FJLJJ7
+# MAGIC |F|F-JF---7F7-L7L|7|
+# MAGIC |FFJF7L7F-JF7|JL---7
+# MAGIC 7-L-JL7||F7|L7F-7F7|
+# MAGIC L.L7LFJ|||||FJL7||LJ
+# MAGIC L7JLJL-JLJLJL--JLJ.L
+# MAGIC </code></pre>
+# MAGIC <p>Here are just the tiles that are <em>enclosed by the loop</em> marked with <code>I</code>:</p>
+# MAGIC <pre><code>FF7FSF7F7F7F7F7F---7
+# MAGIC L|LJ||||||||||||F--J
+# MAGIC FL-7LJLJ||||||LJL-77
+# MAGIC F--JF--7||LJLJ<em>I</em>F7FJ-
+# MAGIC L---JF-JLJ<em>IIII</em>FJLJJ7
+# MAGIC |F|F-JF---7<em>III</em>L7L|7|
+# MAGIC |FFJF7L7F-JF7<em>II</em>L---7
+# MAGIC 7-L-JL7||F7|L7F-7F7|
+# MAGIC L.L7LFJ|||||FJL7||LJ
+# MAGIC L7JLJL-JLJLJL--JLJ.L
+# MAGIC </code></pre>
+# MAGIC <p>In this last example, <code><em>10</em></code> tiles are enclosed by the loop.</p>
+# MAGIC <p>Figure out whether you have time to search for the nest by calculating the area within the loop. <em>How many tiles are enclosed by the loop?</em></p>
+# MAGIC </article>
+
+# COMMAND ----------
+
+# Traverse the loop clockwise and mark everything on the right as "external". Right being external is hard-coded based on the specific input.
+external = set()
 pos = list(start_pos)
 direction = 'N'
 while True:
-    # Internal is right of the heading
     pos2 = tuple(pos)
-    #print(pos2)
-    if direction == 'E': # Heading the east
+    if direction == 'E': # Heading east
         if m[pos2] == '-':
-            internal.add((pos[0] + 1, pos[1])) # S
+            external.add((pos[0] + 1, pos[1])) # S
             pos[1] += 1 # E
         elif m[pos2] == 'J':
-            internal.add((pos[0] + 1, pos[1]))# S, E, SE
-            internal.add((pos[0], pos[1] + 1))
-            internal.add((pos[0] + 1, pos[1] + 1))
-            pos[0] -= 1# N
+            external.add((pos[0] + 1, pos[1])) # S, E, SE
+            external.add((pos[0], pos[1] + 1))
+            external.add((pos[0] + 1, pos[1] + 1))
+            pos[0] -= 1 # N
             direction = 'N'
         elif m[pos2] == '7':
-            internal.add((pos[0] + 1, pos[1] - 1)) # None. I guess SW
+            external.add((pos[0] + 1, pos[1] - 1)) # SW
             pos[0] += 1 # S
             direction = 'S'
-    elif direction == 'S':
+    elif direction == 'S': # Heading south
         if m[pos2] == '|':
-            internal.add((pos[0], pos[1] - 1)) # W
+            external.add((pos[0], pos[1] - 1)) # W
             pos[0] += 1 # S
         elif m[pos2] == 'L':
-            internal.add((pos[0], pos[1] - 1)) # W, SW, S
-            internal.add((pos[0] + 1, pos[1] - 1))
-            internal.add((pos[0] + 1, pos[1]))
+            external.add((pos[0], pos[1] - 1)) # W, SW, S
+            external.add((pos[0] + 1, pos[1] - 1))
+            external.add((pos[0] + 1, pos[1]))
             pos[1] += 1 # E
             direction = 'E'
         elif m[pos2] == 'J':
-            internal.add((pos[0] - 1, pos[1] - 1)) # NW
+            external.add((pos[0] - 1, pos[1] - 1)) # NW
             pos[1] -= 1 # W
             direction = 'W'
     if direction == 'W': # Heading west
         if m[pos2] == '-':
-            internal.add((pos[0] - 1, pos[1])) # N
+            external.add((pos[0] - 1, pos[1])) # N
             pos[1] -= 1 # W
         elif m[pos2] == 'L':
-            internal.add((pos[0] - 1, pos[1] + 1)) # NE
+            external.add((pos[0] - 1, pos[1] + 1)) # NE
             pos[0] -= 1# N
             direction = 'N'
         elif m[pos2] == 'F':
-            internal.add((pos[0] - 1, pos[1])) # N, W, NW
-            internal.add((pos[0], pos[1] - 1))
-            internal.add((pos[0] - 1, pos[1] - 1))
+            external.add((pos[0] - 1, pos[1])) # N, W, NW
+            external.add((pos[0], pos[1] - 1))
+            external.add((pos[0] - 1, pos[1] - 1))
             pos[0] += 1 # S
             direction = 'S'
     elif direction == 'N': # Heading north
         if m[pos2] == '|':
-            internal.add((pos[0], pos[1] + 1)) # E
+            external.add((pos[0], pos[1] + 1)) # E
             pos[0] -= 1 # N
         elif m[pos2] == '7':
-            internal.add((pos[0], pos[1] + 1)) # E, N, NE
-            internal.add((pos[0] - 1, pos[1]))
-            internal.add((pos[0] - 1, pos[1] + 1))
+            external.add((pos[0], pos[1] + 1)) # E, N, NE
+            external.add((pos[0] - 1, pos[1]))
+            external.add((pos[0] - 1, pos[1] + 1))
             pos[1] -= 1 # W
             direction = 'W'
         elif m[pos2] == 'F':
-            internal.add((pos[0] + 1, pos[1] + 1)) # SE
+            external.add((pos[0] + 1, pos[1] + 1)) # SE
             pos[1] += 1 # E
             direction = 'E'
-
-
 
     if tuple(pos) == start_pos:
         break
 
 # COMMAND ----------
 
-internal
-
-# COMMAND ----------
-
-n_rows = max(row for row, _ in m)
-n_cols = max(col for _, col in m)
-for row in range(n_rows):
-    for col in range(n_cols):
-        c = '.' if (row, col) not in distances else m[(row, col)]
-        if c == '.' and (row, col) in internal:
-            c = 'O' # This is actually external
-        print(c, end='')
-    print()
-
-# COMMAND ----------
-
-s = '''......................................OOOOOOOO.............................................................................................
-......................................OF-7OF7OO............................................................................................
-......................................OL7|FJL7O.............................OOOO...........................................................
-......................................OFJ||F-JO.............................OF7OOO.........................................................
-......................................OL7LJL7OOOOOOO........................O||F7O.........................................................
-....................................OOOOL-7FJF7OOF7O......................OOO||||OOO.......................................................
-...................................OOF7OOFJL-JL7O||O....................OOOF7||||F7O.......................................................
-...................................OFJL7FJF7F-7L7||OOO.........OOOOO..OOOF7|LJLJLJ|O.......................................................
-....................OOOOOO.........OL-7LJFJLJOL-J|L-7O........OOF-7OOOOF-J|L-7F7F-JOO........OOOO...OOOO...OOOOOOOO........................
-...................OOF7F7OOOOO...OOOOOL-7L7F7F7OFJF-JO....OOOOOFJFJOF7OL-7L7O||LJF-7OOOOOOOOOOF7OOO.OF7O...OF7OOF7OO.......................
-.................OOOFJLJL---7O...OF7F7F-JFJ|LJL7L7L7OO..OOOF--7L7|OFJ|OOOL7|FJL7FJFJOOF7OOF7F-J|F7OOO||O...O|L7FJL7OOO.....................
-.................OF7L--7F---JOOOOO|LJ||F-JFJF--JFJFJOOOOOF7L7FJFJL7L7|F7F7||L7FJL7L7F7||OO||L7FJ|L7F7||OOOOOL7|L-7L-7O.OOOO................
-.................O|L7OO||OOOOOF-7FJF7LJL-7|FJF7FJFJOF7OF-JL-J|FJF-JFJLJ||LJ|O||F7|FJ|LJ|OO|L-J|O|FJ|||L7OOF-7||F7|F-JO.OF7O.OOOO...........
-.................OL7L7FJ|F7OF7|FJL-JL-7F-J||O||L7L--J|OL----7||FJOFJF--JL-7L-JLJ|||OL-7L7O|F--JFJ|FJ||FJOOL7||LJLJL-7OOO||OOOF7O...........
-.................OOL7|L7||L7|||L7F7F7FJL7O||FJL7|F7F7|F----7||||F-JFJF-7F7L--7F-J|L7F7L7|FJL7F7|FJL7LJL7OOFJLJF7F7F-JF7O||OF7||OO..........
-................OOF7||FJ||FJ||L7||||||F7|FJLJF-J||LJLJL---7LJLJ|L7FJOL7||L---JL-7L7||L-JLJF7||LJL7FJF--JOO|F--JLJ||OFJL7||FJ||L7O..........
-................OFJ|||L7|||FJ|FJ||LJ|||LJL7F-JF7|L7OOOOF7O|F7F-JFJL-7FJ|L-----7FJFJLJF7F-7|LJ|F--JL7L-7F7FJL---7OLJFJF7||||FJ|FJOOOO.......
-.............OOOOL7LJL-JLJ||FJL7|L-7LJL7F7||OFJ|L7|F7OFJL7|||L7O|F--JL7L-7F7F-JL7L-7FJLJFJ|F-JL-7F-JF-J||L7F--7L--7L7||LJLJL-J|F--7O.......
-...........OOOF7F-JF7F-7F7LJL7O|L7OL--7||LJ|FJFJO|||L7L7FJLJ|FJFJL7OF7|F-J||L7F7L--J|F7OL-JL-7F-JL-7|OFJL-JL-7L---JOLJL7F-----J|F-JO.......
-...........OF7||L7FJLJO||L--7L7|FJF7F7|LJF-J|FJOFJ|L7L7|L7F7||FJF-JFJLJL-7|L7LJL---7LJL--7OF-JL7OOFJL7L--7F7FJOF-7F7F7FJ|F7F7F-JL7OO.......
-...........O|||L7LJF7F7||F--JFJ||O||||L-7L7FJ|F7L7|O|FJ|FJ|||LJFJOFJF----JL7L7F-7F7|F----JFJF--JOFJF-JF7FJ|LJF7|FJ||||L7||LJ||F--JOOO......
-..........OO||L7L--JLJ|||L--7|FJ|FJ|||F7|FJL7||L7|L7|L7||FJ|L-7|F7L7|F-7F7FJFJL7LJLJL----7L7L7F7FJFJF7||L7L7O||||FJ||L7|LJF-J|L-7F-7O......
-..........OFJ|OL---7F-JLJF--J||FJL7LJ||LJ|F7|||FJL7||FJ|LJFJF7|LJL7|||FJ||L7L-7L7F7F7F---JO|FJ|||FJFJ|||OL7L7||||L7LJFJ|F-JF7|F-J|FJO......
-..........OL7|F7F7FJ|F-7OL--7LJ|F-JF-JL-7||||LJ|F-J||L7L-7L-J|L-7FJ|LJL7||FJF7L7LJLJ||OF7F7|L7|LJL7|FJ||F-JFJ|||L7|F7L-JL--JLJL--J|OO......
-..........OFJLJLJLJFJ|FJF7F7|F-JL-7|OF7O|||||F-JL-7||FJF7|F--JOFJL7L7F-J|||FJ|FJOF--JL-JLJ|L7|L-7FJ|L7||L-7L7|||FJLJL7F--7F7F7F---JOO......
-.......OOOOL------7|O|L7||||||F7OFJL7||FJLJ||L-7F7||||O|||L7F--JF-JFJ|F-J|||OLJF7L7F--7F--JFJ|F-JL7|FJ||F7L7||LJL7OF7|L-7||LJ|L----7O......
-.......OF-7F---7F7|L7L7||||||LJL7L-7|||L--7||F-J|LJLJ|FJ||FJL--7|F7|FJL7FJ|L-7O||OLJF-JL-7FJFJ|F7FJ|L-JLJ|FJLJF7FJFJLJF-JLJF-JF7F--JOO.....
-......OOL7|L--7LJ||FJO|LJLJ|L--7L--JLJL7F7|LJL7OL---7||FJ|L-7F-JLJLJL7FJ|O|F-JFJ|F-7|F7F-JL7|O||LJOL--7F7|L7F7|LJOL-7FJOF7OL--J|L---7O.....
-......OF7||F7FJF7LJL-7L---7|OF7L----7F7LJLJF7FJF7OF-JLJ|O|F-JL-7F----JL7L-J|F7L7|L7|LJ|L-7FJL7||F-7F7O|||L-J|LJF7OF-JL--JL7F--7|F7F-JO.....
-......O|LJLJ|L-J|F7F7L---7||FJ|F-7F7LJL7F-7|||FJL7L-7F-JFJL-7F7||F7OF7FJF--J||FJ|FJ|F-JF-J|F-J||L7LJL7LJL7F7L-7|L7L-7F7F7FJ|F-JLJLJOOOOO...
-.....OOL7F-7|F--J|LJ|F--7LJ|L7|L7||L7OFJL7LJLJL-7|F-JL7OL7F-J|LJLJL7|LJFJOF7||L7|L7|L-7L-7||F7||FJF--JOF7LJ|F-J|FJF7||LJLJO||F7F7F7OF-7O...
-.....OF-J|FJLJF7FJF-J|F-JF7L7||FJLJFJFJF7L7F7F-7||L-7FJF7||OFJF7F--J|F7L7FJ|||FJ|FJ|F7|F-J|||LJ|L7|F7F7||F7|L7FJ|FJ||L-7F-7|LJLJ|||O|FJOO..
-.....O|F7|L--7|LJOL--JL--JL7|||L7F7L7L7|L-J||L7|||F7||FJ|||FJFJLJF7OLJ|FJL7|||L7|L7||||L-7||L-7L7||||||||||L7||FJL7||F-J|FJ|F--7LJL-JL-7O..
-.....OLJ||F-7LJOF7OF7F7F---JLJL7LJ|FJFJL7F7||FJ||LJ|||L7|||L7|F7FJ|F7FJ|F7|LJL7|L7|||||F-J||F7|FJ|||LJ||LJL-J|||F7||||F7|L-JL7O|F-7F7F-JO..
-.....OOOLJL7|OOFJL-JLJ|L------7|OFJL7L-7|||||L7||F-J||O||||O|||||FJ|||FJ||L--7||FJ||||||F7||||||O||L-7|L-7F-7LJLJLJLJLJLJF7F7L7|L7||||OOO..
-.......OOOO|L7FJF7F7F7|OF7F7OFJL7L-7L-7||||||FJLJ|F7|L7|||L-J|||||FJ|||FJL7F7|LJ|FJ|||||||||||||FJL7FJ|F-JL7L7F-7F--7F7F7|LJL-J|FJLJLJO....
-.........OFJFJL-JLJLJ|L-JLJL7L-7L-7L-7||||LJ|L7F-J|LJFJ||L-7FJ||||L7|||L-7LJ||#FJ|#LJ|||||||||||L7#|L7LJF--JO||FJ|F7LJLJ||F7F7FJL-7OOOO....
-.......OOOL7|F7F7OF7O|F7F-7FJF7L7FJF-JLJ||#FJFJ|F7|F-JFJ|F7|L7||||FJ|||F-JF-JL7L7|F7#||||||||LJ|FJFJFJF7L---7||L7LJL--7FJLJ|||L---JO.......
-.......OF7O||||||FJL-J|LJFJL-JL-JL7L---7LJFJFJ#LJ||L7FJFJ|||FJ||||L7|||L-7|F7FJFJLJL7||||LJ|L-7|L7L7L7|L----JLJOL-----JL7F7LJL7F-7OO.......
-.....OOO||FJLJLJ|L-7F7L7FJF----7F7L----JF-JFJF7F-J|#|L7L7|LJL7|LJL7||||F7|LJ|L7|F-7FJ||||F-JF-J|FJ#|FJ|F---------------7|||F-7LJFJO........
-.....OF-JLJF---7|F-J|L7|L7|F7F7LJL-----7|F7|FJ|L-7L7|FJ#||F--JL-7FJ|||||LJF-JFJ||#|L7||||L7FJF-J|F-JL7||F--------------JLJLJO|F7L7O........
-.....OL7F-7|F--JLJF-JOLJOLJ|LJL--7OF---JLJLJL7L--JFJ|L-7||L-7F7FJL7|||LJF-JF7L7|L7|FJLJ||#|L7L-7|L7F-JLJL--------------7F-7F-J||FJO........
-.....OOLJO||L-7F-7|F7F7OF--JF7F-7L-JF7#F7#F-7L---7|FJF7|||F-J|||#FJ||L-7L-7||FJ|FJLJF-7||FJFJF-JL7LJ#F7##F7F7F-7F7F----J|FJL--JLJOO........
-......OOOOLJF-J|FJ||LJL7|F--JLJFJF--JL7|L7|FJF---J|L-JLJLJ|F7||L7L7|L7FJF-J|||#|L---JFJ||L7L7|F-7|F--JL7FJLJ|L7LJ|L-----JL7OOOOF-7OO.......
-.........OOOL--JL7|L7F7|LJF---7L7L7F--J|FJ|L7L---7|F7F---7LJ||L7L7|L7||#L-7|||FJF---7|#LJ#|FJ|L7||L---7|L--7L-JF7L-------7L-7F7L7L7OO......
-.........OF------J|OLJ|L--JF-7|O|FJL---JL-JFJ#F7FJLJLJF7FJ#FJ|#|FJL7||L7F-J|||L7L--7LJF7F-JL7L-JLJF---JL--7L---JL-------7L--J||OL7L7O......
-.........OL7F7F-7FJF--JF--7|FJL-J|F--7F---7L--J||F7F7FJ|L-7|FJFJL7FJ|L7|L7FJLJ#L7F7L--J|L-7FJF7F7FJF--7F-7L---7F7F-7F-7FJF7F7||OFJFJO......
-.........OOLJ||FJ|OL---JF-J||F7F7|L-7|L--7|F7F7|||||LJ#L7FJLJ#L7FJL7|FJ|#||#F7F-J||F7F7|F-JL7|||LJFJ#FJL7L-7F7LJ|L7||OLJFJLJLJL-JFJOO......
-..........OOFJ|L7L7OF---JF7|LJ||||F-J|F-7|||LJLJ|||L7#F7||F----J|F7LJL7|FJL7|LJF7|||||||L---J||L-7|F7L7FJF-J||F7L-JLJF7FJF-7F7F--JOO.......
-...........OL-JO|FJFJF7F7|LJF-J|LJL-7|L7|||L---7||L7L7||LJL-7F-7LJL7F-J|L7FJ|F7|||||||||#F7#FJL7#LJ|L7LJFJF7|LJ|F7F7FJLJFJOLJLJF7OO........
-...........OOOOOLJOL-JLJ||F7L-7|F---JL-JLJ|F7F7||L7L7LJL--7FJ|#L7F-JL-7L7LJ#||LJ||||||||FJL7|F-JF-7L7|F7L-JLJF-J|LJLJF--JF7F7F7|L7O........
-............OF-7F7OF7F--J||L-7LJL--7#F7F7#LJLJLJL-J#|F----JL7|F-JL---7L7L--7||F-J|||LJLJL-7|||F7L7|FJ||L--7F-JF-JF---JF7FJ||||||FJOOO......
-............OL7LJ|FJ|L--7||F7L-----JFJLJL------7F7F7LJF---7FJ||F7F7F7L7L7F7||||F7|LJF-----JLJLJL-J|L7|L--7LJF7L7FJF-7O|||FJ|||||L7F7O......
-............OOL-7|L7|F--J|LJL-7F7F-7|F--7F7F7F7LJLJL--JF--J|FJ|||||||FJ#||LJ||||||F-JF----7F--7F-7L-JL7F7L--JL-JL7|FJFJLJL-JLJLJFJ||OO.....
-..........OOOOF7|L7|||F--JF---J||L7LJL7.LJLJLJL7F-7F---JF7FJ|FJ||||||L7FJL7FJ|||LJL7FJF--7||F-J|#L---7||L---7F7F7LJL7L7F7F---7F7L-JL7O.....
-..........OF7FJ|L7LJ|LJF-7L-7F7|L-JF-7L-------7|L7||F7F7||L-JL7|||LJ|FJL7FJ|FJLJ#F-J|FJF7LJ|L-7|F----JLJF--7LJLJ|F--JFJ|LJF7OLJL----JO.....
-.........OO||L7L7L-7L7FJFJF7LJ||F--J.L--------JL-J|LJLJLJL-7..|||L7.||.FJL7LJF---JF-JL7|L7FJF-J||F-7F7F-JF7L---7|L-7FJFJOFJ|F------7OO.....
-......OOOOFJ|OL7|F7L7|L7|FJL-7LJL--7..F7F7.F--7F7.L7F-7F--7L-7LJL7L7||.L7FJ..L7F-7L7F-J|FJL7L-7|LJ#LJ||F-JL----JL-7LJFJOFJFJ|F--7F7|O......
-......OF--JFJF-JLJL7||O||L--7L7F7F7L7FJ||L7|F-J||F7LJ.LJF7L--JF7.|FJ||.FJL-7..LJ.L7|L--J|F-JF-J|F7F7FJ|L-7F------7|F7L-7|FJFJL7O||LJO......
-......OL7F7|OL--7F7LJL-JL-7OL7LJLJL-J|FJ|FJ|L--JLJL7F7F-JL----J|FJL7LJ.L7F-J......LJF---JL7#L--J|LJ|L-JF7||F7F---JLJL7FJ||O|F7L7|L7OO......
-......OOLJ|L-7F7LJL---7F7FJF7L-------JL-JL-JF------J||L7F------JL-7|....|L-7......F-JF--7FJF---7L-7|F7FJLJ||LJF7F---7LJFJL-J||FJL7|O.......
-.......OF7L-7LJL7F7F7OLJ||O|L---7F7F7F7F---7L7F7F7.FJL-JL-----7...||....|F7|......L--JF7LJ#L--7L-7|||||F--JL7FJLJF--JF-JF-7FJLJOFJ|O.......
-......OO||F7L--7LJ|||F--JL7L7F-7LJLJ|||L-7.L-J|LJL7|F--7F-----J...LJ....LJ||........F7||F7#F-7L-7||LJLJ|F--7LJF-7L---JF7L7|L--7OL7|O.......
-......OFJLJL-7FJF7LJLJF7F7L7LJFJF7F7LJ|F7L----JF-7LJL-7|L------7..........LJ.....F--JLJLJL-JFJF7|LJF--7|L-7|F7L7L-----J|FJL7F7L7OLJO.......
-......OL----7|L-JL7F7FJLJL7L7OL7|LJL-7|||F7F-7FJFJF-7FJL--7F---J.................L--7F-----7L-JLJF-J#FJ|F-JLJ|FJOF-7F7OLJF7LJL7L7OOO.......
-......OOF---J|F--7LJ|L7OF7L7|F7LJF7F7||||||L7|L7L7L7|L---7LJF--7F7................F7LJ.F7F7L7F7F7|F-7L-JL---7LJF7L7LJL--7|L--7|FJO.........
-....OOOFJF7F7LJF7L--JFJFJL-J|||F-JLJLJ||||L7||FJFJFJ|F7F-JF7L-7LJ|..............F-JL---JLJL-J|LJLJL7L7F-----JOFJL-JF-7F7LJF--JLJOO.........
-....OF7L-JLJL-7|L7F7FJFJF--7LJLJF--7F7LJLJ.LJ|L7L-J.LJ|L-7|L7FJF-J..............L7F7F---7F7F7|F-7F7L7|L-----7FJF7F7|OLJL-7L---7OO..........
-....O|L7F7OF--J|FJ||L7L7|F-JF7F-JF7LJL7.F7.F7L-JF--7F7L--JL7LJFJ................FJ||L7F-J|||||L7LJL-J|#F----J|FJLJLJF---7L----JOO..........
-...OOL7|||FJF-7|L7||FJOLJ|F7|||F-JL---JFJL-JL7F-JF7|||F7...|F7L-7...............|FJL-JL7FJ||||#L--7F7L-JF7F7O|L----7|F--JF--7OF7OO.........
-..OOF7||||L7|FJL7|||L7F7OLJ||||L7F---7.|F----JL7FJ|||LJL7.FJ|L--J...............LJF----J|.||||F---J|L--7|LJL-JF----J|L---JF-JFJL7OOO.......
-..OFJLJLJL-J|L7FJ||L7||L---J||L7||F--JFJL----7FJL7LJL7F7L7L7L7F7F7................L-7F7FJFJ|LJL----J#F7LJF----JF--7O|F----JOFJF7L-7O.......
-..OL-7F--7F-JFJL7LJOLJL-7F--J|FJLJL---JF7F7F-J|F-JF-7||L-J.L7||LJ|................F-J|LJ.L-JF----7F7FJL--JF----JF7L-JL---7OFJFJ|F-JO.......
-..OOO||F-JL-7L-7L-7F-7F7LJF--J|F7F-----JLJLJF-JL-7L7|||.F7F-JLJF-J.F7.............L--JF-7F7.L-7F7LJLJF-7F-JF--7FJ|F7F7F-7L-JFJOLJOOOOOO....
-....OLJL7F7FJF-JF7|L7LJL7FJF--J|||F------7F7|F--7L-JLJL7|LJF7F-J...||F7...............L7|||F-7LJL----J#LJF-JF7LJFJ|LJLJOL-7FJOOF7OOOF7OO...
-....OOOFJ|||OL7FJ||OL--7|L-JOF7||LJF7F7F-J|||L-7L7F7F-7LJF7||L--7..|LJ|...........F-7F-JLJLJFJF7F7F---7F-JF-J|F7L-JF7F---7|L-7FJ|OF7|L7O...
-....OOO|FJ|L7OLJO||F---JL----JLJL--JLJLJF7|||F-J.LJLJ.|F-JLJ|F-7L7.L-7|....F-7....L7|L-7F7F7L-JLJ|L--7|L--JF-J|L-7O|LJF7FJL--JL7L-JLJFJO...
-....OF-J|FJFJOOOOLJL7F7F7F---------7F-7FJLJLJL---7F7F7LJF--7||FJFJF--JL7...|FJF7.F-JL-7LJLJL----7|.F7||F---JF7|F-JFJF-JLJF7OF7O|F----JOOO..
-....O|F7||FJOO..OOOOLJLJLJF-----7F-JL7||F7F7F7F-7LJLJL--JF-J||L7|.L-7F-J..FJ|FJL7L---7|.F7F7.F--JL-JLJLJF7F7||||F7L7|F7OFJL7|L7||F-----7O..
-....OLJLJLJOO.....OF------JF---7|L---JLJ|LJLJ|L7|F-----7FJF7LJ.LJ..FJL7...L7LJF-JF---JL-JLJ|FJF7F-7F----JLJLJLJLJ|FJLJL7L7FJ|FJ|||F-7F-JO..
-....OOOOOOOO......OL-------JF--JL------7L---7L7||L----7LJFJL7F7...FJF7L7F7FJF7|F-JF-------7|L-JLJFJ|F-----7F-7F--J|F--7L-JL-JL-JLJL7LJOOO..
-............OOOOOOOOOF7OF---JF7F7F----7L----J.LJL7F7F7L--JF-J||F-7L-J|FJ|||FJLJL--JF------JL----7L-JL----7LJFJL--7|L-7|F7F7F7F7F--7L7OO....
-............OF7F7OOF-J|FJF--7|LJLJF--7L---7F-7.F7LJ||L7F--JF-J||FJF7FJL7|||L---7F7.L7F-7F7F---7FJ.F-7F7F7L-7L7F-7LJF-J|||||||||L-7L-JO.....
-............O|||L7OL-7LJFJF7LJF7F7L-7L----J|FJFJL7.|L7|L--7|F7||L-JLJF7LJLJF7F-J||..LJFJ|||F-7||F7L7||LJL--JFJL7L--JF7LJLJLJ||L7FJF7OO.....
-............O|LJFJF7OL7FJFJL--JLJL--JF7F---JL-JF7L7|FJL7F7|LJ||L-----JL7F--JLJ.FJL7..FJFJLJL7LJLJL-JLJF7F--7|F7L----JL7F7F7OLJFJ|O||OO.....
-............O|F7L7||F7||FJF7F--------JLJF------JL-JLJF7LJ|L7FJ|F7F7F7F7||F---7FJF-JF7L-JF--7L7F7F7F-7FJLJF7||||F---7F7LJ||L--7L-JFJL7O.....
-............OLJL7|||||LJL-JLJF----7F7F7FJF----7.F--7.|L-7|FJL7||||LJ||LJLJF7FJL7|..|L--7L-7|FJ|||||.LJ.F-JLJLJ|L7F7|||F7LJF--JF--JF-JOO....
-............OOF7|||LJ|OF7F-7OL7F-7LJ|||L-JF--7L7|F7|FJF-J||F7|||LJF-JL-7F-JLJF-JL7.L--7L--JLJFJLJLJF7F7L---7F7L-J||LJ|||F7L---JF-7L7F7O....
-............OFJLJ|L-7|FJ||FJF7LJFJF7LJL-7FJF-JFJ||LJL7|F7LJ||||L7FJ.F--JL-7F7L7F-JF-7.L7F---7|F7F7FJLJL7.F-J|L7F-JL-7LJ||L7F7F-JOL-J||O....
-............OL--7L--J|L7|||FJL7OL-JL---7LJ.|F7L-JL7.FJLJL-7||||FJ|F7L-7F--J||FJL-7L7|F7LJF7FJ||LJLJF7F7L-JF7L7||F---JF7||OLJ|L------J|O....
-............OOOOL7F-7L7|||||F7L-------7L--7LJL-7F-JFJF7F--J||||L7LJ|F7|L7F7|||F--JFJLJL7FJ|L-JL7F-7|||L7F-JL-JLJL---7||LJF7OL7F------JO....
-........OOOOOF7F-J|OL7LJLJ|LJL-7F7F7F7L7F7L7.F-JL7FJFJLJF7FJ||L-JF-J|||FJ|||||L--7L---7|L7|F7F7LJFJ|LJ.LJF--7F------J||F-JL-7|L----7OOO....
-......OOOF-7O||L7FJF7L---7L7F7OLJLJLJL7LJL7L7L-7FJL7L7F7|LJFJL-7FJ.FJLJ|.|||||F-7|.F7FJL7|||||L7.L-JF----JF7|L-------JLJF-7FJ|F-7F7L-7O....
-......OF-JFJO|L7|L7|L----JFJ||F7OF7F-7L--7L-JF7||F-JFJ|||F-JF-7|L-7L--7L7|LJ||L7LJFJ|L7FJ||||L7|F7F7L-----J|L7F7F-7F-7F7L7|L7|L7LJL7FJO....
-......O|F7L7OL7|L-JL-7F7F7L-JLJL-JLJ.|F--JF7.||LJL7FJ.|LJ|F7|FJ|F-JF7.L7|L7FJL7L7FJFJ.||FJLJ|.||||||F7.F---JOLJLJO|L7||L7||FJL7L-7O||OO....
-....OOOLJ|FJF-J|F7OF7LJLJL---7F7F---7LJF7FJ|FJL7F-J|F7L-7||||L7|L-7|L-7|L7||.FJFJL7|.FJLJF--JFJLJ||||L-JF--------7L-JLJO|||L-7|F-JOLJO.....
-....OF---JL-JF-J||FJ|OF7F---7LJLJOF-JF7||L7|L7FJL-7LJL-7|LJLJFJ|F-J|F-JL7||L7L7L7FJL7L7F-JF7.L7F-J||L---JF-------JF-7F-7LJL--JLJOOOOOO.....
-....OL-7F-7F7L7O||L7|FJ|L7F7|OF7F7L-7|LJL-JL7|L7F7L7F7FJ|F---J.|L7.||F7FJ||FJ.L7|L7FJFJL-7|L7FJL7FJ|F----JF7F7F7F7L7LJFJOF7F7F7OOO.........
-....OOO||OLJL7|FJ|FJ||FJFJ||L-JLJL7FJ|F-----J|FJ||FJ|LJFJL7F7F-JFJFJ||||FJ||F7FJ|FJL-JF--J|FJL7FJL7|L-----JLJ||LJL-JF7L--JLJLJL-7O.........
-......OLJF7F7||L7|L7||L7L-JL-----7|L-J|F---7FJL7|LJFJF7|F-J||L-7L-JFJ|||L7||||L7||F--7L-7FJL--J|F7||F-7F7F7F-J|F----JL----7F----JOO........
-......OOFJLJLJL7||FJ||FJF7F7F-7F7|L-7FJ|F--JL-7|L-7|.|||L7FJL7.|F--JFJLJFJ|LJ|FJ|LJF7|F-JL--7F7|||||L7LJLJLJF7|L-7OF7OF7F7LJOF7OF7O........
-.......OL-----7|||L7|||FJLJ|L7LJLJF7LJ.|L-7F--JL-7|L-JLJFJL-7L-JL7F7|F--J.|F-JL7|F7|||L--7F7|||||LJ|.L7F-7OFJLJF7L-JL-JLJL---JL7||OO.......
-.......OOF----JLJL-JLJ|L--7|OL7F-7|L7F7L7FJL--7F7LJF----JF-7L--7FJ|||L-7.FJL-7.||||||L7F-J||LJ|LJF-JF7LJFJFJF7FJ|F7F----7F7F7F7||L7O.......
-........OL--7F-7F7F7F7|F7FJ|F7LJOLJFJ|L7|L7F--J|L--JF---7L7|F7FJL7|LJF-JFJF--JFJ||||L7|L7FJ|F7L-7|F7|L7.L-JFJLJOLJLJOF-7LJLJLJ|LJFJO.......
-........OF--J|FJ|LJLJ||||L7LJL-7F7FJ.L7||FJL--7|F7F7|F--J.||||L7FJL7FJF7L7|.F7L7||||FJ|FJL7|||F7|||||FJF7F7L7F--7F7F7|FJOF---7L-7|OO.......
-.....OOOOL---JL7|F---JLJ|OL---7||LJF7FJ||L-7F7|LJ||||L7F7FJ||L7|L7FJL7|L7|L7|L7||||||FJ|F7||||||||||||FJ||L7LJF-J|||LJL--JF--JOOLJO.OOOOO..
-.....OF7OOF---7LJL----7FJF7F--JLJF-JLJO|L-7|||L7FJ|LJFJ|||FJL7||FJ|F-JL7|L7|L7LJ||LJ||O||||||LJ|||||||L7LJFJF7L--J||F-----JOF7OF7OOOOF-7O..
-.....O|L-7L--7L7F7F---JL-JLJF-7F7L-7F--JF-J|||FJL7L7FJFJ|||F-J||L7|L7F-J|FJ|FJF7||F-JL7LJ|||L7FJ|||||L7L-7L7||F7F7LJL-------JL-J|OOF-JFJO..
-....OOL7FJOF7L7||||F7F7F---7|FJ||F7|L7F7L-7|||L7O|FJL-JOLJ|L-7||FJ|FJ|F-JL7|L-J|||L7F-JOFJ|L7|L7|||||OL7FJFJ||||||F7F-7F--------JF7L7FJOO..
-...OOF-JL--J|O||||LJLJLJF--J||FJ|||L7||L7FJ|||FJFJL----7F-JF-JLJL7||FJL-7FJ|F7FJ|L7||OF-JFJFJL7|||||L7O|L7L7|||||LJ|L7|L---------JL-J|OO...
-...OFJF--7F7L-JLJL------JF7FJ||FJ||FJ||O|L7|||L7L-7F7F7|L-7L--7F7LJ|L7F7LJFJ||L7L7||L7L7FJO|F7|||||L7L7L7L7|||||L7FJFJL----------7F7FJOOO..
-...OL-JF-J||F7F-7F------7|LJFJ|L7|||O|L7|FJ|||FJF-J|LJ||F7|F-7LJ|F-JFJ||F7|FJ|FJFJ|L7L7|L-7LJ|||||L7L7|FJFJ|||||FJL7L-----------7LJ|L--7O..
-...OOF7L7FJLJ||FJ|F-----JL7OL7|FJ|||FJFJ|L7||||FJF7L-7LJ|LJL7|F7||F7L-JLJ||L7|L7L-JOL7||F7L-7|||||FJFJ|L7|FJ|||LJF-JF-------7F-7L-7|F--JO..
-...OFJL7LJOF-J|L-JL7F7F7F7|F-J|L-J|||FJO|FJLJ||L7||F7|F7L-7FJLJ||LJL7F7F-JL-JL7L7OF--J|LJL7FJ||||||OL7L7||L7|||F7L-7L------7|L7L-7|LJOOOO..
-...OL-7L---JF7|F7F-J|||||LJL-7|F--J||L-7||F--J|FJ|LJLJ|L--JL--7|L7F-J|||F--7F7|FJFJF7FJOF7||FJ|||||F-JFJLJO|||LJ|F-JF7F----JL7L7OLJOOO.....
-...OOOL7F7F7||||LJF7|||||F---J|L--7|L7FJ|||F-7|L7L-7F-JF7F7F7FJ|FJL7FJ|LJF7LJ|LJO|FJ|L-7||||L7|LJ|||F7L-7F-J||F-J|F7||L-----7L-JOOOO.......
-.....OFJ|LJLJ||L7FJLJ||LJL-7F7L--7|L7|L7||||O|L7L7FJL-7|||||LJFJ|OFJL7L7FJ|F7L--7LJFJF7LJ||L7||F-J|LJL7FJL-7|LJF-J|||L7F7F-7L---7O.........
-.....OL7|F---J|FJL7F7||F---J||F7FJ|FJ|FJLJLJFJFJFJL7OFJ||||L-7L7L7|F7|FJL7|||F--JF7|FJL7FJ|FJLJL-7L-7FJL-7FJL-7L-7|||FJ||L7L----JO.........
-.....OO||L7F-7|L--J|LJ||F7F7|LJLJO||OLJF7OF7|FJO|F7L7L7|||L7FJFJFJ||||L7FJLJ|L-7FJLJL-7|L7|L7F---JF-J|F7FJ|F7FJOFJ||||FJL7L--7F7OO.........
-......OLJO||FJ|F---JF7||||||L--7F7|L--7|L-JLJL-7LJ|FJFJ|LJO|L7L7L7||||FJL--7|F-JL-7F7FJL-J|FJL-7F7L-7LJLJFJ||L7FJFJ||LJOOL7F7LJL7O.........
-......OOOO||L-JL--7FJ||LJLJL7F7LJ||F7FJL7F-7F-7L-7LJFJFJOF-JFJOL-JLJ|||F-7FJ|L7OF-J||L---7||OF-J||F7L7F7O|FJL-JL7L7|L--7F-J|L7F-JO.........
-.........OLJOOF---J|FJL--7F-J||F7||||L7FJ|O||FJF-JF-JFJF-JF7L----7F-J||L7|L7L7L7L7FJL7F7FJLJFJF7|||L7LJL7|L--7F-JFJL-7FJL-7|FJ|OOO.........
-.........OOOOOL----JL7F--JL7FJLJ||LJ|FJL7|FJ||FJF-JF7L7L-7||F7F7FJL-7|L-J|FJFJFJFJ|F-J|||F7O|FJ|||L7L7F-JL7F7|L-7|F7O||OOOLJ|FJO...........
-.............OOF-----J|F7F-JL7F7|L7FJ|OFJ|L7||L7L7FJL7|F-J|||||||F--J|OF7LJFJFJO|FJ|F7||LJL7LJFJ|L7|FJL-7FJ||L7FJLJL7||O.OOOLJOO...........
-..............OL--7F-7|||L7F7LJ||FJL7L7L7|FJ|L7|FJ|F-J||F7|||LJ||L7F7L7|L-7L7L-7||FJ||||F-7L-7|FJOLJ|F--JL7||FJ|F7F7|||O...OOOO............
-..............OOOO||OLJ|L-J|L7FJLJOOL7|OLJL7|FJ|L7||F7||||||L-7||FJ|L7LJF7L7|F7||||FJ||LJO|F-JLJOOF-JL7OOO|||L7||||LJLJO...................
-.................OLJOOFJF7FJO|L--7OOO|L7OOOLJL7L7LJLJ||LJ|||F-J||L7|OL7FJ|FJ||||LJ||FJL7OFJL-7OOOOL7F-JOOFJ|L7|||LJOOOOO...................
-.................OOOF-JFJ||F-JF--JO.O|FJO.OOOOL-JF-7FJL-7|||L-7||OLJF-JL7||O||||F7||L7FJFJF-7L7O.OO||OOOO|FJOLJ|L7OO.......................
-...................OL-7L7||L-7L-7OOOOLJOO..OOOOF7L7LJF7FJLJ|F7|LJF--JF7FJLJFJ||LJ|||O||FJFJO|FJO..OLJO..OLJOOOOL-JO........................
-...................OOOL-J|L7FJF-JF7OOOOO...OF--J|FJF7||L--7LJ|L7OL-7FJ|L--7L7||F-JLJOLJL7|OO||OO..OOOO..OOOO..OOOOO........................
-.....................OOOOL-JL7L--J|OOO.....OL--7LJFJ||L--7L-7|FJF--J|FJF7FJO|||L7OOOOOOOLJOOLJO............................................
-........................OOOOOL7F-7L-7O.....OOOO|F7|FJL7F7|F-J||O|F-7||FJ||OO||L7L7O....OOOOOOOO............................................
-............................OFJL7L-7|O........OLJ||L7FJ|LJ|F-JL7LJFJ|||FJ|OOLJO|FJO........................................................
-............................O|F7L7OLJO........OOFJ|FJ|OL7FJL7F7L-7|FJ|||FJOOOOOLJOO........................................................
-............................OLJ|FJOOOO.........OL7|L7L7O||F-J|L7FJ||O||LJOO...OOOO.........................................................
-............................OOOLJOO............OOLJOL-JOLJ|F-JFJ|O||OLJOOO.................................................................
-..............................OOOO..............OOOOOOOOOOLJOOL7L7LJOOOO...................................................................
-.........................................................OOOOOOL-JOOO......................................................................
-..............................................................OOOOO........................................................................
-'''
-
-# COMMAND ----------
-
 import re
 
-#re.sub(r'([|-LJ7F]).', r'\1\#', '7FJ.L7|')
-s2 = re.sub(r'([|LJ7F-])\.', r'\1\#', s)
-s2 = re.sub(r'\#\.', r'##', s2)
-s2 = re.sub(r'\#\.', r'##', s2)
-s2 = re.sub(r'\#\.', r'##', s2)
-s2 = re.sub(r'\#\.', r'##', s2)
-s2 = re.sub(r'\#\.', r'##', s2)
-s2 = re.sub(r'\#\.', r'##', s2)
-s2 = re.sub(r'\#\.', r'##', s2)
-s2 = re.sub(r'\#\.', r'##', s2)
-s2 = re.sub(r'\#\.', r'##', s2)
-s2 = re.sub(r'\#\.', r'##', s2)
-s2 = re.sub(r'\#\.', r'##', s2)
-s2 = re.sub(r'\#\.', r'##', s2)
-s2 = re.sub(r'\#\.', r'##', s2)
-s2 = re.sub(r'\#\.', r'##', s2)
-s2 = re.sub(r'\#\.', r'##', s2)
-s2 = re.sub(r'\#\.', r'##', s2)
-s2 = re.sub(r'\#\.', r'##', s2)
-s2 = re.sub(r'\#\.', r'##', s2)
-s2 = re.sub(r'\#\.', r'##', s2)
-s2 = re.sub(r'\#\.', r'##', s2)
-s2 = re.sub(r'\#\.', r'##', s2)
-s2 = re.sub(r'\#\.', r'##', s2)
-s2 = re.sub(r'\#\.', r'##', s2)
-s2 = re.sub(r'\#\.', r'##', s2)
-s2 = re.sub(r'\#\.', r'##', s2)
-print(s2)
-
-# COMMAND ----------
-
-s2.count('#')
-
-# COMMAND ----------
-
-cc = {
-    '|': '|',
-    '-': '-',
-    'L': '∟',
-    'J': '',
-    '7': '',
-    'F': '',
-}
+graphic = ''
 n_rows = max(row for row, _ in m)
 n_cols = max(col for _, col in m)
 for row in range(n_rows):
     for col in range(n_cols):
         c = '.' if (row, col) not in distances else m[(row, col)]
-        print(c, end='')
-    print()
+        if c == '.' and (row, col) in external:
+            c = 'O'
+        graphic += c
+    graphic += '\n'
+
+# Do some basic replacements to determine what is internal
+# Any . next to a pipe MUST be internal - otherwise it would be an O
+graphic = re.sub(r'([|LJ7F-])\.', r'\1#', graphic)
+for _ in range(100):
+    graphic = graphic.replace('#.', '##')
+print(graphic)
 
 # COMMAND ----------
 
-# start_pos = next(pos for pos, c in m.items() if c == 'S')
-# q = collections.deque([(start_pos, 0)])
-# distances = {}
-# while q:
-#     pos, d = q.popleft()
-#     if pos in distances:
-#         continue
-#     distances[pos] = d
-
-#     d += 1
-#     if m[(pos[0] - 1, pos[1])] in '|7F': # N
-#         q.append(((pos[0] - 1, pos[1]), d))
-#     if m[(pos[0], pos[1] + 1)] in '-J7': # E
-#         q.append(((pos[0], pos[1] + 1), d))
-#     if m[(pos[0] + 1, pos[1])] in '|LJ': # S
-#         q.append(((pos[0] + 1, pos[1]), d))
-#     if m[(pos[0], pos[1] - 1)] in '|LF': # W
-#         q.append(((pos[0], pos[1] - 1), d))
-
-# COMMAND ----------
-
-for row in range(6):
-    for col in range(5):
-        c = '.' if (row, col) not in distances else distances[(row, col)]
-        print(c, end='')
-    print()
-
-# COMMAND ----------
-
-
+answer = graphic.count('#')
+print(answer)
