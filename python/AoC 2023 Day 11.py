@@ -233,15 +233,6 @@ inp = '''.......................................#...............................
 
 # COMMAND ----------
 
-g = inp.splitlines()
-empty_rows = [i for i, row in enumerate(g) if '#' not in row]
-empty_cols = [i for i, row in enumerate(zip(*g)) if '#' not in row]
-empty_rows, empty_cols
-
-# COMMAND ----------
-
-
-import collections
 
 def get_distances_sum(empty_size):
     distance_sum = 0
