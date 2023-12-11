@@ -1,19 +1,91 @@
 # Databricks notebook source
-# %pip install z3-solver
+# MAGIC %md https://adventofcode.com/2023/day/11
 
 # COMMAND ----------
 
-inp = '''...#......
-.......#..
-#.........
-..........
-......#...
-.#........
-.........#
-..........
-.......#..
-#...#.....
-'''
+# MAGIC %md <article class="day-desc"><h2>--- Day 11: Cosmic Expansion ---</h2><p>You continue following signs for "Hot Springs" and eventually come across an <a href="https://en.wikipedia.org/wiki/Observatory" target="_blank">observatory</a>. The Elf within turns out to be a researcher studying cosmic expansion using the giant telescope here.</p>
+# MAGIC <p>He doesn't know anything about the missing machine parts; he's only visiting for this research project. However, he confirms that the hot springs are the next-closest area likely to have people; he'll even take you straight there once he's done with today's observation analysis.</p>
+# MAGIC <p>Maybe you can help him with the analysis to speed things up?</p>
+# MAGIC <p>The researcher has collected a bunch of data and compiled the data into a single giant <em>image</em> (your puzzle input). The image includes <em>empty space</em> (<code>.</code>) and <em>galaxies</em> (<code>#</code>). For example:</p>
+# MAGIC <pre><code>...#......
+# MAGIC .......#..
+# MAGIC #.........
+# MAGIC ..........
+# MAGIC ......#...
+# MAGIC .#........
+# MAGIC .........#
+# MAGIC ..........
+# MAGIC .......#..
+# MAGIC #...#.....
+# MAGIC </code></pre>
+# MAGIC <p>The researcher is trying to figure out the sum of the lengths of the <em>shortest path between every pair of galaxies</em>. However, there's a catch: the universe expanded in the time it took the light from those galaxies to reach the observatory.</p>
+# MAGIC <p>Due to something involving gravitational effects, <em>only some space expands</em>. In fact, the result is that <em>any rows or columns that contain no galaxies</em> should all actually be twice as big.</p>
+# MAGIC <p>In the above example, three columns and two rows contain no galaxies:</p>
+# MAGIC <pre><code>   v  v  v
+# MAGIC  ...#......
+# MAGIC  .......#..
+# MAGIC  #.........
+# MAGIC &gt;..........&lt;
+# MAGIC  ......#...
+# MAGIC  .#........
+# MAGIC  .........#
+# MAGIC &gt;..........&lt;
+# MAGIC  .......#..
+# MAGIC  #...#.....
+# MAGIC    ^  ^  ^
+# MAGIC </code></pre>
+# MAGIC <p>These rows and columns need to be <em>twice as big</em>; the result of cosmic expansion therefore looks like this:</p>
+# MAGIC <pre><code>....#........
+# MAGIC .........#...
+# MAGIC #............
+# MAGIC .............
+# MAGIC .............
+# MAGIC ........#....
+# MAGIC .#...........
+# MAGIC ............#
+# MAGIC .............
+# MAGIC .............
+# MAGIC .........#...
+# MAGIC #....#.......
+# MAGIC </code></pre>
+# MAGIC <p>Equipped with this expanded universe, the shortest path between every pair of galaxies can be found. It can help to assign every galaxy a unique number:</p>
+# MAGIC <pre><code>....1........
+# MAGIC .........2...
+# MAGIC 3............
+# MAGIC .............
+# MAGIC .............
+# MAGIC ........4....
+# MAGIC .5...........
+# MAGIC ............6
+# MAGIC .............
+# MAGIC .............
+# MAGIC .........7...
+# MAGIC 8....9.......
+# MAGIC </code></pre>
+# MAGIC <p>In these 9 galaxies, there are <em>36 pairs</em>. Only count each pair once; order within the pair doesn't matter. For each pair, find any shortest path between the two galaxies using only steps that move up, down, left, or right exactly one <code>.</code> or <code>#</code> at a time. (The shortest path between two galaxies is allowed to pass through another galaxy.)</p>
+# MAGIC <p>For example, here is one of the shortest paths between galaxies <code>5</code> and <code>9</code>:</p>
+# MAGIC <pre><code>....1........
+# MAGIC .........2...
+# MAGIC 3............
+# MAGIC .............
+# MAGIC .............
+# MAGIC ........4....
+# MAGIC .5...........
+# MAGIC .##.........6
+# MAGIC ..##.........
+# MAGIC ...##........
+# MAGIC ....##...7...
+# MAGIC 8....9.......
+# MAGIC </code></pre>
+# MAGIC <p>This path has length <code><em>9</em></code> because it takes a minimum of <em>nine steps</em> to get from galaxy <code>5</code> to galaxy <code>9</code> (the eight locations marked <code>#</code> plus the step onto galaxy <code>9</code> itself). Here are some other example shortest path lengths:</p>
+# MAGIC <ul>
+# MAGIC <li>Between galaxy <code>1</code> and galaxy <code>7</code>: 15</li>
+# MAGIC <li>Between galaxy <code>3</code> and galaxy <code>6</code>: 17</li>
+# MAGIC <li>Between galaxy <code>8</code> and galaxy <code>9</code>: 5</li>
+# MAGIC </ul>
+# MAGIC <p>In this example, after expanding the universe, the sum of the shortest path between all 36 pairs of galaxies is <code><em>374</em></code>.</p>
+# MAGIC <p>Expand the universe, then find the length of the shortest path between every pair of galaxies. <em>What is the sum of these lengths?</em></p>
+# MAGIC </article>
 
 # COMMAND ----------
 
@@ -169,92 +241,43 @@ empty_rows, empty_cols
 # COMMAND ----------
 
 
-g = inp.splitlines()
-empty_rows = [i for i, row in enumerate(g) if '#' not in row]
-empty_cols = [i for i, row in enumerate(zip(*g)) if '#' not in row]
-empty_rows, empty_cols
-
 import collections
-galaxies = [(row, col) for row, line in enumerate(g) for col, c in enumerate(line) if c == '#']
-pairs = [(galaxies[i], galaxies[i2]) for i in range(len(galaxies)) for i2 in range(i+1, len(galaxies))]
-# print(len(pairs))
+
+def get_distances_sum(empty_size):
+    distance_sum = 0
+    for g1, g2 in pairs:
+        d_row = abs(g2[0] - g1[0])
+        for row in empty_rows:
+            if min(g1[0], g2[0]) < row < max(g1[0], g2[0]):
+                d_row += empty_size - 1
+
+        d_col = abs(g2[1] - g1[1])
+        for col in empty_cols:
+            if min(g1[1], g2[1]) < col < max(g1[1], g2[1]):
+                d_col += empty_size - 1
+
+        distance_sum += d_row + d_col
+
+    return distance_sum
 
 
-def get_shortest_distance(g1, g2):
-    q = collections.deque([(g1, 0)])
-    seen = set()
-    while q:
-        pos, d = q.popleft()
-        if pos == g2:
-            return d
-        if pos in seen:
-            continue
-        seen.add(pos)
-
-        d += 1 + ((pos[0] in empty_rows) or (pos[1] in empty_cols))
-        q.append(((pos[0] - 1, pos[1]), d))
-        q.append(((pos[0] + 1, pos[1]), d))
-        q.append(((pos[0], pos[1] - 1), d))
-        q.append(((pos[0], pos[1] + 1), d))
-
-
-# answer = 0
-# for g1, g2 in pairs:
-#     answer += get_shortest_distance(g1, g2)
-# print(answer)
-
-z=1_000_000-1
-answer=0
-for g1, g2 in pairs:
-    d_row = abs(g2[0] - g1[0])
-    for row in empty_rows:
-        if min(g1[0], g2[0]) < row < max(g1[0], g2[0]):
-            #d_row += 1_000_000
-            d_row += z
-
-    d_col = abs(g2[1] - g1[1])
-    for col in empty_cols:
-        if min(g1[1], g2[1]) < col < max(g1[1], g2[1]):
-            # d_col += 1_000_000
-            d_col += z
-    answer += d_row + d_col
+grid = inp.splitlines()
+empty_rows = [i for i, row in enumerate(grid) if '#' not in row]
+empty_cols = [i for i, row in enumerate(zip(*grid)) if '#' not in row]
+galaxies = [(row, col) for row, line in enumerate(grid) for col, c in enumerate(line) if c == '#']
+pairs = [(galaxies[i], galaxies[i2]) for i in range(len(galaxies)) for i2 in range(i + 1, len(galaxies))]
+answer = get_distances_sum(2)
 print(answer)
 
-# 726820896326 not right
+# COMMAND ----------
+
+# MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>The galaxies are much <em>older</em> (and thus much <em>farther apart</em>) than the researcher initially estimated.</p>
+# MAGIC <p>Now, instead of the expansion you did before, make each empty row or column <em><span title="And you have to have your pinky near your mouth when you do it.">one million</span> times</em> larger. That is, each empty row should be replaced with <code>1000000</code> empty rows, and each empty column should be replaced with <code>1000000</code> empty columns.</p>
+# MAGIC <p>(In the example above, if each empty row or column were merely <code>10</code> times larger, the sum of the shortest paths between every pair of galaxies would be <code><em>1030</em></code>. If each empty row or column were merely <code>100</code> times larger, the sum of the shortest paths between every pair of galaxies would be <code><em>8410</em></code>. However, your universe will need to expand far beyond these values.)</p>
+# MAGIC <p>Starting with the same initial image, expand the universe according to these new rules, then find the length of the shortest path between every pair of galaxies. <em>What is the sum of these lengths?</em></p>
+# MAGIC </article>
 
 # COMMAND ----------
 
-# import collections
-# galaxies = [(row, col) for row, line in enumerate(g) for col, c in enumerate(line) if c == '#']
-# pairs = [(galaxies[i], galaxies[i2]) for i in range(len(galaxies)) for i2 in range(i+1, len(galaxies))]
-
-# def get_shortest_distance(g1, g2):
-#     q = collections.deque([(g1, 0)])
-#     seen = set()
-#     while q:
-#         pos, d = q.popleft()
-#         if pos == g2:
-#             return d
-#         if pos in seen:
-#             continue
-#         seen.add(pos)
-        
-#         d += 1 + ((pos[0] in empty_rows) or (pos[1] in empty_cols))
-#         q.append(((pos[0] - 1, pos[1]), d))
-#         q.append(((pos[0] + 1, pos[1]), d))
-#         q.append(((pos[0], pos[1] - 1), d))
-#         q.append(((pos[0], pos[1] + 1), d))
-
-
-# answer = 0
-# for g1, g2 in pairs:
-#     answer += get_shortest_distance(g1, g2)
-# print(answer)
-
-# COMMAND ----------
-
-# 93096 pairs
-
-# COMMAND ----------
-
-galaxies
+answer = get_distances_sum(1_000_000)
+print(answer)
