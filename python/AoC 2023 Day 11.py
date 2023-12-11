@@ -233,7 +233,6 @@ inp = '''.......................................#...............................
 
 # COMMAND ----------
 
-
 def get_distances_sum(empty_size):
     distance_sum = 0
     for g1, g2 in pairs:
@@ -254,9 +253,10 @@ def get_distances_sum(empty_size):
 
 grid = inp.splitlines()
 empty_rows = [i for i, row in enumerate(grid) if '#' not in row]
-empty_cols = [i for i, row in enumerate(zip(*grid)) if '#' not in row]
+empty_cols = [i for i, col in enumerate(zip(*grid)) if '#' not in col]
 galaxies = [(row, col) for row, line in enumerate(grid) for col, c in enumerate(line) if c == '#']
 pairs = [(galaxies[i], galaxies[i2]) for i in range(len(galaxies)) for i2 in range(i + 1, len(galaxies))]
+
 answer = get_distances_sum(2)
 print(answer)
 
