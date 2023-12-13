@@ -3,22 +3,60 @@
 
 # COMMAND ----------
 
-inp = '''#.##..##.
-..#.##.#.
-##......#
-##......#
-..#.##.#.
-..##..##.
-#.#.##.#.
+# MAGIC %md https://adventofcode.com/2023/day/13
 
-#...##..#
-#....#..#
-..##..###
-#####.##.
-#####.##.
-..##..###
-#....#..#
-'''
+# COMMAND ----------
+
+# MAGIC %md <article class="day-desc"><h2>--- Day 13: Point of Incidence ---</h2><p>With your help, the hot springs team locates an appropriate spring which launches you neatly and precisely up to the edge of <em>Lava Island</em>.</p>
+# MAGIC <p>There's just one problem: you don't see any <em>lava</em>.</p>
+# MAGIC <p>You <em>do</em> see a lot of ash and igneous rock; there are even what look like gray mountains scattered around. After a while, you make your way to a nearby cluster of mountains only to discover that the valley between them is completely full of large <em>mirrors</em>.  Most of the mirrors seem to be aligned in a consistent way; perhaps you should head in that direction?</p>
+# MAGIC <p>As you move through the valley of mirrors, you find that several of them have fallen from the large metal frames keeping them in place. The mirrors are extremely flat and shiny, and many of the fallen mirrors have lodged into the ash at strange angles. Because the terrain is all one color, it's hard to tell where it's safe to walk or where you're about to run into a mirror.</p>
+# MAGIC <p>You note down the patterns of ash (<code>.</code>) and rocks (<code>#</code>) that you see as you walk (your puzzle input); perhaps by carefully analyzing these patterns, you can figure out where the mirrors are!</p>
+# MAGIC <p>For example:</p>
+# MAGIC <pre><code>#.##..##.
+# MAGIC ..#.##.#.
+# MAGIC ##......#
+# MAGIC ##......#
+# MAGIC ..#.##.#.
+# MAGIC ..##..##.
+# MAGIC #.#.##.#.
+# MAGIC
+# MAGIC #...##..#
+# MAGIC #....#..#
+# MAGIC ..##..###
+# MAGIC #####.##.
+# MAGIC #####.##.
+# MAGIC ..##..###
+# MAGIC #....#..#
+# MAGIC </code></pre>
+# MAGIC <p>To find the reflection in each pattern, you need to find a perfect reflection across either a horizontal line between two rows or across a vertical line between two columns.</p>
+# MAGIC <p>In the first pattern, the reflection is across a vertical line between two columns; arrows on each of the two columns point at the line between the columns:</p>
+# MAGIC <pre><code>123456789
+# MAGIC     &gt;&lt;   
+# MAGIC #.##..##.
+# MAGIC ..#.##.#.
+# MAGIC ##......#
+# MAGIC ##......#
+# MAGIC ..#.##.#.
+# MAGIC ..##..##.
+# MAGIC #.#.##.#.
+# MAGIC     &gt;&lt;   
+# MAGIC 123456789
+# MAGIC </code></pre>
+# MAGIC <p>In this pattern, the line of reflection is the vertical line between columns 5 and 6. Because the vertical line is not perfectly in the middle of the pattern, part of the pattern (column 1) has nowhere to reflect onto and can be ignored; every other column has a reflected column within the pattern and must match exactly: column 2 matches column 9, column 3 matches 8, 4 matches 7, and 5 matches 6.</p>
+# MAGIC <p>The second pattern reflects across a horizontal line instead:</p>
+# MAGIC <pre><code>1 #...##..# 1
+# MAGIC 2 #....#..# 2
+# MAGIC 3 ..##..### 3
+# MAGIC 4v#####.##.v4
+# MAGIC 5^#####.##.^5
+# MAGIC 6 ..##..### 6
+# MAGIC 7 #....#..# 7
+# MAGIC </code></pre>
+# MAGIC <p>This pattern reflects across the horizontal line between rows 4 and 5. Row 1 would reflect with a hypothetical row 8, but since that's not in the pattern, row 1 doesn't need to match anything. The remaining rows match: row 2 matches row 7, row 3 matches row 6, and row 4 matches row 5.</p>
+# MAGIC <p>To <em>summarize</em> your pattern notes, add up <em>the number of columns</em> to the left of each vertical line of reflection; to that, also add <em>100 multiplied by the number of rows</em> above each horizontal line of reflection. In the above example, the first pattern's vertical line has <code>5</code> columns to its left and the second pattern's horizontal line has <code>4</code> rows above it, a total of <code><em>405</em></code>.</p>
+# MAGIC <p>Find the line of reflection in each of the patterns in your notes. <em>What number do you get after summarizing all of your notes?</em></p>
+# MAGIC </article>
 
 # COMMAND ----------
 
@@ -1337,138 +1375,93 @@ inp = '''.##.###..####..
 
 # COMMAND ----------
 
-# grids = [grid.splitlines() for grid in inp.split('\n\n')]
-#grids
-
-# COMMAND ----------
-
 def is_mirror(grid, col):
     for line in grid:
         if any(a != b for a, b in zip(line[:col][::-1], line[col:])):
             return False
     return True
 
-def get_col(grid):
-    for col in range(1, len(grid[0])):
-        if is_mirror(grid, col):
-            return col
-    return 0
 
-def get_row(grid):
+def get_mirror_cols(grid):
+    return {col for col in range(1, len(grid[0])) if is_mirror(grid, col)}
+
+
+def get_mirror_rows(grid):
     grid = list(zip(*grid))[::-1]
-    for row in range(1, len(grid[0])):
-        if is_mirror(grid, row):
-            return row
-    return 0
+    return {row for row in range(1, len(grid[0])) if is_mirror(grid, row)}
+
 
 grids = [grid.splitlines() for grid in inp.split('\n\n')]
 answer = 0
-splits = []
 for grid in grids:
-    c = get_col(grid)
-    r = get_row(grid)
-    # print(c, r)
-    splits.append((c,r))
-    answer += c + 100 * r
-print(answer) # 29130
+    mirror_cols = get_mirror_cols(grid)
+    mirror_rows = get_mirror_rows(grid)
+    answer += next(iter(mirror_cols), 0) + 100 * next(iter(mirror_rows), 0)
 
-# COMMAND ----------
-
-# def is_mirror(grid, col):
-#     for line in grid:
-#         if any(a != b for a, b in zip(line[:col][::-1], line[col:])):
-#             return False
-#     return True
-
-# def get_col(grid):
-#     for col in range(1, len(grid[0])):
-#         if is_mirror(grid, col):
-#             return col
-#     return 0
-
-# def get_row(grid):
-#     grid = list(zip(*grid))[::-1]
-#     for row in range(1, len(grid[0])):
-#         if is_mirror(grid, row):
-#             return row
-#     return 0
-
-# grids = [grid.splitlines() for grid in inp.split('\n\n')]
-# answer = 0
-# for grid2 in grids:
-#     for row in range(len(grid2)):
-#         done = False
-#         for col in range(len(grid2[0])):
-
-#             c = get_col(grid)
-#             r = get_row(grid)
-#             # print(c, r)
-#             answer += c + 100 * r
-# print(answer) # 29130
-
-# COMMAND ----------
-
-import copy
-def is_mirror(grid, col):
-    for line in grid:
-        if any(a != b for a, b in zip(line[:col][::-1], line[col:])):
-            return False
-    return True
-
-def get_col(grid):
-    result = []
-    for col in range(1, len(grid[0])):
-        if is_mirror(grid, col):
-            result.append(col)
-    return result
-
-def get_row(grid):
-    grid = list(zip(*grid))[::-1]
-    result = []
-    for row in range(1, len(grid[0])):
-        if is_mirror(grid, row):
-            result.append(row)
-    return result
-
-grids = [grid.splitlines() for grid in inp.split('\n\n')]
-answer = 0
-for grid2 in grids:
-    for row in range(len(grid2)):
-        done = False
-        for col in range(len(grid2[0])):
-            #grid = copy.deepcopy(grid2)
-            grid = [list(s)for s in grid2]
-            grid[row][col] = {'#': '.', '.': '#'}[grid[row][col]]
-            #print(grid)
-            # c = get_col(grid)
-            # r = get_row(grid)
-            c = list(set(get_col(grid)).difference(set(get_col(grid2))))
-            r = list(set(get_row(grid)).difference(set(get_row(grid2))))
-            if len(c) == 1 and not r:
-                #print(r, c, row, col)
-                answer += c[0]
-                done=True
-                break
-            if len(r) == 1 and not c:
-                #print(r, c, row, col, grid)
-                answer += 100*r[0]
-                done=True
-                break
-
-        if done:
-            break
 print(answer)
 
 # COMMAND ----------
 
-grid = [['.', '.', '#', '#', '.', '.', '#', '#', '.'], ['.', '.', '#', '.', '#', '#', '.', '#', '.'], ['#', '#', '.', '.', '.', '.', '.', '.', '#'], ['#', '#', '.', '.', '.', '.', '.', '.', '#'], ['.', '.', '#', '.', '#', '#', '.', '#', '.'], ['.', '.', '#', '#', '.', '.', '#', '#', '.'], ['#', '.', '#', '.', '#', '#', '.', '#', '.']]
-get_col(grid)
+# MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>You resume walking through the valley of mirrors and - <em>SMACK!</em> - run directly into one. Hopefully <span title="Sorry, Nobody saw that.">nobody</span> was watching, because that must have been pretty embarrassing.</p>
+# MAGIC <p>Upon closer inspection, you discover that every mirror has exactly one <em>smudge</em>: exactly one <code>.</code> or <code>#</code> should be the opposite type.</p>
+# MAGIC <p>In each pattern, you'll need to locate and fix the smudge that causes a <em>different reflection line</em> to be valid. (The old reflection line won't necessarily continue being valid after the smudge is fixed.)</p>
+# MAGIC <p>Here's the above example again:</p>
+# MAGIC <pre><code>#.##..##.
+# MAGIC ..#.##.#.
+# MAGIC ##......#
+# MAGIC ##......#
+# MAGIC ..#.##.#.
+# MAGIC ..##..##.
+# MAGIC #.#.##.#.
+# MAGIC
+# MAGIC #...##..#
+# MAGIC #....#..#
+# MAGIC ..##..###
+# MAGIC #####.##.
+# MAGIC #####.##.
+# MAGIC ..##..###
+# MAGIC #....#..#
+# MAGIC </code></pre>
+# MAGIC <p>The first pattern's smudge is in the top-left corner. If the top-left <code>#</code> were instead <code>.</code>, it would have a different, horizontal line of reflection:</p>
+# MAGIC <pre><code>1 ..##..##. 1
+# MAGIC 2 ..#.##.#. 2
+# MAGIC 3v##......#v3
+# MAGIC 4^##......#^4
+# MAGIC 5 ..#.##.#. 5
+# MAGIC 6 ..##..##. 6
+# MAGIC 7 #.#.##.#. 7
+# MAGIC </code></pre>
+# MAGIC <p>With the smudge in the top-left corner repaired, a new horizontal line of reflection between rows 3 and 4 now exists. Row 7 has no corresponding reflected row and can be ignored, but every other row matches exactly: row 1 matches row 6, row 2 matches row 5, and row 3 matches row 4.</p>
+# MAGIC <p>In the second pattern, the smudge can be fixed by changing the fifth symbol on row 2 from <code>.</code> to <code>#</code>:</p>
+# MAGIC <pre><code>1v#...##..#v1
+# MAGIC 2^#...##..#^2
+# MAGIC 3 ..##..### 3
+# MAGIC 4 #####.##. 4
+# MAGIC 5 #####.##. 5
+# MAGIC 6 ..##..### 6
+# MAGIC 7 #....#..# 7
+# MAGIC </code></pre>
+# MAGIC <p>Now, the pattern has a different horizontal line of reflection between rows 1 and 2.</p>
+# MAGIC <p>Summarize your notes as before, but instead use the new different reflection lines. In this example, the first pattern's new horizontal line has 3 rows above it and the second pattern's new horizontal line has 1 row above it, summarizing to the value <code><em>400</em></code>.</p>
+# MAGIC <p>In each pattern, fix the smudge and find the different line of reflection. <em>What number do you get after summarizing the new reflection line in each pattern in your notes?</em></p>
+# MAGIC </article>
 
 # COMMAND ----------
 
-grid = [['.', '.', '.', '.', '#', '#', '.', '.', '#'], ['#', '.', '.', '.', '.', '#', '.', '.', '#'], ['.', '.', '#', '#', '.', '.', '#', '#', '#'], ['#', '#', '#', '#', '#', '.', '#', '#', '.'], ['#', '#', '#', '#', '#', '.', '#', '#', '.'], ['.', '.', '#', '#', '.', '.', '#', '#', '#'], ['#', '.', '.', '.', '.', '#', '.', '.', '#']]
-get_col(grid), get_row(grid) # Why is 4 cemetrical?
+import itertools
 
-# COMMAND ----------
 
-get_col(grids[1]), get_row(grids[1])
+answer = 0
+for grid_original in grids:
+    for row, col in itertools.product(range(len(grid_original)), range(len(grid_original[0]))):
+        grid = [list(s)for s in grid_original]
+        grid[row][col] = {'#': '.', '.': '#'}[grid[row][col]]
+
+        mirror_cols = get_mirror_cols(grid).difference(get_mirror_cols(grid_original))
+        mirror_rows = get_mirror_rows(grid).difference(get_mirror_rows(grid_original))
+
+        if len(mirror_cols) + len(mirror_rows) == 1:
+            answer += next(iter(mirror_cols), 0) + 100 * next(iter(mirror_rows), 0)
+            break
+
+print(answer)
