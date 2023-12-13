@@ -1,8 +1,4 @@
 # Databricks notebook source
-# %pip install z3-solver
-
-# COMMAND ----------
-
 # MAGIC %md https://adventofcode.com/2023/day/13
 
 # COMMAND ----------
