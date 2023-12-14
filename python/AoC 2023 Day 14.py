@@ -1,5 +1,52 @@
 # Databricks notebook source
-#%pip install z3-solver
+# MAGIC %md https://adventofcode.com/2023/day/14
+
+# COMMAND ----------
+
+# MAGIC %md <article class="day-desc"><h2>--- Day 14: Parabolic Reflector Dish ---</h2><p>You reach the place where all of the mirrors were pointing: a massive <a href="https://en.wikipedia.org/wiki/Parabolic_reflector" target="_blank">parabolic reflector dish</a> <span title="Why, where do you attach YOUR massive parabolic reflector dishes?">attached</span> to the side of another large mountain.</p>
+# MAGIC <p>The dish is made up of many small mirrors, but while the mirrors themselves are roughly in the shape of a parabolic reflector dish, each individual mirror seems to be pointing in slightly the wrong direction. If the dish is meant to focus light, all it's doing right now is sending it in a vague direction.</p>
+# MAGIC <p>This system must be what provides the energy for the lava! If you focus the reflector dish, maybe you can go where it's pointing and use the light to fix the lava production.</p>
+# MAGIC <p>Upon closer inspection, the individual mirrors each appear to be connected via an elaborate system of ropes and pulleys to a large metal platform below the dish. The platform is covered in large rocks of various shapes. Depending on their position, the weight of the rocks deforms the platform, and the shape of the platform controls which ropes move and ultimately the focus of the dish.</p>
+# MAGIC <p>In short: if you move the rocks, you can focus the dish. The platform even has a control panel on the side that lets you <em>tilt</em> it in one of four directions! The rounded rocks (<code>O</code>) will roll when the platform is tilted, while the cube-shaped rocks (<code>#</code>) will stay in place. You note the positions of all of the empty spaces (<code>.</code>) and rocks (your puzzle input). For example:</p>
+# MAGIC <pre><code>O....#....
+# MAGIC O.OO#....#
+# MAGIC .....##...
+# MAGIC OO.#O....O
+# MAGIC .O.....O#.
+# MAGIC O.#..O.#.#
+# MAGIC ..O..#O..O
+# MAGIC .......O..
+# MAGIC #....###..
+# MAGIC #OO..#....
+# MAGIC </code></pre>
+# MAGIC <p>Start by tilting the lever so all of the rocks will slide <em>north</em> as far as they will go:</p>
+# MAGIC <pre><code>OOOO.#.O..
+# MAGIC OO..#....#
+# MAGIC OO..O##..O
+# MAGIC O..#.OO...
+# MAGIC ........#.
+# MAGIC ..#....#.#
+# MAGIC ..O..#.O.O
+# MAGIC ..O.......
+# MAGIC #....###..
+# MAGIC #....#....
+# MAGIC </code></pre>
+# MAGIC <p>You notice that the support beams along the north side of the platform are <em>damaged</em>; to ensure the platform doesn't collapse, you should calculate the <em>total load</em> on the north support beams.</p>
+# MAGIC <p>The amount of load caused by a single rounded rock (<code>O</code>) is equal to the number of rows from the rock to the south edge of the platform, including the row the rock is on. (Cube-shaped rocks (<code>#</code>) don't contribute to load.) So, the amount of load caused by each rock in each row is as follows:</p>
+# MAGIC <pre><code>OOOO.#.O.. 10
+# MAGIC OO..#....#  9
+# MAGIC OO..O##..O  8
+# MAGIC O..#.OO...  7
+# MAGIC ........#.  6
+# MAGIC ..#....#.#  5
+# MAGIC ..O..#.O.O  4
+# MAGIC ..O.......  3
+# MAGIC #....###..  2
+# MAGIC #....#....  1
+# MAGIC </code></pre>
+# MAGIC <p>The total load is the sum of the load caused by all of the <em>rounded rocks</em>. In this example, the total load is <code><em>136</em></code>.</p>
+# MAGIC <p>Tilt the platform so that the rounded rocks all roll north. Afterward, <em>what is the total load on the north support beams?</em></p>
+# MAGIC </article>
 
 # COMMAND ----------
 
@@ -121,650 +168,109 @@ O...O.O..O.#.......O..O.O....O..O..#..#.........#O.OO..O..O.#O..O.....O.....#O..
 
 # COMMAND ----------
 
-m = {(row, col): c for row, line in enumerate(inp.splitlines()) for col, c in enumerate(line)}
-n_rows = len(inp.splitlines())
-n_cols = len(inp.splitlines()[0])
-cubes = {pos for pos, c in m.items() if c == '#'}
-rollers = {pos for pos, c in m.items() if c == 'O'}
-
-for _ in range(n_rows):
-    for row in range(1, n_rows):
-        for col in range(n_cols):
-            if (row, col) in rollers and (row-1, col) not in cubes.union(rollers):
-                rollers.remove((row, col))
-                rollers.add((row-1, col))
-
-answer = 0
-for roller in rollers:
-    answer += n_rows - roller[0]
-answer
-
-# COMMAND ----------
-
-import itertools
-m = {(row, col): c for row, line in enumerate(inp.splitlines()) for col, c in enumerate(line)}
-n_rows = len(inp.splitlines())
-n_cols = len(inp.splitlines()[0])
-cubes = {pos for pos, c in m.items() if c == '#'}
-rollers = {pos for pos, c in m.items() if c == 'O'}
-
-# for _ in range(n_rows):
-# for _ in range(100):
-for _ in range(1):
-    for row, col in sorted(rollers):
-        for dr in itertools.count(1):
-            if (row-dr, col) not in cubes.union(rollers) and row-dr>=0:
-                pass
-            else:
-                break
-
-        if dr > 1:
-            rollers.remove((row, col))
-            rollers.add((row-dr+1, col))
-
-answer = 0
-for roller in rollers:
-    answer += n_rows - roller[0]
-answer
-
-# COMMAND ----------
-
-def tilt_north():
-    for row, col in sorted(rollers):
-        for dr in itertools.count(1):
-            if (row-dr, col) not in cubes.union(rollers) and row-dr>=0:
-                pass
-            else:
-                break
-
-        if dr > 1:
-            rollers.remove((row, col))
-            rollers.add((row-dr+1, col))
-
-def tilt_west():
-    for row, col in sorted(rollers, key=lambda x: x[1]):
-        for dc in itertools.count(1):
-            if (row, col-dc) not in cubes.union(rollers) and col-dc>=0:
-                pass
-            else:
-                break
-
-        if dc > 1:
-            rollers.remove((row, col))
-            rollers.add((row, col-dc+1))
-
-def tilt_south():
-    for row, col in sorted(rollers, reverse=True):
-        for dr in itertools.count(1):
-            if (row+dr, col) not in cubes.union(rollers) and row+dr<n_rows:
-                pass
-            else:
-                break
-
-        if dr > 1:
-            rollers.remove((row, col))
-            rollers.add((row+dr-1, col))
-
-def tilt_east():
-    for row, col in sorted(rollers, key=lambda x: -x[1]):
-        for dc in itertools.count(1):
-            if (row, col+dc) not in cubes.union(rollers) and col+dc<n_cols:
-                pass
-            else:
-                break
-
-        if dc > 1:
-            rollers.remove((row, col))
-            rollers.add((row, col+dc-1))
-
-def cycle():
-    tilt_north()
-    tilt_west()
-    tilt_south()
-    tilt_east()
-
-def print_m():
-    for row in range(n_rows):
-        line = ''
-        for col in range(n_cols):
-            c = '.'
-            if (row, col) in cubes: c = '#'
-            if (row, col) in rollers: c = 'O'
-            line += c
-        print(line)
-
-import itertools
-m = {(row, col): c for row, line in enumerate(inp.splitlines()) for col, c in enumerate(line)}
-n_rows = len(inp.splitlines())
-n_cols = len(inp.splitlines()[0])
-cubes = {pos for pos, c in m.items() if c == '#'}
-rollers = {pos for pos, c in m.items() if c == 'O'}
-
-# cycle()
-# print_m()
-# print()
-# cycle()
-# print_m()
-# print()
-# cycle()
-# print_m()
-# print()
-
-nums = []
-#for _ in range(200):
-for _ in range(121):
-    cycle()
-    num = sum(n_rows - roller[0] for roller in rollers)
-    nums.append(num)
-nums
-
-# COMMAND ----------
-
-#example2
-cycle_len = 7
-prefix = 121
-cycle_start = prefix - cycle_len
-i = cycle_start + ((1000000000 - prefix) % cycle_len) - 1
-nums[i]
-
-
-# COMMAND ----------
-
-nums = [99836,
-99778,
-99579,
-99533,
-99441,
-99397,
-99380,
-99402,
-99334,
-99344,
-99338,
-99341,
-99365,
-99387,
-99380,
-99397,
-99390,
-99390,
-99388,
-99440,
-99476,
-99545,
-99529,
-99604,
-99645,
-99721,
-99752,
-99779,
-99788,
-99843,
-99891,
-99971,
-100040,
-100078,
-100119,
-100180,
-100216,
-100257,
-100281,
-100301,
-100300,
-100304,
-100324,
-100335,
-100379,
-100407,
-100442,
-100463,
-100481,
-100477,
-100472,
-100462,
-100458,
-100451,
-100449,
-100438,
-100409,
-100390,
-100365,
-100339,
-100304,
-100267,
-100238,
-100215,
-100198,
-100182,
-100169,
-100157,
-100162,
-100160,
-100140,
-100124,
-100109,
-100092,
-100066,
-100042,
-100021,
-100008,
-99997,
-99999,
-100011,
-100025,
-100043,
-100071,
-100084,
-100084,
-100086,
-100084,
-100086,
-100086,
-100079,
-100064,
-100047,
-100034,
-100024,
-100016,
-100008,
-100011,
-100025,
-100043,
-100071,
-100084,
-100084,
-100086,
-100084,
-100086,
-100086,
-100079,
-100064,
-100047,
-100034,
-100024,
-100016,
-100008,
-100011,
-100025,
-100043,
-100071,
-100084,
-100084,
-100086,
-]
-nums
-
-# COMMAND ----------
-
-#actual
-cycle_len = 15
-cycle_start = 121 - cycle_len
-prefix = 121
-i = cycle_start + ((1000000000 - prefix) % cycle_len) - 1
-nums[i]
-# Not 100011, 100008
-
-# COMMAND ----------
-
-set([100079,
-100064,
-100047,
-100034,
-100024,
-100016,
-100008,
-100011,
-100025,
-100043,
-100071,
-100084,
-100084,
-100086]).difference(set([100011, 100008]))
-
-# COMMAND ----------
-
-nums = '''99836
-99778
-99579
-99533
-99441
-99397
-99380
-99402
-99334
-99344
-99338
-99341
-99365
-99387
-99380
-99397
-99390
-99390
-99388
-99440
-99476
-99545
-99529
-99604
-99645
-99721
-99752
-99779
-99788
-99843
-99891
-99971
-100040
-100078
-100119
-100180
-100216
-100257
-100281
-100301
-100300
-100304
-100324
-100335
-100379
-100407
-100442
-100463
-100481
-100477
-100472
-100462
-100458
-100451
-100449
-100438
-100409
-100390
-100365
-100339
-100304
-100267
-100238
-100215
-100198
-100182
-100169
-100157
-100162
-100160
-100140
-100124
-100109
-100092
-100066
-100042
-100021
-100008
-99997
-99999
-100011
-100025
-100043
-100071
-100084
-100084
-100086
-100084
-100086
-100086
-100079
-100064
-100047
-100034
-100024
-100016
-100008
-100011
-100025
-100043
-100071
-100084
-100084
-100086
-100084
-100086
-100086
-100079
-100064
-100047
-100034
-100024
-100016
-100008
-100011
-100025
-100043
-100071
-100084
-100084
-100086
-100084
-100086
-100086
-100079
-100064
-100047
-100034
-100024
-100016
-100008
-100011
-100025
-100043
-100071
-100084
-100084
-100086
-100084
-100086
-100086
-100079
-100064
-100047
-100034
-100024
-100016
-100008
-100011
-100025
-100043
-100071
-100084
-100084
-100086
-100084
-100086
-100086
-100079
-100064
-100047
-100034
-100024
-100016
-100008
-100011
-100025
-100043
-100071
-100084
-100084
-100086
-100084
-100086
-100086
-100079
-100064
-100047
-100034
-100024
-100016
-100008
-100011
-100025
-100043
-100071
-100084
-100084
-100086
-100084
-100086
-100086
-100079
-100064
-100047
-100034
-100024
-100016
-100008
-100011
-'''
-nums = [int(x) for x in nums.splitlines()]
-len(nums)
-# Cycle 17
-
-# COMMAND ----------
-
-#actual
-cycle_len = 17
-cycle_start = 200 - cycle_len
-prefix = 200
-i = cycle_start + ((1000000000 - prefix) % cycle_len) - 1
-nums[i]
-# Not 100011, 100008
-
-# COMMAND ----------
-
-def tilt_north():
-    for col in range(n_cols):
+def tilt_north(grid):
+    for col in range(len(grid[0])):
         free = None
-        for row in range(n_rows):
-            if (row, col) not in cubes and (row, col) not in rollers:
-                free = free or row
-            if (row, col) in rollers:
-                if free:
-                    rollers.remove((row,col))
-                    rollers.add((free, col))
+        for row in range(len(grid)):
+            if grid[row][col] == '.':
+                if free is None:
+                    free = row
+            elif grid[row][col] == 'O':
+                if free is not None:
+                    grid[row][col] = '.'
+                    grid[free][col] = 'O'
 
                     # Find next free spot
-                    free = None
-                    for r2 in range(free+1, n_rows):
-                        if (r2,col) not in cubes and (r2,col) not in rollers:
+                    for r2 in range(free + 1, len(grid)):
+                        if grid[r2][col] == '.':
                             free = r2
                             break
+                    else:
+                        free = None
+            elif grid[row][col] == '#':
+                free = None
 
-def tilt_west():
-    for row, col in sorted(rollers, key=lambda x: x[1]):
-        for dc in itertools.count(1):
-            if (row, col-dc) not in cubes.union(rollers) and col-dc>=0:
-                pass
-            else:
-                break
 
-        if dc > 1:
-            rollers.remove((row, col))
-            rollers.add((row, col-dc+1))
-
-def tilt_south():
-    for row, col in sorted(rollers, reverse=True):
-        for dr in itertools.count(1):
-            if (row+dr, col) not in cubes.union(rollers) and row+dr<n_rows:
-                pass
-            else:
-                break
-
-        if dr > 1:
-            rollers.remove((row, col))
-            rollers.add((row+dr-1, col))
-
-def tilt_east():
-    for row, col in sorted(rollers, key=lambda x: -x[1]):
-        for dc in itertools.count(1):
-            if (row, col+dc) not in cubes.union(rollers) and col+dc<n_cols:
-                pass
-            else:
-                break
-
-        if dc > 1:
-            rollers.remove((row, col))
-            rollers.add((row, col+dc-1))
-
-def cycle():
-    tilt_north()
-    tilt_west()
-    tilt_south()
-    tilt_east()
-
-def print_m():
-    for row in range(n_rows):
-        line = ''
-        for col in range(n_cols):
-            c = '.'
-            if (row, col) in cubes: c = '#'
-            if (row, col) in rollers: c = 'O'
-            line += c
-        print(line)
-
-import itertools
-m = {(row, col): c for row, line in enumerate(inp.splitlines()) for col, c in enumerate(line)}
-n_rows = len(inp.splitlines())
-n_cols = len(inp.splitlines()[0])
-cubes = {pos for pos, c in m.items() if c == '#'}
-rollers = {pos for pos, c in m.items() if c == 'O'}
-
-# cycle()
-# print_m()
-# print()
-# cycle()
-# print_m()
-# print()
-# cycle()
-# print_m()
-# print()
-
-nums = []
-for _ in range(200):
-    cycle()
-    num = sum(n_rows - roller[0] for roller in rollers)
-    nums.append(num)
-nums
+grid = [list(line) for line in inp.splitlines()]
+tilt_north(grid)
+answer = sum(len(grid) - row for row, line in enumerate(grid) for c in line if c == 'O')
+print(answer)
 
 # COMMAND ----------
 
-#example
-cycle_start = 193
-cycle_len = 7
-prefix = 200
-i = cycle_start + ((1000000000 - prefix) % cycle_len) - 1
-nums[i]
+# MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>The parabolic reflector dish deforms, but not in a way that focuses the beam. To do that, you'll need to move the rocks to the edges of the platform. Fortunately, a button on the side of the control panel labeled "<em>spin cycle</em>" attempts to do just that!</p>
+# MAGIC <p>Each <em>cycle</em> tilts the platform four times so that the rounded rocks roll <em>north</em>, then <em>west</em>, then <em>south</em>, then <em>east</em>. After each tilt, the rounded rocks roll as far as they can before the platform tilts in the next direction. After one cycle, the platform will have finished rolling the rounded rocks in those four directions in that order.</p>
+# MAGIC <p>Here's what happens in the example above after each of the first few cycles:</p>
+# MAGIC <pre><code>After 1 cycle:
+# MAGIC .....#....
+# MAGIC ....#...O#
+# MAGIC ...OO##...
+# MAGIC .OO#......
+# MAGIC .....OOO#.
+# MAGIC .O#...O#.#
+# MAGIC ....O#....
+# MAGIC ......OOOO
+# MAGIC #...O###..
+# MAGIC #..OO#....
+# MAGIC
+# MAGIC After 2 cycles:
+# MAGIC .....#....
+# MAGIC ....#...O#
+# MAGIC .....##...
+# MAGIC ..O#......
+# MAGIC .....OOO#.
+# MAGIC .O#...O#.#
+# MAGIC ....O#...O
+# MAGIC .......OOO
+# MAGIC #..OO###..
+# MAGIC #.OOO#...O
+# MAGIC
+# MAGIC After 3 cycles:
+# MAGIC .....#....
+# MAGIC ....#...O#
+# MAGIC .....##...
+# MAGIC ..O#......
+# MAGIC .....OOO#.
+# MAGIC .O#...O#.#
+# MAGIC ....O#...O
+# MAGIC .......OOO
+# MAGIC #...O###.O
+# MAGIC #.OOO#...O
+# MAGIC </code></pre>
+# MAGIC <p>This process should work if you leave it running long enough, but you're still worried about the north support beams. To make sure they'll survive for a while, you need to calculate the <em>total load</em> on the north support beams after <code>1000000000</code> cycles.</p>
+# MAGIC <p>In the above example, after <code>1000000000</code> cycles, the total load on the north support beams is <code><em>64</em></code>.</p>
+# MAGIC <p>Run the spin cycle for <code>1000000000</code> cycles. Afterward, <em>what is the total load on the north support beams?</em></p>
+# MAGIC </article>
 
 # COMMAND ----------
 
-sorted(rollers, key=lambda x: x[1])
-
-# COMMAND ----------
-
-# for _ in range(100):
-#     for row in range(1, n_rows):
-#         for col in range(n_cols):
-#             if (row, col) in rollers and (row-1, col) not in cubes.union(rollers):
-#                 rollers.remove((row, col))
-#                 rollers.add((row-1, col))
-
-# answer = 0
-# for roller in rollers:
-#     answer += n_rows - roller[0]
-# answer
-
-# COMMAND ----------
-
-{pos for pos, c in m.items() if c == '#'}
-
-# COMMAND ----------
+def rotate_clockwise(grid):
+    return [list(z)[::-1] for z in zip(*grid)]
 
 
+def cycle(grid):
+    for _ in range(4):
+        tilt_north(grid)
+        grid = rotate_clockwise(grid)
+    return grid
+
+
+def to_string(grid):
+    return '\n'.join(''.join(line) for line in grid)
+
+
+grid = [list(line) for line in inp.splitlines()]
+seen = {}
+loads = []
+i = 0
+while to_string(grid) not in seen:
+    seen[to_string(grid)] = i
+    loads.append(sum(len(grid) - row for row, line in enumerate(grid) for c in line if c == 'O'))
+    grid = cycle(grid)
+    i += 1
+
+cycle_length = i - seen[to_string(grid)]
+cycle_start = i - cycle_length
+i_answer = cycle_start + ((1000000000 - i) % cycle_length)
+answer = loads[i_answer]
+print(answer)
