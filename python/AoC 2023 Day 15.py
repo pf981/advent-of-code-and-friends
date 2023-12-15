@@ -1,9 +1,63 @@
 # Databricks notebook source
-# %pip install z3-solver
+# MAGIC %md https://adventofcode.com/2023/day/15
 
 # COMMAND ----------
 
-inp = '''rn=1,cm-,qp=3,cm=2,qp-,pc=4,ot=9,ab=5,pc-,pc=6,ot=7'''
+# MAGIC %md <article class="day-desc"><h2>--- Day 15: Lens Library ---</h2><p>The newly-focused parabolic reflector dish is sending all of the collected light to a point on the side of yet another mountain - the largest mountain on Lava Island. As you approach the mountain, you find that the light is being collected by the wall of a large facility embedded in the mountainside.</p>
+# MAGIC <p>You find a door under a large sign that says "Lava Production Facility" and next to a smaller sign that says "Danger - Personal Protective Equipment required beyond this point".</p>
+# MAGIC <p>As you step inside, you are immediately greeted by a somewhat panicked <span title="do you like my hard hat">reindeer</span> wearing goggles and a loose-fitting <a href="https://en.wikipedia.org/wiki/Hard_hat" target="_blank">hard hat</a>. The reindeer leads you to a shelf of goggles and hard hats (you quickly find some that fit) and then further into the facility. At one point, you pass a button with a faint snout mark and the label "PUSH FOR HELP". No wonder you were loaded into that <a href="1">trebuchet</a> so quickly!</p>
+# MAGIC <p>You pass through a final set of doors surrounded with even more warning signs and into what must be the room that collects all of the light from outside. As you admire the large assortment of lenses available to further focus the light, the reindeer brings you a book titled "Initialization Manual".</p>
+# MAGIC <p>"Hello!", the book cheerfully begins, apparently unaware of the concerned reindeer reading over your shoulder. "This procedure will let you bring the Lava Production Facility online - all without burning or melting anything unintended!"</p>
+# MAGIC <p>"Before you begin, please be prepared to use the Holiday ASCII String Helper algorithm (appendix 1A)." You turn to appendix 1A. The reindeer leans closer with interest.</p>
+# MAGIC <p>The HASH algorithm is a way to turn any <a href="https://en.wikipedia.org/wiki/String_(computer_science)" target="_blank">string</a> of characters into a single <em>number</em> in the range 0 to 255. To run the HASH algorithm on a string, start with a <em>current value</em> of <code>0</code>. Then, for each character in the string starting from the beginning:</p>
+# MAGIC <ul>
+# MAGIC <li>Determine the <a href="https://en.wikipedia.org/wiki/ASCII#Printable_characters" target="_blank">ASCII code</a> for the current character of the string.</li>
+# MAGIC <li>Increase the <em>current value</em> by the ASCII code you just determined.</li>
+# MAGIC <li>Set the <em>current value</em> to itself multiplied by <code>17</code>.</li>
+# MAGIC <li>Set the <em>current value</em> to the <a href="https://en.wikipedia.org/wiki/Modulo" target="_blank">remainder</a> of dividing itself by <code>256</code>.</li>
+# MAGIC </ul>
+# MAGIC <p>After following these steps for each character in the string in order, the <em>current value</em> is the output of the HASH algorithm.</p>
+# MAGIC <p>So, to find the result of running the HASH algorithm on the string <code>HASH</code>:</p>
+# MAGIC <ul>
+# MAGIC <li>The <em>current value</em> starts at <code>0</code>.</li>
+# MAGIC <li>The first character is <code>H</code>; its ASCII code is <code>72</code>.</li>
+# MAGIC <li>The <em>current value</em> increases to <code>72</code>.</li>
+# MAGIC <li>The <em>current value</em> is multiplied by <code>17</code> to become <code>1224</code>.</li>
+# MAGIC <li>The <em>current value</em> becomes <code><em>200</em></code> (the remainder of <code>1224</code> divided by <code>256</code>).</li>
+# MAGIC <li>The next character is <code>A</code>; its ASCII code is <code>65</code>.</li>
+# MAGIC <li>The <em>current value</em> increases to <code>265</code>.</li>
+# MAGIC <li>The <em>current value</em> is multiplied by <code>17</code> to become <code>4505</code>.</li>
+# MAGIC <li>The <em>current value</em> becomes <code><em>153</em></code> (the remainder of <code>4505</code> divided by <code>256</code>).</li>
+# MAGIC <li>The next character is <code>S</code>; its ASCII code is <code>83</code>.</li>
+# MAGIC <li>The <em>current value</em> increases to <code>236</code>.</li>
+# MAGIC <li>The <em>current value</em> is multiplied by <code>17</code> to become <code>4012</code>.</li>
+# MAGIC <li>The <em>current value</em> becomes <code><em>172</em></code> (the remainder of <code>4012</code> divided by <code>256</code>).</li>
+# MAGIC <li>The next character is <code>H</code>; its ASCII code is <code>72</code>.</li>
+# MAGIC <li>The <em>current value</em> increases to <code>244</code>.</li>
+# MAGIC <li>The <em>current value</em> is multiplied by <code>17</code> to become <code>4148</code>.</li>
+# MAGIC <li>The <em>current value</em> becomes <code><em>52</em></code> (the remainder of <code>4148</code> divided by <code>256</code>).</li>
+# MAGIC </ul>
+# MAGIC <p>So, the result of running the HASH algorithm on the string <code>HASH</code> is <code><em>52</em></code>.</p>
+# MAGIC <p>The <em>initialization sequence</em> (your puzzle input) is a comma-separated list of steps to start the Lava Production Facility. <em>Ignore newline characters</em> when parsing the initialization sequence. To verify that your HASH algorithm is working, the book offers the sum of the result of running the HASH algorithm on each step in the initialization sequence.</p>
+# MAGIC <p>For example:</p>
+# MAGIC <pre><code>rn=1,cm-,qp=3,cm=2,qp-,pc=4,ot=9,ab=5,pc-,pc=6,ot=7</code></pre>
+# MAGIC <p>This initialization sequence specifies 11 individual steps; the result of running the HASH algorithm on each of the steps is as follows:</p>
+# MAGIC <ul>
+# MAGIC <li><code>rn=1</code> becomes <code><em>30</em></code>.</li>
+# MAGIC <li><code>cm-</code> becomes <code><em>253</em></code>.</li>
+# MAGIC <li><code>qp=3</code> becomes <code><em>97</em></code>.</li>
+# MAGIC <li><code>cm=2</code> becomes <code><em>47</em></code>.</li>
+# MAGIC <li><code>qp-</code> becomes <code><em>14</em></code>.</li>
+# MAGIC <li><code>pc=4</code> becomes <code><em>180</em></code>.</li>
+# MAGIC <li><code>ot=9</code> becomes <code><em>9</em></code>.</li>
+# MAGIC <li><code>ab=5</code> becomes <code><em>197</em></code>.</li>
+# MAGIC <li><code>pc-</code> becomes <code><em>48</em></code>.</li>
+# MAGIC <li><code>pc=6</code> becomes <code><em>214</em></code>.</li>
+# MAGIC <li><code>ot=7</code> becomes <code><em>231</em></code>.</li>
+# MAGIC </ul>
+# MAGIC <p>In this example, the sum of these results is <code><em>1320</em></code>. Unfortunately, the reindeer has stolen the page containing the expected verification number and is currently running around the facility with it excitedly.</p>
+# MAGIC <p>Run the HASH algorithm on each step in the initialization sequence. <em>What is the sum of the results?</em> (The initialization sequence is one long line; be careful when copy-pasting it.)</p>
+# MAGIC </article>
 
 # COMMAND ----------
 
@@ -12,22 +66,106 @@ inp = '''jpv-,ndd-,bqpgj-,fp=5,fl-,bfh-,qh=2,npxt-,tsjpg=3,fls-,gm-,lk-,nj-,hvv-
 # COMMAND ----------
 
 def get_hash(s):
-    cur = 0
+    current_value = 0
     for c in s:
-        cur += ord(c)
-        cur *= 17
-        cur %= 256
-    return cur
-sum(get_hash(x) for x in inp.split(','))
+        current_value += ord(c)
+        current_value *= 17
+        current_value %= 256
+    return current_value
+
+answer = sum(get_hash(s) for s in inp.split(','))
+print(answer)
+
+# COMMAND ----------
+
+# MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>You convince the reindeer to bring you the page; the page confirms that your HASH algorithm is working.</p>
+# MAGIC <p>The book goes on to describe a series of 256 <em>boxes</em> numbered <code>0</code> through <code>255</code>. The boxes are arranged in a line starting from the point where light enters the facility. The boxes have holes that allow light to pass from one box to the next all the way down the line.</p>
+# MAGIC <pre><code>      +-----+  +-----+         +-----+
+# MAGIC Light | Box |  | Box |   ...   | Box |
+# MAGIC -----------------------------------------&gt;
+# MAGIC       |  0  |  |  1  |   ...   | 255 |
+# MAGIC       +-----+  +-----+         +-----+
+# MAGIC </code></pre>
+# MAGIC <p>Inside each box, there are several <em>lens slots</em> that will keep a lens correctly positioned to focus light passing through the box. The side of each box has a panel that opens to allow you to insert or remove lenses as necessary.</p>
+# MAGIC <p>Along the wall running parallel to the boxes is a large library containing lenses organized by <em>focal length</em> ranging from <code>1</code> through <code>9</code>. The reindeer also brings you a small handheld <a href="https://en.wikipedia.org/wiki/Label_printer" target="_blank">label printer</a>.</p>
+# MAGIC <p>The book goes on to explain how to perform each step in the initialization sequence, a process it calls the Holiday ASCII String Helper Manual Arrangement Procedure, or <em>HASHMAP</em> for short.</p>
+# MAGIC <p>Each step begins with a sequence of letters that indicate the <em>label</em> of the lens on which the step operates. The result of running the HASH algorithm on the label indicates the correct box for that step.</p>
+# MAGIC <p>The label will be immediately followed by a character that indicates the <em>operation</em> to perform: either an equals sign (<code>=</code>) or a dash (<code>-</code>).</p>
+# MAGIC <p>If the operation character is a <em>dash</em> (<code>-</code>), go to the relevant box and remove the lens with the given label if it is present in the box. Then, move any remaining lenses as far forward in the box as they can go without changing their order, filling any space made by removing the indicated lens. (If no lens in that box has the given label, nothing happens.)</p>
+# MAGIC <p>If the operation character is an <em>equals sign</em> (<code>=</code>), it will be followed by a number indicating the <em>focal length</em> of the lens that needs to go into the relevant box; be sure to use the label maker to mark the lens with the label given in the beginning of the step so you can find it later. There are two possible situations:</p>
+# MAGIC <ul>
+# MAGIC <li>If there is already a lens in the box with the same label, <em>replace the old lens</em> with the new lens: remove the old lens and put the new lens in its place, not moving any other lenses in the box.</li>
+# MAGIC <li>If there is <em>not</em> already a lens in the box with the same label, add the lens to the box immediately behind any lenses already in the box. Don't move any of the other lenses when you do this. If there aren't any lenses in the box, the new lens goes all the way to the front of the box.</li>
+# MAGIC </ul>
+# MAGIC <p>Here is the contents of every box after each step in the example initialization sequence above:</p>
+# MAGIC <pre><code>After "rn=1":
+# MAGIC Box 0: [rn 1]
+# MAGIC
+# MAGIC After "cm-":
+# MAGIC Box 0: [rn 1]
+# MAGIC
+# MAGIC After "qp=3":
+# MAGIC Box 0: [rn 1]
+# MAGIC Box 1: [qp 3]
+# MAGIC
+# MAGIC After "cm=2":
+# MAGIC Box 0: [rn 1] [cm 2]
+# MAGIC Box 1: [qp 3]
+# MAGIC
+# MAGIC After "qp-":
+# MAGIC Box 0: [rn 1] [cm 2]
+# MAGIC
+# MAGIC After "pc=4":
+# MAGIC Box 0: [rn 1] [cm 2]
+# MAGIC Box 3: [pc 4]
+# MAGIC
+# MAGIC After "ot=9":
+# MAGIC Box 0: [rn 1] [cm 2]
+# MAGIC Box 3: [pc 4] [ot 9]
+# MAGIC
+# MAGIC After "ab=5":
+# MAGIC Box 0: [rn 1] [cm 2]
+# MAGIC Box 3: [pc 4] [ot 9] [ab 5]
+# MAGIC
+# MAGIC After "pc-":
+# MAGIC Box 0: [rn 1] [cm 2]
+# MAGIC Box 3: [ot 9] [ab 5]
+# MAGIC
+# MAGIC After "pc=6":
+# MAGIC Box 0: [rn 1] [cm 2]
+# MAGIC Box 3: [ot 9] [ab 5] [pc 6]
+# MAGIC
+# MAGIC After "ot=7":
+# MAGIC Box 0: [rn 1] [cm 2]
+# MAGIC Box 3: [ot 7] [ab 5] [pc 6]
+# MAGIC </code></pre>
+# MAGIC <p>All 256 boxes are always present; only the boxes that contain any lenses are shown here. Within each box, lenses are listed from front to back; each lens is shown as its label and focal length in square brackets.</p>
+# MAGIC <p>To confirm that all of the lenses are installed correctly, add up the <em>focusing power</em> of all of the lenses. The focusing power of a single lens is the result of multiplying together:</p>
+# MAGIC <ul>
+# MAGIC <li>One plus the box number of the lens in question.</li>
+# MAGIC <li>The slot number of the lens within the box: <code>1</code> for the first lens, <code>2</code> for the second lens, and so on.</li>
+# MAGIC <li>The focal length of the lens.</li>
+# MAGIC </ul>
+# MAGIC <p>At the end of the above example, the focusing power of each lens is as follows:</p>
+# MAGIC <ul>
+# MAGIC <li><code>rn</code>: <code>1</code> (box 0) * <code>1</code> (first slot) * <code>1</code> (focal length) = <code><em>1</em></code></li>
+# MAGIC <li><code>cm</code>: <code>1</code> (box 0) * <code>2</code> (second slot) * <code>2</code> (focal length) = <code><em>4</em></code></li>
+# MAGIC <li><code>ot</code>: <code>4</code> (box 3) * <code>1</code> (first slot) * <code>7</code> (focal length) = <code><em>28</em></code></li>
+# MAGIC <li><code>ab</code>: <code>4</code> (box 3) * <code>2</code> (second slot) * <code>5</code> (focal length) = <code><em>40</em></code></li>
+# MAGIC <li><code>pc</code>: <code>4</code> (box 3) * <code>3</code> (third slot) * <code>6</code> (focal length) = <code><em>72</em></code></li>
+# MAGIC </ul>
+# MAGIC <p>So, the above example ends up with a total focusing power of <code><em>145</em></code>.</p>
+# MAGIC <p>With the help of an over-enthusiastic reindeer in a hard hat, follow the initialization sequence. <em>What is the focusing power of the resulting lens configuration?</em></p>
+# MAGIC </article>
 
 # COMMAND ----------
 
 boxes = [[] for _ in range(256)]
+
 for instruction in inp.split(','):
     if '=' in instruction:
         target, num = instruction.split('=')
         box = get_hash(target)
-        #print(f'{box=}')
         
         for i, (t, n) in enumerate(boxes[box]):
             if t == target:
@@ -42,9 +180,9 @@ for instruction in inp.split(','):
             if t == target:
                 del boxes[box][i]
                 break
-# boxes
+
 answer = 0
 for i_box, box in enumerate(boxes, 1):
     for i_slot, (_, num) in enumerate(box, 1):
         answer += i_box * i_slot * int(num)
-answer
+print(answer)
