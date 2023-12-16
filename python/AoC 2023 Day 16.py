@@ -172,6 +172,29 @@ inp = r'''\....\..-...........|..\........|.........|./.\..............\........
 # COMMAND ----------
 
 def count_energized(start_pos, start_dir, m):
+    movements = {
+        '.^': '^',
+        '.>': '>',
+        '.v': 'v',
+        '.<': '<',
+        '|^': '^',
+        '|>': 'v^',
+        '|v': 'v',
+        '|<': 'v^',
+        '-^': '<>',
+        '->': '>',
+        '-v': '<>',
+        '-<': '<',
+        '/^': '>',
+        '/>': '^',
+        '/v': '<',
+        '/<': 'v',
+        '\\^': '<',
+        '\\>': 'v',
+        '\\v': '>',
+        '\\<': '^'
+    }
+
     seen = set() # pos, direction
     stack = [(start_pos, start_dir)]
     while stack:
@@ -184,42 +207,8 @@ def count_energized(start_pos, start_dir, m):
             continue
         seen.add((pos, direction))
 
-
-        if m[pos] == '.' or (m[pos] == '|' and direction == 'v^') or (m[pos] == '-' and direction == '<>'):
-            stack.append(((pos[0] + (direction == 'v') - (direction == '^'), pos[1] + (direction == '>') - (direction == '<')), direction))
-            continue
-
-        if m[pos] == '|':
-            stack.append(((pos[0] - 1, pos[1]), '^'))
-            stack.append(((pos[0] + 1, pos[1]), 'v'))
-            continue
-        
-        if m[pos] == '-':
-            stack.append(((pos[0], pos[1] - 1), '<'))
-            stack.append(((pos[0], pos[1] + 1), '>'))
-            continue
-
-        if m[pos] == '/':
-            if direction == '>':
-                stack.append(((pos[0] - 1, pos[1]), '^'))
-            elif direction == '<':
-                stack.append(((pos[0] + 1, pos[1]), 'v'))
-            elif direction == '^':
-                stack.append(((pos[0], pos[1] + 1), '>'))
-            elif direction == 'v':
-                stack.append(((pos[0], pos[1] - 1), '<'))
-            continue
-
-        if m[pos] == '\\':
-            if direction == '>':
-                stack.append(((pos[0] + 1, pos[1]), 'v'))
-            elif direction == '<':
-                stack.append(((pos[0] - 1, pos[1]), '^'))
-            elif direction == '^':
-                stack.append(((pos[0], pos[1] - 1), '<'))
-            elif direction == 'v':
-                stack.append(((pos[0], pos[1] + 1), '>'))
-            continue
+        for new_direction in movements[m[pos] + direction]:
+            stack.append(((pos[0] + (new_direction == 'v') - (new_direction == '^'), pos[1] + (new_direction == '>') - (new_direction == '<')), new_direction))
 
     return len({pos for pos, _ in seen}) 
 
