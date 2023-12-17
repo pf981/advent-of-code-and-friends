@@ -1,4 +1,52 @@
 # Databricks notebook source
+# MAGIC %md https://adventofcode.com/2023/day/17
+
+# COMMAND ----------
+
+# MAGIC %md <article class="day-desc"><h2>--- Day 17: Clumsy Crucible ---</h2><p>The lava starts flowing rapidly once the Lava Production Facility is operational. As you <span title="see you soon?">leave</span>, the reindeer offers you a parachute, allowing you to quickly reach Gear Island.</p>
+# MAGIC <p>As you descend, your bird's-eye view of Gear Island reveals why you had trouble finding anyone on your way up: half of Gear Island is empty, but the half below you is a giant factory city!</p>
+# MAGIC <p>You land near the gradually-filling pool of lava at the base of your new <em>lavafall</em>. Lavaducts will eventually carry the lava throughout the city, but to make use of it immediately, Elves are loading it into large <a href="https://en.wikipedia.org/wiki/Crucible" target="_blank">crucibles</a> on wheels.</p>
+# MAGIC <p>The crucibles are top-heavy and pushed by hand. Unfortunately, the crucibles become very difficult to steer at high speeds, and so it can be hard to go in a straight line for very long.</p>
+# MAGIC <p>To get Desert Island the machine parts it needs as soon as possible, you'll need to find the best way to get the crucible <em>from the lava pool to the machine parts factory</em>. To do this, you need to minimize <em>heat loss</em> while choosing a route that doesn't require the crucible to go in a <em>straight line</em> for too long.</p>
+# MAGIC <p>Fortunately, the Elves here have a map (your puzzle input) that uses traffic patterns, ambient temperature, and hundreds of other parameters to calculate exactly how much heat loss can be expected for a crucible entering any particular city block.</p>
+# MAGIC <p>For example:</p>
+# MAGIC <pre><code>2413432311323
+# MAGIC 3215453535623
+# MAGIC 3255245654254
+# MAGIC 3446585845452
+# MAGIC 4546657867536
+# MAGIC 1438598798454
+# MAGIC 4457876987766
+# MAGIC 3637877979653
+# MAGIC 4654967986887
+# MAGIC 4564679986453
+# MAGIC 1224686865563
+# MAGIC 2546548887735
+# MAGIC 4322674655533
+# MAGIC </code></pre>
+# MAGIC <p>Each city block is marked by a single digit that represents the <em>amount of heat loss if the crucible enters that block</em>. The starting point, the lava pool, is the top-left city block; the destination, the machine parts factory, is the bottom-right city block. (Because you already start in the top-left block, you don't incur that block's heat loss unless you leave that block and then return to it.)</p>
+# MAGIC <p>Because it is difficult to keep the top-heavy crucible going in a straight line for very long, it can move <em>at most three blocks</em> in a single direction before it must turn 90 degrees left or right. The crucible also can't reverse direction; after entering each city block, it may only turn left, continue straight, or turn right.</p>
+# MAGIC <p>One way to <em>minimize heat loss</em> is this path:</p>
+# MAGIC <pre><code>2<em>&gt;</em><em>&gt;</em>34<em>^</em><em>&gt;</em><em>&gt;</em><em>&gt;</em>1323
+# MAGIC 32<em>v</em><em>&gt;</em><em>&gt;</em><em>&gt;</em>35<em>v</em>5623
+# MAGIC 32552456<em>v</em><em>&gt;</em><em>&gt;</em>54
+# MAGIC 3446585845<em>v</em>52
+# MAGIC 4546657867<em>v</em><em>&gt;</em>6
+# MAGIC 14385987984<em>v</em>4
+# MAGIC 44578769877<em>v</em>6
+# MAGIC 36378779796<em>v</em><em>&gt;</em>
+# MAGIC 465496798688<em>v</em>
+# MAGIC 456467998645<em>v</em>
+# MAGIC 12246868655<em>&lt;</em><em>v</em>
+# MAGIC 25465488877<em>v</em>5
+# MAGIC 43226746555<em>v</em><em>&gt;</em>
+# MAGIC </code></pre>
+# MAGIC <p>This path never moves more than three consecutive blocks in the same direction and incurs a heat loss of only <code><em>102</em></code>.</p>
+# MAGIC <p>Directing the crucible from the lava pool to the machine parts factory, but not moving more than three consecutive blocks in the same direction, <em>what is the least heat loss it can incur?</em></p>
+# MAGIC </article>
+
+# COMMAND ----------
+
 inp = '''2413432311323
 3215453535623
 3255245654254
@@ -12,15 +60,6 @@ inp = '''2413432311323
 1224686865563
 2546548887735
 4322674655533
-'''
-
-# COMMAND ----------
-
-inp = '''111111111111
-999999999991
-999999999991
-999999999991
-999999999991
 '''
 
 # COMMAND ----------
@@ -172,170 +211,102 @@ inp = '''23324423112255312252541345452235413546222232653534466226454422364265225
 
 import heapq
 
-revs = {
-  '<': '>',
-  '>': '<',
-  '^': 'v',
-  'v': '^',
-  '': '',
-}
 
-lines = inp.splitlines()
-m = {(row, col): int(c) for row, line in enumerate(lines) for col, c in enumerate(line)}
-n_rows = len(lines)
-n_cols = len(lines[0])
+def get_min_heat_loss(m, target, min_streak, max_streak):
+  reverse_direction = {
+    '<': '>',
+    '>': '<',
+    '^': 'v',
+    'v': '^',
+    'x': 'x'
+  }
+  seen = set()
+  h = [(0, (0, 0), 'x')]
+  while True:
+    heat, pos, streak = heapq.heappop(h)
 
-seen = set()
-h = [(0, (0, 0), '', '')]
-while True:
-  #print(h)
-  heat, pos, streak, seq = heapq.heappop(h)
-  #print(streak)
-
-  if pos == (n_rows-1, n_cols-1):
-    break
-  
-  if (streak, pos) in seen:
-    continue
-  seen.add((streak, pos))
-  #print(pos)
-  
-  for direction in '<>^v':
-    if revs[streak[-1:]] == direction:
+    if pos == target:
+      return heat
+    
+    if (streak, pos) in seen:
       continue
-    new_pos = (
-      pos[0] + (direction == 'v') - (direction == '^'),
-      pos[1] + (direction == '>') - (direction == '<')
-    )
-    new_streak = streak + direction
-    if len(set(new_streak)) != 1:
-      new_streak = direction
-    if len(new_streak) == 4:
-      continue
-    if new_pos in m:
-      heapq.heappush(h, (heat + m[new_pos], new_pos, new_streak, seq+direction))
-  
-print(heat)
+    seen.add((streak, pos))
+    
+    for direction in '<>^v':
+      if reverse_direction[streak[-1]] == direction:
+        continue
 
-# COMMAND ----------
-
-import heapq
-
-revs = {
-  '<': '>',
-  '>': '<',
-  '^': 'v',
-  'v': '^',
-  '': '',
-  'z': '',
-}
-
-lines = inp.splitlines()
-m = {(row, col): int(c) for row, line in enumerate(lines) for col, c in enumerate(line)}
-n_rows = len(lines)
-n_cols = len(lines[0])
-
-seen = set()
-h = [(0, (0, 0), 'z', '')]
-while True:
-  #print(h)
-  heat, pos, streak, seq = heapq.heappop(h)
-  #print(streak)
-
-  if pos == (n_rows-1, n_cols-1):
-    break
-  
-  if (streak, pos) in seen:
-    continue
-  seen.add((streak, pos))
-  #print(pos)
-  
-  for direction in '<>^v':
-    if revs[streak[-1:]] == direction:
-      continue
-
-    new_streak = streak + direction
-
-    if len(set(new_streak)) != 1: # New direction
-      new_streak = direction*4
-      new_heat = heat
       new_pos = pos
-      for _ in range(4):
+      new_heat = heat
+      new_streak = streak
+      n_moves = 1
+
+      if streak[-1] != direction:
+        new_streak = ''
+        n_moves = min_streak
+      elif len(streak) == max_streak:
+        continue
+    
+      for _ in range(n_moves):
+        new_streak += direction
         new_pos = (
           new_pos[0] + (direction == 'v') - (direction == '^'),
           new_pos[1] + (direction == '>') - (direction == '<')
         )
-        if new_pos in m:
-          new_heat += m[new_pos]
-        else:
-            break
-      if new_pos in m:
-        heapq.heappush(h, (new_heat, new_pos, new_streak, seq+direction*4))
-      continue
+        if new_pos not in m:
+          break
+        new_heat += m[new_pos]
+      else:
+        heapq.heappush(h, (new_heat, new_pos, new_streak))
 
-    new_pos = (
-      pos[0] + (direction == 'v') - (direction == '^'),
-      pos[1] + (direction == '>') - (direction == '<')
-    )
 
-    if len(new_streak) == 11:
-      continue
-    if new_pos in m:
-      heapq.heappush(h, (heat + m[new_pos], new_pos, new_streak, seq+direction))
-  
-print(heat) # 1196 too low
+lines = inp.splitlines()
+m = {(row, col): int(c) for row, line in enumerate(lines) for col, c in enumerate(line)}
+target = (len(lines) - 1, len(lines[0]) - 1)
+
+answer = get_min_heat_loss(m, target, 1, 3)
+print(answer)
 
 # COMMAND ----------
 
-seq
+# MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>The crucibles of lava simply aren't large enough to provide an adequate supply of lava to the machine parts factory. Instead, the Elves are going to upgrade to <em>ultra crucibles</em>.</p>
+# MAGIC <p>Ultra crucibles are even more difficult to steer than normal crucibles. Not only do they have trouble going in a straight line, but they also have trouble turning!</p>
+# MAGIC <p>Once an ultra crucible starts moving in a direction, it needs to move <em>a minimum of four blocks</em> in that direction before it can turn (or even before it can stop at the end). However, it will eventually start to get wobbly: an ultra crucible can move a maximum of <em>ten consecutive blocks</em> without turning.</p>
+# MAGIC <p>In the above example, an ultra crucible could follow this path to minimize heat loss:</p>
+# MAGIC <pre><code>2<em>&gt;</em><em>&gt;</em><em>&gt;</em><em>&gt;</em><em>&gt;</em><em>&gt;</em><em>&gt;</em><em>&gt;</em>1323
+# MAGIC 32154535<em>v</em>5623
+# MAGIC 32552456<em>v</em>4254
+# MAGIC 34465858<em>v</em>5452
+# MAGIC 45466578<em>v</em><em>&gt;</em><em>&gt;</em><em>&gt;</em><em>&gt;</em>
+# MAGIC 143859879845<em>v</em>
+# MAGIC 445787698776<em>v</em>
+# MAGIC 363787797965<em>v</em>
+# MAGIC 465496798688<em>v</em>
+# MAGIC 456467998645<em>v</em>
+# MAGIC 122468686556<em>v</em>
+# MAGIC 254654888773<em>v</em>
+# MAGIC 432267465553<em>v</em>
+# MAGIC </code></pre>
+# MAGIC <p>In the above example, an ultra crucible would incur the minimum possible heat loss of <code><em>94</em></code>.</p>
+# MAGIC <p>Here's another example:</p>
+# MAGIC <pre><code>111111111111
+# MAGIC 999999999991
+# MAGIC 999999999991
+# MAGIC 999999999991
+# MAGIC 999999999991
+# MAGIC </code></pre>
+# MAGIC <p>Sadly, an ultra crucible would need to take an unfortunate path like this one:</p>
+# MAGIC <pre><code>1<em>&gt;</em><em>&gt;</em><em>&gt;</em><em>&gt;</em><em>&gt;</em><em>&gt;</em><em>&gt;</em>1111
+# MAGIC 9999999<em>v</em>9991
+# MAGIC 9999999<em>v</em>9991
+# MAGIC 9999999<em>v</em>9991
+# MAGIC 9999999<em>v</em><em>&gt;</em><em>&gt;</em><em>&gt;</em><em>&gt;</em>
+# MAGIC </code></pre>
+# MAGIC <p>This route causes the ultra crucible to incur the minimum possible heat loss of <code><em>71</em></code>.</p>
+# MAGIC <p>Directing the <em>ultra crucible</em> from the lava pool to the machine parts factory, <em>what is the least heat loss it can incur?</em></p>
+# MAGIC </article>
 
 # COMMAND ----------
 
-m
-
-# COMMAND ----------
-
-m[(n_rows-1, n_cols-1)]
-
-# COMMAND ----------
-
-seq
-
-# COMMAND ----------
-
-pos
-
-# COMMAND ----------
-
-lines
-
-# COMMAND ----------
-
-# import heapq
-
-# lines = inp.splitlines()
-# m = {(row, col): int(c) for row, line in enumerate(lines) for col, c in enumerate(line)}
-# n_rows = len(lines)
-# n_cols = len(lines[0])
-
-# seen = set()
-# h = [(0, (0, 0), '')]
-# while True:
-#   heat, pos, streak = heapq.heappop(h)
-#   if pos == (n_rows-1, n_cols-1):
-#     break
-  
-#   if pos in seen:
-#     continue
-#   seen.add(pos)
-#   #print(pos)
-  
-#   for direction in '<>^v':
-#     new_pos = (pos[0] + (direction == 'v') - (direction == '^'), pos[1] + (direction == '>') - (direction == '<'))
-#     new_streak = streak + direction
-#     if len(new_streak) == 4 and len(set(new_streak)) == 1:
-#       continue
-#     if new_pos in m:
-#       heapq.heappush(h, (heat + m[new_pos], new_pos, new_streak))
-  
-# print(heat)
+answer = get_min_heat_loss(m, target, 4, 10)
+print(answer)
