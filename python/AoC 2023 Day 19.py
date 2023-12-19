@@ -1,26 +1,56 @@
 # Databricks notebook source
-# %pip install z3-solver
+# MAGIC %md https://adventofcode.com/2023/day/19
 
 # COMMAND ----------
 
-inp = '''px{a<2006:qkq,m>2090:A,rfg}
-pv{a>1716:R,A}
-lnx{m>1548:A,A}
-rfg{s<537:gd,x>2440:R,A}
-qs{s>3448:A,lnx}
-qkq{x<1416:A,crn}
-crn{x>2662:A,R}
-in{s<1351:px,qqz}
-qqz{s>2770:qs,m<1801:hdj,R}
-gd{a>3333:R,R}
-hdj{m>838:A,pv}
-
-{x=787,m=2655,a=1222,s=2876}
-{x=1679,m=44,a=2067,s=496}
-{x=2036,m=264,a=79,s=2244}
-{x=2461,m=1339,a=466,s=291}
-{x=2127,m=1623,a=2188,s=1013}
-'''
+# MAGIC %md <article class="day-desc"><h2>--- Day 19: Aplenty ---</h2><p>The Elves of Gear Island are thankful for your help and send you on your way. They even have a hang glider that someone <a href="9">stole</a> from Desert Island; since you're already going that direction, it would help them a lot if you would use it to get down there and return it to them.</p>
+# MAGIC <p>As you reach the bottom of the <em>relentless avalanche of machine parts</em>, you discover that they're already forming a formidable heap. Don't worry, though - a group of Elves is already here organizing the parts, and they have a <span title="This part sparks joy. This part sparks joy. This part ALSO sparks joy... I think we need a different system."><em>system</em></span>.</p>
+# MAGIC <p>To start, each part is rated in each of four categories:</p>
+# MAGIC <ul>
+# MAGIC <li><code>x</code>: E<em>x</em>tremely cool looking</li>
+# MAGIC <li><code>m</code>: <em>M</em>usical (it makes a noise when you hit it)</li>
+# MAGIC <li><code>a</code>: <em>A</em>erodynamic</li>
+# MAGIC <li><code>s</code>: <em>S</em>hiny</li>
+# MAGIC </ul>
+# MAGIC <p>Then, each part is sent through a series of <em>workflows</em> that will ultimately <em>accept</em> or <em>reject</em> the part. Each workflow has a name and contains a list of <em>rules</em>; each rule specifies a condition and where to send the part if the condition is true. The first rule that matches the part being considered is applied immediately, and the part moves on to the destination described by the rule. (The last rule in each workflow has no condition and always applies if reached.)</p>
+# MAGIC <p>Consider the workflow <code>ex{x&gt;10:one,m&lt;20:two,a&gt;30:R,A}</code>. This workflow is named <code>ex</code> and contains four rules. If workflow <code>ex</code> were considering a specific part, it would perform the following steps in order:</p>
+# MAGIC <ul>
+# MAGIC <li>Rule "<code>x&gt;10:one</code>": If the part's <code>x</code> is more than <code>10</code>, send the part to the workflow named <code>one</code>.</li>
+# MAGIC <li>Rule "<code>m&lt;20:two</code>": Otherwise, if the part's <code>m</code> is less than <code>20</code>, send the part to the workflow named <code>two</code>.</li>
+# MAGIC <li>Rule "<code>a&gt;30:R</code>": Otherwise, if the part's <code>a</code> is more than <code>30</code>, the part is immediately <em>rejected</em> (<code>R</code>).</li>
+# MAGIC <li>Rule "<code>A</code>": Otherwise, because no other rules matched the part, the part is immediately <em>accepted</em> (<code>A</code>).</li>
+# MAGIC </ul>
+# MAGIC <p>If a part is sent to another workflow, it immediately switches to the start of that workflow instead and never returns. If a part is <em>accepted</em> (sent to <code>A</code>) or <em>rejected</em> (sent to <code>R</code>), the part immediately stops any further processing.</p>
+# MAGIC <p>The system works, but it's not keeping up with the torrent of weird metal shapes. The Elves ask if you can help sort a few parts and give you the list of workflows and some part ratings (your puzzle input). For example:</p>
+# MAGIC <pre><code>px{a&lt;2006:qkq,m&gt;2090:A,rfg}
+# MAGIC pv{a&gt;1716:R,A}
+# MAGIC lnx{m&gt;1548:A,A}
+# MAGIC rfg{s&lt;537:gd,x&gt;2440:R,A}
+# MAGIC qs{s&gt;3448:A,lnx}
+# MAGIC qkq{x&lt;1416:A,crn}
+# MAGIC crn{x&gt;2662:A,R}
+# MAGIC in{s&lt;1351:px,qqz}
+# MAGIC qqz{s&gt;2770:qs,m&lt;1801:hdj,R}
+# MAGIC gd{a&gt;3333:R,R}
+# MAGIC hdj{m&gt;838:A,pv}
+# MAGIC
+# MAGIC {x=787,m=2655,a=1222,s=2876}
+# MAGIC {x=1679,m=44,a=2067,s=496}
+# MAGIC {x=2036,m=264,a=79,s=2244}
+# MAGIC {x=2461,m=1339,a=466,s=291}
+# MAGIC {x=2127,m=1623,a=2188,s=1013}
+# MAGIC </code></pre>
+# MAGIC <p>The workflows are listed first, followed by a blank line, then the ratings of the parts the Elves would like you to sort. All parts begin in the workflow named <code>in</code>. In this example, the five listed parts go through the following workflows:</p>
+# MAGIC <ul>
+# MAGIC <li><code>{x=787,m=2655,a=1222,s=2876}</code>: <code>in</code> -&gt; <code>qqz</code> -&gt; <code>qs</code> -&gt; <code>lnx</code> -&gt; <code><em>A</em></code></li>
+# MAGIC <li><code>{x=1679,m=44,a=2067,s=496}</code>: <code>in</code> -&gt; <code>px</code> -&gt; <code>rfg</code> -&gt; <code>gd</code> -&gt; <code><em>R</em></code></li>
+# MAGIC <li><code>{x=2036,m=264,a=79,s=2244}</code>: <code>in</code> -&gt; <code>qqz</code> -&gt; <code>hdj</code> -&gt; <code>pv</code> -&gt; <code><em>A</em></code></li>
+# MAGIC <li><code>{x=2461,m=1339,a=466,s=291}</code>: <code>in</code> -&gt; <code>px</code> -&gt; <code>qkq</code> -&gt; <code>crn</code> -&gt; <code><em>R</em></code></li>
+# MAGIC <li><code>{x=2127,m=1623,a=2188,s=1013}</code>: <code>in</code> -&gt; <code>px</code> -&gt; <code>rfg</code> -&gt; <code><em>A</em></code></li>
+# MAGIC </ul>
+# MAGIC <p>Ultimately, three parts are <em>accepted</em>. Adding up the <code>x</code>, <code>m</code>, <code>a</code>, and <code>s</code> rating for each of the accepted parts gives <code>7540</code> for the part with <code>x=787</code>, <code>4623</code> for the part with <code>x=2036</code>, and <code>6951</code> for the part with <code>x=2127</code>. Adding all of the ratings for <em>all</em> of the accepted parts gives the sum total of <code><em>19114</em></code>.</p>
+# MAGIC <p>Sort through all of the parts you've been given; <em>what do you get if you add together all of the rating numbers for all of the parts that ultimately get accepted?</em></p>
+# MAGIC </article>
 
 # COMMAND ----------
 
@@ -757,99 +787,85 @@ jjd{x<2486:A,m>459:R,a>1413:R,A}
 
 # COMMAND ----------
 
+import math
 import re
 
-workflows_raw, objs = inp.split('\n\n')
-objs = eval('[' + objs.replace('=', ':').replace('\n', ',')[:-1].replace('x', '"x"').replace('m', '"m"').replace('a', '"a"').replace('s', '"s"') + ']')
 
-workflows = {}
-for line in workflows_raw.splitlines():
-  name, rest = line.split('{')
-  parts = []
-  for part in rest[:-1].split(','):
-    parts.append(part.split(':'))
-  workflows[name] = parts
-# workflows
+def parse_part(part):
+  if ':' not in part:
+    return (part, )
+  rule, destination = part.split(':')
+  c, op, val = re.match(r'([xmas])([<>])([0-9]+)', rule).groups()
+  return (c, op, int(val)), destination
 
-# COMMAND ----------
 
-def resolve(obj, w):
-  if w in 'AR':
-    return w
-  for part in workflows[w]:
+def parse_workflow(line):
+  name, parts = re.match(r'([a-z]+){(.+)}', line).groups()
+  return name, [parse_part(part) for part in parts.split(',')]
+
+
+def resolve(machine_part, workflow_name, workflows):
+  if workflow_name in 'AR':
+    return workflow_name
+  for part in workflows[workflow_name]:
     if len(part) == 1:
-      return resolve(obj, part[0])
+      return resolve(machine_part, part[0], workflows)
 
-    x = obj['x']
-    m = obj['m']
-    a = obj['a']
-    s = obj['s']
-    if eval(part[0]):
-      return resolve(obj, part[1])
+    (c, op, val), destination = part
+    if eval(f'{machine_part[c]} {op} {val}'):
+      return resolve(machine_part, destination, workflows)
 
-accepted = 0
-for obj in objs:
-  if resolve(obj, 'in') == 'A':
-    accepted += sum(obj.values())
 
-accepted
+workflows, machine_parts = inp.split('\n\n')
+workflows = dict([parse_workflow(workflow) for workflow in workflows.splitlines()])
+machine_parts = [dict(zip('xmas', [int(num) for num in re.findall(r'\d+', machine_part)])) for machine_part in machine_parts.splitlines()]
+
+answer = sum(sum(machine_part.values()) for machine_part in machine_parts if resolve(machine_part, 'in', workflows) == 'A')
+print(answer)
 
 # COMMAND ----------
 
-# import z3
-
-# X = z3.Int('X')
-# M = z3.Int('M')
-# A = z3.Int('A')
-# S = z3.Int('S')
-# # Eh, I don't think z3 can COUNT solutions
+# MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Even with your help, the sorting process <em>still</em> isn't fast enough.</p>
+# MAGIC <p>One of the Elves comes up with a new plan: rather than sort parts individually through all of these workflows, maybe you can figure out in advance which combinations of ratings will be accepted or rejected.</p>
+# MAGIC <p>Each of the four ratings (<code>x</code>, <code>m</code>, <code>a</code>, <code>s</code>) can have an integer value ranging from a minimum of <code>1</code> to a maximum of <code>4000</code>. Of <em>all possible distinct combinations</em> of ratings, your job is to figure out which ones will be <em>accepted</em>.</p>
+# MAGIC <p>In the above example, there are <code><em>167409079868000</em></code> distinct combinations of ratings that will be accepted.</p>
+# MAGIC <p>Consider only your list of workflows; the list of part ratings that the Elves wanted you to sort is no longer relevant. <em>How many distinct combinations of ratings will be accepted by the Elves' workflows?</em></p>
+# MAGIC </article>
 
 # COMMAND ----------
 
-import math
 
-def count_solutions(ranges, w):
+def count_solutions(ranges, workflow_name, workflows):
   if any(end <= start for start, end in ranges.values()):
     return 0
-  if w == 'A':
-    print(ranges)
-    return math.prod(end - start for start, end in ranges.values()) # Is it really just the sum of these options? I think it must be because these are DISJOINT
-  if w == 'R':
+  if workflow_name == 'A':
+    return math.prod(end - start for start, end in ranges.values())
+  if workflow_name == 'R':
     return 0
 
   n_solutions = 0
-  for part in wfs[w]:
+  for part in workflows[workflow_name]:
     if len(part) == 1:
-      return n_solutions + count_solutions(ranges, part[0])
+      n_solutions += count_solutions(ranges, part[0], workflows)
+      break
 
     c, op, val = part[0]
-    next_w = part[1]
-    
+    next_workflow_name = part[1]
+    new_ranges = ranges.copy()
+
     if op == '<':
-      #if val < ranges[c][1]:
       if ranges[c][0] < val <= ranges[c][1]:
-      # if val <= ranges[c][1]:
-        n_solutions += count_solutions({x: y.copy() if x != c else [y[0], val] for x, y in ranges.items()}, next_w)
-        ranges[c][0] = val
+        new_ranges[c] = (new_ranges[c][0], val)
+        n_solutions += count_solutions(new_ranges, next_workflow_name, workflows)
+        ranges[c] = (val, ranges[c][1])
     if op == '>':
-      #if val >= ranges[c][0]:
       if ranges[c][0] <= val < ranges[c][1]:
-      # if val+1 >= ranges[c][0]:
-        n_solutions += count_solutions({x: y.copy() if x != c else [val+1, y[1]] for x, y in ranges.items()}, next_w)
-        ranges[c][1] = val+1
-    
-  
-import re
-def split_part(parts):
-  if len(parts) == 1: return parts
-  els = re.match(r'([xmas])([<>])([0-9]+)', parts[0]).groups()
-  els = (els[0], els[1], int(els[2]))
-  return [els, parts[1]]
-wfs = workflows
-wfs = {name: [split_part(part) for part in parts] for name, parts in workflows.items()}
+        new_ranges[c] = (val + 1, new_ranges[c][1])
+        n_solutions += count_solutions(new_ranges, next_workflow_name, workflows)
+        ranges[c] = (ranges[c][0], val + 1)
 
-count_solutions({'x':[1, 4001], 'm':[1, 4001], 'a':[1, 4001], 's':[1, 4001]}, 'in')
+  return n_solutions
 
-# COMMAND ----------
 
-# %pip install PySMT
+answer = count_solutions({'x': (1, 4001), 'm': (1, 4001), 'a': (1, 4001), 's': (1, 4001)}, 'in', workflows)
+print(answer)
