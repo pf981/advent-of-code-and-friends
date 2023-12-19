@@ -867,5 +867,5 @@ def count_solutions(ranges, workflow_name, workflows):
   return n_solutions
 
 
-answer = count_solutions({'x': (1, 4001), 'm': (1, 4001), 'a': (1, 4001), 's': (1, 4001)}, 'in', workflows)
+answer = count_solutions(dict(zip('xmas', [(1, 4001)] * 4)), 'in', workflows)
 print(answer)
