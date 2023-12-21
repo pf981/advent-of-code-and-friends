@@ -315,13 +315,14 @@ import numpy as np
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
 
+poly = PolynomialFeatures(degree=2)
+
 X = np.array([0, 1, 2]).reshape(-1, 1)
 Y = np.array(reach_counts).reshape(-1, 1)
-X_poly = PolynomialFeatures(degree=2).fit_transform(X)
-model = LinearRegression()
-model.fit(X_poly, Y)
+X2 = np.array(target // side_len).reshape(1, -1)
 
-z = target // side_len
-X2 = PolynomialFeatures(degree=2).fit_transform(np.array(z).reshape(1, -1))
-answer2 = int(model.predict(X2)[0][0])
+model = LinearRegression()
+model.fit(poly.fit_transform(X), Y)
+
+answer2 = model.predict(poly.transform(X2))[0][0].astype(int)
 print(answer2)
