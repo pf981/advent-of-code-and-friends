@@ -222,7 +222,7 @@ start_pos = next((row, col) for row, line in enumerate(lines) for col, c in enum
 
 side_len = len(lines) # Assume square
 target = 26501365
-remainder = 26501365 % side_len
+remainder = target % side_len
 
 q = collections.deque([(start_pos, 0)])
 seen = set() # (steps % 2, pos)
@@ -241,7 +241,7 @@ while q:
 
   if (pos[0] % side_len, pos[1] % side_len) not in plots or (steps % 2, pos) in seen:
     continue
-  seen.add((steps%2, pos))
+  seen.add((steps % 2, pos))
 
   if len(reach_counts) == 3:
     break
