@@ -1394,7 +1394,6 @@ inp = '''7,0,231~7,2,231
 
 # COMMAND ----------
 
-import collections
 import re
 
 
@@ -1426,7 +1425,7 @@ def get_supports(i, bricks):
 X1, Y1, Z1, X2, Y2, Z2 = range(6)
 bricks = [[int(num) for num in re.findall(r'-?[0-9]+', line)] for line in inp.splitlines()]
 bricks.sort(key=lambda brick: brick[2])
-supports = collections.defaultdict(list)
+supports = {}
 
 for i, _ in enumerate(bricks):
   sups = []
