@@ -1,12 +1,112 @@
 # Databricks notebook source
-inp = '''1,0,1~1,2,1
-0,0,2~2,0,2
-0,2,3~2,2,3
-0,0,4~0,2,4
-2,0,5~2,2,5
-0,1,6~2,1,6
-1,1,8~1,1,9
-'''
+# MAGIC %md https://adventofcode.com/2023/day/22
+
+# COMMAND ----------
+
+# MAGIC %md <article class="day-desc"><h2>--- Day 22: Sand Slabs ---</h2><p>Enough sand has fallen; it can finally filter water for Snow Island.</p>
+# MAGIC <p>Well, <em>almost</em>.</p>
+# MAGIC <p>The sand has been falling as large compacted <em>bricks</em> of sand, piling up to form an impressive stack here near the edge of Island Island. In order to make use of the sand to filter water, some of the bricks will need to be broken apart - nay, <em><span title="Disintegrate - X,R
+# MAGIC Sorcery
+# MAGIC Destroy X target bricks of sand. They cannot be regenerated. Create 32768 0/1 colorless Sand artifact creature tokens for each brick of sand destroyed in this way.">disintegrated</span></em> - back into freely flowing sand.</p>
+# MAGIC <p>The stack is tall enough that you'll have to be careful about choosing which bricks to disintegrate; if you disintegrate the wrong brick, large portions of the stack could topple, which sounds pretty dangerous.</p>
+# MAGIC <p>The Elves responsible for water filtering operations took a <em>snapshot of the bricks while they were still falling</em> (your puzzle input) which should let you work out which bricks are safe to disintegrate. For example:</p>
+# MAGIC <pre><code>1,0,1~1,2,1
+# MAGIC 0,0,2~2,0,2
+# MAGIC 0,2,3~2,2,3
+# MAGIC 0,0,4~0,2,4
+# MAGIC 2,0,5~2,2,5
+# MAGIC 0,1,6~2,1,6
+# MAGIC 1,1,8~1,1,9
+# MAGIC </code></pre>
+# MAGIC <p>Each line of text in the snapshot represents the position of a single brick at the time the snapshot was taken. The position is given as two <code>x,y,z</code> coordinates - one for each end of the brick - separated by a tilde (<code>~</code>). Each brick is made up of a single straight line of cubes, and the Elves were even careful to choose a time for the snapshot that had all of the free-falling bricks at <em>integer positions above the ground</em>, so the whole snapshot is aligned to a three-dimensional cube grid.</p>
+# MAGIC <p>A line like <code>2,2,2~2,2,2</code> means that both ends of the brick are at the same coordinate - in other words, that the brick is a single cube.</p>
+# MAGIC <p>Lines like <code>0,0,10~1,0,10</code> or <code>0,0,10~0,1,10</code> both represent bricks that are <em>two cubes</em> in volume, both oriented horizontally. The first brick extends in the <code>x</code> direction, while the second brick extends in the <code>y</code> direction.</p>
+# MAGIC <p>A line like <code>0,0,1~0,0,10</code> represents a <em>ten-cube brick</em> which is oriented <em>vertically</em>. One end of the brick is the cube located at <code>0,0,1</code>, while the other end of the brick is located directly above it at <code>0,0,10</code>.</p>
+# MAGIC <p>The ground is at <code>z=0</code> and is perfectly flat; the lowest <code>z</code> value a brick can have is therefore <code>1</code>. So, <code>5,5,1~5,6,1</code> and <code>0,2,1~0,2,5</code> are both resting on the ground, but <code>3,3,2~3,3,3</code> was above the ground at the time of the snapshot.</p>
+# MAGIC <p>Because the snapshot was taken while the bricks were still falling, some bricks will <em>still be in the air</em>; you'll need to start by figuring out where they will end up. Bricks are magically stabilized, so they <em>never rotate</em>, even in weird situations like where a long horizontal brick is only supported on one end. Two bricks cannot occupy the same position, so a falling brick will come to rest upon the first other brick it encounters.</p>
+# MAGIC <p>Here is the same example again, this time with each brick given a letter so it can be marked in diagrams:</p>
+# MAGIC <pre><code>1,0,1~1,2,1   &lt;- A
+# MAGIC 0,0,2~2,0,2   &lt;- B
+# MAGIC 0,2,3~2,2,3   &lt;- C
+# MAGIC 0,0,4~0,2,4   &lt;- D
+# MAGIC 2,0,5~2,2,5   &lt;- E
+# MAGIC 0,1,6~2,1,6   &lt;- F
+# MAGIC 1,1,8~1,1,9   &lt;- G
+# MAGIC </code></pre>
+# MAGIC <p>At the time of the snapshot, from the side so the <code>x</code> axis goes left to right, these bricks are arranged like this:</p>
+# MAGIC <pre><code> x
+# MAGIC 012
+# MAGIC .G. 9
+# MAGIC .G. 8
+# MAGIC ... 7
+# MAGIC FFF 6
+# MAGIC ..E 5 z
+# MAGIC D.. 4
+# MAGIC CCC 3
+# MAGIC BBB 2
+# MAGIC .A. 1
+# MAGIC --- 0
+# MAGIC </code></pre>
+# MAGIC <p>Rotating the perspective 90 degrees so the <code>y</code> axis now goes left to right, the same bricks are arranged like this:</p>
+# MAGIC <pre><code> y
+# MAGIC 012
+# MAGIC .G. 9
+# MAGIC .G. 8
+# MAGIC ... 7
+# MAGIC .F. 6
+# MAGIC EEE 5 z
+# MAGIC DDD 4
+# MAGIC ..C 3
+# MAGIC B.. 2
+# MAGIC AAA 1
+# MAGIC --- 0
+# MAGIC </code></pre>
+# MAGIC <p>Once all of the bricks fall downward as far as they can go, the stack looks like this, where <code>?</code> means bricks are hidden behind other bricks at that location:</p>
+# MAGIC <pre><code> x
+# MAGIC 012
+# MAGIC .G. 6
+# MAGIC .G. 5
+# MAGIC FFF 4
+# MAGIC D.E 3 z
+# MAGIC ??? 2
+# MAGIC .A. 1
+# MAGIC --- 0
+# MAGIC </code></pre>
+# MAGIC <p>Again from the side:</p>
+# MAGIC <pre><code> y
+# MAGIC 012
+# MAGIC .G. 6
+# MAGIC .G. 5
+# MAGIC .F. 4
+# MAGIC ??? 3 z
+# MAGIC B.C 2
+# MAGIC AAA 1
+# MAGIC --- 0
+# MAGIC </code></pre>
+# MAGIC <p>Now that all of the bricks have settled, it becomes easier to tell which bricks are supporting which other bricks:</p>
+# MAGIC <ul>
+# MAGIC <li>Brick <code>A</code> is the only brick supporting bricks <code>B</code> and <code>C</code>.</li>
+# MAGIC <li>Brick <code>B</code> is one of two bricks supporting brick <code>D</code> and brick <code>E</code>.</li>
+# MAGIC <li>Brick <code>C</code> is the other brick supporting brick <code>D</code> and brick <code>E</code>.</li>
+# MAGIC <li>Brick <code>D</code> supports brick <code>F</code>.</li>
+# MAGIC <li>Brick <code>E</code> also supports brick <code>F</code>.</li>
+# MAGIC <li>Brick <code>F</code> supports brick <code>G</code>.</li>
+# MAGIC <li>Brick <code>G</code> isn't supporting any bricks.</li>
+# MAGIC </ul>
+# MAGIC <p>Your first task is to figure out <em>which bricks are safe to disintegrate</em>. A brick can be safely disintegrated if, after removing it, <em>no other bricks</em> would fall further directly downward. Don't actually disintegrate any bricks - just determine what would happen if, for each brick, only that brick were disintegrated. Bricks can be disintegrated even if they're completely surrounded by other bricks; you can squeeze between bricks if you need to.</p>
+# MAGIC <p>In this example, the bricks can be disintegrated as follows:</p>
+# MAGIC <ul>
+# MAGIC <li>Brick <code>A</code> cannot be disintegrated safely; if it were disintegrated, bricks <code>B</code> and <code>C</code> would both fall.</li>
+# MAGIC <li>Brick <code>B</code> <em>can</em> be disintegrated; the bricks above it (<code>D</code> and <code>E</code>) would still be supported by brick <code>C</code>.</li>
+# MAGIC <li>Brick <code>C</code> <em>can</em> be disintegrated; the bricks above it (<code>D</code> and <code>E</code>) would still be supported by brick <code>B</code>.</li>
+# MAGIC <li>Brick <code>D</code> <em>can</em> be disintegrated; the brick above it (<code>F</code>) would still be supported by brick <code>E</code>.</li>
+# MAGIC <li>Brick <code>E</code> <em>can</em> be disintegrated; the brick above it (<code>F</code>) would still be supported by brick <code>D</code>.</li>
+# MAGIC <li>Brick <code>F</code> cannot be disintegrated; the brick above it (<code>G</code>) would fall.</li>
+# MAGIC <li>Brick <code>G</code> <em>can</em> be disintegrated; it does not support any other bricks.</li>
+# MAGIC </ul>
+# MAGIC <p>So, in this example, <code><em>5</em></code> bricks can be safely disintegrated.</p>
+# MAGIC <p>Figure how the blocks will settle based on the snapshot. Once they've settled, consider disintegrating a single brick; <em>how many bricks could be safely chosen as the one to get disintegrated?</em></p>
+# MAGIC </article>
 
 # COMMAND ----------
 
@@ -1297,6 +1397,7 @@ inp = '''7,0,231~7,2,231
 import collections
 import re
 
+
 def get_points(x1, y1, x2, y2):
   s = set()
   for x in range(x1, x2 + 1):
@@ -1304,28 +1405,25 @@ def get_points(x1, y1, x2, y2):
       s.add((x, y))
   return s
 
+
 def get_supports(i, bricks):
   x1, y1, z1, x2, y2, z2 = bricks[i]
   z1 -= 1
   z2 -= 1
   ps = get_points(x1, y1, x2, y2)
-  sups = []
 
+  sups = set()
   for i2 in range(i):
     bx1, by1, bz1, bx2, by2, bz2 = bricks[i2]
-    #print(f'{bz2=} {z1=} {i=} {i2=}')
     if bz2 != z1: # The bottom of the ith brick needs to have the same z as the top of the lower brick
       continue
-    #print(f'checking {i=} {i2=}')
     if get_points(bx1, by1, bx2, by2).intersection(ps):
-      sups.append(i2)
+      sups.add(i2)
   
-  #print(f'{i=} {sups=} {ps=}')
   return sups
 
 
 X1, Y1, Z1, X2, Y2, Z2 = range(6)
-
 bricks = [[int(num) for num in re.findall(r'-?[0-9]+', line)] for line in inp.splitlines()]
 bricks.sort(key=lambda brick: brick[2])
 supports = collections.defaultdict(list)
@@ -1333,182 +1431,42 @@ supports = collections.defaultdict(list)
 for i, _ in enumerate(bricks):
   sups = []
   while bricks[i][Z1] > 1 and not (sups := get_supports(i, bricks)):
-    #print(i, sups)
     bricks[i][Z1] -= 1
     bricks[i][Z2] -= 1
-  supports[i] = sups # Eh, it's okay to run repeatedly
+  supports[i] = sups
 
 brick_ids = set(range(len(bricks)))
-cannot_remove = {l[0] for l in supports.values() if len(l) == 1}
+cannot_remove = {next(iter(s)) for s in supports.values() if len(s) == 1}
 can_remove = brick_ids.difference(cannot_remove)
-len(can_remove)
+answer = len(can_remove)
+print(answer)
 
 # COMMAND ----------
 
-# # PART 2
-import copy
+# MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Disintegrating bricks one at a time isn't going to be fast enough. While it might sound dangerous, what you really need is a <em>chain reaction</em>.</p>
+# MAGIC <p>You'll need to figure out the best brick to disintegrate. For each brick, determine how many <em>other bricks would fall</em> if that brick were disintegrated.</p>
+# MAGIC <p>Using the same example as above:</p>
+# MAGIC <ul>
+# MAGIC <li>Disintegrating brick <code>A</code> would cause all <code><em>6</em></code> other bricks to fall.</li>
+# MAGIC <li>Disintegrating brick <code>F</code> would cause only <code><em>1</em></code> other brick, <code>G</code>, to fall.</li>
+# MAGIC </ul>
+# MAGIC <p>Disintegrating any other brick would cause <em>no other bricks</em> to fall. So, in this example, the sum of <em>the number of other bricks that would fall</em> as a result of disintegrating each brick is <code><em>7</em></code>.</p>
+# MAGIC <p>For each brick, determine how many <em>other bricks</em> would fall if that brick were disintegrated. <em>What is the sum of the number of other bricks that would fall?</em></p>
+# MAGIC </article>
+
+# COMMAND ----------
 
 fall_counts = []
 for candidate in cannot_remove:
-# for candidate in [5]: # FIXME:Test
-  # sups = copy.deepcopy(supports)
   fallen = set([candidate])
   for _ in range(10):
-    for i, l in supports.items():
-      if bricks[i][Z1] == 1: continue
-      # print(i, l, fallen)
-      if not set(l).difference(fallen):
+    for i, s in supports.items():
+      if bricks[i][Z1] == 1:
+        continue
+      if not s.difference(fallen):
         fallen.add(i)
   
   fall_counts.append(len(fallen) - 1)
-sum(fall_counts)
 
-# COMMAND ----------
-
-supports
-
-# COMMAND ----------
-
-cannot_remove
-
-# COMMAND ----------
-
-# PART 2
-import copy
-import functools
-
-#@functools.cache
-def count_children(i):
-  children = rev_supports[i]
-  n = 1
-  for child in children:
-    n += count_children(child)
-
-  return n
-
-rev_supports = collections.defaultdict(set)
-for a, l in supports.items():
-  for b in l:
-    rev_supports[b].add(a)
-
-# max(count_children(i) for i in brick_ids) - 1
-[count_children(i) for i in brick_ids]
-
-# COMMAND ----------
-
-supports
-
-# COMMAND ----------
-
-rev_supports
-
-# COMMAND ----------
-
-bricks
-
-# COMMAND ----------
-
-str(supports).replace('0', 'A').replace('1', 'B').replace('2', 'C').replace('3', 'D').replace('4', 'E').replace('5', 'F').replace('6', 'G')
-
-# COMMAND ----------
-
-# A: [],
-# B: [A],
-# C: [A],
-# D: [B, C],
-# E: [B, C],
-# F: [A, D, E], # FIXME: Why is A supporting F???
-# G: [A, F] # FIXME: Why is A supporting G?
-
-# COMMAND ----------
-
-
-
-# COMMAND ----------
-
-can_remove
-
-# COMMAND ----------
-
-bricks
-
-# COMMAND ----------
-
-# import re
-
-# def get_points(x1, y1, x2, y2):
-#   s = set()
-#   for x in range(x1, x2 + 1):
-#     for y in range(y1, y2 + 1):
-#       s.add((x, y))
-#   return s
-
-# def can_move_lower(i, bricks):
-#   x1, y1, z1, x2, y2, z2 = bricks[i]
-#   z1 += 1
-#   z2 += 1
-#   ps = get_points(x1, y1, x2, y2)
-
-#   for i2 in range(i):
-#     bx1, by1, bz1, bx2, by2, bz2 = bricks[i2]
-#     if bz2 > z2:
-#       continue
-#     get_points(bx1, by1, bx2, by2).intersection(ps)
-
-# X1, Y1, Z1, X2, Y2, Z2 = range(6)
-
-# bricks = [[int(num) for num in re.findall(r'-?[0-9]+', line)] for line in inp.splitlines()]
-# bricks.sort(key=lambda brick: brick[2])
-
-# for i, _ in enumerate(bricks):
-#   while can_move_lower(i, bricks):
-#     bricks[i][Z1] -= 1
-#     bricks[i][Z2] -= 1
-
-# for 
-
-# COMMAND ----------
-
-bricks
-
-# COMMAND ----------
-
-bricks = [[[int(x) for x in part.split(',')] for part in line.split('~')] for line in inp.splitlines()]
-bricks
-
-# COMMAND ----------
-
-[line.split('~') for line in inp.splitlines()]
-
-# COMMAND ----------
-
-import re
-
-bricks = {z2: (x1, y1, x2 - x1, y2 - y1, z2 - z1) for x1, y1, z1, x2, y2, z2 in [[int(num) for num in re.findall(r'-?[0-9]+', line)] for line in inp.splitlines()]}
-bricks
-
-# COMMAND ----------
-
-bricks = {int(z1): (x1, y1) for (x1, y1, z1), (x2, y2, z2) in [[part.split('m,')line.split('~') for line in inp.splitlines()]}
-bricks
-
-# COMMAND ----------
-
-for z in range(2, max(bricks) + 1)
-
-# COMMAND ----------
-
-bricks2 = []
-for from_pos, to_pos in bricks:
-  s = set()
-  pos = tuple(from_pos)
-  s.add(pos)
-  dxyz = [b - a for a, b in zip(from_pos, to_pos)]
-  while pos != to_pos:
-    print(from_pos, to_pos, pos)
-    pos = tuple(a + b for a, b in zip(pos, dxyz))
-    s.add(pos)
-
-# COMMAND ----------
-
-[1, 2, 1] == (1, 2, 1)
+answer = sum(fall_counts)
+print(answer)
