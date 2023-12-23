@@ -210,7 +210,6 @@ inp = """#.#####################################################################
 # COMMAND ----------
 
 def get_longest_hike(m, target):
-    target = (len(lines)-1, len(lines[0]) - 2)
     stack = [((0, 1), 0)]
     longest_hike = 0
     seen = set()
@@ -231,6 +230,7 @@ def get_longest_hike(m, target):
         for direction in '<>^v':
             if m[pos] in '<>^v' and direction != m[pos]:
                 continue
+
             new_pos = (
                 pos[0] + (direction == 'v') - (direction == '^'),
                 pos[1] + (direction == '>') - (direction == '<')
@@ -243,6 +243,7 @@ def get_longest_hike(m, target):
 
             stack.append((new_pos, d + 1))
     return longest_hike
+
 
 lines = inp.splitlines()
 m = {(row, col): c for row, line in enumerate(lines) for col, c in enumerate(line)}
