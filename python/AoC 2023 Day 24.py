@@ -1,21 +1,73 @@
 # Databricks notebook source
-# %pip install z3-solver
+# MAGIC %pip install z3-solver
 
 # COMMAND ----------
 
-inp = '''19, 13, 30 @ -2,  1, -2
-18, 19, 22 @ -1, -1, -2
-20, 25, 34 @ -2, -2, -4
-12, 31, 28 @ -1, -2, -1
-20, 19, 15 @  1, -5, -3
-'''
-test_min = 7
-test_max = 27
+# MAGIC %md https://adventofcode.com/2023/day/24
 
 # COMMAND ----------
 
-test_min = 200000000000000
-test_max = 400000000000000
+# MAGIC %md <article class="day-desc"><h2>--- Day 24: Never Tell Me The Odds ---</h2><p>It seems like something is going wrong with the snow-making process. Instead of forming snow, the water that's been absorbed into the air seems to be forming <a href="https://en.wikipedia.org/wiki/Hail" target="_blank">hail</a>!</p>
+# MAGIC <p>Maybe there's something you can do to break up the hailstones?</p>
+# MAGIC <p>Due to strong, probably-magical winds, the hailstones are all flying through the air in perfectly linear trajectories. You make a note of each hailstone's <em>position</em> and <em>velocity</em> (your puzzle input). For example:</p>
+# MAGIC <pre><code>19, 13, 30 @ -2,  1, -2
+# MAGIC 18, 19, 22 @ -1, -1, -2
+# MAGIC 20, 25, 34 @ -2, -2, -4
+# MAGIC 12, 31, 28 @ -1, -2, -1
+# MAGIC 20, 19, 15 @  1, -5, -3
+# MAGIC </code></pre>
+# MAGIC <p>Each line of text corresponds to the position and velocity of a single hailstone. The positions indicate where the hailstones are <em>right now</em> (at time <code>0</code>). The velocities are constant and indicate exactly how far each hailstone will move in <em>one nanosecond</em>.</p>
+# MAGIC <p>Each line of text uses the format <code>px py pz @ vx vy vz</code>. For instance, the hailstone specified by <code>20, 19, 15 @  1, -5, -3</code> has initial X position <code>20</code>, Y position <code>19</code>, Z position <code>15</code>, X velocity <code>1</code>, Y velocity <code>-5</code>, and Z velocity <code>-3</code>. After one nanosecond, the hailstone would be at <code>21, 14, 12</code>.</p>
+# MAGIC <p>Perhaps you won't have to do anything. How likely are the hailstones to collide with each other and smash into tiny ice crystals?</p>
+# MAGIC <p>To estimate this, consider only the X and Y axes; <em>ignore the Z axis</em>. Looking <em>forward in time</em>, how many of the hailstones' <em>paths</em> will intersect within a test area? (The hailstones themselves don't have to collide, just test for intersections between the paths they will trace.)</p>
+# MAGIC <p>In this example, look for intersections that happen with an X and Y position each at least <code>7</code> and at most <code>27</code>; in your actual data, you'll need to check a much larger test area. Comparing all pairs of hailstones' future paths produces the following results:</p>
+# MAGIC <pre><code>Hailstone A: 19, 13, 30 @ -2, 1, -2
+# MAGIC Hailstone B: 18, 19, 22 @ -1, -1, -2
+# MAGIC Hailstones' paths will cross <em>inside</em> the test area (at x=14.333, y=15.333).
+# MAGIC
+# MAGIC Hailstone A: 19, 13, 30 @ -2, 1, -2
+# MAGIC Hailstone B: 20, 25, 34 @ -2, -2, -4
+# MAGIC Hailstones' paths will cross <em>inside</em> the test area (at x=11.667, y=16.667).
+# MAGIC
+# MAGIC Hailstone A: 19, 13, 30 @ -2, 1, -2
+# MAGIC Hailstone B: 12, 31, 28 @ -1, -2, -1
+# MAGIC Hailstones' paths will cross outside the test area (at x=6.2, y=19.4).
+# MAGIC
+# MAGIC Hailstone A: 19, 13, 30 @ -2, 1, -2
+# MAGIC Hailstone B: 20, 19, 15 @ 1, -5, -3
+# MAGIC Hailstones' paths crossed in the past for hailstone A.
+# MAGIC
+# MAGIC Hailstone A: 18, 19, 22 @ -1, -1, -2
+# MAGIC Hailstone B: 20, 25, 34 @ -2, -2, -4
+# MAGIC Hailstones' paths are parallel; they never intersect.
+# MAGIC
+# MAGIC Hailstone A: 18, 19, 22 @ -1, -1, -2
+# MAGIC Hailstone B: 12, 31, 28 @ -1, -2, -1
+# MAGIC Hailstones' paths will cross outside the test area (at x=-6, y=-5).
+# MAGIC
+# MAGIC Hailstone A: 18, 19, 22 @ -1, -1, -2
+# MAGIC Hailstone B: 20, 19, 15 @ 1, -5, -3
+# MAGIC Hailstones' paths crossed in the past for both hailstones.
+# MAGIC
+# MAGIC Hailstone A: 20, 25, 34 @ -2, -2, -4
+# MAGIC Hailstone B: 12, 31, 28 @ -1, -2, -1
+# MAGIC Hailstones' paths will cross outside the test area (at x=-2, y=3).
+# MAGIC
+# MAGIC Hailstone A: 20, 25, 34 @ -2, -2, -4
+# MAGIC Hailstone B: 20, 19, 15 @ 1, -5, -3
+# MAGIC Hailstones' paths crossed in the past for hailstone B.
+# MAGIC
+# MAGIC Hailstone A: 12, 31, 28 @ -1, -2, -1
+# MAGIC Hailstone B: 20, 19, 15 @ 1, -5, -3
+# MAGIC Hailstones' paths crossed in the past for both hailstones.
+# MAGIC </code></pre>
+# MAGIC <p>So, in this example, <code><em>2</em></code> hailstones' future paths cross inside the boundaries of the test area.</p>
+# MAGIC <p>However, you'll need to search a much larger test area if you want to see if any hailstones might collide. Look for intersections that happen with an X and Y position each at least <code>200000000000000</code> and at most <code>400000000000000</code>. Disregard the Z axis entirely.</p>
+# MAGIC <p>Considering only the X and Y axes, check all pairs of hailstones' future paths for intersections. <em>How many of these intersections occur within the test area?</em></p>
+# MAGIC </article>
+
+# COMMAND ----------
+
 inp = '''291493672529314, 259618209733833, 379287136024123 @ -9, 119, -272
 308409248682955, 156803514643857, 424989308414284 @ -78, 236, -255
 195379943194796, 213851381371727, 355270583377422 @ 25, 14, -15
@@ -320,13 +372,11 @@ inp = '''291493672529314, 259618209733833, 379287136024123 @ -9, 119, -272
 
 # COMMAND ----------
 
-# 200000000000000 <= xy <= 400000000000000
-
-# COMMAND ----------
-
+import re
 import z3
 
-def does_intersect(px1,py1,pz1,vx1,vy1,vz1, px2,py2,pz2,vx2,vy2,vz2):
+
+def does_intersect(px1, py1, pz1, vx1, vy1, vz1, px2, py2, pz2, vx2, vy2, vz2, test_min=200000000000000, test_max=400000000000000):
     X1 = z3.Real('X1')
     Y1 = z3.Real('Y1')
     T1 = z3.Real('T1')
@@ -335,6 +385,8 @@ def does_intersect(px1,py1,pz1,vx1,vy1,vz1, px2,py2,pz2,vx2,vy2,vz2):
     Y2 = z3.Real('Y2')
     T2 = z3.Real('T2')
 
+    # Optimize runs significantly faster than Solver for part 1
+    # o = z3.Solver()
     o = z3.Optimize()
 
     o.add(X1 >= test_min)
@@ -355,71 +407,63 @@ def does_intersect(px1,py1,pz1,vx1,vy1,vz1, px2,py2,pz2,vx2,vy2,vz2):
     o.add(X2 == px2 + vx2 * T2)
     o.add(Y2 == py2 + vy2 * T2)
 
-
     o.add(X1 == X2)
     o.add(Y1 == Y2)
 
     return str(o.check()) == 'sat'
 
 
-import re
 stones = [[int(x) for x in re.findall(r'-?[0-9]+', line)] for line in inp.splitlines()]
 
 answer = 0
 for i, a in enumerate(stones):
     for j in range(i + 1, len(stones)):
         if does_intersect(*a, *stones[j]):
-            # print(i, j)
             answer += 1
 
 print(answer)
 
 # COMMAND ----------
 
-# # PART 2
-# import z3
-
-# o = z3.Optimize()
-# X0 = z3.Int('X0')
-# Y0 = z3.Int('Y0')
-# Z0 = z3.Int('Z0')
-# VX0 = z3.Int('VX0')
-# VY0 = z3.Int('VY0')
-# VZ0 = z3.Int('VZ0')
-
-# def add_rock(i, px1,py1,pz1,vx1,vy1,vz1):
-#     X1 = z3.Int('X' + str(i))
-#     Y1 = z3.Int('Y' + str(i))
-#     Z1 = z3.Int('Z' + str(i))
-#     T1 = z3.Int('T' + str(i))
-
-#     o.add(T1 >= 0)
-
-#     o.add(X1 == px1 + vx1 * T1)
-#     o.add(Y1 == py1 + vy1 * T1)
-#     o.add(Z1 == pz1 + vz1 * T1)
-
-
-#     o.add(X1 == X0 + VX0 * T1)
-#     o.add(Y1 == Y0 + VY0 * T1)
-#     o.add(Z1 == Z0 + VZ0 * T1)
-
-
-# import re
-# stones = [[int(x) for x in re.findall(r'-?[0-9]+', line)] for line in inp.splitlines()]
-
-# answer = 0
-# for i, a in enumerate(stones, 1): # Don't start at 0
-#     add_rock(i, *a)
-
-# # o.check()
+# MAGIC %md <article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Upon further analysis, it doesn't seem like <em>any</em> hailstones will naturally collide. It's up to you to fix that!</p>
+# MAGIC <p>You find a rock on the ground nearby. While it seems extremely unlikely, if you throw it just right, you should be able to <em>hit every hailstone in a single throw</em>!</p>
+# MAGIC <p>You can use the probably-magical winds to reach <em>any integer position</em> you like and to propel the rock at <em>any integer velocity</em>. Now <em>including the Z axis</em> in your calculations, if you throw the rock at time <code>0</code>, where do you need to be so that the rock <em>perfectly collides with every hailstone</em>? Due to <span title="What, you've never studied probably-magical physics?">probably-magical inertia</span>, the rock won't slow down or change direction when it collides with a hailstone.</p>
+# MAGIC <p>In the example above, you can achieve this by moving to position <code>24, 13, 10</code> and throwing the rock at velocity <code>-3, 1, 2</code>. If you do this, you will hit every hailstone as follows:</p>
+# MAGIC <pre><code>Hailstone: 19, 13, 30 @ -2, 1, -2
+# MAGIC Collision time: 5
+# MAGIC Collision position: 9, 18, 20
+# MAGIC
+# MAGIC Hailstone: 18, 19, 22 @ -1, -1, -2
+# MAGIC Collision time: 3
+# MAGIC Collision position: 15, 16, 16
+# MAGIC
+# MAGIC Hailstone: 20, 25, 34 @ -2, -2, -4
+# MAGIC Collision time: 4
+# MAGIC Collision position: 12, 17, 18
+# MAGIC
+# MAGIC Hailstone: 12, 31, 28 @ -1, -2, -1
+# MAGIC Collision time: 6
+# MAGIC Collision position: 6, 19, 22
+# MAGIC
+# MAGIC Hailstone: 20, 19, 15 @ 1, -5, -3
+# MAGIC Collision time: 1
+# MAGIC Collision position: 21, 14, 12
+# MAGIC </code></pre>
+# MAGIC <p>Above, each hailstone is identified by its initial position and its velocity. Then, the time and position of that hailstone's collision with your rock are given.</p>
+# MAGIC <p>After 1 nanosecond, the rock has <em>exactly the same position</em> as one of the hailstones, obliterating it into ice dust! Another hailstone is smashed to bits two nanoseconds after that. After a total of 6 nanoseconds, all of the hailstones have been destroyed.</p>
+# MAGIC <p>So, at time <code>0</code>, the rock needs to be at X position <code>24</code>, Y position <code>13</code>, and Z position <code>10</code>. Adding these three coordinates together produces <code><em>47</em></code>. (Don't add any coordinates from the rock's velocity.)</p>
+# MAGIC <p>Determine the exact position and velocity the rock needs to have at time <code>0</code> so that it perfectly collides with every hailstone. <em>What do you get if you add up the X, Y, and Z coordinates of that initial position?</em></p>
+# MAGIC </article>
 
 # COMMAND ----------
 
-# PART 2
 import z3
 
-o = z3.Solver() # Note: Use Solver and NOT Optimize
+
+# Solver runs significantly faster than Optimize for part 1
+# o = z3.Optimize()
+o = z3.Solver()
+
 X0 = z3.Int('X0')
 Y0 = z3.Int('Y0')
 Z0 = z3.Int('Z0')
@@ -427,28 +471,18 @@ VX0 = z3.Int('VX0')
 VY0 = z3.Int('VY0')
 VZ0 = z3.Int('VZ0')
 
-def add_rock(i, px1,py1,pz1,vx1,vy1,vz1):
-    T1 = z3.Int('T' + str(i))
 
+def add_rock(i, px1, py1, pz1, vx1, vy1, vz1):
+    T1 = z3.Int('T' + str(i))
     o.add(T1 >= 0)
     o.add(px1 + vx1 * T1 == X0 + VX0 * T1)
     o.add(py1 + vy1 * T1 == Y0 + VY0 * T1)
     o.add(pz1 + vz1 * T1 == Z0 + VZ0 * T1)
 
-
-import re
-stones = [[int(x) for x in re.findall(r'-?[0-9]+', line)] for line in inp.splitlines()]
-
 answer = 0
-for i, a in enumerate(stones, 1): # Don't start at 0
+for i, a in enumerate(stones):
     add_rock(i, *a)
 
-# o.check()
-
-# COMMAND ----------
-
 o.check()
-
-# COMMAND ----------
-
-o.model().eval(X0 + Y0 + Z0)
+answer = o.model().eval(X0 + Y0 + Z0)
+print(answer)
