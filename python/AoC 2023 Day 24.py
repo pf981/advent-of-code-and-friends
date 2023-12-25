@@ -376,10 +376,50 @@ print(answer)
 
 # COMMAND ----------
 
+# # PART 2
+# import z3
+
+# o = z3.Optimize()
+# X0 = z3.Int('X0')
+# Y0 = z3.Int('Y0')
+# Z0 = z3.Int('Z0')
+# VX0 = z3.Int('VX0')
+# VY0 = z3.Int('VY0')
+# VZ0 = z3.Int('VZ0')
+
+# def add_rock(i, px1,py1,pz1,vx1,vy1,vz1):
+#     X1 = z3.Int('X' + str(i))
+#     Y1 = z3.Int('Y' + str(i))
+#     Z1 = z3.Int('Z' + str(i))
+#     T1 = z3.Int('T' + str(i))
+
+#     o.add(T1 >= 0)
+
+#     o.add(X1 == px1 + vx1 * T1)
+#     o.add(Y1 == py1 + vy1 * T1)
+#     o.add(Z1 == pz1 + vz1 * T1)
+
+
+#     o.add(X1 == X0 + VX0 * T1)
+#     o.add(Y1 == Y0 + VY0 * T1)
+#     o.add(Z1 == Z0 + VZ0 * T1)
+
+
+# import re
+# stones = [[int(x) for x in re.findall(r'-?[0-9]+', line)] for line in inp.splitlines()]
+
+# answer = 0
+# for i, a in enumerate(stones, 1): # Don't start at 0
+#     add_rock(i, *a)
+
+# # o.check()
+
+# COMMAND ----------
+
 # PART 2
 import z3
 
-o = z3.Optimize()
+o = z3.Solver() # Note: Use Solver and NOT Optimize
 X0 = z3.Int('X0')
 Y0 = z3.Int('Y0')
 Z0 = z3.Int('Z0')
@@ -388,21 +428,12 @@ VY0 = z3.Int('VY0')
 VZ0 = z3.Int('VZ0')
 
 def add_rock(i, px1,py1,pz1,vx1,vy1,vz1):
-    X1 = z3.Int('X' + str(i))
-    Y1 = z3.Int('Y' + str(i))
-    Z1 = z3.Int('Z' + str(i))
     T1 = z3.Int('T' + str(i))
 
     o.add(T1 >= 0)
-
-    o.add(X1 == px1 + vx1 * T1)
-    o.add(Y1 == py1 + vy1 * T1)
-    o.add(Z1 == pz1 + vz1 * T1)
-
-
-    o.add(X1 == X0 + VX0 * T1)
-    o.add(Y1 == Y0 + VY0 * T1)
-    o.add(Z1 == Z0 + VZ0 * T1)
+    o.add(px1 + vx1 * T1 == X0 + VX0 * T1)
+    o.add(py1 + vy1 * T1 == Y0 + VY0 * T1)
+    o.add(pz1 + vz1 * T1 == Z0 + VZ0 * T1)
 
 
 import re
