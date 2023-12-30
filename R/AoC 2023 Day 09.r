@@ -14,11 +14,11 @@ extrapolate <- function(sequence) {
 }
 
 sequences <- str_extract_all(text, "-?\\d+") |> map(as.integer)
-answer1 = sum(map_int(sequences, extrapolate))
+answer1 = sequences |> map_int(extrapolate) |> sum()
 print(answer1)
 
 
 
 
-answer2 = sum(map_int(sequences, \(.) extrapolate(rev(.))))
+answer2 = sequences |> map(rev) |> map_int(extrapolate) |> sum()
 print(answer2)
