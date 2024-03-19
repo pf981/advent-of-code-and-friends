@@ -41,13 +41,13 @@ fn to_int(student: Student) -> Int {
   }
 }
 
-fn to_plants(plant: String) -> Plant {
+fn to_plants(plant: String) -> Result(Plant, Nil) {
   case plant {
-    "R" -> Radishes
-    "C" -> Clover
-    "V" -> Violets
-    "G" -> Grass
-    _ -> panic
+    "R" -> Ok(Radishes)
+    "C" -> Ok(Clover)
+    "V" -> Ok(Violets)
+    "G" -> Ok(Grass)
+    _ -> Error(Nil)
   }
 }
 
@@ -65,4 +65,5 @@ pub fn plants(diagram: String, student: Student) -> List(Plant) {
   |> list.map(extract_nth(_, to_int(student)))
   |> list.flatten
   |> list.map(to_plants)
+  |> result.values
 }
