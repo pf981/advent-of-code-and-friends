@@ -36,22 +36,43 @@ fn to_instruction(char: String) -> Result(Instruction, Nil) {
   }
 }
 
-fn handle_instruction(robot: Robot, instruction: Instruction) -> Robot {
-  let Robot(direction, position) = robot
+fn right(robot: Robot) -> Robot {
+  let direction = case robot.direction {
+    North -> East
+    East -> South
+    South -> West
+    West -> North
+  }
+  Robot(..robot, direction: direction)
+}
 
-  case instruction, direction {
-    Right, North -> Robot(East, position)
-    Right, East -> Robot(South, position)
-    Right, South -> Robot(West, position)
-    Right, West -> Robot(North, position)
-    Left, North -> Robot(West, position)
-    Left, East -> Robot(North, position)
-    Left, South -> Robot(East, position)
-    Left, West -> Robot(South, position)
-    Advance, North -> Robot(direction, Position(position.x, position.y + 1))
-    Advance, East -> Robot(direction, Position(position.x + 1, position.y))
-    Advance, South -> Robot(direction, Position(position.x, position.y - 1))
-    Advance, West -> Robot(direction, Position(position.x - 1, position.y))
+fn left(robot: Robot) -> Robot {
+  let direction = case robot.direction {
+    North -> West
+    East -> North
+    South -> East
+    West -> South
+  }
+  Robot(..robot, direction: direction)
+}
+
+fn advance(robot: Robot) -> Robot {
+  let Position(x, y) = robot.position
+
+  let position = case robot.direction {
+    North -> Position(x, y + 1)
+    East -> Position(x + 1, y)
+    South -> Position(x, y - 1)
+    West -> Position(x - 1, y)
+  }
+  Robot(..robot, position: position)
+}
+
+fn handle_instruction(robot: Robot, instruction: Instruction) -> Robot {
+  case instruction {
+    Right -> right(robot)
+    Left -> left(robot)
+    Advance -> advance(robot)
   }
 }
 
