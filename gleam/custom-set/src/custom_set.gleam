@@ -66,17 +66,6 @@ pub fn difference(between first: Set(t), and second: Set(t)) -> Set(t) {
   }
 }
 
-// pub fn difference(between first: Set(t), and second: Set(t)) -> Set(t) {
-//   case second {
-//     Set([]) -> Set([])
-//     Set([head, ..rest]) ->
-//       case contains(first, head) {
-//         True -> intersection(Set(rest), first)
-//         False -> union(Set([head]), intersection(Set(rest), first))
-//       }
-//   }
-// }
-
 pub fn union(of first: Set(t), and second: Set(t)) -> Set(t) {
   case first {
     Set([]) -> second
