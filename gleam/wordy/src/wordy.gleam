@@ -18,19 +18,22 @@ pub type Error {
   ImpossibleOperation
 }
 
-fn take_number(s: String) -> Result(#(Token, String), Nil) {
-  let #(left, right) =
-    s
-    |> string.split_once(" ")
-    |> result.unwrap(#(s, ""))
-
-  let #(left, right) = case string.ends_with(left, "?") {
-    True -> #(string.drop_right(left, 1), "?" <> right)
-    False -> #(left, right)
+fn take_digits(s: String, acc: String) -> #(String, String) {
+  case string.pop_grapheme(s) {
+    Ok(#(first, rest)) ->
+      case string.contains("0123456789-", first) {
+        True -> take_digits(rest, acc <> first)
+        False -> #(acc, s)
+      }
+    Error(Nil) -> #(acc, s)
   }
+}
 
-  case int.base_parse(left, 10) {
-    Ok(num) -> Ok(#(Value(num), right))
+fn take_number(s: String) -> Result(#(Token, String), Nil) {
+  let #(digits, rest) = take_digits(s, "")
+
+  case int.base_parse(digits, 10) {
+    Ok(num) -> Ok(#(Value(num), rest))
     Error(Nil) -> Error(Nil)
   }
 }
