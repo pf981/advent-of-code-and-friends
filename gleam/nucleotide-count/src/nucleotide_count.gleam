@@ -9,10 +9,9 @@ fn count(
 ) -> Result(Dict(String, Int), Nil) {
   case char {
     "A" | "C" | "G" | "T" ->
-      case dict.get(counter, char) {
-        Ok(num) -> Ok(dict.insert(counter, char, num + 1))
-        Error(Nil) -> Error(Nil)
-      }
+      counter
+      |> dict.get(char)
+      |> result.map(fn(num) { dict.insert(counter, char, num + 1) })
     _ -> Error(Nil)
   }
 }
