@@ -9,6 +9,7 @@ type Token {
   Minus
   Multiply
   Divide
+  QuestionMark
 }
 
 pub type Error {
@@ -35,13 +36,14 @@ fn take_number(s: String) -> Result(#(Token, String), Nil) {
 }
 
 fn lex(s: String, acc: List(Token)) -> Result(List(Token), Error) {
-  let s = string.trim(s)
+  let s = string.trim_left(s)
 
   case take_number(s) {
     Ok(#(value, rest)) -> lex(rest, [value, ..acc])
     Error(Nil) ->
       case s {
-        "?" -> Ok(acc)
+        "" -> Ok(acc)
+        "?" <> rest -> lex(rest, [QuestionMark, ..acc])
         "What is" <> rest if acc == [] -> lex(rest, acc)
         "plus" <> rest -> lex(rest, [Plus, ..acc])
         "minus" <> rest -> lex(rest, [Minus, ..acc])
@@ -54,7 +56,7 @@ fn lex(s: String, acc: List(Token)) -> Result(List(Token), Error) {
 
 fn parse(tokens: List(Token)) -> Result(Int, Error) {
   case tokens {
-    [Value(a)] -> Ok(a)
+    [Value(a), QuestionMark] -> Ok(a)
     [Value(a), Plus, Value(b), ..rest] -> parse([Value(a + b), ..rest])
     [Value(a), Minus, Value(b), ..rest] -> parse([Value(a - b), ..rest])
     [Value(a), Multiply, Value(b), ..rest] -> parse([Value(a * b), ..rest])
