@@ -3,7 +3,6 @@ import gleam/result
 
 fn parse(rna: String, acc: List(String)) -> Result(List(String), Nil) {
   case rna {
-    "" -> Ok(acc)
     "AUG" <> rest -> parse(rest, ["Methionine", ..acc])
     "UUU" <> rest | "UUC" <> rest -> parse(rest, ["Phenylalanine", ..acc])
     "UUA" <> rest | "UUG" <> rest -> parse(rest, ["Leucine", ..acc])
@@ -12,7 +11,7 @@ fn parse(rna: String, acc: List(String)) -> Result(List(String), Nil) {
     "UAU" <> rest | "UAC" <> rest -> parse(rest, ["Tyrosine", ..acc])
     "UGU" <> rest | "UGC" <> rest -> parse(rest, ["Cysteine", ..acc])
     "UGG" <> rest -> parse(rest, ["Tryptophan", ..acc])
-    "UAA" <> _ | "UAG" <> _ | "UGA" <> _ -> Ok(acc)
+    "UAA" <> _ | "UAG" <> _ | "UGA" <> _ | "" -> Ok(acc)
     _ -> Error(Nil)
   }
 }
