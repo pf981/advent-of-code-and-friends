@@ -19,8 +19,8 @@ fn count(
 pub fn nucleotide_count(dna: String) -> Result(Dict(String, Int), Nil) {
   dna
   |> string.to_graphemes
-  |> list.fold(
-    Ok(dict.from_list([#("A", 0), #("C", 0), #("G", 0), #("T", 0)])),
-    fn(acc, char) { result.try(acc, count(_, char)) },
+  |> list.try_fold(
+    dict.from_list([#("A", 0), #("C", 0), #("G", 0), #("T", 0)]),
+    count,
   )
 }
