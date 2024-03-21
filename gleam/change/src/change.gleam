@@ -1,9 +1,15 @@
 import gleam/bool
 import gleam/list
-import gleam/result
 
 pub type Error {
   ImpossibleTarget
+}
+
+fn is_worth_trying(candidate, best) {
+  case best {
+    Ok(l) -> list.length(candidate) < list.length(l)
+    _ -> True
+  }
 }
 
 fn find_best(
@@ -12,26 +18,15 @@ fn find_best(
   acc: List(Int),
   best: Result(List(Int), Error),
 ) -> Result(List(Int), Error) {
-  use <- bool.guard(
-    result.unwrap(
-      result.map(best, fn(b) { list.length(acc) >= list.length(b) }),
-      False,
-    ),
-    best,
-  )
+  use <- bool.guard(!is_worth_trying(acc, best), best)
   use <- bool.guard(target == 0, Ok(acc))
-  use <- bool.guard(target < 0, Error(ImpossibleTarget))
+  use <- bool.guard(target < 0, best)
 
   case coins {
-    [] -> Error(ImpossibleTarget)
+    [] -> best
     [first, ..rest] -> {
-      let best =
-        find_best(coins, target - first, [first, ..acc], best)
-        |> result.or(best)
-      let best =
-        find_best(rest, target, acc, best)
-        |> result.or(best)
-      best
+      let best = find_best(coins, target - first, [first, ..acc], best)
+      find_best(rest, target, acc, best)
     }
   }
 }
