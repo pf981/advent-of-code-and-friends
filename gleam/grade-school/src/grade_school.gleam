@@ -1,4 +1,3 @@
-import gleam/bool
 import gleam/dict.{type Dict}
 import gleam/int
 import gleam/list
@@ -13,31 +12,29 @@ pub fn create() -> School {
 }
 
 pub fn roster(school: School) -> List(String) {
-  school
-  |> dict.map_values(fn(_key, value) { list.sort(value, string.compare) })
-  |> dict.to_list
-  |> list.sort(fn(pair1, pair2) { int.compare(pair1.0, pair2.0) })
-  |> list.flat_map(fn(pair) { pair.1 })
+  let grades = list.sort(dict.keys(school), int.compare)
+  list.flat_map(grades, grade(school, _))
 }
 
 pub fn add(
   to school: School,
   student student: String,
-  grade grade: Int,
+  grade grade_num: Int,
 ) -> Result(School, Nil) {
   let all_students =
     school
     |> dict.values
     |> list.flatten
 
-  use <- bool.guard(list.contains(all_students, student), Error(Nil))
-
-  let grade_students =
-    school
-    |> dict.get(grade)
-    |> result.unwrap([])
-
-  Ok(dict.insert(school, grade, [student, ..grade_students]))
+  case list.contains(all_students, student) {
+    True -> Error(Nil)
+    False ->
+      Ok(dict.insert(
+        school,
+        grade_num,
+        list.sort([student, ..grade(school, grade_num)], string.compare),
+      ))
+  }
 }
 
 pub fn grade(school: School, desired_grade: Int) -> List(String) {
