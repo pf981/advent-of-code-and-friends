@@ -6,8 +6,9 @@ type Sound {
   Consonant(text: String)
 }
 
-fn lex_rest(letters: List(String)) -> List(Sound) {
+fn lex_rest(letters: String) -> List(Sound) {
   letters
+  |> string.to_graphemes
   |> list.prepend("")
   |> list.window_by_2()
   |> list.map(fn(pair) {
@@ -20,12 +21,11 @@ fn lex_rest(letters: List(String)) -> List(Sound) {
   })
 }
 
-fn lex(letters: List(String)) -> List(Sound) {
+fn lex(letters: String) -> List(Sound) {
   case letters {
-    [] -> []
-    ["x", "r", ..rest] -> [Vowel("xr"), ..lex_rest(rest)]
-    ["y", "t", ..rest] -> [Vowel("yt"), ..lex_rest(rest)]
-    ["y", ..rest] -> [Consonant("y"), ..lex_rest(rest)]
+    "xr" <> rest -> [Vowel("xr"), ..lex_rest(rest)]
+    "yt" <> rest -> [Vowel("yt"), ..lex_rest(rest)]
+    "y" <> rest -> [Consonant("y"), ..lex_rest(rest)]
     rest -> lex_rest(rest)
   }
 }
@@ -44,7 +44,6 @@ fn reorder(sounds: List(Sound)) -> List(Sound) {
 
 fn pig(word: String) -> String {
   word
-  |> string.to_graphemes
   |> lex
   |> reorder
   |> list.map(fn(sound) { sound.text })
