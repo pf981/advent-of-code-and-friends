@@ -42,19 +42,14 @@ fn reorder(sounds: List(Sound)) -> List(Sound) {
   list.append(rest, consonants)
 }
 
-fn to_string(sounds: List(Sound)) -> String {
-  sounds
-  |> list.map(fn(sound) { sound.text })
-  |> string.concat
-  |> string.append("ay")
-}
-
 fn pig(word: String) -> String {
   word
   |> string.to_graphemes
   |> lex
   |> reorder
-  |> to_string
+  |> list.map(fn(sound) { sound.text })
+  |> string.concat
+  |> string.append("ay")
 }
 
 pub fn translate(phrase: String) -> String {
