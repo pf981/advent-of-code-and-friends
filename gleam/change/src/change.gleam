@@ -5,10 +5,10 @@ pub type Error {
   ImpossibleTarget
 }
 
-fn is_worth_trying(candidate, best) {
+fn is_worth_trying(candidate: List(Int), best: Result(List(Int), Error)) -> Bool {
   case best {
     Ok(l) -> list.length(candidate) < list.length(l)
-    _ -> True
+    Error(_) -> True
   }
 }
 
