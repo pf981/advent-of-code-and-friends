@@ -1,8 +1,9 @@
 import gleam/bool
 import gleam/dict.{type Dict}
-import gleam/iterator
 import gleam/list
+import gleam/result
 import gleam/set.{type Set}
+import gleam/string
 
 pub type Player {
   X
@@ -12,8 +13,43 @@ pub type Player {
 type Pos =
   #(Int, Int)
 
-fn parse_board(board: String) -> Dict(Pos, Player) {
-  todo
+import gleam/io
+
+pub fn main() {
+  parse_board(
+    "
+O O O X
+ X . . X
+  X . . X
+   X O O O",
+  )
+}
+
+fn parse_board(board: String) -> #(Dict(Player, Set(Pos)), Int, Int) {
+  let rows =
+    board
+    |> string.replace(" ", "")
+    |> string.split("\n")
+    |> list.filter(fn(row) { row != "" })
+    |> io.debug
+
+  rows
+  |> list.index_map(fn(row, j) {
+    row
+    |> string.to_graphemes
+    |> list.index_map(fn(i, c) { #(i, j, c) })
+  })
+  // FIXME: This is not the right coordinates
+  |> io.debug
+
+  #(
+    dict.new(),
+    list.length(rows),
+    rows
+      |> list.first
+      |> result.unwrap("")
+      |> string.length(),
+  )
 }
 
 fn neighbors(pos: Pos) -> List(Pos) {
@@ -53,17 +89,10 @@ fn check_win_impl(
 }
 
 fn check_win(
-  board: Dict(Pos, Player),
-  player: Player,
+  valid: Set(Pos),
   start_condition: fn(Pos) -> Bool,
   win_condition: fn(Pos) -> Bool,
 ) {
-  let valid =
-    board
-    |> dict.filter(fn(_, play) { play == player })
-    |> dict.keys
-    |> set.from_list
-
   valid
   |> set.filter(start_condition)
   |> set.to_list
@@ -71,18 +100,22 @@ fn check_win(
 }
 
 pub fn winner(board: String) -> Result(Player, Nil) {
-  let board = parse_board(board)
-
-  // todo 
-  let n_rows = 10
-  let n_cols = 10
+  let #(board, i_max, j_max) = parse_board(board)
 
   use <- bool.guard(
-    check_win(board, O, fn(pos) { pos.0 == 0 }, fn(pos) { pos.0 == n_rows }),
+    check_win(
+      result.unwrap(dict.get(board, X), set.new()),
+      fn(pos) { pos.0 == 0 },
+      fn(pos) { pos.0 == i_max },
+    ),
     Ok(X),
   )
   use <- bool.guard(
-    check_win(board, O, fn(pos) { pos.1 == 0 }, fn(pos) { pos.1 == n_cols }),
+    check_win(
+      result.unwrap(dict.get(board, O), set.new()),
+      fn(pos) { pos.1 == 0 },
+      fn(pos) { pos.1 == j_max },
+    ),
     Ok(O),
   )
   Error(Nil)
