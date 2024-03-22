@@ -36,11 +36,6 @@ fn to_string(ints: List(Int)) -> String {
   |> list.map(fn(x) { x + 97 })
   |> list.filter_map(string.utf_codepoint)
   |> string.from_utf_codepoints
-  |> string.to_graphemes
-  |> list.sized_chunk(5)
-  |> list.intersperse([" "])
-  |> list.flatten
-  |> string.concat
 }
 
 pub fn code(plaintext: String, f: fn(Int) -> Int) -> String {
@@ -61,7 +56,13 @@ pub fn encode(
   b b: Int,
 ) -> Result(String, Error) {
   use <- bool.guard(gcd(a, 26) != 1, Error(KeyNotCoprime(a, 26)))
-  Ok(code(plaintext, fn(x) { { a * x + b } % 26 }))
+  code(plaintext, fn(x) { { a * x + b } % 26 })
+  |> string.to_graphemes
+  |> list.sized_chunk(5)
+  |> list.intersperse([" "])
+  |> list.flatten
+  |> string.concat
+  |> Ok
 }
 
 pub fn decode(
@@ -77,7 +78,5 @@ pub fn decode(
     |> iterator.first
     |> result.unwrap(0)
 
-  code(ciphertext, fn(x) { mod(a_inv_m * { x - b }, 26) })
-  |> string.replace(" ", "")
-  |> Ok
+  Ok(code(ciphertext, fn(x) { mod(a_inv_m * { x - b }, 26) }))
 }
