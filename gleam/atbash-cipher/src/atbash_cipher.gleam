@@ -5,10 +5,8 @@ import gleam/string
 fn encode_char(c: String) -> Result(String, Nil) {
   case <<c:utf8>> {
     <<code>> if code >= 48 && code <= 57 -> Ok(c)
-    <<code>> if code >= 97 && code <= 122 -> {
-      let code2 = 97 + 122 - code
-      bit_array.to_string(<<code2>>)
-    }
+    <<code>> if code >= 97 && code <= 122 ->
+      bit_array.to_string(<<{ 97 + 122 - code }>>)
     _ -> Error(Nil)
   }
 }
