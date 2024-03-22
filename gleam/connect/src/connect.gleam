@@ -1,5 +1,7 @@
 import gleam/bool
 import gleam/dict.{type Dict}
+import gleam/iterator
+import gleam/list
 import gleam/set.{type Set}
 
 pub type Player {
@@ -14,6 +16,42 @@ fn parse_board(board: String) -> Dict(Pos, Player) {
   todo
 }
 
+fn neighbors(pos: Pos) -> List(Pos) {
+  let #(i, j) = pos
+  [
+    #(i, j - 1),
+    #(i, j + 1),
+    #(i + 1, j),
+    #(i - 1, j),
+    #(i + 1, j - 1),
+    #(i - 1, j + 1),
+  ]
+}
+
+fn check_win_impl(
+  positions: List(Pos),
+  valid: Set(Pos),
+  seen: Set(Pos),
+  win_condition: fn(Pos) -> Bool,
+) -> Bool {
+  case positions {
+    [pos, ..rest] -> {
+      use <- bool.guard(
+        !set.contains(valid, pos) || set.contains(seen, pos),
+        check_win_impl(rest, valid, seen, win_condition),
+      )
+      win_condition(pos)
+      || check_win_impl(
+        list.append(rest, neighbors(pos)),
+        set.insert(seen, pos),
+        valid,
+        win_condition,
+      )
+    }
+    [] -> False
+  }
+}
+
 fn check_win(
   board: Dict(Pos, Player),
   player: Player,
@@ -26,10 +64,10 @@ fn check_win(
     |> dict.keys
     |> set.from_list
 
-  set.filter(valid, start_condition)
-  // Maybe use iterator
-  // iterator.any(win_condition)
-  True
+  valid
+  |> set.filter(start_condition)
+  |> set.to_list
+  |> check_win_impl(valid, set.new(), win_condition)
 }
 
 pub fn winner(board: String) -> Result(Player, Nil) {
