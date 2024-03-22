@@ -1,5 +1,4 @@
 import gleam/bool
-import gleam/iterator
 import gleam/list
 
 pub type Error {
@@ -12,20 +11,10 @@ fn to_int(digits: List(Int), base: Int) -> Int {
   |> list.fold(0, fn(acc, digit) { acc * base + digit })
 }
 
-fn to_digits(num: Int, base: Int) -> List(Int) {
-  let digits =
-    iterator.iterate(num, fn(remaining) { remaining / base })
-    |> iterator.fold_until([], fn(acc, remaining) {
-      case remaining == 0 {
-        True -> list.Stop(acc)
-        False -> list.Continue([remaining % base, ..acc])
-      }
-    })
-
-  case digits {
-    [] -> [0]
-    _ -> digits
-  }
+fn to_digits(num: Int, base: Int, acc: List(Int)) -> List(Int) {
+  use <- bool.guard(num == 0 && acc == [], [0])
+  use <- bool.guard(num == 0, acc)
+  to_digits(num / base, base, [num % base, ..acc])
 }
 
 pub fn rebase(
@@ -46,7 +35,7 @@ pub fn rebase(
     Error(Nil) ->
       digits
       |> to_int(input_base)
-      |> to_digits(output_base)
+      |> to_digits(output_base, [])
       |> Ok
   }
 }
