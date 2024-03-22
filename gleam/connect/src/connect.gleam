@@ -1,5 +1,6 @@
 import gleam/bool
 import gleam/dict.{type Dict}
+import gleam/set.{type Set}
 
 pub type Player {
   X
@@ -19,13 +20,22 @@ fn check_win(
   start_condition: fn(Pos) -> Bool,
   win_condition: fn(Pos) -> Bool,
 ) {
-  todo
+  let valid =
+    board
+    |> dict.filter(fn(_, play) { play == player })
+    |> dict.keys
+    |> set.from_list
+
+  set.filter(valid, start_condition)
+  // Maybe use iterator
+  // iterator.any(win_condition)
+  True
 }
 
 pub fn winner(board: String) -> Result(Player, Nil) {
   let board = parse_board(board)
 
-  // todo
+  // todo 
   let n_rows = 10
   let n_cols = 10
 
