@@ -1,6 +1,5 @@
 import gleam/bit_array
 import gleam/list
-import gleam/result
 import gleam/string
 
 fn encode_char(c: String) -> Result(String, Nil) {
@@ -9,8 +8,6 @@ fn encode_char(c: String) -> Result(String, Nil) {
     <<code>> if code >= 97 && code <= 122 -> {
       let code2 = 97 + 122 - code
       bit_array.to_string(<<code2>>)
-      |> result.unwrap("")
-      |> Ok
     }
     _ -> Error(Nil)
   }
