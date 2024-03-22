@@ -56,7 +56,7 @@ pub fn encode(
   b b: Int,
 ) -> Result(String, Error) {
   use <- bool.guard(gcd(a, 26) != 1, Error(KeyNotCoprime(a, 26)))
-  code(plaintext, fn(x) { { a * x + b } % 26 })
+  code(plaintext, fn(x) { mod(a * x + b, 26) })
   |> string.to_graphemes
   |> list.sized_chunk(5)
   |> list.intersperse([" "])
@@ -74,7 +74,7 @@ pub fn decode(
 
   let a_inv_m =
     iterator.range(1, 25)
-    |> iterator.filter(fn(x) { { { a % 26 } * { x % 26 } } % 26 == 1 })
+    |> iterator.filter(fn(x) { mod(mod(a, 26) * mod(x, 26), 26) == 1 })
     |> iterator.first
     |> result.unwrap(0)
 
