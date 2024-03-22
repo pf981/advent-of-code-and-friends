@@ -4,28 +4,14 @@ pub type Item {
   Item(value: Int, weight: Int)
 }
 
-fn knapsack(
-  items: List(Item),
-  maximum_weight: Int,
-  current_value: Int,
-  best: Int,
-) -> Int {
+pub fn maximum_value(items: List(Item), maximum_weight: Int) -> Int {
   case items {
-    [] -> int.max(current_value, best)
+    [] -> 0
     [first, ..rest] if first.weight <= maximum_weight ->
       int.max(
-        knapsack(
-          rest,
-          maximum_weight - first.weight,
-          current_value + first.value,
-          best,
-        ),
-        knapsack(rest, maximum_weight, current_value, best),
+        first.value + maximum_value(rest, maximum_weight - first.weight),
+        maximum_value(rest, maximum_weight),
       )
-    [_, ..rest] -> knapsack(rest, maximum_weight, current_value, best)
+    [_, ..rest] -> maximum_value(rest, maximum_weight)
   }
-}
-
-pub fn maximum_value(items: List(Item), maximum_weight: Int) -> Int {
-  knapsack(items, maximum_weight, 0, 0)
 }
