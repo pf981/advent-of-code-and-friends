@@ -3,7 +3,7 @@ import gleam/list
 fn comb(available: List(Int), target: Int, size: Int) -> List(List(Int)) {
   case available {
     _ if target == 0 && size == 0 -> [[]]
-    _ if target <= 0 || size == 0 -> []
+    _ if target <= 0 || size <= 0 -> []
     [] -> []
     [first, ..rest] -> {
       let keep =
