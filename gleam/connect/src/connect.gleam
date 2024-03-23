@@ -45,44 +45,56 @@ pub fn main() {
   //     . O X ."
   //   |> winner
   //   |> io.debug
-  let board =
-    "
-. O . .
- O X X X
-  O O O .
-   X X O X
-    . O X ."
+  //   let board =
   //     "
   // . O . .
   //  O X X X
-  //   O X O .
+  //   O O O .
   //    X X O X
   //     . O X ."
-  let #(hexes, n_rows, n_cols) = parse_board(board)
-  let p =
-    player_hexes(hexes, O)
-    // player_hexes(hexes, X)
-    |> io.debug
+  //   //     "
+  //   // . O . .
+  //   //  O X X X
+  //   //   O X O .
+  //   //    X X O X
+  //   //     . O X ."
+  //   let #(hexes, n_rows, n_cols) = parse_board(board)
+  //   let p =
+  //     player_hexes(hexes, O)
+  //     // player_hexes(hexes, X)
+  //     |> io.debug
 
-  let start = fn(pos: #(Int, Int)) { pos.1 == 0 }
-  let end = fn(pos: #(Int, Int)) { pos.1 == n_rows - 1 }
+  //   let start = fn(pos: #(Int, Int)) { pos.1 == 0 }
+  //   let end = fn(pos: #(Int, Int)) { pos.1 == n_rows - 1 }
 
-  // let start = fn(pos: #(Int, Int)) { pos.0 == pos.1 / 2 }
-  // let end = fn(pos: #(Int, Int)) { pos.0 == n_cols - 1 + pos.1 / 2 }
+  //   // let start = fn(pos: #(Int, Int)) { pos.0 == pos.1 / 2 }
+  //   // let end = fn(pos: #(Int, Int)) { pos.0 == n_cols - 1 + pos.1 / 2 }
 
-  p
-  |> set.filter(start)
-  |> io.debug
-  p
-  |> set.filter(end)
-  |> io.debug
+  //   p
+  //   |> set.filter(start)
+  //   |> io.debug
+  //   p
+  //   |> set.filter(end)
+  //   |> io.debug
 
-  io.debug(n_cols)
-  io.debug(n_rows)
-  io.debug(n_cols - 1 + 1 / 2)
+  //   io.debug(n_cols)
+  //   io.debug(n_rows)
+  //   io.debug(n_cols - 1 + 1 / 2)
 
-  board
-  |> winner
+  //   // board
+  //   // |> winner
+  //   // |> io.debug
+
+  //   neighbors(#(1, 0))
+  //   |> io.debug
+
+  //   check_win(player_hexes(hexes, O), fn(pos) { pos.1 == 0 }, fn(pos) {
+  //     pos.1 == n_rows - 1
+  //   })
+  // neighbors(#(2, 3))
+  // neighbors(#(3, 3))
+  // neighbors(#(3, 2))
+  neighbors(#(2, 1))
   |> io.debug
 }
 
@@ -129,19 +141,34 @@ fn parse_board(board: String) -> #(List(#(Int, Int, String)), Int, Int) {
 
 fn neighbors(pos: Pos) -> List(Pos) {
   let #(i, j) = pos
+  let parity = j % 2
   [
-    #(i, j - 1),
-    // 1 0
-    #(i, j + 1),
-    // 1 2
+    // NE
+    #(i + parity, j - 1),
+    // E
     #(i + 1, j),
-    // 2 1
+    // SE
+    #(i + parity, j + 1),
+    // SW
+    #(i + parity - 1, j + 1),
+    // W
     #(i - 1, j),
-    // 0 1
-    #(i + 1, j - 1),
-    // 2 0
-    #(i + 1, j + 1),
+    // NW
+    #(i + parity - 1, j - 1),
   ]
+  // [
+  //   #(i, j - 1),
+  //   // 1 0
+  //   #(i, j + 1),
+  //   // 1 2
+  //   #(i + 1, j),
+  //   // 2 1
+  //   #(i - 1, j),
+  //   // 0 1
+  //   #(i + 1, j - 1),
+  //   // 2 0
+  //   #(i + 1, j + 1),
+  // ]
   // 2 2
   // #(i - 1, j + 1),
 }
@@ -158,6 +185,7 @@ fn check_win_impl(
         !set.contains(valid, pos) || set.contains(seen, pos),
         check_win_impl(rest, valid, seen, win_condition),
       )
+      io.debug(pos)
       win_condition(pos)
       || check_win_impl(
         list.append(rest, neighbors(pos)),
