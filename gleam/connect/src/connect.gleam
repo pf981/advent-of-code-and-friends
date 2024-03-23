@@ -16,85 +16,13 @@ type Pos =
 import gleam/io
 
 pub fn main() {
-  // "
-  // O O O X
-  //  X . . X
-  //   X . . X
-  //    X O O O"
-  //   "
-  // O X X X X X X X X
-  //  O X O O O O O O O
-  //   O X O X X X X X O
-  //    O X O X O O O X O
-  //     O X O X X X O X O
-  //      O X O O O X O X O
-  //       O X X X X X O X O
-  //        O O O O O O O X O
-  //         X X X X X X X X O"
-  //   "
-  // . O . .
-  //  O X X X
-  //   O X O .
-  //    X X O X
-  //     . O X ."
-  //   "
-  // . O . .
-  //  O X X X
-  //   O O O .
-  //    X X O X
-  //     . O X ."
-  //   |> winner
-  //   |> io.debug
-  //   let board =
-  //     "
-  // . O . .
-  //  O X X X
-  //   O O O .
-  //    X X O X
-  //     . O X ."
-  //   //     "
-  //   // . O . .
-  //   //  O X X X
-  //   //   O X O .
-  //   //    X X O X
-  //   //     . O X ."
-  //   let #(hexes, n_rows, n_cols) = parse_board(board)
-  //   let p =
-  //     player_hexes(hexes, O)
-  //     // player_hexes(hexes, X)
-  //     |> io.debug
-
-  //   let start = fn(pos: #(Int, Int)) { pos.1 == 0 }
-  //   let end = fn(pos: #(Int, Int)) { pos.1 == n_rows - 1 }
-
-  //   // let start = fn(pos: #(Int, Int)) { pos.0 == pos.1 / 2 }
-  //   // let end = fn(pos: #(Int, Int)) { pos.0 == n_cols - 1 + pos.1 / 2 }
-
-  //   p
-  //   |> set.filter(start)
-  //   |> io.debug
-  //   p
-  //   |> set.filter(end)
-  //   |> io.debug
-
-  //   io.debug(n_cols)
-  //   io.debug(n_rows)
-  //   io.debug(n_cols - 1 + 1 / 2)
-
-  //   // board
-  //   // |> winner
-  //   // |> io.debug
-
-  //   neighbors(#(1, 0))
-  //   |> io.debug
-
-  //   check_win(player_hexes(hexes, O), fn(pos) { pos.1 == 0 }, fn(pos) {
-  //     pos.1 == n_rows - 1
-  //   })
-  // neighbors(#(2, 3))
-  // neighbors(#(3, 3))
-  // neighbors(#(3, 2))
-  neighbors(#(2, 1))
+  "
+. O . .
+ O X X X
+  O O O .
+   X X O X
+    . O X ."
+  |> winner
   |> io.debug
 }
 
@@ -156,21 +84,6 @@ fn neighbors(pos: Pos) -> List(Pos) {
     // NW
     #(i + parity - 1, j - 1),
   ]
-  // [
-  //   #(i, j - 1),
-  //   // 1 0
-  //   #(i, j + 1),
-  //   // 1 2
-  //   #(i + 1, j),
-  //   // 2 1
-  //   #(i - 1, j),
-  //   // 0 1
-  //   #(i + 1, j - 1),
-  //   // 2 0
-  //   #(i + 1, j + 1),
-  // ]
-  // 2 2
-  // #(i - 1, j + 1),
 }
 
 fn check_win_impl(
@@ -179,20 +92,22 @@ fn check_win_impl(
   seen: Set(Pos),
   win_condition: fn(Pos) -> Bool,
 ) -> Bool {
+  io.debug(#(positions, "seen", seen))
   case positions {
     [pos, ..rest] -> {
-      use <- bool.guard(
-        !set.contains(valid, pos) || set.contains(seen, pos),
-        check_win_impl(rest, valid, seen, win_condition),
-      )
-      io.debug(pos)
-      win_condition(pos)
-      || check_win_impl(
-        list.append(rest, neighbors(pos)),
-        set.insert(seen, pos),
-        valid,
-        win_condition,
-      )
+      case !set.contains(valid, pos) || set.contains(seen, pos) {
+        True -> check_win_impl(rest, valid, seen, win_condition)
+        False -> {
+          io.debug(#("TRYING", pos))
+          win_condition(pos)
+          || check_win_impl(
+            list.append(rest, neighbors(pos)),
+            valid,
+            set.insert(seen, pos),
+            win_condition,
+          )
+        }
+      }
     }
     [] -> False
   }
@@ -213,13 +128,14 @@ pub fn winner(board: String) -> Result(Player, Nil) {
   let #(hexes, n_rows, n_cols) = parse_board(board)
 
   io.debug(#(hexes, n_rows, n_cols))
+  io.debug(#("VALID", player_hexes(hexes, O)))
 
-  use <- bool.guard(
-    check_win(player_hexes(hexes, X), fn(pos) { pos.0 == pos.1 / 2 }, fn(pos) {
-      pos.0 == n_cols - 1 + pos.1 / 2
-    }),
-    Ok(X),
-  )
+  // use <- bool.guard(
+  //   check_win(player_hexes(hexes, X), fn(pos) { pos.0 == pos.1 / 2 }, fn(pos) {
+  //     pos.0 == n_cols - 1 + pos.1 / 2
+  //   }),
+  //   Ok(X),
+  // )
   use <- bool.guard(
     check_win(player_hexes(hexes, O), fn(pos) { pos.1 == 0 }, fn(pos) {
       pos.1 == n_rows - 1
