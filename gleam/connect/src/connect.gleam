@@ -1,5 +1,4 @@
 import gleam/bool
-import gleam/dict.{type Dict}
 import gleam/list
 import gleam/result
 import gleam/set.{type Set}
@@ -12,19 +11,6 @@ pub type Player {
 
 type Pos =
   #(Int, Int)
-
-import gleam/io
-
-pub fn main() {
-  "
-. O . .
- O X X X
-  O O O .
-   X X O X
-    . O X ."
-  |> winner
-  |> io.debug
-}
 
 fn player_hexes(
   hexes: List(#(Int, Int, String)),
@@ -92,13 +78,11 @@ fn check_win_impl(
   seen: Set(Pos),
   win_condition: fn(Pos) -> Bool,
 ) -> Bool {
-  // io.debug(#(positions, "seen", seen))
   case positions {
     [pos, ..rest] -> {
       case !set.contains(valid, pos) || set.contains(seen, pos) {
         True -> check_win_impl(rest, valid, seen, win_condition)
         False -> {
-          // io.debug(#("TRYING", pos))
           win_condition(pos)
           || check_win_impl(
             list.append(rest, neighbors(pos)),
@@ -126,9 +110,6 @@ fn check_win(
 
 pub fn winner(board: String) -> Result(Player, Nil) {
   let #(hexes, n_rows, n_cols) = parse_board(board)
-
-  // io.debug(#(hexes, n_rows, n_cols))
-  // io.debug(#("VALID", player_hexes(hexes, O)))
 
   use <- bool.guard(
     check_win(player_hexes(hexes, X), fn(pos) { pos.0 == pos.1 / 2 }, fn(pos) {
