@@ -92,13 +92,13 @@ fn check_win_impl(
   seen: Set(Pos),
   win_condition: fn(Pos) -> Bool,
 ) -> Bool {
-  io.debug(#(positions, "seen", seen))
+  // io.debug(#(positions, "seen", seen))
   case positions {
     [pos, ..rest] -> {
       case !set.contains(valid, pos) || set.contains(seen, pos) {
         True -> check_win_impl(rest, valid, seen, win_condition)
         False -> {
-          io.debug(#("TRYING", pos))
+          // io.debug(#("TRYING", pos))
           win_condition(pos)
           || check_win_impl(
             list.append(rest, neighbors(pos)),
@@ -127,15 +127,15 @@ fn check_win(
 pub fn winner(board: String) -> Result(Player, Nil) {
   let #(hexes, n_rows, n_cols) = parse_board(board)
 
-  io.debug(#(hexes, n_rows, n_cols))
-  io.debug(#("VALID", player_hexes(hexes, O)))
+  // io.debug(#(hexes, n_rows, n_cols))
+  // io.debug(#("VALID", player_hexes(hexes, O)))
 
-  // use <- bool.guard(
-  //   check_win(player_hexes(hexes, X), fn(pos) { pos.0 == pos.1 / 2 }, fn(pos) {
-  //     pos.0 == n_cols - 1 + pos.1 / 2
-  //   }),
-  //   Ok(X),
-  // )
+  use <- bool.guard(
+    check_win(player_hexes(hexes, X), fn(pos) { pos.0 == pos.1 / 2 }, fn(pos) {
+      pos.0 == n_cols - 1 + pos.1 / 2
+    }),
+    Ok(X),
+  )
   use <- bool.guard(
     check_win(player_hexes(hexes, O), fn(pos) { pos.1 == 0 }, fn(pos) {
       pos.1 == n_rows - 1
