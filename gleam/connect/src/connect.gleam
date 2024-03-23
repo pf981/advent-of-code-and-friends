@@ -16,34 +16,109 @@ type Pos =
 import gleam/io
 
 pub fn main() {
-  parse_board(
+  // "
+  // O O O X
+  //  X . . X
+  //   X . . X
+  //    X O O O"
+  //   "
+  // O X X X X X X X X
+  //  O X O O O O O O O
+  //   O X O X X X X X O
+  //    O X O X O O O X O
+  //     O X O X X X O X O
+  //      O X O O O X O X O
+  //       O X X X X X O X O
+  //        O O O O O O O X O
+  //         X X X X X X X X O"
+  //   "
+  // . O . .
+  //  O X X X
+  //   O X O .
+  //    X X O X
+  //     . O X ."
+  //   "
+  // . O . .
+  //  O X X X
+  //   O O O .
+  //    X X O X
+  //     . O X ."
+  //   |> winner
+  //   |> io.debug
+  let board =
     "
-O O O X
- X . . X
-  X . . X
-   X O O O",
-  )
+. O . .
+ O X X X
+  O O O .
+   X X O X
+    . O X ."
+  //     "
+  // . O . .
+  //  O X X X
+  //   O X O .
+  //    X X O X
+  //     . O X ."
+  let #(hexes, n_rows, n_cols) = parse_board(board)
+  let p =
+    player_hexes(hexes, O)
+    // player_hexes(hexes, X)
+    |> io.debug
+
+  let start = fn(pos: #(Int, Int)) { pos.1 == 0 }
+  let end = fn(pos: #(Int, Int)) { pos.1 == n_rows - 1 }
+
+  // let start = fn(pos: #(Int, Int)) { pos.0 == pos.1 / 2 }
+  // let end = fn(pos: #(Int, Int)) { pos.0 == n_cols - 1 + pos.1 / 2 }
+
+  p
+  |> set.filter(start)
+  |> io.debug
+  p
+  |> set.filter(end)
+  |> io.debug
+
+  io.debug(n_cols)
+  io.debug(n_rows)
+  io.debug(n_cols - 1 + 1 / 2)
+
+  board
+  |> winner
+  |> io.debug
 }
 
-fn parse_board(board: String) -> #(Dict(Player, Set(Pos)), Int, Int) {
+fn player_hexes(
+  hexes: List(#(Int, Int, String)),
+  player: Player,
+) -> Set(#(Int, Int)) {
+  list.filter_map(hexes, fn(triplet) {
+    let #(i, j, c) = triplet
+    case c {
+      "X" if player == X -> Ok(#(i, j))
+      "O" if player == O -> Ok(#(i, j))
+      _ -> Error(Nil)
+    }
+  })
+  |> set.from_list
+}
+
+fn parse_board(board: String) -> #(List(#(Int, Int, String)), Int, Int) {
   let rows =
     board
     |> string.replace(" ", "")
     |> string.split("\n")
     |> list.filter(fn(row) { row != "" })
-    |> io.debug
 
-  rows
-  |> list.index_map(fn(row, j) {
-    row
-    |> string.to_graphemes
-    |> list.index_map(fn(i, c) { #(i, j, c) })
-  })
-  // FIXME: This is not the right coordinates
-  |> io.debug
+  let hexes =
+    rows
+    |> list.index_map(fn(row, j) {
+      row
+      |> string.to_graphemes
+      |> list.index_map(fn(c, i) { #(i + j / 2, j, c) })
+    })
+    |> list.flatten
 
   #(
-    dict.new(),
+    hexes,
     list.length(rows),
     rows
       |> list.first
@@ -56,12 +131,19 @@ fn neighbors(pos: Pos) -> List(Pos) {
   let #(i, j) = pos
   [
     #(i, j - 1),
+    // 1 0
     #(i, j + 1),
+    // 1 2
     #(i + 1, j),
+    // 2 1
     #(i - 1, j),
+    // 0 1
     #(i + 1, j - 1),
-    #(i - 1, j + 1),
+    // 2 0
+    #(i + 1, j + 1),
   ]
+  // 2 2
+  // #(i - 1, j + 1),
 }
 
 fn check_win_impl(
@@ -100,22 +182,20 @@ fn check_win(
 }
 
 pub fn winner(board: String) -> Result(Player, Nil) {
-  let #(board, i_max, j_max) = parse_board(board)
+  let #(hexes, n_rows, n_cols) = parse_board(board)
+
+  io.debug(#(hexes, n_rows, n_cols))
 
   use <- bool.guard(
-    check_win(
-      result.unwrap(dict.get(board, X), set.new()),
-      fn(pos) { pos.0 == 0 },
-      fn(pos) { pos.0 == i_max },
-    ),
+    check_win(player_hexes(hexes, X), fn(pos) { pos.0 == pos.1 / 2 }, fn(pos) {
+      pos.0 == n_cols - 1 + pos.1 / 2
+    }),
     Ok(X),
   )
   use <- bool.guard(
-    check_win(
-      result.unwrap(dict.get(board, O), set.new()),
-      fn(pos) { pos.1 == 0 },
-      fn(pos) { pos.1 == j_max },
-    ),
+    check_win(player_hexes(hexes, O), fn(pos) { pos.1 == 0 }, fn(pos) {
+      pos.1 == n_rows - 1
+    }),
     Ok(O),
   )
   Error(Nil)
