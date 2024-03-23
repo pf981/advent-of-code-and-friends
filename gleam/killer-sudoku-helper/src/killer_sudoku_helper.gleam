@@ -1,15 +1,15 @@
 import gleam/list
 
-fn comb(target: Int, available: List(Int), size: Int) -> List(List(Int)) {
+fn comb(available: List(Int), target: Int, size: Int) -> List(List(Int)) {
   case available {
     _ if target == 0 && size == 0 -> [[]]
     _ if target <= 0 || size == 0 -> []
     [] -> []
     [first, ..rest] -> {
       let keep =
-        comb(target - first, rest, size - 1)
+        comb(rest, target - first, size - 1)
         |> list.map(list.prepend(_, first))
-      let discard = comb(target, rest, size)
+      let discard = comb(rest, target, size)
       list.append(keep, discard)
     }
   }
@@ -20,9 +20,7 @@ pub fn combinations(
   sum sum: Int,
   exclude exclude: List(Int),
 ) -> List(List(Int)) {
-  let available =
-    list.range(1, 9)
-    |> list.filter(fn(el) { !list.contains(exclude, el) })
-
-  comb(sum, available, size)
+  list.range(1, 9)
+  |> list.filter(fn(el) { !list.contains(exclude, el) })
+  |> comb(sum, size)
 }
