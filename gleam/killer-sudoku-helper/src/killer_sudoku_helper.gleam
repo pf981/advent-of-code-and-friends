@@ -1,12 +1,10 @@
-import gleam/bool
 import gleam/list
 
 fn comb(target: Int, available: List(Int), size: Int) -> List(List(Int)) {
-  use <- bool.guard(target == 0 && size == 0, [[]])
-  use <- bool.guard(target <= 0, [])
-  use <- bool.guard(size == 0, [])
-
   case available {
+    _ if target == 0 && size == 0 -> [[]]
+    _ if target <= 0 || size == 0 -> []
+    [] -> []
     [first, ..rest] -> {
       let keep =
         comb(target - first, rest, size - 1)
@@ -14,7 +12,6 @@ fn comb(target: Int, available: List(Int), size: Int) -> List(List(Int)) {
       let discard = comb(target, rest, size)
       list.append(keep, discard)
     }
-    [] -> []
   }
 }
 
