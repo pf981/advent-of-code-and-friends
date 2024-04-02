@@ -45,7 +45,7 @@
 
 # COMMAND ----------
 
-inp = '''T33AA 613
+inp = """T33AA 613
 J5JJ5 411
 J4444 240
 T5K98 463
@@ -1045,7 +1045,7 @@ J9555 151
 57AJQ 897
 83485 782
 K7773 61
-'''
+"""
 
 # COMMAND ----------
 
@@ -1053,24 +1053,27 @@ import collections
 
 
 def get_strength(hand):
-  count = collections.Counter(hand)
+    counts = [count for card, count in collections.Counter(hand).most_common()]
 
-  return (
-    count.most_common(1)[0][1] == 5,
-    count.most_common(1)[0][1] == 4,
-    count.most_common(1)[0][1] == 3 and count.most_common(2)[1][1] == 2,
-    count.most_common(1)[0][1] == 3,
-    count.most_common(1)[0][1] == 2 and count.most_common(2)[1][1] == 2,
-    count.most_common(1)[0][1] == 2
-  )
+    possible_counts = [
+        [1, 1, 1, 1, 1],  # High card
+        [2, 1, 1, 1],  # One pair
+        [2, 2, 1],  # Two pair
+        [3, 1, 1],  # Three of a kind
+        [3, 2],  # Full house
+        [4, 1],  # Four of a kind
+        [5],  # Five of a kind
+    ]
+
+    return possible_counts.index(counts)
 
 
 def hand_bid_order(hand_bid):
-  hand, bid = hand_bid
-  return get_strength(hand), *[-'AKQJT98765432'.index(card) for card in hand]
+    hand, bid = hand_bid
+    return get_strength(hand), *[-"AKQJT98765432".index(card) for card in hand]
 
 
-hands_bids = [line.split(' ') for line in inp.splitlines()]
+hands_bids = [line.split(" ") for line in inp.splitlines()]
 hands_bids.sort(key=hand_bid_order)
 answer = sum(i * int(bid) for i, (_, bid) in enumerate(hands_bids, 1))
 print(answer)
@@ -1098,9 +1101,12 @@ print(answer)
 
 # COMMAND ----------
 
+
 def hand_bid_order2(hand_bid):
-  hand, bid = hand_bid
-  return max(get_strength(hand.replace('J', c)) for c in 'AKQT98765432'), *[-'AKQT98765432J'.index(card) for card in hand]
+    hand, bid = hand_bid
+    return max(get_strength(hand.replace("J", c)) for c in "AKQT98765432"), *[
+        -"AKQT98765432J".index(card) for card in hand
+    ]
 
 
 hands_bids.sort(key=hand_bid_order2)
