@@ -1052,7 +1052,7 @@ K7773 61
 import collections
 
 
-def get_strength(hand):
+def primary_order(hand):
     counts = [count for card, count in collections.Counter(hand).most_common()]
 
     possible_counts = [
@@ -1068,9 +1068,13 @@ def get_strength(hand):
     return possible_counts.index(counts)
 
 
+def secondary_order(hand):
+    return tuple("23456789TJQKA".index(card) for card in hand)
+
+
 def hand_bid_order(hand_bid):
     hand, bid = hand_bid
-    return get_strength(hand), *[-"AKQJT98765432".index(card) for card in hand]
+    return primary_order(hand), secondary_order(hand)
 
 
 hands_bids = [line.split(" ") for line in inp.splitlines()]
@@ -1102,13 +1106,14 @@ print(answer)
 # COMMAND ----------
 
 
-def hand_bid_order2(hand_bid):
+def hand_bid_order_wild(hand_bid):
     hand, bid = hand_bid
-    return max(get_strength(hand.replace("J", c)) for c in "AKQT98765432"), *[
-        -"AKQT98765432J".index(card) for card in hand
-    ]
+    return (
+        max(primary_order(hand.replace("J", c)) for c in "23456789TJQKA"),
+        secondary_order(hand),
+    )
 
 
-hands_bids.sort(key=hand_bid_order2)
+hands_bids.sort(key=hand_bid_order_wild)
 answer = sum(i * int(bid) for i, (_, bid) in enumerate(hands_bids, 1))
 print(answer)
