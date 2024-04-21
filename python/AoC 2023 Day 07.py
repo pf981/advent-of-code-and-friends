@@ -1068,8 +1068,8 @@ def primary_order(hand):
     return possible_counts.index(counts)
 
 
-def secondary_order(hand):
-    return tuple("23456789TJQKA".index(card) for card in hand)
+def secondary_order(hand, card_order="23456789TJQKA"):
+    return tuple(card_order.index(card) for card in hand)
 
 
 def hand_bid_order(hand_bid):
@@ -1110,7 +1110,7 @@ def hand_bid_order_wild(hand_bid):
     hand, bid = hand_bid
     return (
         max(primary_order(hand.replace("J", c)) for c in "23456789TJQKA"),
-        secondary_order(hand),
+        secondary_order(hand, "J23456789TQKA"),
     )
 
 
