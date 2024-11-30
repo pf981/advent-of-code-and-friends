@@ -1,8 +1,6 @@
 with open("./2024/input/everybody_codes_e2024_q08_p1.txt") as f:
     lines = f.read().splitlines()
 
-# lines = '13'.splitlines() # FIXME
-
 target = int(lines[0])
 
 blocks = 1
@@ -26,11 +24,6 @@ mod = 1111
 target = 20240000
 priests = int(lines[0])
 
-# # FIXME: REMOVE
-# mod = 5
-# target = 50
-# priests = 3
-
 blocks = 1
 width = 1
 extra_height = 1
@@ -38,13 +31,9 @@ while blocks < target:
     extra_height = (extra_height * priests) % mod
     width += 2
     blocks += width * extra_height
-    # FIXME: REMOVE
-    # if width >= 100:
-    #     break
 
 remaining = blocks - target
 answer2 = remaining * width
-
 print(answer2)
 
 
@@ -60,11 +49,6 @@ with open("./2024/input/everybody_codes_e2024_q08_p3.txt") as f:
 extra = mod = 10
 target = 202400000
 priests = int(lines[0])
-
-# # FIXME: REMOVE
-# extra = mod = 5
-# target = 160
-# priests = 2
 
 heights = collections.deque([1])
 
@@ -86,6 +70,5 @@ for i in range(1, len(heights) - 1):
     to_remove += (priests * width * heights[i]) % mod
 
 required_to_complete_shell = blocks - to_remove
-
-answer3 = target - required_to_complete_shell
+answer3 = required_to_complete_shell - target
 print(answer3)
