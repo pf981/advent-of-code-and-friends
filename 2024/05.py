@@ -1,10 +1,9 @@
+import collections
+import itertools
+
+
 with open("./2024/input/everybody_codes_e2024_q05_p1.txt") as f:
     lines = f.read().splitlines()
-
-# lines = '''2 3 4 5
-# 3 4 5 2
-# 4 5 2 3
-# 5 2 3 4'''.splitlines()
 
 columns = list(zip(*([int(num) for num in line.split(' ')] for line in lines)))
 columns = [list(column) for column in columns]
@@ -22,15 +21,8 @@ print(answer1)
 # Part 2
 
 
-import collections
-import itertools
-
-
 with open("./2024/input/everybody_codes_e2024_q05_p2.txt") as f:
     lines = f.read().splitlines()
-
-# lines = '''2 3 4 5
-# 6 7 8 9'''.splitlines()
 
 columns = list(zip(*([int(num) for num in line.split(' ')] for line in lines)))
 columns = [list(column) for column in columns]
@@ -58,21 +50,14 @@ for round in itertools.count(1):
         answer2 = int(s) * round
         break
 
-
-    # print(f'{round=} {columns=} {"".join(str(column[0]) for column in columns)}')
-
-# answer2 = ''.join(str(column[0]) for column in columns)
 print(answer2)
 
 
-# # Part 3
+# Part 3
 
 
 with open("./2024/input/everybody_codes_e2024_q05_p3.txt") as f:
     lines = f.read().splitlines()
-
-# lines = '''2 3 4 5
-# 6 7 8 9'''.splitlines()
 
 columns = list(zip(*([int(num) for num in line.split(' ')] for line in lines)))
 columns = [list(column) for column in columns]
