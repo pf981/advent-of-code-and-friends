@@ -1,20 +1,13 @@
 import functools
 
+
 with open("./2024/input/everybody_codes_e2024_q09_p1.txt") as f:
     lines = f.read().splitlines()
 
-# # FIXME: REMOVE
-# lines = '''2
-# 4
-# 7
-# 16'''.splitlines()
-
-# 1, 3, 5, 10
 stamps = [1, 3, 5, 10]
 
 @functools.cache
 def min_stamps(i, target):
-    # print(f'{i=} {target=}')
     if i == len(stamps):
         if target == 0:
             return 0
@@ -30,7 +23,6 @@ nums = [int(line) for line in lines]
 answer1 = 0
 for num in nums:
     answer1 += min_stamps(0, num)
-
 print(answer1)
 
 
@@ -40,21 +32,10 @@ print(answer1)
 with open("./2024/input/everybody_codes_e2024_q09_p2.txt") as f:
     lines = f.read().splitlines()
 
-# FIXME: REMOVE
-# lines = '''33
-# 41
-# 55
-# 99'''.splitlines()
-
 stamps = [1, 3, 5, 10, 15, 16, 20, 24, 25, 30]
 
 @functools.cache
 def min_stamps(i, target):
-    # print(f'{i=} {target=}')
-    # if i == len(stamps):
-    #     if target == 0:
-    #         return 0
-    #     return float('inf')
     if i == len(stamps) - 1:
         if target % stamps[len(stamps) - 1] == 0:
             return target // stamps[len(stamps) - 1]
@@ -70,66 +51,18 @@ nums = [int(line) for line in lines]
 answer2 = 0
 for num in nums:
     answer2 += min_stamps(0, num)
-
 print(answer2)
 
 
 # Part 3
 
 
-with open("./2024/input/everybody_codes_e2024_q09_p3.txt") as f:
-    lines = f.read().splitlines()
-
-# FIXME: REMOVE
-lines = '''156488
-352486
-546212'''.splitlines()
-
-stamps = [1, 3, 5, 10, 15, 16, 20, 24, 25, 30, 37, 38, 49, 50, 74, 75, 100, 101]
-stamps.sort(reverse=True)
-
-@functools.cache
-def min_stamps(i, target):
-    # print(f'{i=} {target=}')
-    if i == len(stamps) - 1:
-        if target % stamps[len(stamps) - 1] == 0:
-            return target // stamps[len(stamps) - 1]
-        return float('inf')
-
-    best = float('inf')
-    for n in range(target // stamps[i] + 1):
-        required = n + min_stamps(i + 1, target - n * stamps[i])
-        best = min(best, required)
-    return best
-
-nums = [int(line) for line in lines]
-answer3 = 0
-for num in nums:
-    best = float('inf')
-    a = num // 2
-    b = num - a
-    while abs(a - b) <= 100:
-        print(f'{a=} {b=} {a+b=} {num=}')
-        best = min(
-            best,
-            min_stamps(0, a) + min_stamps(0, b)
-        )
-        a -= 1
-        b = num - a
-    answer3 += best
-
-print(answer3)
-
-
-# 156488 -> 78275 + 78213
-# 78275 = 775*101
-# 78213 = 774*101 + 39 = 774*101 + 38 + 1> 776
-
-
 import z3
+
 
 def z3abs(x):
     return z3.If(x >= 0, x, -x)
+
 
 def solve(target: int) -> int:
     o = z3.Optimize()
@@ -229,15 +162,11 @@ def solve(target: int) -> int:
     o.minimize(total)
 
     o.check()
-    # print(o.model())
-    # return o.model()[s1].as_long() + o.model()[s2].as_long() # FIXME. part1 + part2
     return o.model()[total].as_long()
 
-solve(156488) +solve(352486) +solve(546212)
-solve(156488)
 
-solve(352486) 
-
+with open("./2024/input/everybody_codes_e2024_q09_p3.txt") as f:
+    lines = f.read().splitlines()
 
 nums = [int(line) for line in lines]
 answer3 = sum(solve(num) for num in nums)
