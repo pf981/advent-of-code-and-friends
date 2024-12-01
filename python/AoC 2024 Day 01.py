@@ -7,7 +7,7 @@ lines = inp.splitlines()
 l = []
 r = []
 for line in lines:
-    a, b = line.split('   ')
+    a, b = line.split()
     l.append(int(a))
     r.append(int(b))
 
