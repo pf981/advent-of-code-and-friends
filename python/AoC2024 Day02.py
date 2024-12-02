@@ -1,40 +1,19 @@
 from aocd import get_data, submit
 
 
-inp = get_data(day=2, year=2024)
-
-# inp = '''7 6 4 2 1
-# 1 2 7 8 9
-# 9 7 6 2 1
-# 1 3 2 4 5
-# 8 6 4 4 1
-# 1 3 6 7 9
-# '''
-
-lines = inp.splitlines()
-
-def is_good(nums):
-    if nums[1] > nums[0]: # inc
-        for a, b in zip(nums[:-1], nums[1:]):
-            if not (1 <= b - a <= 3):
-                return False
-        return True
-    #dec
+def is_safe(nums):
+    f = lambda a, b: a - b if nums[0] > nums[1] else b - a
     for a, b in zip(nums[:-1], nums[1:]):
-        if not (1 <= a - b <= 3):
+        if not (1 <= f(a, b) <= 3):
             return False
     return True
 
 
-answer1 = 0
-for line in lines:
-    nums = [int(num) for num in line.split()]
-    print(nums)
-    if is_good(nums):
-        answer1 +=1
+inp = get_data(day=2, year=2024)
+lines = inp.splitlines()
+reports = [[int(num) for num in line.split()] for line in lines]
 
-# is_good([7,6,4,2,1])
-
+answer1 = sum(is_safe(nums) for nums in reports)
 print(answer1)
 
 submit(answer1, part='a', day=2, year=2024)
@@ -42,17 +21,14 @@ submit(answer1, part='a', day=2, year=2024)
 
 # Part 2
 
+
 answer2 = 0
-for line in lines:
-    nums = [int(num) for num in line.split()]
-    print(nums)
+for nums in reports:
     for i in range(len(nums)):
         nums2 = nums[:i] + nums[i+1:]
-        if is_good(nums2):
+        if is_safe(nums2):
             answer2 +=1
             break
-
-
 print(answer2)
 
 submit(answer2, part='b', day=2, year=2024)
