@@ -172,9 +172,6 @@ for _ in range(2):
             solve(r, c, m)
             complete_grid(r, c, m)
 
-for line in m:
-    print(''.join(line))
-
 answer3 = 0
 for r in range(0, len(lines) - 2, 6):
     for c in range(0, len(lines[0]) - 2, 6):
