@@ -162,8 +162,8 @@ def get_candidates(grid: list[str]) -> list[set] | None:
             all_cols[val] += 1
     all_rows['?'] = 1
     all_cols['?'] = 1
-    print(f'{all_rows=}')
-    print(f'{all_cols=}')
+    # print(f'{all_rows=}')
+    # print(f'{all_cols=}')
     if any(count != 1 for count in all_rows.values()) or any(count != 1 for count in all_cols.values()):
         return None
     
@@ -311,3 +311,170 @@ print(answer3)
 # That's not the right answer...
 # Your answer length is: correct
 # The first character of your answer is: correct
+
+
+###########################################
+
+# '**LWQK**'[6]
+
+def solve(r: int, c: int, m: list[list[str]]) -> None:
+    used = set()
+    for dr in  range(2, 6):
+        for dc in range(2, 6):
+            if m[r + dr][c + dc] != '.':
+                used.add(m[r + dr][c + dc])
+    for _ in range(5):
+        for dr in  range(2, 6):
+            for dc in range(2, 6):
+                if m[r + dr][c + dc] != '.':
+                    used.add(m[r + dr][c + dc])
+                    continue
+                row_candidates = {
+                    m[r + dr][c],
+                    m[r + dr][c + 1],
+                    m[r + dr][c + 6],
+                    m[r + dr][c + 7],
+                } - used
+                col_candidates = {
+                    m[r][c + dc],
+                    m[r + 1][c + dc],
+                    m[r + 6][c + dc],
+                    m[r + 7][c + dc],
+                } - used
+                intersection = (row_candidates & col_candidates) - {'?'}
+                if len(intersection) == 1:
+                    used.update(intersection)
+                    m[r + dr][c + dc] = list(intersection)[0]
+                    continue
+                
+                union = row_candidates | col_candidates
+                print(f'{union=}')
+                if len(row_candidates) == 1 and len(col_candidates) == 1 and len(union) == 2 and '?' in union:
+                    el = list(union - {'?'})[0]
+                    m[r + dr][c + dc] = el
+                    used.add(el)
+            
+
+with open("./2024/input/everybody_codes_e2024_q10_p3.txt") as f:
+    lines = f.read().splitlines()
+
+m = [list(line) for line in lines]
+
+# def complete_grid(r, c, m, word):
+#     i = 0
+#     for dr in  range(2, 6):
+#         for dc in range(2, 6):
+#             ch = word[i]
+#             i += 1
+#             row_candidates = [
+#                 m[r + dr][c],
+#                 m[r + dr][c + 1],
+#                 m[r + dr][c + 6],
+#                 m[r + dr][c + 7],
+#             ]
+#             if ch not in row_candidates:
+#                 print(f'{ch=} {row_candidates=}')
+#                 m[r + dr][c + row_candidates.index('?')*6] = ch
+
+#             col_candidates = [
+#                 m[r][c + dc],
+#                 m[r + 1][c + dc],
+#                 m[r + 6][c + dc],
+#                 m[r + 7][c + dc],
+#             ]
+#             if ch not in col_candidates:
+#                 m[r + col_candidates.index('?')*6][c + dc] = ch
+def complete_grid(r, c, m):
+    for dr in  range(2, 6):
+        for dc in range(2, 6):
+            if m[r + dr][c + dc] == '.':
+                return
+
+    i = 0
+    for dr in  range(2, 6):
+        for dc in range(2, 6):
+            ch = m[r + dr][c + dc]
+            i += 1
+            row_candidates = [
+                m[r + dr][c],
+                m[r + dr][c + 1],
+                m[r + dr][c + 6],
+                m[r + dr][c + 7],
+            ]
+            if ch not in row_candidates:
+                print(f'{ch=} {row_candidates=}')
+                m[r + dr][c + [0,1,6,7][row_candidates.index('?')]] = ch
+
+            col_candidates = [
+                m[r][c + dc],
+                m[r + 1][c + dc],
+                m[r + 6][c + dc],
+                m[r + 7][c + dc],
+            ]
+            if ch not in col_candidates:
+                m[r + [0,1,6,7][col_candidates.index('?')]][c + dc] = ch
+
+for _ in range(10):
+    for r in range(0, len(lines) - 2, 6):
+        for c in range(0, len(lines[0]) - 2, 6):
+            grid = []
+            for dr in range(8):
+                line = []
+                for dc in range(8):
+                    line.append(m[r + dr][c + dc])
+                grid.append(line)
+            # if get_candidates(grid): # Check if valid. This doesn't work well enough...
+            #     solve(r, c, m)
+            # word = get_word(grid)
+            # if word:
+            #     complete_grid(r, c, m, word)
+            # print(word)
+            solve(r, c, m)
+            complete_grid(r, c, m)
+
+        # grid = []
+        # for r2 in range(r, r + 8):
+        #     grid.append(lines[r2][c:c + 8])
+        # grids.append(grid)
+
+
+# for line in grid:
+#     print(''.join(line))
+import copy
+# grid2 = copy.deepcopy(grid)
+m = grid
+solve(0, 0, m)
+# ** GZHX **
+# ** SLKF **
+
+# F? NRHF HN
+# PQ SQPX X?
+# W? GLWJ GL
+# ?C CZKB TZ
+
+# ** NRWB **
+# ** CQPJ **
+
+for line in m:
+    print(''.join(line))
+
+answer3 = 0
+for r in range(0, len(lines) - 2, 6):
+    for c in range(0, len(lines[0]) - 2, 6):
+        word = ''.join(m[r + dr][c + dc] for dr in  range(2, 6) for dc in range(2, 6))
+        if '.' not in word:
+            answer3 += get_power(word)
+print(answer3)
+
+# 150183
+# Your answer length is: correct
+# The first character of your answer is: incorrect
+# (so must be between 200,000 and 999,999)
+# solve(0, 6*3, m)
+# m[0][6*3]
+
+# grids[3]
+
+# I think the current issue is that it isn't skipping the bad ones. It is doing them and filling in the question marks when it shouldn't
+# It probably has duplicates
+# Oh, actually - my solve function didn't populate the question marks...
