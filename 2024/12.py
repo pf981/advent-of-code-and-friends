@@ -1,7 +1,7 @@
 import collections
 
 
-def shoot(power: int) -> collections.abc.Iterable[int]:
+def shoot(power: int) -> collections.abc.Generator[int]:
     y = 0
     yield y
     for _ in range(power):
