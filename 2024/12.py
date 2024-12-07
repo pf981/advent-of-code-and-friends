@@ -112,6 +112,7 @@ with open("./2024/input/everybody_codes_e2024_q12_p3.txt") as f:
 # lines = '''6 5
 # 6 7
 # 10 5'''.splitlines()
+# lines = '''5 5'''.splitlines()
 
 meteors = [[int(num) for num in line.split()] for line in lines]
 
@@ -162,7 +163,8 @@ def power_to_hit(x: int, y: int) -> int | None:
 answer3 = 0
 for meteor_x, meteor_y in meteors:
     x_hit = meteor_x // 2
-    y_hit = meteor_y - x_hit
+    # y_hit = meteor_y - x_hit
+    y_hit = meteor_y - (meteor_x - x_hit)
 
     print(f'{x_hit=} {y_hit=}')
 
@@ -172,10 +174,12 @@ for meteor_x, meteor_y in meteors:
         # print(f'{power=}')
         if power is not None:
             ranking_value = min(ranking_value, power * (start_y + 1))
-    # print(f'{meteor_x, meteor_y=}{ranking_value=}')
+    print(f'{meteor_x, meteor_y=} {ranking_value=}')
     answer3 += ranking_value
 
 print(answer3)
+
+# power_to_hit(2, 2)
 
 # 731907
 # Your answer length is: correct
