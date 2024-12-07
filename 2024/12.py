@@ -106,15 +106,101 @@ print(answer2)
 # Part 3
 
 
-# with open("./2024/input/everybody_codes_e2024_q12_p3.txt") as f:
-#     lines = f.read().splitlines()
+with open("./2024/input/everybody_codes_e2024_q12_p3.txt") as f:
+    lines = f.read().splitlines()
 
-# meteors = [(int(line.split()[0]), int(line.split()[1])) for line in lines]
+# lines = '''6 5
+# 6 7
+# 10 5'''.splitlines()
 
-# max(list(zip(*meteors))[0])
-# max(list(zip(*meteors))[1])
-# min(list(zip(*meteors))[0])
-# min(list(zip(*meteors))[1])
+meteors = [[int(num) for num in line.split()] for line in lines]
 
-# answer3 = 'todo'
-# print(answer3)
+
+def shoot(power):
+    y = 0
+    yield y
+    for _ in range(power):
+        y += 1
+        yield y
+    for _ in range(power):
+        yield y
+    while True:
+        y -= 1
+        yield y
+
+
+def get_y(target_x, power):
+    return next((y for x, y in enumerate(shoot(power)) if x == target_x))
+
+# best_hit: (y, power)
+# t_meteor >= t
+# Basically, get the point furthest right where the projectile isn't past the meteor yet
+# But isn't that just the MIDDLE? So you need any point BEFORE the middle
+# So x <= meteor_start_x // 2
+# I think we are guaranteed one of our starts will hit at x//2
+def power_to_hit(x: int, y: int) -> int | None:
+    l = 0
+    r = x
+    while l <= r:
+        m = (l + r) // 2
+        cur_y = get_y(x, m)
+        if cur_y == y:
+            return m
+        elif cur_y < y:
+            l = m + 1
+        else:
+            r = m - 1
+    return None
+
+# meteor_x = 6
+# meteor_y = 5
+# x_hit = meteor_x // 2
+# y_hit = meteor_y - x_hit
+# start_y = 2
+# power_to_hit(x_hit, y_hit - start_y)
+
+answer3 = 0
+for meteor_x, meteor_y in meteors:
+    x_hit = meteor_x // 2
+    y_hit = meteor_y - x_hit
+
+    print(f'{x_hit=} {y_hit=}')
+
+    ranking_value = float('inf')
+    for start_y in range(3):
+        power = power_to_hit(x_hit, y_hit - start_y)
+        # print(f'{power=}')
+        if power is not None:
+            ranking_value = min(ranking_value, power * (start_y + 1))
+    # print(f'{meteor_x, meteor_y=}{ranking_value=}')
+    answer3 += ranking_value
+
+print(answer3)
+
+# 731907
+# Your answer length is: correct
+# The first character of your answer is: correct
+
+# get_y(1, 99)
+
+# list(shoot(1))
+
+# # answer3 = 'todo'
+# # print(answer3)
+
+# power_to_hit(6, 5)
+
+# ranking_value = {'A': 1, 'B': 2, 'C': 3}[c] * power
+
+power_to_hit(10, 5)
+power_to_hit(10, 5-1)
+power_to_hit(10, 5-2)
+
+meteor_x=10
+meteor_y=5
+
+
+
+# 997
+# Your answer length is: incorrect
+# The first character of your answer is: incorrect
