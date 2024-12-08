@@ -251,3 +251,91 @@ print(answer3)
 
 
 # 15_000, 2_000 -> 
+
+
+################
+
+import collections
+import functools
+import sys
+
+# sys.setrecursionlimit(2*(10**9))
+# sys.setrecursionlimit(2_147_483_647)
+sys.setrecursionlimit(10**10)
+
+
+
+with open("C:/Users/Paul/dev/everybody-codes-solutions/2024/input/everybody_codes_e2024_q16_p3.txt") as f:
+    lines = f.read().splitlines()
+
+
+# lines = '''1,2,3
+
+# ^_^ -.- ^,-
+# >.- ^_^ >.<
+# -_- -.- ^.^
+#     -.^ >.<
+#     >.>'''.splitlines()
+
+jumps, _, *wheels_lines = lines
+jumps = [int(jump) for jump in jumps.split(',')]
+
+wheels = [[] for _ in range(len(jumps))]
+for line in wheels_lines:
+    for i in range(len(jumps)):
+        face = line[i*4:i*4+3].replace(' ', '')
+        if face:
+            wheels[i].append(face)
+
+def shift_one(indexes, wheels, shift):
+    indexes = list(indexes)
+    for i in range(len(wheels)):
+        indexes[i] = (indexes[i] + shift) % len(wheels[i])
+    return tuple(indexes)
+
+def min_max_coins(n_pulls, wheels, jumps):
+    indexes = tuple(0 for _ in range(len(wheels)))
+    min_coins = dfs(n_pulls, indexes, False, True)
+    max_coins = dfs(n_pulls, indexes, True, True)
+    return min_coins, max_coins
+
+@functools.cache
+def dfs(n_pulls, indexes, is_max, can_shift):
+    if n_pulls == 0:
+        return 0
+    
+    best = 0 if is_max else float('inf')
+    f = max if is_max else min
+    if can_shift:
+        best = f(
+            best,
+            dfs(n_pulls, shift_one(indexes, wheels, +1), is_max, False),
+            dfs(n_pulls, shift_one(indexes, wheels, -1), is_max, False)
+        )
+
+    indexes = list(indexes)
+    s = ''
+    coins = 0
+    for i in range(len(wheels)):
+        indexes[i] = (indexes[i] + jumps[i]) % len(wheels[i])
+        face = wheels[i][indexes[i]]
+        s += face[0] + face[2]
+    for count in collections.Counter(s).values():
+        coins += max(0, count - 2)
+    best = f(
+        best,
+        coins + dfs(n_pulls - 1, tuple(indexes), is_max, True)
+    )
+    return best
+
+# min_max_coins(1, wheels, jumps)
+# min_max_coins(2, wheels, jumps)
+# min_max_coins(3, wheels, jumps)
+# min_max_coins(10, wheels, jumps)
+
+# min_max_coins(100, wheels, jumps)
+# min_max_coins(250, wheels, jumps)
+
+min_coins, max_coins = min_max_coins(256, wheels, jumps)
+answer3 = f'{max_coins} {min_coins}'
+print(answer3)
