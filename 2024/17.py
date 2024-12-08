@@ -95,7 +95,6 @@ print(answer2)
 # Part 3
 
 
-
 with open("./2024/input/everybody_codes_e2024_q17_p3.txt") as f:
     lines = f.read().splitlines() 
 
