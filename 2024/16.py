@@ -261,7 +261,7 @@ import sys
 
 # sys.setrecursionlimit(2*(10**9))
 # sys.setrecursionlimit(2_147_483_647)
-sys.setrecursionlimit(10**10)
+# sys.setrecursionlimit(10**10)
 
 
 
@@ -295,43 +295,134 @@ def shift_one(indexes, wheels, shift):
 
 def min_max_coins(n_pulls, wheels, jumps):
     indexes = tuple(0 for _ in range(len(wheels)))
-    min_coins = dfs(n_pulls, indexes, False, True)
-    max_coins = dfs(n_pulls, indexes, True, True)
+    # min_coins = dfs(n_pulls, indexes, False, True)
+    # max_coins = dfs(n_pulls, indexes, True, True)
+    min_coins = solve(n_pulls, False)
+    max_coins = solve(n_pulls, True)
     return min_coins, max_coins
 
-@functools.cache
-def dfs(n_pulls, indexes, is_max, can_shift):
-    if n_pulls == 0:
-        return 0
-    
-    best = 0 if is_max else float('inf')
-    f = max if is_max else min
-    if can_shift:
-        best = f(
-            best,
-            dfs(n_pulls, shift_one(indexes, wheels, +1), is_max, False),
-            dfs(n_pulls, shift_one(indexes, wheels, -1), is_max, False)
-        )
+# def solve(n_pulls, is_max):
+#     indexes = tuple(0 for _ in range(len(wheels)))
+#     f = max if is_max else min
+#     best = 0 if is_max else float('inf')
+#     dp = {} # (n_pulls, indexes, can_shift) -> coins
+#     stack = [(0, n_pulls, indexes, True, tuple())] # [(coins, n_pulls, indexes, can_shift, path), ...]
+#     # path is ((coins, n_pulls, indexes, can_shift), ...)
+#     while stack:
+#         coins, n_pulls, indexes, can_shift, path = stack.pop()
 
-    indexes = list(indexes)
-    s = ''
-    coins = 0
-    for i in range(len(wheels)):
-        indexes[i] = (indexes[i] + jumps[i]) % len(wheels[i])
-        face = wheels[i][indexes[i]]
-        s += face[0] + face[2]
-    for count in collections.Counter(s).values():
-        coins += max(0, count - 2)
-    best = f(
-        best,
-        coins + dfs(n_pulls - 1, tuple(indexes), is_max, True)
-    )
+#         if (n_pulls, indexes, can_shift) in dp:
+#             # best = f(best, coins + dp[(n_pulls, indexes, can_shift)])
+#             coins += dp[(n_pulls, indexes, can_shift)]
+#             n_pulls = 0
+
+#         if n_pulls == 0:
+#             best = f(best, coins)
+#             for p in path:
+#                 dp[p[1:]] = coins - p[0] # TODO: Check this
+#             continue
+
+        
+
+#         if can_shift:
+#             path2 = path + ((coins, n_pulls, indexes, can_shift),)
+#             stack.append((coins, n_pulls, shift_one(indexes, wheels, +1), False, path2))
+#             stack.append((coins, n_pulls, shift_one(indexes, wheels, -1), False, path2))
+
+#         indexes2 = list(indexes)
+#         s = ''
+#         for i in range(len(wheels)):
+#             indexes2[i] = (indexes2[i] + jumps[i]) % len(wheels[i])
+#             face = wheels[i][indexes2[i]]
+#             s += face[0] + face[2]
+#         for count in collections.Counter(s).values():
+#             coins += max(0, count - 2)
+        
+#         path3 = path + ((coins, n_pulls, indexes, can_shift),)
+#         stack.append((coins, n_pulls - 1, tuple(indexes2), True, path3))
+    
+#     print(dp)
+#     return best
+
+def solve(n_pulls, is_max):
+    indexes = tuple(0 for _ in range(len(wheels)))
+    f = max if is_max else min
+    best = 0 if is_max else float('inf')
+    dp = {} # (n_pulls, indexes, can_shift) -> coins
+    stack = [(0, n_pulls, indexes, True, tuple())] # [(coins, n_pulls, indexes, can_shift, path), ...]
+    # path is ((coins, n_pulls, indexes, can_shift), ...)
+    while stack:
+        coins, n_pulls, indexes, can_shift, path = stack.pop()
+
+        if (n_pulls, indexes, can_shift) in dp:
+            # best = f(best, coins + dp[(n_pulls, indexes, can_shift)])
+            coins += dp[(n_pulls, indexes, can_shift)]
+            n_pulls = 0
+
+        if n_pulls == 0:
+            best = f(best, coins)
+            for p in path:
+                if p[1:] in dp:
+                    dp[p[1:]] = f(coins - p[0], dp[p[1:]])
+                else:
+                    dp[p[1:]] = coins - p[0] # TODO: Check this
+            continue
+
+        
+        path = path + ((coins, n_pulls, indexes, can_shift),)
+        if can_shift:
+            # path2 = path + ((coins, n_pulls, indexes, can_shift),)
+            stack.append((coins, n_pulls, shift_one(indexes, wheels, +1), False, path))
+            stack.append((coins, n_pulls, shift_one(indexes, wheels, -1), False, path))
+
+        indexes2 = list(indexes)
+        s = ''
+        for i in range(len(wheels)):
+            indexes2[i] = (indexes2[i] + jumps[i]) % len(wheels[i])
+            face = wheels[i][indexes2[i]]
+            s += face[0] + face[2]
+        for count in collections.Counter(s).values():
+            coins += max(0, count - 2)
+        
+        # path3 = path + ((coins, n_pulls, indexes, can_shift),)
+        stack.append((coins, n_pulls - 1, tuple(indexes2), True, path))
+    
+    # print(dp)
     return best
 
-# min_max_coins(1, wheels, jumps)
-# min_max_coins(2, wheels, jumps)
-# min_max_coins(3, wheels, jumps)
-# min_max_coins(10, wheels, jumps)
+# @functools.cache
+# def dfs(n_pulls, indexes, is_max, can_shift):
+#     if n_pulls == 0:
+#         return 0
+    
+#     best = 0 if is_max else float('inf')
+#     f = max if is_max else min
+#     if can_shift:
+#         best = f(
+#             best,
+#             dfs(n_pulls, shift_one(indexes, wheels, +1), is_max, False),
+#             dfs(n_pulls, shift_one(indexes, wheels, -1), is_max, False)
+#         )
+
+#     indexes = list(indexes)
+#     s = ''
+#     coins = 0
+#     for i in range(len(wheels)):
+#         indexes[i] = (indexes[i] + jumps[i]) % len(wheels[i])
+#         face = wheels[i][indexes[i]]
+#         s += face[0] + face[2]
+#     for count in collections.Counter(s).values():
+#         coins += max(0, count - 2)
+#     best = f(
+#         best,
+#         coins + dfs(n_pulls - 1, tuple(indexes), is_max, True)
+#     )
+#     return best
+
+min_max_coins(1, wheels, jumps)
+min_max_coins(2, wheels, jumps)
+min_max_coins(3, wheels, jumps)
+min_max_coins(10, wheels, jumps)
 
 # min_max_coins(100, wheels, jumps)
 # min_max_coins(250, wheels, jumps)
@@ -339,3 +430,7 @@ def dfs(n_pulls, indexes, is_max, can_shift):
 min_coins, max_coins = min_max_coins(256, wheels, jumps)
 answer3 = f'{max_coins} {min_coins}'
 print(answer3)
+
+
+
+#############
