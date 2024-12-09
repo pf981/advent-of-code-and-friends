@@ -24,14 +24,14 @@ def clean_databricks_comments(input_dir, output_dir):
             with open(input_path, "r") as f:
                 content = f.read()
 
-            # Apply each pattern to remove matches
-            for pattern in patterns:
-                content = re.sub(pattern, "", content)
-            
-            # Replace inp = '''...''' with
-            # from aocd import get_data
-            # inp = get_data(day=10, year=2024)
-            if filename != "template.py":
+            if filename not in "template.py":
+                # Apply each pattern to remove matches
+                for pattern in patterns:
+                    content = re.sub(pattern, "", content)
+                
+                # Replace inp = '''...''' with
+                # from aocd import get_data
+                # inp = get_data(day=10, year=2024)
                 year, day = (int(num) for num in re.findall(r'\d+', filename))
 
                 header = f"from aocd import get_data\n\ninp = get_data(day={day}, year={year})\n\n"
