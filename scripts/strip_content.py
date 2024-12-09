@@ -14,12 +14,18 @@ def clean_databricks_comments(input_dir, output_dir):
         r"inp\s*=\s*'''(.|\n)*?'''\n*",
         r"inp\s*=\s*'.*'.*\n*",
         r'input\s<-\s"(.|\n)*?\n*"',
-        r"input\s<-\s'(.|\n)*?\n*'"
+        r"input\s<-\s'(.|\n)*?\n*'",
+        r"// Databricks notebook source.*\n*",
+        r"// MAGIC .*\n*",
+        r"// COMMAND.*\n*",
+        r'val\s*input.*=\s*"""(.|\n)*?"""\n*',
+        r'val\s*input.*=\s*raw""""(.|\n)*?""""\n*',
+        r'val\s*input.*=.*".*?\n*"',
     ]
 
     # Process each file in the input directory
     for filename in os.listdir(input_dir):
-        if filename.endswith(".py") or filename.lower().endswith(".r"):
+        if filename.endswith(".py") or filename.lower().endswith(".r") or filename.endswith(".scala"):
             input_path = os.path.join(input_dir, filename)
             output_path = os.path.join(output_dir, filename)
 
@@ -51,6 +57,8 @@ def clean_databricks_comments(input_dir, output_dir):
 # output_directory = "./python2/"
 # input_directory = "./R/"
 # output_directory = "./R2/"
+# input_directory = "./scala/"
+# output_directory = "./scala2/"
 # clean_databricks_comments(input_directory, output_directory)
 
 def rename_files(input_dir):
