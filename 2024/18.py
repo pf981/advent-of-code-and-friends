@@ -7,7 +7,7 @@ def bfs(lines: list[str], start_positions: list[tuple[int, int]]) -> int:
     q = collections.deque(start_positions)
     d = 0
     remaining_p = sum(c == 'P' for line in lines for c in line)
-    seen = set((1, 0))
+    seen = set(start_positions)
     while q:
         for _ in range(len(q)):
             r, c = q.popleft()
