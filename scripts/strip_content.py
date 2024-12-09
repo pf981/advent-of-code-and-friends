@@ -12,12 +12,14 @@ def clean_databricks_comments(input_dir, output_dir):
         r"# MAGIC .*\n*",
         r"# COMMAND.*\n*",
         r"inp\s*=\s*'''(.|\n)*?'''\n*",
-        r"inp\s*=\s*'.*'.*\n*"
+        r"inp\s*=\s*'.*'.*\n*",
+        r'input\s<-\s"(.|\n)*?\n*"',
+        r"input\s<-\s'(.|\n)*?\n*'"
     ]
 
     # Process each file in the input directory
     for filename in os.listdir(input_dir):
-        if filename.endswith(".py") or filename.endswith(".R"):
+        if filename.endswith(".py") or filename.lower().endswith(".r"):
             input_path = os.path.join(input_dir, filename)
             output_path = os.path.join(output_dir, filename)
 
@@ -34,8 +36,9 @@ def clean_databricks_comments(input_dir, output_dir):
                 # inp = get_data(day=10, year=2024)
                 year, day = (int(num) for num in re.findall(r'\d+', filename))
 
-                header = f"from aocd import get_data\n\ninp = get_data(day={day}, year={year})\n\n"
-                content = header + content
+                if filename.endswith(".py"):
+                    header = f"from aocd import get_data\n\ninp = get_data(day={day}, year={year})\n\n"
+                    content = header + content
 
 
             with open(output_path, "w") as f:
@@ -44,6 +47,8 @@ def clean_databricks_comments(input_dir, output_dir):
     print(f"Processed files from {input_dir} and saved to {output_dir}")
 
 
-input_directory = "./python/"
-output_directory = "./python2/"
-clean_databricks_comments(input_directory, output_directory)
+# input_directory = "./python/"
+# output_directory = "./python2/"
+# input_directory = "./R/"
+# output_directory = "./R2/"
+# clean_databricks_comments(input_directory, output_directory)
