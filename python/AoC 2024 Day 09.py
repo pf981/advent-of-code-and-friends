@@ -63,7 +63,7 @@ import sortedcontainers
 inp = get_data(day=9, year=2024)
 nums = [int(c) for c in inp.splitlines()[0]]
 
-gaps = sortedcontainers.SortedDict() # gap_size -> [(index, size), ...]
+gaps = {gap_size: sortedcontainers.SortedList(key=lambda ind: -ind) for gap_size in range(1, 10)} # gap_size -> [(index, size), ...]
 files = [] # file_id -> [index, size]
 index = 0
 for i in range(0, len(nums), 2):
@@ -74,7 +74,6 @@ for i in range(0, len(nums), 2):
     if i + 1 < len(nums):
         gap_size = nums[i + 1]
         if gap_size:
-            gaps[gap_size] = gaps.get(gap_size, sortedcontainers.SortedList(key=lambda ind: -ind))
             gaps[gap_size].add(index)
             index += gap_size
 
@@ -94,15 +93,11 @@ for file_id in reversed(range(len(files))):
         continue
 
     files[file_id][0] = gaps[best_gap_size].pop()
-    if not gaps[best_gap_size]:
-        del gaps[best_gap_size]
-
     new_gap_size = best_gap_size - file_size
     if new_gap_size == 0:
         continue
     new_gap_index = best_gap_index + file_size
 
-    gaps.get(new_gap_size, sortedcontainers.SortedList(key=lambda ind: -ind))
     gaps[new_gap_size].add(new_gap_index)
     
     # I'm assuming there is no case where we need to merge new gaps with existing ones?
@@ -113,3 +108,5 @@ for file_id, (file_index, file_size) in enumerate(files):
     for di in range(file_size):
         answer2 += file_id * (file_index + di)
 print(answer2)
+
+submit(answer2, part='b', day=9, year=2024)
