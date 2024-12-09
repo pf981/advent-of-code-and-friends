@@ -1,3 +1,7 @@
+from aocd import get_data
+
+inp = get_data(day=9, year=2023)
+
 from aocd import get_data, submit
 
 
