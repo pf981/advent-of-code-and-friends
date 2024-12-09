@@ -24,7 +24,7 @@ def clean_databricks_comments(input_dir, output_dir):
             with open(input_path, "r") as f:
                 content = f.read()
 
-            if filename not in "template.py":
+            if filename not in "template.py" and "2024" not in filename:
                 # Apply each pattern to remove matches
                 for pattern in patterns:
                     content = re.sub(pattern, "", content)
