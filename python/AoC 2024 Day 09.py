@@ -57,97 +57,59 @@ print(answer1)
 # Part 2
 
 
-def checksum(nums):
-    result = 0
-    for i, num in enumerate(nums):
-        if num == -1:
-            continue
-        result += i * num
-    return result
+import sortedcontainers
 
-
-def try_fit(data, i, j):
-    pass
 
 inp = get_data(day=9, year=2024)
+nums = [int(c) for c in inp.splitlines()[0]]
 
-# inp = '''2333133121414131402
-# '''
-
-lines = inp.splitlines()
-nums = [int(c) for c in lines[0]]
-
-data = []
-file_id = 0
+gaps = sortedcontainers.SortedDict() # gap_size -> [(index, size), ...]
+files = [] # file_id -> [index, size]
+index = 0
 for i in range(0, len(nums), 2):
     file_size = nums[i]
-    data.extend([file_id] * file_size)
+    files.append([index, file_size])
+    index += file_size
+
     if i + 1 < len(nums):
-        free_size = nums[i + 1]
-        data.extend([-1] * free_size)
-    file_id += 1
+        gap_size = nums[i + 1]
+        if gap_size:
+            gaps[gap_size] = gaps.get(gap_size, sortedcontainers.SortedList(key=lambda ind: -ind))
+            gaps[gap_size].add(index)
+            index += gap_size
 
-i = 0
-j = len(data) - 1
-while j >= 0:
-    # print(''.join(str(c) if c != -1 else '.'for c in data))
+for file_id in reversed(range(len(files))):
+    file_index, file_size = files[file_id]
 
-    # File
-    while j >= 0 and data[j] == -1:
-        j -= 1
-    if i == -1:
-        break
-
-    file_size = 1
-    while j > 0 and data[j-1] == data[j]:
-        file_size += 1
-        j -= 1
-
-
-    # Find gap
-    i = 0
-    while i < len(data):
-        while i < len(data) and data[i] != -1:
-            i += 1
-        if i == len(data):
-            continue # 
-        
-        gap_size = 0
-        while i + gap_size < len(data) and data[i] == data[i + gap_size]:
-            gap_size += 1
-        
-        if gap_size >= file_size:
-            break
-        i += gap_size
-    else:
-        j -= 1
+    best_gap_index = float('inf')
+    best_gap_size = None
+    for gap_size, (*_, gap_index) in gaps.items():
+        if gap_size < file_size:
+            continue
+        if gap_index < best_gap_index:
+            best_gap_index = gap_index
+            best_gap_size = gap_size
+    
+    if best_gap_size is None or best_gap_index > file_index:
         continue
 
+    files[file_id][0] = gaps[best_gap_size].pop()
+    if not gaps[best_gap_size]:
+        del gaps[best_gap_size]
 
-    if not i <= j:
-        j -= 1
+    new_gap_size = best_gap_size - file_size
+    if new_gap_size == 0:
         continue
+    new_gap_index = best_gap_index + file_size
 
-    # print(f'{i=} {j=} {file_size=} {gap_size=} {data[i]=} {data[j]=}')
+    gaps.get(new_gap_size, sortedcontainers.SortedList(key=lambda ind: -ind))
+    gaps[new_gap_size].add(new_gap_index)
+    
+    # I'm assuming there is no case where we need to merge new gaps with existing ones?
+    # e.g  0.1.22 -> 01..22
 
-    # if gap_size < file_size:
-    #     j -= 1
-    #     continue
-
-    for _ in range(file_size):
-        data[i], data[j] = data[j], data[i]
-        i += 1
-        j += 1
-    j -= 1
-
-print(''.join(str(c) if c != -1 else '.'for c in data))
-# # all(x == -1 for x in data[data.index(-1):])
-# 01234567890123456789012345678901234567890
-# 00...111...2...333.44.5555.6666.777.888899
-
-answer2 = checksum(data)
+answer2 = 0
+for file_id, (file_index, file_size) in enumerate(files):
+    for di in range(file_size):
+        answer2 += file_id * (file_index + di)
 print(answer2)
-
-# submit(answer2, part='b', day=9, year=2024)
-
-# Probably should use a heap
