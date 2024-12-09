@@ -1,6 +1,5 @@
 library(tidyverse)
 
-input <- 409551
 
 score <- function(after_n_recipes) {
   recipes <- c(3, 7)

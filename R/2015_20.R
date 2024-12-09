@@ -1,7 +1,5 @@
 library(tidyverse)
 
-input <- 34000000
-
 presents <- integer(input / 10)
 
 for (elf in seq_along(presents)) {
