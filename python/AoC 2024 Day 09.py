@@ -17,16 +17,12 @@ for i in range(0, len(nums), 2):
 
 i = 0
 j = len(data) - 1
-while i <= j:
+while True:
     while i < len(data) and data[i] != -1:
         i += 1
-    if i == len(data):
-        break
     while j >= 0 and data[j] == -1:
         j -= 1
     if not i <= j:
-        break
-    if i == -1:
         break
     data[i], data[j] = data[j], data[i]
 
