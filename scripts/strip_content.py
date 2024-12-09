@@ -52,3 +52,21 @@ def clean_databricks_comments(input_dir, output_dir):
 # input_directory = "./R/"
 # output_directory = "./R2/"
 # clean_databricks_comments(input_directory, output_directory)
+
+def rename_files(input_dir):
+    for filename in os.listdir(input_dir):
+        if filename.endswith(".py"):
+            if filename in "template.py":
+                continue
+            year, day = (int(num) for num in re.findall(r'\d+', filename))
+            new_filename = f'{year}_{day:02}.py'
+            print(f'Renaming "{filename}" to "{new_filename}"')
+            os.rename(os.path.join(input_dir, filename), os.path.join(input_dir, new_filename))
+        elif filename.lower().endswith(".r"):
+            year, day = (int(num) for num in re.findall(r'\d+', filename))
+            new_filename = f'{year}_{day:02}.R'
+            print(f'Renaming "{filename}" to "{new_filename}"')
+            os.rename(os.path.join(input_dir, filename), os.path.join(input_dir, new_filename))
+
+# rename_files("./python/")
+# rename_files("./R/")
