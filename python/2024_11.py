@@ -31,6 +31,7 @@ submit(answer1, part='a', day=11, year=2024)
 
 # Part 2
 
+
 answer2 = simulate(75)
 print(answer2)
 
