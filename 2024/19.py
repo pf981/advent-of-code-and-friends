@@ -2,12 +2,14 @@ import itertools
 
 
 def rot_r(g: list[list[str]], r: int, c: int) -> None:
-    g[r-1][c-1],g[r-1][c],g[r-1][c+1],g[r][c+1],g[r+1][c+1],g[r+1][c],g[r+1][c-1],g[r][c-1] =\
+    g[r-1][c-1],g[r-1][c],g[r-1][c+1],g[r][c+1],g[r+1][c+1],g[r+1][c],g[r+1][c-1],g[r][c-1] = (
         g[r][c-1],g[r-1][c-1],g[r-1][c],g[r-1][c+1],g[r][c+1],g[r+1][c+1],g[r+1][c],g[r+1][c-1]
+    )
 
 def rot_l(g: list[list[str]], r: int, c: int) -> None:
-    g[r-1][c-1],g[r-1][c],g[r-1][c+1],g[r][c+1],g[r+1][c+1],g[r+1][c],g[r+1][c-1],g[r][c-1] =\
+    g[r-1][c-1],g[r-1][c],g[r-1][c+1],g[r][c+1],g[r+1][c+1],g[r+1][c],g[r+1][c-1],g[r][c-1] = (
         g[r-1][c],g[r-1][c+1],g[r][c+1],g[r+1][c+1],g[r+1][c],g[r+1][c-1],g[r][c-1],g[r-1][c-1]
+    )
 
 
 with open("./2024/input/everybody_codes_e2024_q19_p1.txt") as f:
