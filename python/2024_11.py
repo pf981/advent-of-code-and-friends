@@ -2,7 +2,7 @@ from aocd import get_data, submit
 import collections
 
 
-def simulate(n_iterations):
+def simulate(nums, n_iterations):
     counts = collections.Counter(nums)
     for _ in range(n_iterations):
         new_counts = collections.Counter()
@@ -23,7 +23,7 @@ inp = get_data(day=11, year=2024)
 lines = inp.splitlines()
 nums = [int(num) for num in lines[0].split()]
 
-answer1 = simulate(25)
+answer1 = simulate(nums, 25)
 print(answer1)
 
 submit(answer1, part='a', day=11, year=2024)
@@ -32,7 +32,7 @@ submit(answer1, part='a', day=11, year=2024)
 # Part 2
 
 
-answer2 = simulate(75)
+answer2 = simulate(nums, 75)
 print(answer2)
 
 submit(answer2, part='b', day=11, year=2024)
