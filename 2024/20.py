@@ -194,7 +194,9 @@ def find_best():
     test = set()
 
     q = collections.deque([(start_altitude, *start, None, 'S')]) # altitude, r, c, last_checkpoint, direction
-    seen = {q[0]}
+    seen = collections.defaultdict(int)
+    seen[q[0][1:]] = start_altitude
+
     d = 0
     while q:
         for _ in range(len(q)):
@@ -223,10 +225,10 @@ def find_best():
                             return d + 1
                         continue
 
-                if (altitude2, r2, c2, last_checkpoint2, direction2) in seen:
+                if seen[r2, c2, last_checkpoint2, direction2] >= altitude2:
                     continue
 
-                seen.add((altitude2, r2, c2, last_checkpoint2, direction2))
+                seen[(r2, c2, last_checkpoint2, direction2)] = altitude2
                 q.append((altitude2, r2, c2, last_checkpoint2, direction2))
         d += 1
 
@@ -253,8 +255,112 @@ print(answer2)
 # # Part 3
 
 
-# with open("./2024/input/everybody_codes_e2024_q20_p3.txt") as f:
-#     lines = f.read().splitlines()
+# 384400 
 
-# answer3 = 'todo'
-# print(answer3)
+with open("./2024/input/everybody_codes_e2024_q20_p3.txt") as f:
+    lines = f.read().splitlines()
+
+lines = '''#......S......#
+#-...+...-...+#
+#.............#
+#..+...-...+..#
+#.............#
+#-...-...+...-#
+#.............#
+#..#...+...+..#'''.splitlines()
+
+delta = {
+    'S': -1,
+    '.': -1,
+    '+': +1,
+    '-': -2
+}
+
+import itertools
+
+# def get_distance(start_altitude):
+#     start_altitude += sum(delta[c] for c in 'S...')
+#     segment = itertools.cycle('...+...+')
+#     distance = 0
+#     while start_altitude > 0:
+#         start_altitude += delta[next(segment)]
+#         distance += 1
+#     return distance
+# get_distance(384400)
+
+def get_distance(start_altitude):
+    start_altitude += sum(delta[c] for c in '...')
+    segment = itertools.cycle('...+...+')
+    distance = 0
+    while start_altitude > 0:
+        start_altitude += delta[next(segment)]
+        distance += 1
+    return distance
+get_distance(384400)
+
+print(f'1 -> {get_distance(1)} (1)')
+print(f'2 -> {get_distance(2)} (2)')
+print(f'3 -> {get_distance(3)} (3)')
+print(f'4 -> {get_distance(4)} (4)')
+print(f'5 -> {get_distance(5)} (5)')
+print(f'6 -> {get_distance(6)} (6)')
+print(f'7 -> {get_distance(7)} (7)')
+print(f'8 -> {get_distance(8)} (9)')
+print(f'9 -> {get_distance(9)} (10)')
+print(f'10 -> {get_distance(10)} (11)')
+print(f'100 -> {get_distance(100)} (190)')
+print(f'1000 -> {get_distance(1000)} (1990)')
+print(f'10000 -> {get_distance(10000)} (19990)')
+print(f'100000 -> {get_distance(100000)} (199990)')
+print(f'384400 -> {get_distance(384400)} (768790)')
+
+
+
+import itertools
+delta = {
+    'S': -1,
+    '.': -1,
+    '+': +1,
+    '-': -2
+}
+
+def get_distance(start_altitude):
+    # start_altitude += sum(delta[c] for c in 'S....................')
+    # segment = itertools.cycle('.+...+...+..')
+    # start_altitude += sum(delta[c] for c in '..S')
+    start_altitude += sum(delta[c] for c in '..')
+    segment = itertools.cycle('.+...+...+..')
+    distance = 0
+    while start_altitude > 0:
+        start_altitude += delta[next(segment)]
+        distance += 1
+    return distance
+
+answer3 = get_distance(384400)
+print(answer3)
+
+# 768757
+# Your answer length is: correct
+# The first character of your answer is: correct
+
+# 768793 <- Why isn't this right?
+# Your answer length is: correct
+# The first character of your answer is: correct
+
+# 768792
+# Your answer length is: correct
+# The first character of your answer is: correct
+
+# 768794
+# Your answer length is: correct
+# The first character of your answer is: correct
+
+# 768791
+# Your answer length is: correct
+# The first character of your answer is: correct
+
+# 768796
+# Your answer length is: correct
+# The first character of your answer is: correct
+
+# 768795
