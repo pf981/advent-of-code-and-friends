@@ -13,7 +13,7 @@ WITH Records AS (
         jsonb_to_recordset(cleaning_receipts) AS (
           "receipt_id" text,
           "garment" text,
-          color text,
+          "color" text,
           "cost" float,
           "drop_off" date,
           "pickup" date
