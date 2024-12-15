@@ -2,42 +2,9 @@ from aocd import get_data, submit
 
 
 inp = get_data(day=15, year=2024)
-
-inp = '''##########
-#..O..O.O#
-#......O.#
-#.OO..O.O#
-#..O@..O.#
-#O#..O...#
-#O..O..O.#
-#.OO.O.OO#
-#....O...#
-##########\n\n<vv>^<v^>v>^vv^v>v<>v^v<v<^vv<<<^><<><>>v<vvv<>^v^>^<<<><<v<<<v^vv^v>^
-vvv<<^>^v^^><<>>><>^<<><^vv^^<>vvv<>><^^v>^>vv<>v<<<<v<^v>^<^^>>>^<v<v
-><>vv>v^v^<>><>>>><^^>vv>v<^^^>>v^v^<^^>v^^>v^<^v>v<>>v^v^<v>v^^<^^vv<
-<<v<^>>^^^^>>>v^<>vvv^><v<<<>^^^vv^<vvv>^>v<^^^^v<>^>vvvv><>>v^<<^^^^^
-^><^><>>><>^^<<^^v>>><^<v>^<vv>>v>>>^v><>^v><<<<v>>v<v<v>vvv>^<><<>^><
-^>><>^v<><^vvv<^^<><v<<<<<><^v<<<><<<^^<v<^^^><^>>^<v^><<<^>>^v<v^v<v^
->^>>^v>vv>^<<^v<>><<><<v<<v><>v<^vv<<<>^^v^>^^>>><<^v>>v^v><^^>>^<>vv^
-<><^^>^^^<><vvvvv^v<v<<>^v<v>v<<^><<><<><<<^^<<<^<<>><<><^^^>^^<>^>v<>
-^^>vv<^v^v<vv>^<><v<^v>^^^>>>^^vvv^>vvv<>>>^<^>>>>>^<<^v>^vvv<>^<><<v>
-v^^>>><<^^<>>^v^<v^vv<>v^<<>^<^v^v><^<<<><<^<v><v<>vv>>v><v^<vv<>v^<<^
-'''
-
-inp = '''########
-#..O.O.#
-##@.O..#
-#...O..#
-#.#.O..#
-#...O..#
-#......#
-########\n\n<^^>>>vv<v>>v<<'''
-
 txt, ops = inp.split('\n\n')
 lines = txt.splitlines()
 ops = ops.replace('\n', '')
-
-# len(ops.splitlines())
 
 walls = set()
 boxes = set()
@@ -54,9 +21,6 @@ for r, line in enumerate(lines):
 
 r, c = robot
 for op in ops:
-    if op not in 'v^<>':
-        print(f'!!!{op}')
-        break
     r2 = r + (op == 'v') - (op == '^')
     c2 = c + (op == '>') - (op == '<')
     
@@ -68,8 +32,6 @@ for op in ops:
             c3 += (op == '>') - (op == '<')
         if (r3, c3) in walls:
             continue
-        # r3 -= (op == 'v') - (op == '^')
-        # c3 -= (op == '>') - (op == '<')
         boxes.remove((r2, c2))
         boxes.add((r3, c3))
         r = r2
@@ -82,11 +44,9 @@ for op in ops:
     r = r2
     c = c2
 
-
 answer1 = 0
 for r, c in boxes:
     answer1 += 100 * r + c
-
 print(answer1)
 
 submit(answer1, part='a', day=15, year=2024)
@@ -95,55 +55,10 @@ submit(answer1, part='a', day=15, year=2024)
 # Part 2
 
 
-
-
-inp = get_data(day=15, year=2024)
-
-# inp = '''##########
-# #..O..O.O#
-# #......O.#
-# #.OO..O.O#
-# #..O@..O.#
-# #O#..O...#
-# #O..O..O.#
-# #.OO.O.OO#
-# #....O...#
-# ##########\n\n<vv>^<v^>v>^vv^v>v<>v^v<v<^vv<<<^><<><>>v<vvv<>^v^>^<<<><<v<<<v^vv^v>^
-# vvv<<^>^v^^><<>>><>^<<><^vv^^<>vvv<>><^^v>^>vv<>v<<<<v<^v>^<^^>>>^<v<v
-# ><>vv>v^v^<>><>>>><^^>vv>v<^^^>>v^v^<^^>v^^>v^<^v>v<>>v^v^<v>v^^<^^vv<
-# <<v<^>>^^^^>>>v^<>vvv^><v<<<>^^^vv^<vvv>^>v<^^^^v<>^>vvvv><>>v^<<^^^^^
-# ^><^><>>><>^^<<^^v>>><^<v>^<vv>>v>>>^v><>^v><<<<v>>v<v<v>vvv>^<><<>^><
-# ^>><>^v<><^vvv<^^<><v<<<<<><^v<<<><<<^^<v<^^^><^>>^<v^><<<^>>^v<v^v<v^
-# >^>>^v>vv>^<<^v<>><<><<v<<v><>v<^vv<<<>^^v^>^^>>><<^v>>v^v><^^>>^<>vv^
-# <><^^>^^^<><vvvvv^v<v<<>^v<v>v<<^><<><<><<<^^<<<^<<>><<><^^^>^^<>^>v<>
-# ^^>vv<^v^v<vv>^<><v<^v>^^^>>>^^vvv^>vvv<>>>^<^>>>>>^<<^v>^vvv<>^<><<v>
-# v^^>>><<^^<>>^v^<v^vv<>v^<<>^<^v^v><^<<<><<^<v><v<>vv>>v><v^<vv<>v^<<^
-# '''
-
-# inp = '''########
-# #..O.O.#
-# ##@.O..#
-# #...O..#
-# #.#.O..#
-# #...O..#
-# #......#
-# ########\n\n<^^>>>vv<v>>v<<'''
-
-# inp = '''#######
-# #...#.#
-# #.....#
-# #..OO@#
-# #..O..#
-# #.....#
-# #######\n\n<vv<<^^<<^^'''
-
 txt, ops = inp.split('\n\n')
 
-txt = txt.replace('#', '##')
-txt = txt.replace('O', '[]')
-txt = txt.replace('.', '..')
-txt = txt.replace('@', '@.')
-
+for a, b in [('#', '##'), ('O', '[]'),('.', '..'),('@', '@.')]:
+    txt = txt.replace(a, b)
 lines = txt.splitlines()
 ops = ops.replace('\n', '')
 
@@ -160,21 +75,6 @@ for r, line in enumerate(lines):
         elif ch == '@':
             robot = r, c
 
-def print_grid():
-    for row, line in enumerate(lines):
-        for col, _ in enumerate(line):
-            ch = '.'
-            if (row, col) in walls:
-                ch = '#'
-            elif (row, col) in boxes:
-                ch = '['
-            elif (row, col-1) in boxes:
-                ch = ']'
-            elif (row, col) == (r, c):
-                ch = '@'
-            print(ch, end='')
-        print()
-
 
 def get_boxes(r, c, dr):
     if (r, c) in walls:
@@ -189,21 +89,15 @@ def get_boxes(r, c, dr):
     # It is a box
     left = get_boxes(r + dr, c, dr)
     right = get_boxes(r + dr, c + 1, dr)
+
     if left is None or right is None:
         return None
-    s = {(r, c)}
-    s.update(left)
-    s.update(right)
-    return s
 
+    return {(r, c)} | left | right
 
 
 r, c = robot
 for op in ops:
-    # print_grid()
-    if op not in 'v^<>':
-        print(f'!!!{op}')
-        break
     r2 = r + (op == 'v') - (op == '^')
     c2 = c + (op == '>') - (op == '<')
     
@@ -219,12 +113,10 @@ for op in ops:
             if (r3, c3+2) in walls:
                 continue
             
-            
             new_box_positions = {(box_r, box_c + 1) for box_r, box_c in moving_boxes}
             for box_r, box_c in moving_boxes:
                 boxes.remove((box_r, box_c))
             boxes.update(new_box_positions)
-
 
             r = r2
             c = c2
@@ -240,7 +132,6 @@ for op in ops:
                 moving_boxes.add((r3, c3))
             if (r3, c3 - 1) in walls:
                 continue
-            
             
             new_box_positions = {(box_r, box_c - 1) for box_r, box_c in moving_boxes}
             for box_r, box_c in moving_boxes:
@@ -258,7 +149,6 @@ for op in ops:
             break
 
         if (r2, c2) in  boxes or (r2, c2 - 1) in boxes:
-            # HANDLE UP/DOWN BOXES
             moving_boxes = get_boxes(r2, c2, dr)
 
             if not moving_boxes:
@@ -269,8 +159,6 @@ for op in ops:
                 boxes.remove((box_r, box_c))
             boxes.update(new_box_positions)
                 
-
-            # END HANDLE BOXES
             r = r2
             c = c2
             continue
@@ -281,21 +169,9 @@ for op in ops:
     r = r2
     c = c2
 
-
-answer1 = 0
+answer2 = 0
 for r, c in boxes:
-    answer1 += 100 * r + c
+    answer2 += 100 * r + c
+print(answer2)
 
-print(answer1)
-
-submit(answer1, part='b', day=15, year=2024)
-
-
-
-
-
-
-# answer2 = 'todo'
-# print(answer2)
-
-# submit(answer2, part='b', day=15, year=2024)
+submit(answer2, part='b', day=15, year=2024)
