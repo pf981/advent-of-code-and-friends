@@ -17,7 +17,7 @@ def run(reg_a, reg_b, reg_c, program):
         ][literal]
         match op:
             case 0: # adv
-                reg_a = reg_a // (2**combo)
+                reg_a = reg_a // (2 ** combo)
             case 1: # bxl
                 reg_b = reg_b ^ literal
             case 2: # bst
@@ -25,15 +25,15 @@ def run(reg_a, reg_b, reg_c, program):
             case 3: # jnz
                 if reg_a != 0:
                     ip = literal
-                    continue # Does this work in match?
+                    continue
             case 4: # bxc
                 reg_b = reg_b ^ reg_c
             case 5: # out
                 output.append(combo % 8)
             case 6: # bdv
-                reg_b = reg_a // (2**combo)
+                reg_b = reg_a // (2 ** combo)
             case 7: # cdv
-                reg_c = reg_a // (2**combo)
+                reg_c = reg_a // (2 ** combo)
         
         ip += 2
     return ','.join(str(x) for x in output)
