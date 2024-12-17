@@ -54,10 +54,7 @@ import z3
 
 
 def bit_vecs(s):
-    l = []
-    for ss in s.split():
-        l.append(z3.BitVec(ss, 64))
-    return l
+    return [z3.BitVec(ss, 64) for ss in s.split()]
 
 
 o = z3.Optimize()
