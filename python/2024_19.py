@@ -5,11 +5,11 @@ inp = get_data(day=19, year=2024)
 patterns, _, *designs = inp.splitlines()
 patterns = patterns.split(', ')
 
-reg = '^(' + '|'.join(pattern for pattern in patterns) + ')+$'
+regex = re.compile('^(' + '|'.join(pattern for pattern in patterns) + ')+$')
 
 answer1 = 0
 for design in designs:
-    if re.match(reg, design):
+    if regex.match(design):
         answer1 += 1
 print(answer1)
 
@@ -35,7 +35,7 @@ def count_ways(design):
 
 answer2 = 0
 for design in designs:
-    if re.match(reg, design):
+    if regex.match(design):
         answer2 += count_ways(design)
 print(answer2)
 
