@@ -2,28 +2,14 @@ from aocd import get_data, submit
 import functools
 
 
-keypad1 = '''789
-456
-123
- 0A
-'''
-m1 = {}
-for r, line in enumerate(keypad1.splitlines()):
-    for c, ch in enumerate(line):
-        if ch != ' ':
-            m1[(r, c)] = ch
-
-keypad2 = ''' ^A
-<v>
-'''
-m2 = {}
-for r, line in enumerate(keypad2.splitlines()):
-    for c, ch in enumerate(line):
-        if ch != ' ':
-            m2[(r, c)] = ch
-
-pad2_start = next(pos for pos, ch in m2.items() if ch == 'A')
-pad1_start = next(pos for pos, ch in m1.items() if ch == 'A')
+def get_keypad(depth):
+    keypad = ['789','456','123', ' 0A'] if depth == 0 else [' ^A', '<v>']
+    m = {}
+    for r, line in enumerate(keypad):
+        for c, ch in enumerate(line):
+            if ch != ' ':
+                m[(r, c)] = ch
+    return m
 
 
 def get_paths(from_pos, to_pos, m):
@@ -48,10 +34,9 @@ def get_paths(from_pos, to_pos, m):
 
 @functools.cache
 def get_shortest_length(code, depth, max_depth):
-   
-    from_pos = pad1_start if depth == 0 else pad2_start
-    m = m1 if depth == 0 else m2
+    m = get_keypad(depth)
     m_rev = {ch: pos for pos, ch in m.items()}
+    from_pos = next(pos for pos, ch in m.items() if ch == 'A')
 
     shortest_length = 0
     for ch in code:
