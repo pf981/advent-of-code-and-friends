@@ -1,5 +1,4 @@
 from aocd import get_data, submit
-import collections
 import functools
 
 
@@ -64,12 +63,10 @@ def get_shortest_length(code, depth, max_depth):
             from_pos = to_pos
             continue
         
-        shortest_sublength = float('inf')
-        for path in paths:
-            shortest_sublength = min(shortest_sublength, get_shortest_length(path, depth + 1, max_depth))
+        shortest_sublength = min(get_shortest_length(path, depth + 1, max_depth) for path in paths)
         shortest_length += shortest_sublength
-
         from_pos = to_pos
+
     return shortest_length
 
 
