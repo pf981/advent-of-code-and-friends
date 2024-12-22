@@ -8,16 +8,15 @@ def sim(num):
     num = mix_prune(num * 2048, num)
     return num
 
-
 inp = get_data(day=22, year=2024)
 lines = inp.splitlines()
 nums = [int(line) for line in lines]
 
-for _ in range(2000):
-    for i, num in enumerate(nums):
-        nums[i] = sim(num)
-
-answer1 = sum(nums)
+answer1 = 0
+for num in nums:
+    for _ in range(2000):
+        num = sim(num)
+    answer1 += num
 print(answer1)
 
 submit(answer1, part='a', day=22, year=2024)
@@ -26,34 +25,31 @@ submit(answer1, part='a', day=22, year=2024)
 # Part 2
 
 
+import collections
+
+
 def get_prices_deltas(num, n):
     prices = []
     for _ in range(n):
         prices.append(num % 10)
         num = sim(num)
-    deltas = [a - b for a, b in zip(prices, [0] + prices[:-1])]
+    deltas = tuple(a - b for a, b in zip(prices, [0] + prices[:-1]))
     return prices, deltas
 
 
-options = set()
-first_seen = {} # (i (nums index), tuple) -> price
-for i, num in enumerate(nums):
-    prices, deltas = get_prices_deltas(nums[i], 2000)
-    for j in range(2000 - 4):
-        t = tuple(deltas[j:j+4])
-        options.add(t)
-        if (i, t) in first_seen:
-            continue
-        first_seen[(i, t)] = prices[j+4-1]
-
+streaks = collections.defaultdict(int) # tuple -> total_price
 best = 0
-for t in options:
-    cur = 0
-    for i, _ in enumerate(nums):
-        if (i, t) not in first_seen:
+for num in nums:
+    prices, deltas = get_prices_deltas(num, 2000)
+    seen = set()
+    for i in range(2000 - 4):
+        t = deltas[i:i + 4]
+        if t in seen:
             continue
-        cur += first_seen[(i, t)]
-    best = max(best, cur)
+        seen.add(t)
+        streaks[t] += prices[i + 4 - 1]
+        best = max(best, streaks[t])
+
 answer2 = best
 print(answer2)
 
