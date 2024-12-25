@@ -625,6 +625,11 @@ for _ in range(4):
             score = get_score(new_swaps)
             candidate = min(candidate, (score, i, j))
     bests.append(candidate)
+
+    _, i, j = bests[-1]
+    swaps[outputs[i]] = outputs[j]
+    swaps[outputs[j]] = outputs[i]
+
     print(bests)
 
 answer2 = []
@@ -648,3 +653,47 @@ for i in range(10):
         break
 else:
     print('GOOD!')
+
+
+# bests
+# # [(0.225, 57, 202),
+# #  (0.21666666666666667, 30, 143),
+# #  (0.23333333333333334, 22, 200),
+# #  (0.23333333333333334, 22, 105)]
+# [(0.3, 4, 86)]
+
+for out, (a, b, op) in m.items():
+    if op == 'XOR':
+        if (a.startswith('x') or b.startswith('x') or a.startswith('y') or b.startswith('y')):
+            if out.startswith('z'):
+                print(a, b, out)
+        else:
+            if not out.startswith('z'):
+                print(a, b, out)
+
+
+for out, (a, b, op) in m.items():
+    if out.startswith('z') and op != 'XOR':
+        print(a, b, out)
+
+# Check AND outputs to OR
+for out, (a, b, op) in m.items():
+    if op == 'OR':
+        if m[a][2] != 'AND':
+            print(a)
+        if m[b][2] != 'AND':
+            print(b)
+
+
+# wpd
+# mdd
+# wts
+# z19
+# z37
+# z11
+# jqf
+# skh
+l = ['wpd','mdd','wts','z19','z37','z11','jqf','skh']
+
+answer2 = ','.join(sorted(l))
+print(answer2)
