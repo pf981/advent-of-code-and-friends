@@ -27,7 +27,8 @@ def main():
                 a, b = grab(), grab()
                 reg[a] = b
             case 2:  # push: 2 a; push <a> onto the stack
-                pass
+                a = grab()
+                stack.append(a)
             case 3:  # pop: 3 a; remove the top element from the stack and write it into <a>; empty stack = error
                 pass
             case 4:  # eq: 4 a b c; set <a> to 1 if <b> is equal to <c>; set it to 0 otherwise
