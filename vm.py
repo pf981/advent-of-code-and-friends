@@ -27,9 +27,8 @@ def main() -> None:
         "file", help="Path of bin file.", default="./challenge.bin", type=str, nargs="?"
     )
     args = parser.parse_args()
-    print(f"{args=}")
 
-    # registers at index 32768..32775
+    # registers at indexes 32768..32775
     memory = parse(args.file)
     ip = 0
     stack = []
@@ -156,9 +155,9 @@ if __name__ == "__main__":
 # $ echo -n "<Code Here>" | md5sum
 
 # 76ec2408e8fe3f1753c25db51efd8eb3
-# 0e6aa7be1f68d930926d72b3741a145c DONE
-# 7997a3b2941eab92c1c0345d5747b420 DONE
-# 186f842951c0dcfe8838af1e7222b7d4
+# 0e6aa7be1f68d930926d72b3741a145c DONE (first output)
+# 7997a3b2941eab92c1c0345d5747b420 DONE (successful self-test)
+# 186f842951c0dcfe8838af1e7222b7d4 DONE (tablet)
 # 2bf84e54b95ce97aefd9fc920451fc45
 # e09640936b3ef532b7b8e83ce8f125f4
 # 4873cf6b76f62ac7d5a53605b2535a0c
