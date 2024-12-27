@@ -1,150 +1,159 @@
 import argparse
+import enum
+import io
 import sys
 
 
-debug = False
+class State(enum.Enum):
+    READY = enum.auto
+    HALTED = enum.auto
+    INPUT_BLOCKED = enum.auto
 
+class Vm:
+    def __init__(self, memory: list[int], stack: list, ip: int) -> None:
+        self.memory = memory
+        self.stack = stack
+        self.ip = ip
+        self.state = State.READY
+        self.reader = io.StringIO()
 
-def parse(file: str) -> list[int]:
-    instructions = []
-    with open(file, "rb") as f:
-        while word := f.read(2):
-            num = int.from_bytes(word, byteorder="little", signed=False)
-            instructions.append(num)
-    return instructions + [0] * (2**15 - len(instructions) + 8)
+    @classmethod
+    def from_file(cls, file: str) -> "Vm":
+        instructions = []
+        with open(file, "rb") as f:
+            while word := f.read(2):
+                num = int.from_bytes(word, byteorder="little", signed=False)
+                instructions.append(num)
+        memory = instructions + [0] * (2**15 - len(instructions) + 8)
+        return Vm(memory, [], 0)
 
+    def grab(self) -> int:
+        result = self.memory[self.ip]
+        self.ip += 1
+        if result <= 32775:
+            return result
+        raise ValueError(f"Invalid number {result}")
 
-def pp(*args) -> None:
-    if not debug:
-        return
-    print("  ", end="")
-    return print(*args)
+    def val(self, i: int) -> int:
+        if i <= 32767:
+            return i
+        if i <= 32775:
+            return self.memory[i]
+        raise ValueError(f"Invalid number {i}")
+
+    def run(self) -> None:
+        while self.state == State.READY:
+            self.step()
+
+    def step(self) -> None:
+        g = self.grab
+        v = self.val
+        op = self.grab()
+        match op:
+            case 0:  # halt: 0; stop execution and terminate the program
+                self.state = State.HALTED
+            case 1:  # set: 1 a b; set register <a> to the self.value of <b>
+                a, b = g(), g()
+                self.memory[a] = v(b)
+            case 2:  # push: 2 a; push <a> onto the self.stack
+                a = g()
+                self.stack.append(v(a))
+            case 3:  # pop: 3 a; remove the top element from the self.stack and write it into <a>; empty self.stack = error
+                a = g()
+                self.memory[a] = self.stack.pop()
+            case 4:  # eq: 4 a b c; set <a> to 1 if <b> is equal to <c>; set it to 0 otherwise
+                a, b, c = g(), g(), g()
+                self.memory[a] = int(v(b) == v(c))
+            case 5:  # gt: 5 a b c; set <a> to 1 if <b> is greater than <c>; set it to 0 otherwise
+                a, b, c = g(), g(), g()
+                self.memory[a] = int(v(b) > v(c))
+            case 6:  # jmp: 6 a; jump to <a>
+                a = g()
+                self.ip = v(a)
+            case 7:  # jt: 7 a b; if <a> is nonzero, jump to <b>
+                a, b = g(), g()
+                if v(a):
+                    self.ip = v(b)
+            case 8:  # jf: 8 a b; if <a> is zero, jump to <b>
+                a, b = g(), g()
+                if not v(a):
+                    self.ip = v(b)
+            case 9:  # add: 9 a b c; assign into <a> the sum of <b> and <c> (modulo 32768)
+                a, b, c = g(), g(), g()
+                self.memory[a] = (v(b) + v(c)) % 32768
+            case 10:  # mult: 10 a b c; store into <a> the product of <b> and <c> (modulo 32768)
+                a, b, c = g(), g(), g()
+                self.memory[a] = (v(b) * v(c)) % 32768
+            case 11:  # mod: 11 a b c; store into <a> the remainder of <b> divided by <c>
+                a, b, c = g(), g(), g()
+                self.memory[a] = v(b) % v(c)
+            case 12:  # and: 12 a b c; stores into <a> the bitwise and of <b> and <c>
+                a, b, c = g(), g(), g()
+                self.memory[a] = v(b) & v(c)
+            case 13:  # or: 13 a b c; stores into <a> the bitwise or of <b> and <c>
+                a, b, c = g(), g(), g()
+                self.memory[a] = v(b) | v(c)
+            case 14:  # not: 14 a b; stores 15-bit bitwise inverse of <b> in <a>
+                a, b = g(), g()
+                self.memory[a] = ((1 << 15) - 1) & ~v(b)
+            case 15:  # rmem: 15 a b; read memory at address <b> and write it to <a>
+                a, b = g(), g()
+                # memory[a] = get(b)
+                self.memory[a] = self.memory[v(b)]
+                # memory[a] = memory[b]
+            case 16:  # wmem: 16 a b; write the value from <b> into memory at address <a>
+                a, b = g(), g()
+                self.memory[v(a)] = v(b)
+            case 17:  # call: 17 a; write the address of the next instruction to the self.stack and jump to <a>
+                a = g()
+                self.stack.append(self.ip)
+                self.ip = v(a)
+            case 18:  # ret: 18; remove the top element from the self.stack and jump to it; empty self.stack = halt
+                if not self.stack:
+                    self.state = State.HALTED
+                else:
+                    self.ip = self.stack.pop()
+            case 19:  # out: 19 a; write the character represented by ascii code <a> to the terminal
+                a = g()
+                print(chr(v(a)), end="")
+            case 20:  # in: 20 a; read a character from the terminal and write its ascii code to <a>; it can be assumed that once input starts, it will continue until a newline is encountered; this means that you can safely read whole lines from the keyboard instead of having to figure out how to read individual characters
+                a = g()
+                self.memory[a] = ord(self.reader.read(1))
+            case 21:  # noop: 21; no operation
+                pass
+
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser("simple_example")
+    parser = argparse.ArgumentParser("vm")
     parser.add_argument(
         "file", help="Path of bin file.", default="./challenge.bin", type=str, nargs="?"
     )
     args = parser.parse_args()
 
-    # registers at indexes 32768..32775
-    memory = parse(args.file)
-    ip = 0
-    stack = []
+    Vm.from_file(args.file)
 
-    def grab() -> int:
-        nonlocal ip
-        result = memory[ip]
-        ip += 1
-        if result <= 32775:
-            return result
-        raise ValueError(f"Invalid number {result}")
+#     # registers at indexes 32768..32775
+#     memory = parse(args.file)
+#     self.ip = 0
+#     self.stack = []
 
-    def val(i) -> int:
-        if i <= 32767:
-            return i
-        if i <= 32775:
-            return memory[i]
-        raise ValueError(f"Invalid number {i}")
+#     def g() -> int:
+#         nonlocal self.ip
+#         result = memory[ip]
+#         self.ip += 1
+#         if result <= 32775:
+#             return result
+#         raise self.valueError(f"Invalid number {result}")
 
-    while True:
-        op = grab()
-        if op != 19:
-            pp(f"\nRegisters: {[val(i) for i in range(32768, 32776)]}")
-        match op:
-            case 0:  # halt: 0; stop execution and terminate the program
-                pp("0(halt)")
-                break
-            case 1:  # set: 1 a b; set register <a> to the value of <b>
-                a, b = grab(), grab()
-                pp(f"1(set) {a}({val(a)}) {b}({val(b)})")
-                memory[a] = val(b)
-            case 2:  # push: 2 a; push <a> onto the stack
-                a = grab()
-                pp(f"2(push) {a}({val(a)}))")
-                stack.append(val(a))
-            case 3:  # pop: 3 a; remove the top element from the stack and write it into <a>; empty stack = error
-                a = grab()
-                pp(f"3(pop) {a}({val(a)}))")
-                memory[a] = stack.pop()
-            case 4:  # eq: 4 a b c; set <a> to 1 if <b> is equal to <c>; set it to 0 otherwise
-                a, b, c = grab(), grab(), grab()
-                pp(f"4(eq) {a}({val(a)}) {b}({val(b)}) {c}({val(c)})")
-                memory[a] = int(val(b) == val(c))
-            case 5:  # gt: 5 a b c; set <a> to 1 if <b> is greater than <c>; set it to 0 otherwise
-                a, b, c = grab(), grab(), grab()
-                pp(f"5(gt) {a}({val(a)}) {b}({val(b)}) {c}({val(c)})")
-                memory[a] = int(val(b) > val(c))
-            case 6:  # jmp: 6 a; jump to <a>
-                a = grab()
-                pp(f"6(jmp) {a}({val(a)}))")
-                ip = val(a)
-            case 7:  # jt: 7 a b; if <a> is nonzero, jump to <b>
-                a, b = grab(), grab()
-                pp(f"7(jt) {a}({val(a)}) {b}({val(b)})")
-                if val(a):
-                    ip = val(b)
-            case 8:  # jf: 8 a b; if <a> is zero, jump to <b>
-                a, b = grab(), grab()
-                pp(f"8(jf) {a}({val(a)}) {b}({val(b)})")
-                if not val(a):
-                    ip = val(b)
-            case 9:  # add: 9 a b c; assign into <a> the sum of <b> and <c> (modulo 32768)
-                a, b, c = grab(), grab(), grab()
-                pp(f"9(add) {a}({val(a)}) {b}({val(b)}) {c}({val(c)})")
-                memory[a] = (val(b) + val(c)) % 32768
-            case 10:  # mult: 10 a b c; store into <a> the product of <b> and <c> (modulo 32768)
-                a, b, c = grab(), grab(), grab()
-                pp(f"10(mult) {a}({val(a)}) {b}({val(b)}) {c}({val(c)})")
-                memory[a] = (val(b) * val(c)) % 32768
-            case 11:  # mod: 11 a b c; store into <a> the remainder of <b> divided by <c>
-                a, b, c = grab(), grab(), grab()
-                pp(f"11(mod) {a}({val(a)}) {b}({val(b)}) {c}({val(c)})")
-                memory[a] = val(b) % val(c)
-            case 12:  # and: 12 a b c; stores into <a> the bitwise and of <b> and <c>
-                a, b, c = grab(), grab(), grab()
-                pp(f"12(and) {a}({val(a)}) {b}({val(b)}) {c}({val(c)})")
-                memory[a] = val(b) & val(c)
-            case 13:  # or: 13 a b c; stores into <a> the bitwise or of <b> and <c>
-                a, b, c = grab(), grab(), grab()
-                pp(f"13(or) {a}({val(a)}) {b}({val(b)}) {c}({val(c)})")
-                memory[a] = val(b) | val(c)
-            case 14:  # not: 14 a b; stores 15-bit bitwise inverse of <b> in <a>
-                a, b = grab(), grab()
-                pp(f"14(not) {a}({val(a)}) {b}({val(b)})")
-                memory[a] = ((1 << 15) - 1) & ~val(b)
-            case 15:  # rmem: 15 a b; read memory at address <b> and write it to <a>
-                a, b = grab(), grab()
-                pp(f"15(rmem) {a}({val(a)}) {b}({val(b)})")
-                # memory[a] = get(b)
-                memory[a] = memory[val(b)]
-                # memory[a] = memory[b]
-            case 16:  # wmem: 16 a b; write the value from <b> into memory at address <a>
-                a, b = grab(), grab()
-                pp(f"16(wmem) {a}({val(a)}) {b}({val(b)})")
-                memory[val(a)] = val(b)
-                pp(" ", memory[32768:])
-            case 17:  # call: 17 a; write the address of the next instruction to the stack and jump to <a>
-                a = grab()
-                pp(f"17(call) {a}({val(a)})")
-                stack.append(ip)
-                ip = val(a)
-            case 18:  # ret: 18; remove the top element from the stack and jump to it; empty stack = halt
-                pp(f"18(ret) [{stack[-1]}]")
-                if not stack:
-                    break
-                ip = stack.pop()
-            case 19:  # out: 19 a; write the character represented by ascii code <a> to the terminal
-                a = grab()
-                # pp(f"19(out) {a}({get(a)})")
-                print(chr(val(a)), end="")
-            case 20:  # in: 20 a; read a character from the terminal and write its ascii code to <a>; it can be assumed that once input starts, it will continue until a newline is encountered; this means that you can safely read whole lines from the keyboard instead of having to figure out how to read individual characters
-                a = grab()
-                pp(f"20(in) {a}({val(a)})")
-                memory[a] = ord(sys.stdin.read(1))
-            case 21:  # noop: 21; no operation
-                pp("21(noop)")
+#     def self.val(i) -> int:
+#         if i <= 32767:
+#             return i
+#         if i <= 32775:
+#             return memory[i]
+#         raise self.valueError(f"Invalid number {i}")
+
+#     while True:
 
 
 if __name__ == "__main__":
