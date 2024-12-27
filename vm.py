@@ -1,21 +1,22 @@
 import argparse
 import enum
 import io
-import sys
 
 
 class State(enum.Enum):
-    READY = enum.auto
-    HALTED = enum.auto
-    INPUT_BLOCKED = enum.auto
+    READY = enum.auto()
+    HALTED = enum.auto()
+    INPUT_BLOCKED = enum.auto()
+
 
 class Vm:
-    def __init__(self, memory: list[int], stack: list, ip: int) -> None:
+    def __init__(self, memory: list[int], stack: list[int], ip: int) -> None:
         self.memory = memory
         self.stack = stack
         self.ip = ip
         self.state = State.READY
         self.reader = io.StringIO()
+        self.writer = io.StringIO()
 
     @classmethod
     def from_file(cls, file: str) -> "Vm":
@@ -25,7 +26,26 @@ class Vm:
                 num = int.from_bytes(word, byteorder="little", signed=False)
                 instructions.append(num)
         memory = instructions + [0] * (2**15 - len(instructions) + 8)
-        return Vm(memory, [], 0)
+        return cls(memory, [], 0)
+
+    @classmethod
+    def from_dump(cls, dump: tuple[tuple[int, ...], tuple[int, ...], int]) -> "Vm":
+        memory, stack, ip = dump
+        return cls(list(memory), list(stack), ip)
+
+    def dump(self) -> tuple[tuple[int, ...], tuple[int, ...], int]:
+        return (tuple(self.memory), tuple(self.stack), self.ip)
+
+    def input(self, s: str) -> None:
+        self.reader.write(s)
+        self.reader.seek(0)
+        self.state = State.READY
+
+    def output(self) -> str:
+        s = self.writer.getvalue()
+        self.writer.truncate(0)
+        self.writer.seek(0)
+        return s
 
     def grab(self) -> int:
         result = self.memory[self.ip]
@@ -48,7 +68,7 @@ class Vm:
     def step(self) -> None:
         g = self.grab
         v = self.val
-        op = self.grab()
+        op = g()
         match op:
             case 0:  # halt: 0; stop execution and terminate the program
                 self.state = State.HALTED
@@ -118,10 +138,14 @@ class Vm:
                 print(chr(v(a)), end="")
             case 20:  # in: 20 a; read a character from the terminal and write its ascii code to <a>; it can be assumed that once input starts, it will continue until a newline is encountered; this means that you can safely read whole lines from the keyboard instead of having to figure out how to read individual characters
                 a = g()
-                self.memory[a] = ord(self.reader.read(1))
+                ch = self.reader.read(1)
+                if not ch:
+                    self.state = State.INPUT_BLOCKED
+                    self.ip -= 2
+                else:
+                    self.memory[a] = ord(ch)
             case 21:  # noop: 21; no operation
                 pass
-
 
 
 def main() -> None:
@@ -131,29 +155,17 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    Vm.from_file(args.file)
+    vm = Vm.from_file(args.file)
+    while True:
+        print(f'{vm.state=}')
+        vm.run()
 
-#     # registers at indexes 32768..32775
-#     memory = parse(args.file)
-#     self.ip = 0
-#     self.stack = []
+        print(vm.output())
 
-#     def g() -> int:
-#         nonlocal self.ip
-#         result = memory[ip]
-#         self.ip += 1
-#         if result <= 32775:
-#             return result
-#         raise self.valueError(f"Invalid number {result}")
-
-#     def self.val(i) -> int:
-#         if i <= 32767:
-#             return i
-#         if i <= 32775:
-#             return memory[i]
-#         raise self.valueError(f"Invalid number {i}")
-
-#     while True:
+        if vm.state == State.INPUT_BLOCKED:
+            vm.input(input() + "\n")
+        else:
+            break
 
 
 if __name__ == "__main__":
