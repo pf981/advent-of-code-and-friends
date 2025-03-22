@@ -1,10 +1,8 @@
-import re
-
-
 with open("2025_contest/06.txt") as f:
     inp = f.read()
 
-sum(c.isalpha() for c in inp)
+answer1 = sum(c.isalpha() for c in inp)
+print(answer1)
 
 
 # Part 2
@@ -17,6 +15,7 @@ for c in inp:
         answer2 += ord(c) - ord("a") + 1
     else:
         answer2 += ord(c) - ord("A") + 27
+
 print(answer2)
 
 
