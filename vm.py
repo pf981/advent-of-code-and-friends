@@ -6,7 +6,6 @@ class State(enum.Enum):
     READY = enum.auto()
     HALTED = enum.auto()
     INPUT_BLOCKED = enum.auto()
-    PAUSED = enum.auto()  # On breakpoint or quit. Will resume on next run.
 
 
 class Vm:
@@ -63,21 +62,14 @@ class Vm:
             return self.memory[i]
         raise ValueError(f"Invalid number {i}")
 
-    def run(self, continue_on_breakpoint: bool = True) -> None:
-        # Automatically resume on breakpoint/quit
-        # if self.state == State.PAUSED:
-        #     self.state = State.READY
-
+    def run(self) -> None:
         while True:
             self.step()
-            if continue_on_breakpoint and self.state == State.PAUSED:
-                continue
             if self.state != State.READY:
                 break
 
     def step(self) -> None:
         # Custom commands
-        # if self.state == State.PAUSED or self.memory[self.ip] == 20:
         if self.ip in self.breakpoints or self.memory[self.ip] == 20:
             pos = self.reader.tell()
             line = self.reader.readline().strip()
@@ -102,18 +94,6 @@ class Vm:
                     self.reader.seek(pos)
             if self.reader.tell() != pos:
                 return
-
-        # # Breakpoint
-        # if self.ip in self.breakpoints:
-        #     if self.state == State.PAUSED:
-        #         # Automatically resume
-        #         self.state = State.READY
-        #         self.breakpoints.remove(self.ip)
-        #         pass
-        #     else:
-        #         self.state = State.PAUSED
-        #         # self.breakpoints.remove(self.ip)
-        #         return
 
         g = self.grab
         v = self.val
@@ -199,36 +179,13 @@ class Vm:
     def resume(self) -> None:
         print("--- Resuming VM ---")
 
-        # if self.state == State.PAUSED:
-        #     self.state = State.READY
-
         while True:
-            # if self.state == State.READY:
             self.step()
             print(self.output(), end="")
 
-            if self.state in [State.INPUT_BLOCKED, State.PAUSED]:
+            if self.state == State.INPUT_BLOCKED:
                 inp = input()
                 self.input(inp + "\n")
-
-                # command, *args = inp.split()
-                # match command:
-                #     case "_quit":  # Quit
-                #         break
-                #     case "_dump":  # Dump
-                #         with open(inp.split(" ", 1)[1], "w") as f:
-                #             f.write(str(self.dump()))
-                #     case "_set-breakpoint":
-                #         self.breakpoints.add(int(inp.split(" ", 1)[1]))
-                #     case "_clear-breakpoints":
-                #         self.breakpoints.clear()
-                #     case "_set-register":
-                #         register, value = args
-                #         self.memory[32768 + register] = value
-                #     case "_set-ip":
-                #         self.ip = args[0]
-                #     case _:  # Standard input
-                #         self.input(inp + "\n")
             elif self.state != State.READY:
                 break
         print("--- VM Exited ---")
