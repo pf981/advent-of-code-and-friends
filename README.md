@@ -1,8 +1,8 @@
-# Synacore Challenge Solutions
+# Synacor Challenge Solutions
 
 ## Introduction
 
-Synacore Challenge was a set of puzzles where you must implement a virtual machine and solve puzzles inside that VM.
+Synacor Challenge was a set of puzzles where you must implement a virtual machine and solve puzzles inside that VM.
 
 There was a website, but it doesn't exist anymore. However, the specification, data, and hashes of solutions can still be obtained from [github](https://github.com/Aneurysm9/vm_challenge).
 
