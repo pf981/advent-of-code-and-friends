@@ -148,10 +148,10 @@ class Vm:
                 pass
 
     def resume(self) -> None:
-        print('--- Resuming VM ---')
+        print("--- Resuming VM ---")
         # self.input("look\n")
         while True:
-            assert self.state == State.READY
+            # assert self.state == State.READY
             self.run()
 
             print(self.output())
@@ -175,6 +175,7 @@ class Vm:
 
 if __name__ == "__main__":
     import argparse
+
     parser = argparse.ArgumentParser("vm")
     parser.add_argument(
         "file", help="Path of bin file.", default="./challenge.bin", type=str, nargs="?"
