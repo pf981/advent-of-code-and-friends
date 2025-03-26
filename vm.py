@@ -63,26 +63,29 @@ class Vm:
             return self.memory[i]
         raise ValueError(f"Invalid number {i}")
 
-    def run(self) -> None:
+    def run(self, continue_on_breakpoint: bool = True) -> None:
         # Automatically resume on breakpoint/quit
         # if self.state == State.PAUSED:
         #     self.state = State.READY
 
         while True:
             self.step()
+            if continue_on_breakpoint and self.state == State.PAUSED:
+                continue
             if self.state != State.READY:
                 break
 
     def step(self) -> None:
         # Custom commands
-        if self.state == State.PAUSED or self.memory[self.ip] == 20:
+        # if self.state == State.PAUSED or self.memory[self.ip] == 20:
+        if self.ip in self.breakpoints or self.memory[self.ip] == 20:
             pos = self.reader.tell()
             line = self.reader.readline().strip()
             command, *args = line.split(" ")
             print(f"{command=} {args=}")
             match command:
-                case "_pause":  # Quit
-                    self.state = State.PAUSED
+                case "_quit":  # Quit
+                    self.state = State.HALTED
                 case "_dump":  # Dump
                     with open(args[0], "w") as f:
                         f.write(str(self.dump()))
@@ -100,14 +103,17 @@ class Vm:
             if self.reader.tell() != pos:
                 return
 
-        # Breakpoint
-        if self.ip in self.breakpoints:
-            if self.state == State.PAUSED:
-                # Automatically resume
-                self.state = State.READY
-            else:
-                self.state = State.PAUSED
-                return
+        # # Breakpoint
+        # if self.ip in self.breakpoints:
+        #     if self.state == State.PAUSED:
+        #         # Automatically resume
+        #         self.state = State.READY
+        #         self.breakpoints.remove(self.ip)
+        #         pass
+        #     else:
+        #         self.state = State.PAUSED
+        #         # self.breakpoints.remove(self.ip)
+        #         return
 
         g = self.grab
         v = self.val
@@ -201,7 +207,7 @@ class Vm:
             self.step()
             print(self.output(), end="")
 
-            if self.state == State.INPUT_BLOCKED:
+            if self.state in [State.INPUT_BLOCKED, State.PAUSED]:
                 inp = input()
                 self.input(inp + "\n")
 
