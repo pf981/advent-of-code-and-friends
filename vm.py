@@ -6,6 +6,7 @@ class State(enum.Enum):
     READY = enum.auto()
     HALTED = enum.auto()
     INPUT_BLOCKED = enum.auto()
+    PAUSED = enum.auto()  # On breakpoint or quit. Will resume on next run.
 
 
 class Vm:
@@ -16,6 +17,7 @@ class Vm:
         self.state = State.READY
         self.reader = io.StringIO()
         self.writer = io.StringIO()
+        self.breakpoints = set()
 
     @classmethod
     def from_file(cls, file: str) -> "Vm":
@@ -62,10 +64,47 @@ class Vm:
         raise ValueError(f"Invalid number {i}")
 
     def run(self) -> None:
+        # Automatically resume on breakpoint/quit
+        if self.state == State.PAUSED:
+            self.state = State.READY
+
         while self.state == State.READY:
             self.step()
 
     def step(self) -> None:
+        # Custom commands
+        pos = self.reader.tell()
+        line = self.reader.readline()
+        command, *args = line.split(" ")
+        match command:
+            case "_quit":  # Quit
+                return
+            case "_dump":  # Dump
+                with open(args[0], "w") as f:
+                    f.write(str(self.dump()))
+            case "_set-breakpoint":
+                self.breakpoints.add(int(args[0]))
+            case "_clear-breakpoints":
+                self.breakpoints.clear()
+            case "_set-register":
+                register, value = args
+                self.memory[32768 + register] = value
+            case "_set-ip":
+                self.ip = int(args[0])
+            case _:
+                self.reader.seek(pos)
+        if self.reader.tell() != pos:
+            return
+
+        # Breakpoint
+        if self.ip in self.breakpoints:
+            if self.state == State.PAUSED:
+                # Automatically resume
+                self.state = State.READY
+            else:
+                self.state = State.PAUSED
+                return
+
         g = self.grab
         v = self.val
         op = g()
@@ -149,25 +188,33 @@ class Vm:
 
     def resume(self) -> None:
         print("--- Resuming VM ---")
-        # self.input("look\n")
         while True:
-            # assert self.state == State.READY
-            self.run()
+            if self.state == State.READY:
+                self.step()
+                print(self.output(), end="")
 
-            print(self.output())
-
-            if self.state == State.INPUT_BLOCKED:
-                # Parse Room
-                # self.input("look\n")
-                self.run()
-
+            elif self.state == State.INPUT_BLOCKED:
                 inp = input()
-                if inp == "q":  # Custom quit command
-                    break
-                if inp.startswith("d "):  # Custom dump command
-                    with open(inp.split(" ", 1)[1], "w") as f:
-                        f.write(str(self.dump()))
                 self.input(inp + "\n")
+
+                # command, *args = inp.split()
+                # match command:
+                #     case "_quit":  # Quit
+                #         break
+                #     case "_dump":  # Dump
+                #         with open(inp.split(" ", 1)[1], "w") as f:
+                #             f.write(str(self.dump()))
+                #     case "_set-breakpoint":
+                #         self.breakpoints.add(int(inp.split(" ", 1)[1]))
+                #     case "_clear-breakpoints":
+                #         self.breakpoints.clear()
+                #     case "_set-register":
+                #         register, value = args
+                #         self.memory[32768 + register] = value
+                #     case "_set-ip":
+                #         self.ip = args[0]
+                #     case _:  # Standard input
+                #         self.input(inp + "\n")
             else:
                 break
         print("--- VM Exited ---")
