@@ -65,36 +65,40 @@ class Vm:
 
     def run(self) -> None:
         # Automatically resume on breakpoint/quit
-        if self.state == State.PAUSED:
-            self.state = State.READY
+        # if self.state == State.PAUSED:
+        #     self.state = State.READY
 
-        while self.state == State.READY:
+        while True:
             self.step()
+            if self.state != State.READY:
+                break
 
     def step(self) -> None:
         # Custom commands
-        pos = self.reader.tell()
-        line = self.reader.readline()
-        command, *args = line.split(" ")
-        match command:
-            case "_quit":  # Quit
+        if self.state == State.PAUSED or self.memory[self.ip] == 20:
+            pos = self.reader.tell()
+            line = self.reader.readline().strip()
+            command, *args = line.split(" ")
+            print(f"{command=} {args=}")
+            match command:
+                case "_pause":  # Quit
+                    self.state = State.PAUSED
+                case "_dump":  # Dump
+                    with open(args[0], "w") as f:
+                        f.write(str(self.dump()))
+                case "_set-breakpoint":
+                    self.breakpoints.add(int(args[0]))
+                case "_clear-breakpoints":
+                    self.breakpoints.clear()
+                case "_set-register":
+                    register, value = args
+                    self.memory[32768 + int(register)] = int(value)
+                case "_set-ip":
+                    self.ip = int(args[0])
+                case _:
+                    self.reader.seek(pos)
+            if self.reader.tell() != pos:
                 return
-            case "_dump":  # Dump
-                with open(args[0], "w") as f:
-                    f.write(str(self.dump()))
-            case "_set-breakpoint":
-                self.breakpoints.add(int(args[0]))
-            case "_clear-breakpoints":
-                self.breakpoints.clear()
-            case "_set-register":
-                register, value = args
-                self.memory[32768 + register] = value
-            case "_set-ip":
-                self.ip = int(args[0])
-            case _:
-                self.reader.seek(pos)
-        if self.reader.tell() != pos:
-            return
 
         # Breakpoint
         if self.ip in self.breakpoints:
@@ -188,12 +192,16 @@ class Vm:
 
     def resume(self) -> None:
         print("--- Resuming VM ---")
-        while True:
-            if self.state == State.READY:
-                self.step()
-                print(self.output(), end="")
 
-            elif self.state == State.INPUT_BLOCKED:
+        # if self.state == State.PAUSED:
+        #     self.state = State.READY
+
+        while True:
+            # if self.state == State.READY:
+            self.step()
+            print(self.output(), end="")
+
+            if self.state == State.INPUT_BLOCKED:
                 inp = input()
                 self.input(inp + "\n")
 
@@ -215,7 +223,7 @@ class Vm:
                 #         self.ip = args[0]
                 #     case _:  # Standard input
                 #         self.input(inp + "\n")
-            else:
+            elif self.state != State.READY:
                 break
         print("--- VM Exited ---")
 

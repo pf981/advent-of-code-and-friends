@@ -55,7 +55,11 @@ actions = [
     "use corroded coin",
     "north",
     "take teleporter",
+    "_set-register 7 25734",
+    "_set-breakpoint 5500",
     "use teleporter",
+    "_set-register 0 6",
+    "_set-ip 5513",
     # "north",
     # "north",
     # "north",
@@ -90,6 +94,12 @@ actions = [
 from vm import State
 
 vm = Vm.from_file("./challenge.bin")
+vm.input("\n".join(actions) + "\n")
+# vm.input("\n".join(actions[:-5]) + "\n")
+vm.run()
+vm.resume()
+
+
 *pre_actions, last_action = actions
 vm.input("\n".join(pre_actions) + "\n")
 
