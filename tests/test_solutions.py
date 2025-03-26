@@ -3,7 +3,7 @@ import importlib
 import pytest
 
 hashes = [
-    "76ec2408e8fe3f1753c25db51efd8eb3",  # Not sure where this is from?
+    "76ec2408e8fe3f1753c25db51efd8eb3",
     "0e6aa7be1f68d930926d72b3741a145c",
     "7997a3b2941eab92c1c0345d5747b420",
     "186f842951c0dcfe8838af1e7222b7d4",

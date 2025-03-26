@@ -74,7 +74,7 @@ class Vm:
             pos = self.reader.tell()
             line = self.reader.readline().strip()
             command, *args = line.split(" ")
-            print(f"{command=} {args=}")
+            # print(f"{command=} {args=}")
             match command:
                 case "_quit":  # Quit
                     self.state = State.HALTED
