@@ -6,64 +6,29 @@ import heapq
 with open("2025_contest/13.txt") as f:
     inp = f.read()
 
-# inp = """STT -> MFP | 5
-# AIB -> ZGK | 6
-# ZGK -> KVX | 20
-# STT -> AFG | 4
-# AFG -> ZGK | 16
-# MFP -> BDD | 13
-# BDD -> AIB | 5
-# AXU -> MFP | 4
-# CLB -> BLV | 20
-# AIB -> BDD | 13
-# BLV -> AXU | 17
-# AFG -> CLB | 2"""
-
 m = collections.defaultdict(list)
 for line in inp.splitlines():
     src, _, dst, _, d = line.split()
-    d = int(d)
-    m[src].append(dst)
+    m[src].append((dst, int(d)))
 
-distances = {}
-q = collections.deque([(0, "STT")])
+distances = {"STT": 0}
+q = collections.deque(["STT"])
+d = 1
 while q:
     for _ in range(len(q)):
-        d, node = q.popleft()
-        if node in distances:
-            continue
-        distances[node] = d
-        for node2 in m[node]:
-            q.append((d + 1, node2))
+        node = q.popleft()
+        for node2, _ in m[node]:
+            if node2 in distances:
+                continue
+            distances[node2] = d
+            q.append(node2)
+    d += 1
 
-# print(distances)
 answer1 = math.prod(sorted(distances.values())[-3:])
 print(answer1)
 
 
 # Part 2
-
-with open("2025_contest/13.txt") as f:
-    inp = f.read()
-
-# inp = """STT -> MFP | 5
-# AIB -> ZGK | 6
-# ZGK -> KVX | 20
-# STT -> AFG | 4
-# AFG -> ZGK | 16
-# MFP -> BDD | 13
-# BDD -> AIB | 5
-# AXU -> MFP | 4
-# CLB -> BLV | 20
-# AIB -> BDD | 13
-# BLV -> AXU | 17
-# AFG -> CLB | 2"""
-
-m = collections.defaultdict(list)
-for line in inp.splitlines():
-    src, _, dst, _, d = line.split()
-    d = int(d)
-    m[src].append((dst, d))
 
 distances = {}
 heap = [(0, "STT")]
@@ -83,34 +48,7 @@ print(answer2)
 
 # Part 3
 
-
-with open("2025_contest/13.txt") as f:
-    inp = f.read()
-
-# inp = """STT -> MFP | 5
-# AIB -> ZGK | 6
-# ZGK -> KVX | 20
-# STT -> AFG | 4
-# AFG -> ZGK | 16
-# MFP -> BDD | 13
-# BDD -> AIB | 5
-# AXU -> MFP | 4
-# CLB -> BLV | 20
-# AIB -> BDD | 13
-# BLV -> AXU | 17
-# AFG -> CLB | 2"""
-
-m = collections.defaultdict(list)
-for line in inp.splitlines():
-    src, _, dst, _, d = line.split()
-    d = int(d)
-    m[src].append((dst, d))
-
-
-start_node = ...
 longest_cycle = 0
-seen = set()
-d = 0
 
 
 def backtrack(node):
