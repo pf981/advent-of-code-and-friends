@@ -48,31 +48,32 @@ print(answer2)
 
 # Part 3
 
-longest_cycle = 0
+
+def find_longest_cycle(m):
+    def backtrack(node):
+        nonlocal longest_cycle
+        nonlocal d
+        if node == start_node:
+            longest_cycle = max(longest_cycle, d)
+
+        for node2, dd in m[node]:
+            if node2 in seen:
+                continue
+
+            seen.add(node2)
+            d += dd
+            backtrack(node2)
+            d -= dd
+            seen.remove(node2)
+
+    longest_cycle = 0
+    for node in m.keys():
+        start_node = node
+        seen = set()
+        d = 0
+        backtrack(node)
+    return longest_cycle
 
 
-def backtrack(node):
-    global longest_cycle
-    global d
-    if node == start_node:
-        longest_cycle = max(longest_cycle, d)
-
-    for node2, dd in m[node]:
-        if node2 in seen:
-            continue
-
-        seen.add(node2)
-        d += dd
-        backtrack(node2)
-        d -= dd
-        seen.remove(node2)
-
-
-for node in m.copy():
-    start_node = node
-    seen = set()
-    d = 0
-    backtrack(node)
-
-answer3 = longest_cycle
+answer3 = find_longest_cycle(m)
 print(answer3)
