@@ -48,4 +48,3 @@ print(answer2)
 
 answer3 = math.prod(get_max_quality(0, 300))
 print(answer3)
- 
