@@ -1,38 +1,7 @@
 import collections
-
-
-with open("2025_contest/16.txt") as f:
-    inp = f.read()
-
-# inp = '''ozNxANO | 576690
-# pYNonIG | 323352
-# MUantNm | 422646
-# lOSlxki | 548306
-# SDJtdpa | 493637
-# ocWkKQi | 747973
-# qfSKloT | 967749
-# KGRZQKg | 661714
-# JSXfNAJ | 499862
-# LnDiFPd | 55528
-# FyNcJHX | 9047
-# UfWSgzb | 200543
-# PtRtdSE | 314969
-# gwHsSzH | 960026
-# JoyLmZv | 833936
-
-# MUantNm | 422646
-# FyNcJHX | 9047
-# '''
-
-tree_s, other = inp.split('\n\n')
-nodes = []
-for line in tree_s.splitlines():
-    code, _, artifact_id = line.split()
-    nodes.append((code, int(artifact_id)))
-
-
 import dataclasses
 from __future__ import annotations
+
 
 @dataclasses.dataclass
 class Node:
@@ -40,6 +9,7 @@ class Node:
     artifact_id: int
     right: 'Node' | None = None
     left: 'Node' | None = None
+
 
 def add_node(tree, node):
     if not tree:
@@ -51,6 +21,17 @@ def add_node(tree, node):
         tree.right = add_node(tree.right, node)
 
     return tree
+
+
+with open("2025_contest/16.txt") as f:
+    inp = f.read()
+
+tree_s, other = inp.split('\n\n')
+nodes = []
+for line in tree_s.splitlines():
+    code, _, artifact_id = line.split()
+    nodes.append((code, int(artifact_id)))
+
 
 dummy = Node('', -1, None, None)
 for code, artifact_id in nodes:
