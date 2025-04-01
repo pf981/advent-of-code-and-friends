@@ -112,6 +112,9 @@ for instruction, twist in zip(instructions, list(twists) + [""]):
 
             rot_cw(grids[faces[2]])
             rot_cw(grids[faces[2]])
+
+            rot_cw(grids[faces[3]])
+            rot_cw(grids[faces[3]])
         case "U":
             # FDBULR
             order = [3, 0, 1, 2, 4, 5]
@@ -120,24 +123,19 @@ for instruction, twist in zip(instructions, list(twists) + [""]):
 
             rot_cw(grids[faces[2]])
             rot_cw(grids[faces[2]])
+
+            rot_cw(grids[faces[1]])
+            rot_cw(grids[faces[1]])
         case "L":
             # FDBULR
             order = [4, 1, 5, 3, 2, 0]
             rot_cw(grids[faces[1]])
             rot_ccw(grids[faces[3]])
-
-            # TEST
-            rot_cw(grids[faces[2]])
-            rot_cw(grids[faces[2]])
         case "R":
             # FDBULR
             order = [5, 1, 4, 3, 0, 2]
             rot_cw(grids[faces[3]])
             rot_ccw(grids[faces[1]])
-
-            # TEST
-            rot_cw(grids[faces[2]])
-            rot_cw(grids[faces[2]])
         case "":
             order = list(range(6))
         case _:
@@ -164,6 +162,9 @@ print(answer2)
 # 59937121117711486063800 incorrect
 # 59937121117711486063800
 # 59336866583580282111800 incorrect
+# 58485578185116293274000 correct
+
+
 # Part 3
 
 # print(answer3)
