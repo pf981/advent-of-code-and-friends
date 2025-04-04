@@ -48,7 +48,7 @@ def get_next_positions(pos):
 
 
 @functools.cache
-def count_ways(pos):
+def count_ways2(pos):
     if pos == end_pos:
         return 1
     if pos[1] > end_pos[1]:
@@ -57,7 +57,7 @@ def count_ways(pos):
     result = 0
     moves = get_next_positions(pos)
     for pos2 in moves:
-        result += count_ways(pos2)
+        result += count_ways2(pos2)
     return result
 
 
@@ -98,7 +98,7 @@ for staircase_id, start, end, from_staircase, to_staircase in staircases:
         m[(staircase_id, end)].append((to_staircase, end))
 
 
-answer2 = count_ways(start_pos)
+answer2 = count_ways2(start_pos)
 print(answer2)
 
 
@@ -110,7 +110,7 @@ pos = start_pos
 rank = 0
 while pos != end_pos:
     for pos2 in sorted(get_next_positions(pos)):
-        ways = count_ways(pos2)
+        ways = count_ways2(pos2)
         if rank + ways < 100000000000000000000000000000:
             rank += ways
         else:
