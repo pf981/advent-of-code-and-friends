@@ -17,14 +17,9 @@ def count_ways(i):
     if i == 99:
         return 1
     if i > 99:
-        return None
+        return 0
 
-    result = 0
-    for di in possible_moves:
-        ways = count_ways(i + di)
-        if ways is not None:
-            result += ways
-    return result
+    return sum(count_ways(i + move) for move in possible_moves)
 
 
 answer1 = count_ways(0)
@@ -35,30 +30,26 @@ print(answer1)
 
 
 def get_next_positions(pos):
-    def _get_next_positions(pos, move):
-        if move == 0:
-            return {pos}
+    next_positions = set()
+    for move in possible_moves:
+        q = collections.deque([pos])
+        while q and move:
+            for _ in range(len(q)):
+                cur_pos = q.popleft()
+                q.extend(m[cur_pos])
+                for next_pos in m[cur_pos]:
+                    q.append(next_pos)
+            move -= 1
+        next_positions.update(q)
 
-        next_positions = set()
-        for pos2 in m[pos]:
-            next_positions.update(_get_next_positions(pos2, move - 1))
-        return next_positions
-
-    return {pos2 for move in possible_moves for pos2 in _get_next_positions(pos, move)}
+    return next_positions
 
 
 @functools.cache
 def count_ways2(pos):
     if pos == end_pos:
         return 1
-    if pos[1] > end_pos[1]:
-        return 0
-
-    result = 0
-    moves = get_next_positions(pos)
-    for pos2 in moves:
-        result += count_ways2(pos2)
-    return result
+    return sum(count_ways2(pos2) for pos2 in get_next_positions(pos))
 
 
 staircases = []
