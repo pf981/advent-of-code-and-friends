@@ -1,3 +1,4 @@
+import heapq
 import re
 
 
@@ -31,19 +32,27 @@ def count_debris(x, y, z, a, t):
         start_y = (y - t * vy) % 15
         start_z = (z - t * vz) % 60
         start_a = (a - t * va + 1) % 3 - 1
-        if (cx * start_x + cy * start_y + cz * start_z + ca * start_a) % denom == mod:
-            cnt += 1
+        cnt += (
+            cx * start_x + cy * start_y + cz * start_z + ca * start_a
+        ) % denom == mod
     return cnt
 
 
-def get_safe_path(start_life, start_pos, target):
-    positions = {(start_life, start_pos)}
+def get_safe_path(start_life, start_pos, target, pruned_nodes=1_000):
+    def score(pos, life):
+        return (sum(pos), life)
+
+    states = [(score(start_pos, start_life), start_life, start_pos)]
     t = 0
-    while positions:
-        next_positions = set()
-        for life, pos in positions:
+    while states:
+        seen = set()
+
+        # Heap contains the next set of states. Only keeps top pruned_nodes elements
+        heap = []
+        for _, life, pos in states:
             if pos == target:
                 return t
+
             for dx, dy, dz in [
                 (0, 0, 0),
                 (-1, 0, 0),
@@ -60,17 +69,25 @@ def get_safe_path(start_life, start_pos, target):
                     continue
                 if not (0 <= pos2[0] < 10 and 0 <= pos2[1] < 15 and 0 <= pos2[2] < 60):
                     continue
-                next_positions.add((life2, pos2))
+                if (life2, pos2) in seen:
+                    continue
+
+                seen.add((life2, pos2))
+
+                if len(heap) >= pruned_nodes:
+                    heapq.heappushpop(heap, (score(pos2, life2), life2, pos2))
+                else:
+                    heapq.heappush(heap, (score(pos2, life2), life2, pos2))
+        states = heap
 
         t += 1
-        positions = sorted(next_positions, key=lambda x: (x[1:], x[0]))[-10000:]
 
 
-answer2 = get_safe_path(0, (0, 0, 0), (9, 14, 59))
+answer2 = get_safe_path(start_life=0, start_pos=(0, 0, 0), target=(9, 14, 59))
 print(answer2)
 
 
 # Part 3
 
-answer3 = get_safe_path(3, (0, 0, 0), (9, 14, 59))
+answer3 = get_safe_path(start_life=3, start_pos=(0, 0, 0), target=(9, 14, 59))
 print(answer3)
