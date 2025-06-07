@@ -1,38 +1,37 @@
+from __future__ import annotations
+import collections
 import dataclasses
 import re
-import typing
 
 
 @dataclasses.dataclass
 class Node:
     rank: int
     symbol: str
-    left: typing.Optional["Node"]
-    right: typing.Optional["Node"]
+    left: Node | None
+    right: Node | None
 
 
-def get_levels(root):
-    levels = [[root]]
-    while True:
-        level = []
-        for node in levels[-1]:
+def get_message(root):
+    result = ""
+    q = collections.deque([root])
+    while q:
+        message = []
+        for _ in range(len(q)):
+            node = q.popleft()
+
+            message.append(node.symbol)
+
             if node.left:
-                level.append(node.left)
+                q.append(node.left)
             if node.right:
-                level.append(node.right)
-        if not level:
-            break
-        levels.append(level)
+                q.append(node.right)
 
-    result = []
-    best = ""
-    for level in levels:
-        line = "".join(node.symbol for node in level)
-        result.append(line)
+        message = "".join(message)
+        if len(message) > len(result):
+            result = message
 
-        if len(line) > len(best):
-            best = line
-    return best
+    return result
 
 
 def place_node(root, node):
@@ -65,7 +64,7 @@ for line in lines:
     left_root = place_node(left_root, Node(l_rank, l_symbol, None, None))
     right_root = place_node(right_root, Node(r_rank, r_symbol, None, None))
 
-answer1 = get_levels(left_root) + get_levels(right_root)
+answer1 = get_message(left_root) + get_message(right_root)
 print(answer1)
 
 
@@ -105,7 +104,7 @@ for line in lines:
     right_root = place_node(right_root, r_node)
 
 
-answer2 = get_levels(left_root) + get_levels(right_root)
+answer2 = get_message(left_root) + get_message(right_root)
 print(answer2)
 
 
@@ -147,5 +146,5 @@ for line in lines:
     right_root = place_node(right_root, r_node)
 
 
-answer3 = get_levels(left_root) + get_levels(right_root)
+answer3 = get_message(left_root) + get_message(right_root)
 print(answer3)
