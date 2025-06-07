@@ -1,4 +1,3 @@
-import collections
 import dataclasses
 import re
 import typing
@@ -36,19 +35,6 @@ def get_levels(root):
     return best
 
 
-with open("./story_1/input/q02_p1.txt") as f:
-    lines = f.read().splitlines()
-
-
-# lines = """ADD id=1 left=[10,A] right=[30,H]
-# ADD id=2 left=[15,D] right=[25,I]
-# ADD id=3 left=[12,F] right=[31,J]
-# ADD id=4 left=[5,B] right=[27,L]
-# ADD id=5 left=[3,C] right=[28,M]
-# ADD id=6 left=[20,G] right=[32,K]
-# ADD id=7 left=[4,E] right=[21,N]""".splitlines()
-
-
 def place_node(root, node):
     if root is None:
         return node
@@ -60,11 +46,13 @@ def place_node(root, node):
     return root
 
 
+with open("./story_1/input/everybody_codes_e1_q02_p1.txt") as f:
+    lines = f.read().splitlines()
+
 left_root = None
 right_root = None
 
 for line in lines:
-    print(f"{line=}")
     _id, l_rank, l_symbol, r_rank, r_symbol = re.match(
         r"ADD id=(-?[0-9]+) left=\[(-?[0-9]+),(.)\] right=\[(-?[0-9]+),(.)\]",
         line,
@@ -73,37 +61,25 @@ for line in lines:
     _id = int(_id)
     l_rank = int(l_rank)
     r_rank = int(r_rank)
-    # print(id, l_rank, l_symbol, r_rank, r_symbol)
 
     left_root = place_node(left_root, Node(l_rank, l_symbol, None, None))
     right_root = place_node(right_root, Node(r_rank, r_symbol, None, None))
-
 
 answer1 = get_levels(left_root) + get_levels(right_root)
 print(answer1)
 
 
-with open("./story_1/input/q02_p2.txt") as f:
+# Part 2
+
+
+with open("./story_1/input/everybody_codes_e1_q02_p2.txt") as f:
     lines = f.read().splitlines()
-
-# lines = """ADD id=1 left=[10,A] right=[30,H]
-# ADD id=2 left=[15,D] right=[25,I]
-# ADD id=3 left=[12,F] right=[31,J]
-# ADD id=4 left=[5,B] right=[27,L]
-# ADD id=5 left=[3,C] right=[28,M]
-# SWAP 1
-# SWAP 5
-# ADD id=6 left=[20,G] right=[32,K]
-# ADD id=7 left=[4,E] right=[21,N]""".splitlines()
-
 
 left_root = None
 right_root = None
 m = {}
 
 for line in lines:
-    print(f"{line=}")
-
     if line.startswith("SWAP"):
         _id = int(line.split()[1])
         l, r = m[_id]
@@ -119,7 +95,6 @@ for line in lines:
     _id = int(_id)
     l_rank = int(l_rank)
     r_rank = int(r_rank)
-    # print(id, l_rank, l_symbol, r_rank, r_symbol)
 
     l_node = Node(l_rank, l_symbol, None, None)
     r_node = Node(r_rank, r_symbol, None, None)
@@ -134,28 +109,17 @@ answer2 = get_levels(left_root) + get_levels(right_root)
 print(answer2)
 
 
-with open("./story_1/input/q02_p3.txt") as f:
+# Part 3
+
+
+with open("./story_1/input/everybody_codes_e1_q02_p3.txt") as f:
     lines = f.read().splitlines()
-
-# lines = """ADD id=1 left=[10,A] right=[30,H]
-# ADD id=2 left=[15,D] right=[25,I]
-# ADD id=3 left=[12,F] right=[31,J]
-# ADD id=4 left=[5,B] right=[27,L]
-# ADD id=5 left=[3,C] right=[28,M]
-# SWAP 1
-# SWAP 5
-# ADD id=6 left=[20,G] right=[32,K]
-# ADD id=7 left=[4,E] right=[21,N]
-# SWAP 2""".splitlines()
-
 
 left_root = None
 right_root = None
 m = {}
 
 for line in lines:
-    print(f"{line=}")
-
     if line.startswith("SWAP"):
         _id = int(line.split()[1])
         l, r = m[_id]
@@ -173,7 +137,6 @@ for line in lines:
     _id = int(_id)
     l_rank = int(l_rank)
     r_rank = int(r_rank)
-    # print(id, l_rank, l_symbol, r_rank, r_symbol)
 
     l_node = Node(l_rank, l_symbol, None, None)
     r_node = Node(r_rank, r_symbol, None, None)
