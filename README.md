@@ -4,7 +4,7 @@ Solutions to [https://codingquest.io/](https://codingquest.io/)
 
 ---
 
-## ⚙️ Setup Instructions
+## ⚙️ Setup
 
 This project uses [uv](https://docs.astral.sh/uv/) for dependency management.
 
