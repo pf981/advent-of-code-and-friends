@@ -12,5 +12,4 @@ for line in lines:
     wins = sum(num in winning_nums for num in nums)
     answer += prizes[wins]
 
-answer = answer
 print(answer)
