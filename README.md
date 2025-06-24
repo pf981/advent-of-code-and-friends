@@ -2,7 +2,9 @@
 
 Solutions to [https://codingquest.io/](https://codingquest.io/)
 
-## Setup
+---
+
+## ⚙️ Setup Instructions
 
 This project uses [uv](https://docs.astral.sh/uv/) for dependency management.
 
@@ -15,18 +17,14 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 ### Installation
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/pf981/coding-quest-solutions.git
-   cd coding-quest-solutions
-   ```
+```bash
+git clone https://github.com/pf981/coding-quest-solutions.git
+cd coding-quest-solutions
+uv sync
+```
 
-2. Install dependencies:
-   ```bash
-   uv sync
-   ```
 
-## Usage
+## 🚀 Usage
 
 ### Running Solutions
 
@@ -45,20 +43,3 @@ uv run pytest
 ```
 
 The tests verify that each solution produces the correct answer by comparing SHA256 hashes.
-
-## Project Structure
-
-```
-coding-quest-solutions/
-├── solutions/
-│   ├── __init__.py
-│   ├── 01.py
-│   ├── 02.py
-│   └── ...
-├── downloader/
-│   ├── __init__.py
-├── tests/
-│   └── test_solutions.py
-├── pyproject.toml
-└── README.md
-```
