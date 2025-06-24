@@ -44,7 +44,7 @@ uv run pytest
 
 The tests verify that each solution produces the correct answer by comparing SHA256 hashes.
 
-Some tests are marked as slow and are skipped by default. To run these as well, use the --runslow flag:
+Some tests are marked as slow and are skipped by default. To run these as well, use the `--runslow` flag:
 ```bash
-uv run pytest -- --runslow
+uv run pytest --runslow
 ```
