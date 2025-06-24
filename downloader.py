@@ -40,15 +40,15 @@ def get(url: str, filename: str, force: bool = False) -> str:
         else:
             log.debug("get cache hit %s", path)
             return data.rstrip("\r\n")
-
-        try:
-            with urllib.request.urlopen(url) as f:
-                data = f.read().decode("utf-8")
-        except urllib.error.HTTPError as e:
-            #  body = e.read().decode()
-            raise e
     else:
         log.debug("force - skipping cache check for %s", path)
+
+    try:
+        with urllib.request.urlopen(url) as f:
+            data = f.read().decode("utf-8")
+    except urllib.error.HTTPError as e:
+        #  body = e.read().decode()
+        raise e
 
     log.debug("saving file %s", path)
     atomic_write_file(path, data)

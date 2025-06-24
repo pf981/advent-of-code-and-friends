@@ -1,27 +1,28 @@
 import itertools
 import string
 
-with open("./2024/input/03-11.txt") as f:
-    text = f.read()
+import downloader
+
+text = downloader.get_puzzle(33)
 
 _, key, _, message = text.splitlines()
 key = key.split(": ")[1]
 message = message.split(": ")[1]
 
-grid = []
-for c in key + string.ascii_lowercase:
-    if c == "j":
-        c = "i"
-    if c not in grid:
-        grid.append(c)
+grid_l = []
+for ch in key + string.ascii_lowercase:
+    if ch == "j":
+        ch = "i"
+    if ch not in grid_l:
+        grid_l.append(ch)
 
-grid = list(itertools.batched(grid, 5))
+grid = list(itertools.batched(grid_l, 5))
 m = {}
 for r in range(len(grid)):
     for c in range(len(grid[0])):
         m[grid[r][c]] = (r, c)
 
-answer = []
+answer_l = []
 for word in message.split():
     assert len(word) % 2 == 0
 
@@ -46,7 +47,7 @@ for word in message.split():
         decoded.append(grid[r1][c2])
         decoded.append(grid[r2][c1])
 
-    answer.append("".join(decoded))
+    answer_l.append("".join(decoded))
 
-answer = " ".join(answer)
+answer = " ".join(answer_l)
 print(answer)

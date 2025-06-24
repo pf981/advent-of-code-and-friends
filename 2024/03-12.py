@@ -1,5 +1,7 @@
 import dataclasses
 
+import downloader
+
 
 @dataclasses.dataclass
 class Folder:
@@ -30,8 +32,13 @@ def get_deletion_size(
     return result
 
 
-with open("./2024/input/03-12.txt") as f:
-    lines = f.read().splitlines()
+# with open("./2024/input/03-12.txt") as f:
+# lines = f.read().splitlines()
+
+# Puzzle 34 uses different url
+lines = downloader.get(
+    "https://codingquest.io/2024/day07_files_to_scan.txt", "34.txt", True
+).splitlines()
 
 
 folders = []
@@ -44,8 +51,8 @@ while lines:
         parts = lines.pop()[3:].split()
 
         if len(parts) == 2:
-            name, size = parts
-            size = int(size)
+            name, size_str = parts
+            size = int(size_str)
             if is_deletable(name):
                 folder.deletable += size
             else:

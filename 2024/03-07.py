@@ -1,7 +1,8 @@
 import math
 
-with open("./2024/input/03-07.txt") as f:
-    lines = f.read().splitlines()
+import downloader
+
+lines = downloader.get_puzzle(31).splitlines()
 
 positions = []
 for line in lines[1:]:

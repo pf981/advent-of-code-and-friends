@@ -1,5 +1,6 @@
 import functools
 
+# Puzzle 35 has no input data
 cables = [40, 12, 2, 1]
 
 

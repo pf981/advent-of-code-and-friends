@@ -1,5 +1,6 @@
-with open("./2024/input/03-08.txt") as f:
-    text = f.read()
+import downloader
+
+text = downloader.get_puzzle(32)
 
 distance_lines, route_lines = (part.splitlines() for part in text.split("\n\n"))
 pois = distance_lines[0].split()
@@ -11,8 +12,8 @@ for line, poi in zip(distance_lines[1:], pois):
 
 answer = 0
 for line in route_lines:
-    _, route = line.split(": ")
-    route = route.split(" -> ")
+    _, route_str = line.split(": ")
+    route = route_str.split(" -> ")
 
     poi = "base"
     for next_poi in route:

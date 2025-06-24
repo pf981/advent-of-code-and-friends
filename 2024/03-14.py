@@ -1,7 +1,8 @@
 import collections
 
-with open("./2024/input/03-14.txt") as f:
-    text = f.read()
+import downloader
+
+text = downloader.get_puzzle(36)
 
 
 def solve(grids: list[list[str]]) -> int:
@@ -42,6 +43,8 @@ def solve(grids: list[list[str]]) -> int:
                 q.append((z, r2, c2))
             nodes -= 1
         d += 1
+
+    return -1  # Stop mypy complaining
 
 
 grids = [grid.split() for grid in text.split("\n\n")]

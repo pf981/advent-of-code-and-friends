@@ -1,8 +1,9 @@
-with open("./2024/input/03-05.txt") as f:
-    lines = f.read().splitlines()
+import downloader
+
+lines = downloader.get_puzzle(29).splitlines()
 
 
-def extract(packet: int, i: int, size: int = 1) -> int:
+def extract(packet: str, i: int, size: int = 1) -> int:
     return int(packet[(i - 1) * 2 : (i - 1 + size) * 2], 16)
 
 

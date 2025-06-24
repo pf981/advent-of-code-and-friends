@@ -1,8 +1,8 @@
 import itertools
 
-with open("./2024/input/03-06.txt") as f:
-    nums = [int(num) for num in f.read().split()]
+import downloader
 
+nums = [int(num) for num in downloader.get_puzzle(30).split()]
 
 it = itertools.cycle(".#")
 output = []
