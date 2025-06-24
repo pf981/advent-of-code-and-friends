@@ -8,7 +8,7 @@ hashes = [
     "7688b6ef52555962d008fff894223582c484517cea7da49ee67800adc7fc8866",
     "aa84045a62389df437a5f9534fbb1fccdeef595969ff204deb28278e05ddd9e4",
     "56be9ffe5554e1314c50757659641fb66dfd2b062c1bfdde7e3becab985e2190",
-    "xxx",
+    "724952e7a957018831758c99dd355b3407516431ae584d1f5b485fb578748829",
     "xxx",
     "xxx",
     "xxx",
@@ -42,8 +42,15 @@ hashes = [
     "1e472b39b105d349bcd069c4a711b44a2fffb8e274714bb07ecfff69a9a7f67b",
 ]
 
+slow_puzzles = {5}
 
-@pytest.mark.parametrize("puzzle_id, expected_hash", enumerate(hashes, 1))
+params = [
+    pytest.param(i, h, marks=(pytest.mark.slow if i in slow_puzzles else ()))
+    for i, h in enumerate(hashes, 1)
+]
+
+
+@pytest.mark.parametrize("puzzle_id, expected_hash", params)
 def test_solutions(puzzle_id: str, expected_hash: str) -> None:
     try:
         module = importlib.import_module(f"solutions.{puzzle_id:02d}")
