@@ -4,7 +4,10 @@ version = "0.1.0"
 description = "Solutions to https://codingquest.io/"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "numpy>=2.3.1",
+    "pillow>=11.2.1",
+]
 
 [dependency-groups]
 dev = [
