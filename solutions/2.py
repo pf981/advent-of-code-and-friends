@@ -20,10 +20,10 @@ assert to_coord(start_r, start_c) == "(3, 21)"
 
 directions = []
 for line in instructions:
-    for c in line:
-        if c not in "NESW":
+    for ch in line:
+        if ch not in "NESW":
             continue
-        directions.append(c)
+        directions.append(ch)
 
 r, c = start_r, start_c
 for d in directions:
