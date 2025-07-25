@@ -30,3 +30,4 @@ answer <-
   filter(customerid == candidates$customerid[1]) |>
   pull(phone)
 print(answer)
+#> [1] "607-231-3605"

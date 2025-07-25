@@ -30,3 +30,4 @@ cat_lady <-
 
 answer <- cat_lady$phone
 print(answer)
+#> "631-507-6048"
