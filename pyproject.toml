@@ -1,0 +1,7 @@
+[project]
+name = "xint-solutions"
+version = "0.1.0"
+description = "Solutions to https://salza.dk/xint/"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
