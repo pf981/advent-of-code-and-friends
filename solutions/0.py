@@ -22,17 +22,20 @@ def contacts(name: str) -> Contact | None:
     if result.strip() == "No match":
         return None
 
-    kwargs: dict[str, str | datetime.date] = {}
     for line in result.splitlines():
         key, value = line.split(": ")
         key = key.lower()
 
-        if key == "birthdate":
-            kwargs[key] = datetime.datetime.strptime(value, "%Y-%m-%d").date()
+        if key == "name":
+            name = value
+        elif key == "city":
+            city = value
+        elif key == "birthdate":
+            birthdate = datetime.datetime.strptime(value, "%Y-%m-%d").date()
         else:
-            kwargs[key] = value
+            raise ValueError(f"Unexpected key, {key}, in contacts response: {result}")
 
-    return Contact(**kwargs)
+    return Contact(name=name, city=city, birthdate=birthdate)
 
 
 def message(content: str) -> str:
