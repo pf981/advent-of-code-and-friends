@@ -5,7 +5,6 @@ This repository contains Python scripts to solve [[X]-Int](https://salza.dk/xint
 ## 📁 Project Structure
 
 - `solutions/`: Python scripts implementing solutions for each level.
-- `tests/`: Pytest-based tests.
 
 ## 🚀 Getting Started
 
@@ -24,10 +23,9 @@ This repository contains Python scripts to solve [[X]-Int](https://salza.dk/xint
    cd xint-solutions
    ```
 
-## 🧪 Running Tests
-
-Run all test cases with:
+## 💻 Running The Solutions
 
 ```bash
-uv run pytest
+uv run solutions/0.py
+uv run solutions/1.py
 ```
