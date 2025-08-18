@@ -5,9 +5,7 @@ WITH child_wishes AS (
         wl.submitted_date,
         json_extract(wl.wishes, '$.first_choice') AS first_choice,
         json_extract(wl.wishes, '$.second_choice') AS second_choice,
-        -- first element of colors (SQLite arrays are 0-based)
         json_extract(wl.wishes, '$.colors[0]') AS favorite_color,
-        -- count colors using json_each
         (
           SELECT COUNT(*) 
           FROM json_each(json_extract(wl.wishes, '$.colors'))
