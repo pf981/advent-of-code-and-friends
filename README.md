@@ -7,18 +7,18 @@ A collection of solutions to various coding challenges and puzzles, all in one p
 | 📂 Directory | 🌐 Challenge Platform | 📝 Description |
 |--------------|----------------------|------------------|
 | [`advent-of-code/`](advent-of-code/) | [Advent of Code](https://adventofcode.com/) | Annual December programming advent calendar |
-| [`everybody-codes/`](everybody-codes/) | [Everybody Codes](https://everybody.codes/) | Programming challenges by the creators of Advent of Code |
-| [`marches-and-gnats/`](marches-and-gnats/) | Marches and Gnats | Competitive programming challenges |
-| [`pi-coding-quest/`](pi-coding-quest/) | Pi Coding Quest | Mathematical programming challenges |
-| [`xint/`](xint/) | Xint Challenge | Logic and algorithmic puzzles |
-| [`coding-mystery/`](coding-mystery/) | Coding Mystery | Mystery-themed programming challenges |
+| [`everybody-codes/`](everybody-codes/) | [Everybody Codes](https://everybody.codes/) | Puzzles similar to Advent of Code |
+| [`marches-and-gnats/`](marches-and-gnats/) | [Marches and Gnats](https://mng.quest/) | Puzzles using a primitive turing machine |
+| [`pi-coding-quest/`](pi-coding-quest/) | [Pi Coding Quest](https://ivanr3d.com/projects/pi/) | Coding challenges inspired by the mystical number Pi |
+| [`xint/`](xint/) | [[X]INT](https://salza.dk/xint/) | An API-Based game for programmers and hackers |
+| [`coding-mystery/`](coding-mystery/) | [Coding Mystery](https://codingmystery.com/) | Escape-room-inspired mysteries full of coding puzzles, programming challenges, and problem-solving |
 | [`project-euler/`](project-euler/) | [Project Euler](https://projecteuler.net/) | Mathematical computation problems |
-| [`hanukkah-of-data/`](hanukkah-of-data/) | [Hanukkah of Data](https://hanukkah.bluebird.sh/) | Data analysis and SQL challenges |
-| [`coding-quest/`](coding-quest/) | Coding Quest | Programming competition challenges |
-| [`codyssi/`](codyssi/) | Codyssi Challenge | Algorithm and data structure problems |
-| [`advent-of-sql/`](advent-of-sql/) | [Advent of SQL](https://adventofsql.com/) | Daily SQL challenges |
+| [`hanukkah-of-data/`](hanukkah-of-data/) | [Hanukkah of Data](https://hanukkah.bluebird.sh/) | Data challenges |
+| [`coding-quest/`](coding-quest/) | [Coding Quest](https://codingquest.io/) | Annual programming puzzles |
+| [`codyssi/`](codyssi/) | [Codyssi](https://www.codyssi.com/) | Puzzles similar to Advent of Code |
+| [`advent-of-sql/`](advent-of-sql/) | [Advent of SQL](https://adventofsql.com/) | SQL puzzles |
 | [`exercism/`](exercism/) | [Exercism](https://exercism.org/) | Coding practice and mentorship platform |
-| [`synacor-challenge/`](synacor-challenge/) | [Synacor Challenge](https://challenge.synacor.com/) | Virtual machine and reverse engineering puzzle |
+| [`synacor-challenge/`](synacor-challenge/) | [Synacor Challenge](https://github.com/Aneurysm9/vm_challenge) | Virtual machine and reverse engineering puzzle |
 
 ## 🎯 About
 
