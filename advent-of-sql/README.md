@@ -10,7 +10,7 @@ This project organizes SQL solutions by year and day, with example input data fo
 
 ### Directory Structure
 
-* `solutions/YYYY/DD.sql` – your solution SQL files (e.g., `solutions/2024/01.sql`)
+* `solutions/YYYY/DD.sql` – solution SQL files (e.g., `solutions/2024/01.sql`)
 * `data/YYYY/advent_of_sql_day_D.sql` – input SQL setup files for each day (e.g., `data/2024/advent_of_sql_day_1.sql`)
 * `tests/test_solutions.py` – pytest runner
 
@@ -24,13 +24,11 @@ sqlite3
 .read solutions/2024/01.sql
 ```
 
-This will execute the setup and the solution in a temporary SQLite database.
-
 ---
 
 ### Running Tests (Optional)
 
-Pytest is included to automatically verify solutions using SQLite3.
+Pytest is included to automatically verify solutions using sqlite3.
 
 Install uv:
 ```bash
