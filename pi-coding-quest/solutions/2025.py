@@ -44,8 +44,6 @@ for line in text.splitlines()[1:]:
     if price_str.replace(".", "") not in pi:
         continue
 
-    manipulated.add(ticker)
-
     price = float(price_str)
     if not result:
         result = price
@@ -82,9 +80,9 @@ letters = "".join(cipher_map.split())
 
 answer2 = ""
 for line in text.splitlines()[1:]:
-    _, price, ticker = line.split()
+    _, price_str, ticker = line.split()
     if ticker in target_tickers:
-        i = int(price.replace(".", "")) % len(letters)
+        i = int(price_str.replace(".", "")) % len(letters)
         answer2 += letters[i]
 
 print(answer2)
