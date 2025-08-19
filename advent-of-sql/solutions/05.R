@@ -9,8 +9,6 @@ read_file("./data/2024/advent_of_sql_day_5.sql") |>
   discard(\(line) line == "") |>
   walk(DBI::dbExecute, conn = con)
 
-DBI::dbListTables(con)
-
 tbl(con, "toy_production") |>
   collect() |>
   arrange(production_date) |>
