@@ -30,3 +30,7 @@ tbl(con, "toy_production") |>
   select(toy_id, added_tags, unchanged_tags, removed_tags) |>
   unlist() |>
   cat(sep = "\n")
+# 2726
+# 98
+# 2
+# 0
