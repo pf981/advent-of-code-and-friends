@@ -6,11 +6,12 @@ This repository contains my solutions to the *Advent of SQL* challenges, impleme
 
 * **Install R** (version ≥ 4.0 recommended).
 * Optionally, use **RStudio**.
-* Install the **tidyverse** package:
+* Install the **tidyverse** and **RSQLite** packages:
 
-  ```r
-  install.packages("tidyverse")
-  ```
+```r
+install.packages("tidyverse")
+install.packages("RSQLite")
+```
 
 ## 📂Repository Structure
 
