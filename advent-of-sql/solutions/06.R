@@ -10,7 +10,7 @@ read_file("./data/2024/advent_of_sql_day_6.sql") |>
   walk(DBI::dbExecute, conn = con)
 
 gifts <- tbl(con, "gifts") |> collect()
-mean_gift_price <-  gifts |> pull(price) |> mean()
+mean_gift_price <- gifts |> pull(price) |> mean()
 
 tbl(con, "children") |>
   collect() |>
