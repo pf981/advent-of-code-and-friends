@@ -7,7 +7,7 @@ read_file("./data/2024/advent_of_sql_day_1.sql") |>
   str_split_1(";") |>
   str_trim() |>
   discard(\(line) line == "") |>
-  map(DBI::dbExecute, conn = con)
+  walk(DBI::dbExecute, conn = con)
 
 result <-
   tbl(con, "wish_lists") |>
