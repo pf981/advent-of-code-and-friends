@@ -18,4 +18,3 @@ tbl(con, "children") |>
   filter(price > mean_gift_price) |>
   arrange(price)
 # Hobart
-  
