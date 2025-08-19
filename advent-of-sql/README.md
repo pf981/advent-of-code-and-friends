@@ -1,6 +1,6 @@
 # Advent of SQL Solutions
 
-Solutions to [Advent of SQL](https://adventofsql.com/challenges/) using SQLite.
+Solutions to [Advent of SQL](https://adventofsql.com/challenges/) using R.
 
 ---
 
