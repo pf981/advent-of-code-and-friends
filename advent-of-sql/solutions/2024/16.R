@@ -14,7 +14,8 @@ read_file("./data/2024/advent_of_sql_day_16.sql") |>
   discard(str_equal, "") |>
   walk(DBI::dbExecute, conn = con)
 
-sleigh_locations <- tbl(con, "sleigh_locations") |>
+sleigh_locations <-
+  tbl(con, "sleigh_locations") |>
   collect() |>
   mutate(
     coordinate = coordinate |>
@@ -25,7 +26,8 @@ sleigh_locations <- tbl(con, "sleigh_locations") |>
   unnest_wider(coordinate) |>
   st_as_sf(coords = c("lon", "lat"), crs = 4326)
 
-areas <- tbl(con, "areas") |>
+areas <-
+  tbl(con, "areas") |>
   collect() |>
   mutate(
     polygon = polygon |> str_extract("POLYGON\\(.*\\)")
