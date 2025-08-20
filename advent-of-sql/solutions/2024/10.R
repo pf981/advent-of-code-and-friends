@@ -14,7 +14,6 @@ read_file("./data/2024/advent_of_sql_day_10.sql") |>
 
 tbl(con, "Drinks") |>
   collect() |>
-  # select(-drink_id) |>
   pivot_wider(
     id_cols = date,
     names_from = drink_name,
