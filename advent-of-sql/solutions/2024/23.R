@@ -9,7 +9,6 @@ read_file("./data/2024/advent_of_sql_day_23.sql") |>
   discard(str_equal, "") |>
   walk(DBI::dbExecute, conn = con)
 
-
 vals <- tbl(con, "sequence_table") |> collect() |> pull(id)
 
 seq(from = 1, to = max(vals)) |>
