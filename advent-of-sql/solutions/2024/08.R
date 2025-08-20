@@ -10,11 +10,17 @@ read_file("./data/2024/advent_of_sql_day_8.sql") |>
   walk(DBI::dbExecute, conn = con)
 
 managers <- tbl(con, "staff") |> collect() |> pull(manager_id)
+managers[1] <- 1
+
 staff_ids <- seq_along(managers)
-result <- 0
+
+dp <- rep_along(managers, NA_integer_)
+dp[1] <- 1
+
 while (!is_empty(staff_ids)) {
-  staff_ids <- managers[staff_ids] |> discard(is.na)
-  result <- result + 1
+  dp[staff_ids] <- 1 + dp[managers[staff_ids]]
+  staff_ids <- staff_ids |> keep(\(staff_id) is.na(dp[staff_id]))
 }
-result
+
+max(dp)
 # 24
