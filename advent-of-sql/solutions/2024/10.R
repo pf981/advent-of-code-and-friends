@@ -10,8 +10,6 @@ read_file("./data/2024/advent_of_sql_day_10.sql") |>
   discard(\(line) line == "") |>
   walk(DBI::dbExecute, conn = con)
 
-
-
 tbl(con, "Drinks") |>
   collect() |>
   pivot_wider(
