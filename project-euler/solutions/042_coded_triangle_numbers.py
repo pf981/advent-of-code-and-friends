@@ -1,12 +1,15 @@
 import re
 
+
 def word_sum(word):
-    return sum(ord(ch) - ord('a') + 1 for ch in word.lower())
+    return sum(ord(ch) - ord("a") + 1 for ch in word.lower())
+
 
 def get_words():
-    with open("p042_words.txt") as in_file:
+    with open("data/p042_words.txt") as in_file:
         text = in_file.read()
-        return re.findall("\w+", text)
+        return re.findall(r"\w+", text)
+
 
 def main():
     # Generate the first 500 triangular numbers
@@ -16,5 +19,6 @@ def main():
     answer = sum(1 for word in get_words() if word_sum(word) in triangular_numbers)
     print(answer)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

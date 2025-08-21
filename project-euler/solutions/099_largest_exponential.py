@@ -5,13 +5,17 @@ import math
 import re
 import numpy as np
 
+
 def main():
-    text = open("p099_base_exp.txt").read()
-    pairs = [(int(base), int(exponent)) for base, exponent in re.findall("(\d+),(\d+)", text)]
+    text = open("data/p099_base_exp.txt").read()
+    pairs = [
+        (int(base), int(exponent))
+        for base, exponent in re.findall(r"(\d+),(\d+)", text)
+    ]
 
     answer = np.argmax([exponent * math.log(base) for base, exponent in pairs]) + 1
     print(answer)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

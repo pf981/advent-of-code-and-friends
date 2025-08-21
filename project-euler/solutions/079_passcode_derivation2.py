@@ -1,14 +1,16 @@
 # This is a significantly more efficient solution that uses toposort to sort the graph
-from toposort import toposort
 import collections
+import graphlib
 import re
+
 
 def connections(attempt):
     # digit1 is the key
     for i, digit1 in enumerate(attempt):
         # digit2 is the value. The key must be followed by the value in the password
-        for digit2 in attempt[i+1:]:
+        for digit2 in attempt[i + 1 :]:
             yield digit1, digit2
+
 
 def make_graph(all_attempts):
     """
@@ -24,11 +26,12 @@ def make_graph(all_attempts):
 
     return graph
 
+
 def main():
-    with open("p079_keylog.txt") as in_file:
+    with open("data/p079_keylog.txt") as in_file:
         text = in_file.read()
 
-    all_attempts = re.findall("(\d\d\d)", text)
+    all_attempts = re.findall(r"(\d\d\d)", text)
 
     # Assume that each of the digits only appears once. If this fails, then the assumption is wrong.
     possible_digits = set(digit for attempt in all_attempts for digit in attempt)
@@ -36,16 +39,17 @@ def main():
     # graph is a dictionary whose values are the digits that must follow the key
     graph = make_graph(all_attempts)
 
-    sorted_graph = toposort(graph)
+    sorted_graph = graphlib.TopologicalSorter(graph).static_order()
 
     # sorted_graph is a list of single-element sets.
     # This line converts that into a string
-    backwards_answer = ''.join([next(iter(item)) for item in sorted_graph])
+    backwards_answer = "".join([next(iter(item)) for item in sorted_graph])
 
     # However, due to the way we sorted it, the answer is backwards
     answer = backwards_answer[::-1]
 
     print(answer)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

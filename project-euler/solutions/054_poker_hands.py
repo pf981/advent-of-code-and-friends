@@ -3,7 +3,10 @@ import re
 
 # The higher the number, the greater the value of the hand
 # No need for royal flush as it is just a special case of a straight flush
-BaseRanks = enum.IntEnum('BaseRanks', 'high_card one_pair two_pairs three_of_a_kind straight flush full_house four_of_a_kind straight_flush')
+BaseRanks = enum.IntEnum(
+    "BaseRanks",
+    "high_card one_pair two_pairs three_of_a_kind straight flush full_house four_of_a_kind straight_flush",
+)
 
 
 def generate_value_relation():
@@ -16,11 +19,11 @@ def generate_value_relation():
     value_relation = {}
 
     # Picture cards
-    value_relation['T'] = 10
-    value_relation['J'] = 11
-    value_relation['Q'] = 12
-    value_relation['K'] = 13
-    value_relation['A'] = 14
+    value_relation["T"] = 10
+    value_relation["J"] = 11
+    value_relation["Q"] = 12
+    value_relation["K"] = 13
+    value_relation["A"] = 14
 
     # Number cards
     for value in range(1, 10):
@@ -47,7 +50,7 @@ class Card:
 
 
 def get_hand(hand_string):
-    hand = [Card(card_string) for card_string in re.findall("\w\w", hand_string)]
+    hand = [Card(card_string) for card_string in re.findall(r"\w\w", hand_string)]
     return sorted(hand, key=lambda card: card.value, reverse=True)
 
 
@@ -65,7 +68,9 @@ def rank_hand(hand):
         base_rank = BaseRanks.flush
 
     # Straight
-    if all(card.value == hand[i-1].value - 1 for i, card in enumerate(hand[1:], start=1)):
+    if all(
+        card.value == hand[i - 1].value - 1 for i, card in enumerate(hand[1:], start=1)
+    ):
         if base_rank == BaseRanks.flush:
             base_rank = BaseRanks.straight_flush
         else:
@@ -74,16 +79,20 @@ def rank_hand(hand):
 
     # Four of a kind
     for i, card in enumerate(hand[3:], start=3):
-        if card.value == hand[i-1].value == hand[i-2].value == hand[i-3].value:
+        if card.value == hand[i - 1].value == hand[i - 2].value == hand[i - 3].value:
             base_rank = BaseRanks.four_of_a_kind
-            secondary_rank = [card.value] + [c.value for c in hand if c.value != card.value]
+            secondary_rank = [card.value] + [
+                c.value for c in hand if c.value != card.value
+            ]
             return tuple([int(base_rank)] + secondary_rank)
 
     # Three of a kind
     for i, card in enumerate(hand[2:], start=2):
-        if card.value == hand[i-1].value == hand[i-2].value:
+        if card.value == hand[i - 1].value == hand[i - 2].value:
             base_rank = BaseRanks.three_of_a_kind
-            secondary_rank = [card.value] + [c.value for c in hand if c.value != card.value]
+            secondary_rank = [card.value] + [
+                c.value for c in hand if c.value != card.value
+            ]
             break
 
     # Pair
@@ -96,18 +105,28 @@ def rank_hand(hand):
             continue
 
         # Bug if there's a 4 4 2 2 2
-        if card.value == hand[i-1].value:
+        if card.value == hand[i - 1].value:
             if base_rank == BaseRanks.three_of_a_kind:
                 base_rank = BaseRanks.full_house
-                secondary_rank = [secondary_rank[0], card.value] + [c.value for c in hand if c.value != card.value and c.value != secondary_rank[0]]
+                secondary_rank = [secondary_rank[0], card.value] + [
+                    c.value
+                    for c in hand
+                    if c.value != card.value and c.value != secondary_rank[0]
+                ]
                 return tuple([int(base_rank)] + secondary_rank)
             elif base_rank == BaseRanks.one_pair:
                 base_rank = BaseRanks.two_pairs
-                secondary_rank = [secondary_rank[0], card.value] + [c.value for c in hand if c.value != card.value and c.value != secondary_rank[0]]
+                secondary_rank = [secondary_rank[0], card.value] + [
+                    c.value
+                    for c in hand
+                    if c.value != card.value and c.value != secondary_rank[0]
+                ]
                 return tuple([int(base_rank)] + secondary_rank)
             else:
                 base_rank = BaseRanks.one_pair
-                secondary_rank = [card.value] + [c.value for c in hand if c.value != card.value]
+                secondary_rank = [card.value] + [
+                    c.value for c in hand if c.value != card.value
+                ]
 
     if not base_rank:
         base_rank = BaseRanks.high_card
@@ -150,14 +169,17 @@ def unit_tests():
 def main():
     # unit_tests()
 
-    with open("p054_poker.txt") as in_file:
+    with open("data/p054_poker.txt") as in_file:
         text = in_file.read()
 
     all_hands_string = re.findall("(.. .. .. .. ..) (.. .. .. .. ..)", text)
-    all_hands = [(get_hand(hand1), get_hand(hand2)) for hand1, hand2 in all_hands_string]
+    all_hands = [
+        (get_hand(hand1), get_hand(hand2)) for hand1, hand2 in all_hands_string
+    ]
 
     answer = sum(1 for hand1, hand2 in all_hands if rank_hand(hand1) > rank_hand(hand2))
     print(answer)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

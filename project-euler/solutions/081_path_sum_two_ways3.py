@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def iterate_zigzag(matrix):
     """
     Iterates over the matrix in the following order
@@ -38,17 +39,18 @@ def length_of_shortest_path(matrix):
     # update each element so that they equal their value plus the minimum of
     # the element to the right or down
     for x, y in iterate_zigzag(matrix):
-        right = matrix[x+1][y] if x+1 < len(matrix) else None
-        down = matrix[x][y+1] if y+1 < len(matrix) else None
+        right = matrix[x + 1][y] if x + 1 < len(matrix) else None
+        down = matrix[x][y + 1] if y + 1 < len(matrix) else None
         matrix[x][y] += min_of_not_none(right, down)
 
     return matrix[0][0]
 
 
 def main():
-    matrix = np.loadtxt("p081_matrix.txt", dtype=int, delimiter=',')
+    matrix = np.loadtxt("data/p081_matrix.txt", dtype=int, delimiter=",")
     answer = length_of_shortest_path(matrix)
     print(answer)
 
-if __name__ == '__main__':
-  main()
+
+if __name__ == "__main__":
+    main()
