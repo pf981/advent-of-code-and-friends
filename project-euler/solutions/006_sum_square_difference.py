@@ -1,11 +1,4 @@
-RANGE_MAX = 101
-
-def main():
-    sum_of_squares = sum((x*x for x in range(RANGE_MAX)))
-    square_of_sum = pow(sum((x for x in range(RANGE_MAX))), 2)
-    answer = square_of_sum - sum_of_squares
-    print(answer)
-
-
-if __name__ == '__main__':
-  main()
+square_of_sum = pow(100 * (100 + 1) // 2, 2)
+sum_of_squares = (2 * 100 + 1) * (100 + 1) * 100 // 6
+answer = square_of_sum - sum_of_squares
+print(answer)

@@ -1,22 +1,26 @@
+import itertools
+import math
+from typing import Generator
+
+
+def is_prime(n: int) -> bool:
+    if n % 2 == 0 and n > 2:
+        return False
+    return all(n % i for i in range(3, int(math.sqrt(n)) + 1, 2))
+
+
 # All primes > 3 are in the form 6k +/- 1
-from helpers import primes
-
-PRIME_N = 10001
-
-def main():
-    prime_list = [2, 3]
-
-    k = 1
-    while len(prime_list) < PRIME_N:
-        if primes.is_prime(6 * k - 1):
-            prime_list.append(6 * k - 1)
-        if primes.is_prime(6 * k + 1):
-            prime_list.append(6 * k + 1)
-        k += 1
-
-    answer = prime_list[PRIME_N - 1]
-    print(answer)
+def gen_candidates() -> Generator[int]:
+    for k in itertools.count(1):
+        yield 6 * k - 1
+        yield 6 * k + 1
 
 
-if __name__ == '__main__':
-  main()
+n = 2
+for candidate in gen_candidates():
+    n += is_prime(candidate)
+    if n == 10001:
+        break
+
+answer = candidate
+print(answer)
