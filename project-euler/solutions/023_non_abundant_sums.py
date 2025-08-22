@@ -1,33 +1,22 @@
-from helpers import helpers
+limit = 28123
 
-def is_abundant(n):
-    # - n is to remove n as a factor
-    return sum(helpers.factors(n)) - n > n
+div_sum = [1] * (limit + 1)
+div_sum[0] = 0
+for i in range(2, limit // 2 + 1):
+    for j in range(i * 2, limit + 1, i):
+        div_sum[j] += i
 
-def get_abundant_numbers():
-    return [n for n in range(12, 28124) if is_abundant(n)]
+abundant_numbers = [n for n in range(12, limit + 1) if div_sum[n] > n]
+can_be_written = [False] * (limit + 1)
 
-def main():
-    abundant_numbers = get_abundant_numbers()
+for i, a in enumerate(abundant_numbers):
+    for j in range(i, len(abundant_numbers)):
+        s = a + abundant_numbers[j]
 
-    sums_of_abundant_pairs = set()
+        if s > limit:
+            break
 
-    # Compute all sums of abundant numbers
-    for abundant1 in abundant_numbers:
-        for abundant2 in abundant_numbers:
-            sum_of_abundant = abundant1 + abundant2
+        can_be_written[s] = True
 
-            # If the sum is out of the range we are checking
-            if sum_of_abundant > 28123:
-                break
-
-            # Add the sum to the set of sums
-            sums_of_abundant_pairs.add(sum_of_abundant)
-
-    # Get the inverse of the set within the range
-    not_sum_of_abundants = set(range(1, 28123)) - sums_of_abundant_pairs
-    answer = sum(not_sum_of_abundants)
-    print(answer)
-
-if __name__ == '__main__':
-  main()
+answer = sum(i for i in range(1, limit + 1) if not can_be_written[i])
+print(answer)
