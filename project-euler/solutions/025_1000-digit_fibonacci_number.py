@@ -1,12 +1,9 @@
-import itertools
-from helpers import helpers
+a = b = 1
+target = 10**999
+i = 2
+while a < target:
+    a, b = a + b, a
+    i += 1
 
-
-def main():
-    # print(list(itertools.islice(helpers.fibonacci(), 10)))
-    answer = next((i + 1 for i, val in enumerate(helpers.fibonacci()) if len(str(val)) >= 1000))
-
-    print(answer)
-
-if __name__ == '__main__':
-  main()
+answer = i
+print(i)

@@ -1,14 +1,14 @@
-from itertools import permutations
-from helpers import helpers
-
-DIGITS = "0123456789"
-ELEMENT_TO_GET = 1000000
-
-def main():
-    answer = helpers.get_nth_element_of_generator(permutations(DIGITS), ELEMENT_TO_GET - 1)
-    answer = "".join(answer)
-    print(answer)
+import math
 
 
-if __name__ == '__main__':
-    main()
+def nth_lexicographic_permutation(digits: list[int], n: int) -> str:
+    result = []
+    for i in reversed(range(len(digits))):
+        fact = math.factorial(i)
+        index, n = divmod(n, fact)
+        result.append(digits.pop(index))
+    return "".join(str(digit) for digit in result)
+
+
+answer = nth_lexicographic_permutation(list(range(10)), 1_000_000 - 1)
+print(answer)
