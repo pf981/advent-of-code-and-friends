@@ -1,35 +1,33 @@
-from helpers import helpers
-# f(n) = n^2 + an + b
-# Clearly, b must be prime as f(0) must be prime
-# a must be b + p - 1 for some prime p (But this code doesn't use this fact)
+import math
 
-MAX_PRIME = 40000
-PRIMES = [p for p in helpers.get_million_primes()[:MAX_PRIME] if p < MAX_PRIME]
+MAX_F = 50_000
+MAX_COEF = 1000
 
-def chain(a, b):
-    n = 0
-    while n*n + a*n + b in PRIMES:
-        n += 1
+is_prime = [True] * (MAX_F + 1)
+is_prime[0] = is_prime[1] = False
+for i in range(2, int(math.sqrt(MAX_F)) + 1):
+    if is_prime[i]:
+        step = i
+        start = i * i
+        is_prime[start : MAX_F + 1 : step] = [False] * (((MAX_F - start) // step) + 1)
 
-    return n
+b_candidates = [b for b in range(2, MAX_COEF + 1) if is_prime[b]]
 
-def main():
-    best_chain = 0
-    # b must be prime
-    b_range = [p for p in PRIMES if p < 1000]
-    # For each a, b combination
-    for a in range(-1000, 1000):
-        for b in b_range:
-            cur_chain = chain(a, b)
+best_len = -1
+best_a = 0
+best_b = 0
 
-            if cur_chain > best_chain:
-                best_chain = cur_chain
-                best_a = a
-                best_b = b
+for b in b_candidates:
+    a_start = -MAX_COEF + (b != 2)
+    for a in range(a_start, MAX_COEF, 2 if b != 2 else 1):
+        n = 0
+        while True:
+            val = n * n + a * n + b
+            if val <= 1 or (val > MAX_F) or not is_prime[val]:
+                break
+            n += 1
+        if n > best_len:
+            best_len, best_a, best_b = n, a, b
 
-    print(best_chain, best_a, best_b)
-    answer = best_a * best_b
-    print(answer)
-
-if __name__ == '__main__':
-    main()
+answer = best_a * best_b
+print(answer)
