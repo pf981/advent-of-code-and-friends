@@ -1,8 +1,4 @@
-from helpers import helpers
-
-UPPER = 1000
-
-ONES_WORDS = {
+ones = {
     0: "",
     1: "one",
     2: "two",
@@ -13,9 +9,9 @@ ONES_WORDS = {
     7: "seven",
     8: "eight",
     9: "nine",
-    }
+}
 
-TEN_TO_NINETEEN_WORDS = {
+ten_to_nineteen = {
     10: "ten",
     11: "eleven",
     12: "twelve",
@@ -25,11 +21,11 @@ TEN_TO_NINETEEN_WORDS = {
     16: "sixteen",
     17: "seventeen",
     18: "eighteen",
-    19: "nineteen"
-    }
+    19: "nineteen",
+}
 
-TENS_WORDS = {
-    1: "", # This is counted in ones
+tens = {
+    1: "",
     2: "twenty",
     3: "thirty",
     4: "forty",
@@ -38,48 +34,35 @@ TENS_WORDS = {
     7: "seventy",
     8: "eighty",
     9: "ninety",
-    0: ""
-    }
+    0: "",
+}
 
 
-def int_to_words(num):
-    """
-    Returns a string representation of the number
-    """
+def int_to_words(num: int) -> str:
     if num == 1000:
-        return "one thousand"
+        return "onethousand"
 
-    words = ""
+    words = []
 
     # Hundreds
     if num >= 100:
-        words += ONES_WORDS[int(str(num)[-3:-2])] + " hundred"
-
-        # And?
+        words.append(ones[int(str(num)[-3:-2])] + "hundred")
         if int(str(num)[-2:]) > 0:
-            words += " and"
+            words += "and"
 
-    # If we are dealing with 10-19
+    # 10-19
     if num >= 10 and int(str(num)[-2:-1]) == 1:
-        words += TEN_TO_NINETEEN_WORDS[int(str(num)[-2:])]
+        words.append(ten_to_nineteen[int(str(num)[-2:])])
     else:
-         # Tens
+        # Tens
         if num >= 10:
-            words += " "
-            words += TENS_WORDS[int(str(num)[-2:-1])]
+            words.append(tens[int(str(num)[-2:-1])])
 
         # Ones
-        words += " "
-        words += ONES_WORDS[int(str(num)[-1:])]
+        words.append(ones[int(str(num)[-1:])])
 
-    # Remove the leading whitespace
-    return words.lstrip(" ")
+    return "".join(words)
 
 
-def main():
-    answer = sum(len(int_to_words(num).replace(" ", "")) for num in range(1, UPPER + 1))
-
-    print(answer)
-
-if __name__ == '__main__':
-  main()
+answer = sum(len(int_to_words(num)) for num in range(1, 1001))
+print(answer)
