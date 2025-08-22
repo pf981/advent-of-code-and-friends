@@ -1,10 +1,4 @@
 import math
-from helpers import helpers
 
-def main():
-    factorial = math.factorial(100)
-    answer = sum(helpers.int_to_digits(factorial))
-    print(answer)
-
-if __name__ == '__main__':
-  main()
+answer = sum(int(digit) for digit in str(math.factorial(100)))
+print(answer)
