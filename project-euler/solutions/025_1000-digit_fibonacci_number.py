@@ -6,4 +6,4 @@ while a < target:
     i += 1
 
 answer = i
-print(i)
+print(answer)
