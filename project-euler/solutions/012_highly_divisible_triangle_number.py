@@ -1,24 +1,29 @@
 import itertools
-from helpers import helpers
 
-MIN_DIVISORS = 500
 
-def triangle_numbers():
-    """Generates the first million triangle numbers"""
-    triangle_num = 0
-    for i in range(1, 1000000):
-        triangle_num += i
-        yield triangle_num
-
-def main():
-    for triangle_num in triangle_numbers():
-        # If it has enough divisors to be the solution
-        if len(helpers.factors(triangle_num)) > MIN_DIVISORS:
-            answer = triangle_num
+def count_factors(n: int) -> int:
+    total = 1
+    d = 2
+    while n > 1:
+        exp = 0
+        while n % d == 0:
+            exp += 1
+            n //= d
+        if exp > 0:
+            total *= exp + 1
+        d += 1
+        if d * d > n:
+            if n > 1:
+                total *= 2
             break
+    return total
 
-    print(answer)
 
+triangle_num = 0
+for i in itertools.count(1):
+    triangle_num += i
+    if count_factors(triangle_num) > 500:
+        answer = triangle_num
+        break
 
-if __name__ == '__main__':
-  main()
+print(answer)
