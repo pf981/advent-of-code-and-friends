@@ -1,34 +1,21 @@
 import collections
 import math
 
-MAX_P = 1000
 
 def generate_triples(max_side):
-    """
-    Yields all unique pythagorean whose sides are less than max_side
-    """
     for a in range(1, max_side):
         for b in range(a, max_side):
-            # If a^2 + b^2 is a perfect square, then this triple is valid
-            c_double = math.sqrt(a*a + b*b)
+            c_double = math.sqrt(a * a + b * b)
             c = int(c_double)
-            if c == c_double:
+            if math.isclose(c, c_double):
                 yield [a, b, c]
 
-def main():
-    all_p = collections.defaultdict(int)
 
-    for a, b, c in generate_triples(MAX_P):
-        sides = [a, b, c]
-        p = sum(sides)
-
-        if p > MAX_P:
-            continue
-
+all_p: collections.Counter[int] = collections.Counter()
+for a, b, c in generate_triples(1000):
+    p = a + b + c
+    if p <= 1000:
         all_p[p] += 1
 
-    answer = max(all_p.keys(), key=lambda key: all_p[key]) # Find the key with the max value of a dict
-    print(answer)
-
-if __name__ == '__main__':
-  main()
+answer = max(all_p.keys(), key=lambda key: all_p[key])
+print(answer)

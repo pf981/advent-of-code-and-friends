@@ -1,18 +1,24 @@
 import itertools
-from helpers import helpers
+import math
 
-def find_biggest_pandigital_prime():
-    # Starting from n = 10 digits, to n = 1 digit
-    for max_range in reversed(range(1, 10)):
-        # For each n-digit permutation
-        for permutation in itertools.permutations(reversed(range(1, max_range))):
-            num = helpers.list_to_int(permutation)
-            if helpers.is_prime(num):
-                return num
 
-def main():
-    answer = find_biggest_pandigital_prime()
-    print(answer)
+def is_prime(n: int) -> bool:
+    if n < 2:
+        return False
+    for i in range(2, int(math.sqrt(n)) + 1):
+        if n % i == 0:
+            return False
+    return True
 
-if __name__ == '__main__':
-  main()
+
+for max_range in reversed(range(1, 10)):
+    for permutation in itertools.permutations(reversed(range(1, max_range + 1))):
+        num = int("".join(str(digit) for digit in permutation))
+        if is_prime(num):
+            answer = num
+            break
+    else:
+        continue
+    break
+
+print(answer)
