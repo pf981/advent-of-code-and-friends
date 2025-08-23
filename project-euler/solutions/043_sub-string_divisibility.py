@@ -8,7 +8,7 @@ def backtrack(i):
     global cur, answer
 
     if i == 10:
-        answer += int(cur)
+        answer += cur
         return
 
     for digit in available.copy():
