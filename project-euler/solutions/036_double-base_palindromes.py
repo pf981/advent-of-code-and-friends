@@ -1,17 +1,23 @@
-MAX_RANGE = 1000000
+from typing import Generator
+import itertools
 
-def is_palindrome(n):
-    string = str(n)
-    return string == string[::-1]
 
-def is_double_palindrome(n):
-    return is_palindrome(n) and is_palindrome(str(bin(n))[2:])
+def gen_binary_palindromes() -> Generator[int]:
+    for left in itertools.count(1):
+        left_str = f"{left:b}"
+        right_str = left_str[::-1]
+        yield int(left_str + right_str, 2)
+        yield int(left_str + "0" + right_str, 2)
+        yield int(left_str + "1" + right_str, 2)
 
-def main():
-    double_palindromes = [n for n in range(MAX_RANGE) if is_double_palindrome(n)]
 
-    answer = sum(double_palindromes)
-    print(answer)
-
-if __name__ == '__main__':
-    main()
+answer = 1
+for binary_palindrome in gen_binary_palindromes():
+    if binary_palindrome >= 2 * 1_000_000:
+        break
+    if binary_palindrome >= 1_000_000:
+        continue
+    s = str(binary_palindrome)
+    if s == s[::-1]:
+        answer += binary_palindrome
+print(answer)
