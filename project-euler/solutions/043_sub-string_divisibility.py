@@ -1,5 +1,5 @@
-cur = ""
-available = set(str(digit) for digit in range(10))
+cur = 0
+available = set(range(10))
 answer = 0
 divisors = [0, 0, 0, 2, 3, 5, 7, 11, 13, 17]
 
@@ -12,18 +12,18 @@ def backtrack(i):
         return
 
     for digit in available.copy():
-        if i == 0 and digit == "0":
+        if i == 0 and digit == 0:
             continue
 
-        if divisors[i] and int(cur[-2:] + digit) % divisors[i] != 0:
+        if divisors[i] and (10 * (cur % 100) + digit) % divisors[i] != 0:
             continue
 
-        cur += digit
+        cur = 10 * cur + digit
         available.remove(digit)
 
         backtrack(i + 1)
 
-        cur = cur[:-1]
+        cur //= 10
         available.add(digit)
 
 
