@@ -1,25 +1,19 @@
-import itertools
+import math
 
-def list_to_int(nums):
-    return int(''.join(map(str, nums)))
 
-def main():
-    # This is just the RHS of a*b=c
-    pandigital_products = set()
+def is_pandigital(multiplicand: int, multiplier: int, product: int) -> bool:
+    return (
+        "".join(sorted(str(multiplicand) + str(multiplier) + str(product)))
+        == "123456789"
+    )
 
-    for permutation in itertools.permutations(range(1, 10)):
-        for i in range(1, len(permutation) - 2):
-            for j in range(i + 1, len(permutation) - 1):
-                first = list_to_int(permutation[:i])
-                second = list_to_int(permutation[i:j])
-                third = list_to_int(permutation[j:])
 
-                if first * second == third:
-                    print(first, "*", second, "=", third)
-                    pandigital_products.add(third)
-
-    answer = sum(pandigital_products)
-    print(answer)
-
-if __name__ == '__main__':
-  main()
+answer = 0
+for rhs in range(1000, 10000):
+    for candidate_factor in range(1, int(math.sqrt(rhs))):
+        if rhs % candidate_factor == 0 and is_pandigital(
+            candidate_factor, rhs // candidate_factor, rhs
+        ):
+            answer += rhs
+            break
+print(answer)
