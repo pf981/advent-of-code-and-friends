@@ -1,16 +1,16 @@
 digits = 0123456789
 bin = 01
 
-// Set up 0M1010
-INIT                 1        MARK_MID                   1  L
-INIT                 0        MARK_MID                   0  L
-MARK_MID             _        PREPEND_ZERO               M  L
-PREPEND_ZERO         _        MARK_RIGHT                 0  R
-> MARK_RIGHT         M       
-> MARK_RIGHT         $bin
-MARK_RIGHT           _        GOTO_M_AND_START           E  L
-< GOTO_M_AND_START   $bin
-GOTO_M_AND_START     M        POP                        M  R
+// Set up 0M1010E
+INIT                         1        MARK_MID                   1  L
+INIT                         0        MARK_MID                   0  L
+MARK_MID                     _        PREPEND_ZERO               M  L
+PREPEND_ZERO                 _        MARK_RIGHT                 0  R
+> MARK_RIGHT                 M       
+> MARK_RIGHT                 $bin
+MARK_RIGHT                   _        GOTO_M_AND_START           E  L
+< GOTO_M_AND_START           $bin
+GOTO_M_AND_START             M        POP                        M  R
 
 // For each 0, double the value. For each 1, double and add 1.
 > POP                        _
