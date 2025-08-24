@@ -1,48 +1,48 @@
-from helpers import helpers
-
-UPPER_BOUND = 1000000
-# Primes were stored as both a list and a set because lists are better for
-# iterating over whereas sets are better for determining if an element is a
-# member of that set. Both types were chosen as a significant amount of
-# iterating and using the "in" keyword were common in this problem.
-PRIMES = list(helpers.primes_to(UPPER_BOUND))
-PRIMES_SET = frozenset(PRIMES)
-
-def most_consecutive_prime_sum():
-    # Find the smallest upper bound for the length of the sublist
-    max_length = 0
-    list_sum = 0
-    while list_sum < 1000000:
-        max_length += 1
-        list_sum += PRIMES[max_length]
-
-    # For each possible length, from largest to smallest
-    # Note that if we started at len(PRIMES) instead of max_length it would
-    # take infeasibly long
-    for length in reversed(range(1, max_length)):
-        for start in range(len(PRIMES) - length + 1):
-            if start == 0:
-                # list_sum is the sum from start to length of the primes
-                list_sum = sum(PRIMES[:length])
-            else:
-                # Instead of recalculating the sum, subtract the first and add the last
-                list_sum += PRIMES[start + length - 1]
-                list_sum -= PRIMES[start-1]
-
-            # If the sum is getting too big
-            if list_sum > UPPER_BOUND:
-                # Then the following sums will only be bigger, so break
-                break
-
-            # If the sum is a prime, it must be the prime with the biggest
-            # sequence length
-            if list_sum in PRIMES_SET:
-                return(list_sum)
+import math
 
 
-def main():
-    answer = most_consecutive_prime_sum()
-    print(answer)
+def get_primes(limit: int) -> list[int]:
+    is_prime = [True] * (limit + 1)
+    is_prime[0] = is_prime[1] = False
+    for i in range(2, int(math.sqrt(limit)) + 1):
+        if is_prime[i]:
+            step = i
+            start = i * i
+            is_prime[start : limit + 1 : step] = [False] * (
+                ((limit - start) // step) + 1
+            )
 
-if __name__ == '__main__':
-    main()
+    return [i for i in range(limit + 1) if is_prime[i]]
+
+
+limit = 1_000_000
+primes = get_primes(limit)
+primes_set = frozenset(primes)
+
+
+def make_prime(consecutive_length: int) -> int | None:
+    start = 0
+    s = 0
+    for end in range(len(primes)):
+        s += primes[end]
+
+        if end - start + 1 > consecutive_length:
+            s -= primes[start]
+            start += 1
+
+        if end - start + 1 == consecutive_length and s in primes_set:
+            return s
+    return None
+
+
+max_length = s = 0
+for prime in primes:
+    s += prime
+    if s >= limit:
+        break
+    max_length += 1
+
+for consecutive_length in reversed(range(max_length)):
+    if answer := make_prime(consecutive_length):
+        break
+print(answer)
