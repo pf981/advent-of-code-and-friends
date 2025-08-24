@@ -1,32 +1,55 @@
+import functools
 import itertools
-from sympy.ntheory.primetest import isprime
+from collections.abc import Iterator
 
-def compute_min_length():
-    cur_value = 1
-    num_primes = 0
+primes: list[int] = [2, 3]
 
-    for spiral_radius in itertools.count(1):
-        gap_between_diagonals = 2 * spiral_radius
 
-        # For each of the first three corners
-        for _ in range(3):
-            cur_value += gap_between_diagonals
-            if isprime(cur_value):
-                num_primes += 1
+def generate_primes() -> Iterator[int]:
+    for p in primes:
+        yield p
+    candidate = primes[-1] + 2
+    while True:
+        is_p = True
+        for q in primes:
+            if q * q > candidate:
+                break
+            if candidate % q == 0:
+                is_p = False
+                break
+        if is_p:
+            primes.append(candidate)
+            yield candidate
+        candidate += 2
 
-        # Ignore the bottom right corner
+
+@functools.cache
+def is_prime(n: int) -> bool:
+    if n < 2:
+        return False
+    for p in generate_primes():
+        if p * p > n:
+            return True
+        if n % p == 0:
+            return False
+    assert False
+
+
+cur_value = 1
+num_primes = 0
+
+for spiral_radius in itertools.count(1):
+    gap_between_diagonals = 2 * spiral_radius
+
+    for _ in range(3):
         cur_value += gap_between_diagonals
+        num_primes += is_prime(cur_value)
 
-        # There are 4 corners in each spiral, and one center number
-        prime_ratio_of_diagonal = num_primes / (4 * spiral_radius + 1)
-        if prime_ratio_of_diagonal < 0.1:
-            return spiral_radius * 2 + 1
+    cur_value += gap_between_diagonals
 
+    prime_ratio_of_diagonal = num_primes / (4 * spiral_radius + 1)
+    if prime_ratio_of_diagonal < 0.1:
+        answer = spiral_radius * 2 + 1
+        break
 
-def main():
-    answer = compute_min_length()
-    print(answer)
-
-
-if __name__ == '__main__':
-    main()
+print(answer)

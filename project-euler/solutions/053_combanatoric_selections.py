@@ -1,18 +1,9 @@
-# Time:
-# real    0m1.789s
-# user    0m1.702s
-# sys     0m0.082s
-import sympy
+import math
 
-def main():
-    count = 0
-    # Brute force all n and r
-    for n in range(1, 101):
-        for r in range(1, n+1):
-            if sympy.binomial(n, r) > 1000000:
-                count += 1
-    answer = count
-    print(answer)
+count = 0
+for n in range(101):
+    for r in range(n + 1):
+        count += math.comb(n, r) > 1_000_000
 
-if __name__ == '__main__':
-    main()
+answer = count
+print(answer)
