@@ -1,0 +1,62 @@
+digits = 0123456789
+
+// Set up 0M1010
+INIT                 1        MARK_MID                   1  L
+INIT                 0        MARK_MID                   0  L
+MARK_MID             _        PREPEND_ZERO               M  L
+PREPEND_ZERO         _        MARK_RIGHT                 0  R
+> MARK_RIGHT         M       
+> MARK_RIGHT         $digits
+MARK_RIGHT           _        GOTO_M_AND_START           E  L
+< GOTO_M_AND_START   $digits
+GOTO_M_AND_START     M        POP                        M  R
+
+// For each 0, double the value. For each 1, double and add 1.
+> POP                        _
+POP                          0        GOTO_M_AND_DOUBLE          _  L
+POP                          1        GOTO_M_DOUBLE_AND_ADD_ONE  _  L
+< GOTO_M_DOUBLE_AND_ADD_ONE  _
+GOTO_M_DOUBLE_AND_ADD_ONE    M        DOUBLE                     I  L  // Replace M with I to indicate you need to add one
+< GOTO_M_AND_DOUBLE          _
+GOTO_M_AND_DOUBLE            M        DOUBLE                     M  L
+DOUBLE                       0        DOUBLE                     0  L
+DOUBLE                       1        DOUBLE                     2  L
+DOUBLE                       2        DOUBLE                     4  L
+DOUBLE                       3        DOUBLE                     6  L
+DOUBLE                       4        DOUBLE                     8  L
+DOUBLE                       5        DOUBLE_1                   0  L
+DOUBLE                       6        DOUBLE_1                   2  L
+DOUBLE                       7        DOUBLE_1                   4  L
+DOUBLE                       8        DOUBLE_1                   6  L
+DOUBLE                       9        DOUBLE_1                   8  L
+DOUBLE                       _        GOTO_M_AND_RESUME          _  R
+DOUBLE_1                     0        DOUBLE                     1  L
+DOUBLE_1                     1        DOUBLE                     3  L
+DOUBLE_1                     2        DOUBLE                     5  L
+DOUBLE_1                     3        DOUBLE                     7  L
+DOUBLE_1                     4        DOUBLE                     9  L
+DOUBLE_1                     5        DOUBLE_1                   1  L
+DOUBLE_1                     6        DOUBLE_1                   3  L
+DOUBLE_1                     7        DOUBLE_1                   5  L
+DOUBLE_1                     8        DOUBLE_1                   7  L
+DOUBLE_1                     9        DOUBLE_1                   9  L
+DOUBLE_1                     _        GOTO_M_AND_RESUME          1  R
+> GOTO_M_AND_RESUME          $digits
+GOTO_M_AND_RESUME            M        POP                        M  R
+GOTO_M_AND_RESUME            I        INCREMENT                  M  L
+INCREMENT                    0        GOTO_M_AND_RESUME          1  R
+INCREMENT                    1        GOTO_M_AND_RESUME          2  R
+INCREMENT                    2        GOTO_M_AND_RESUME          3  R
+INCREMENT                    3        GOTO_M_AND_RESUME          4  R
+INCREMENT                    4        GOTO_M_AND_RESUME          5  R
+INCREMENT                    5        GOTO_M_AND_RESUME          6  R
+INCREMENT                    6        GOTO_M_AND_RESUME          7  R
+INCREMENT                    7        GOTO_M_AND_RESUME          8  R
+INCREMENT                    8        GOTO_M_AND_RESUME          9  R
+INCREMENT                    9        INCREMENT                  0  L
+INCREMENT                    _        GOTO_M_AND_RESUME          1  R
+
+// Finished
+POP                          E        GOTO_M_AND_HALT            _  L
+< GOTO_M_AND_HALT            _
+GOTO_M_AND_HALT              M        HALT                       _  L

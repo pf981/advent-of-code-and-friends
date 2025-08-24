@@ -175,10 +175,6 @@ def tally(num: int) -> str:
     return "|" * num
 
 
-def to_bin(num: int) -> str:
-    return bin(num)[2:]
-
-
 def test_solution1(r):
     assert r("|||+||||") == "|||||||"
     for lhs in range(1, 10):
@@ -191,16 +187,16 @@ def test_solution2(r):
     assert r("|||||||") == "O"
     assert r("||||||") == "E"
     for num in range(1, 10):
-        assert (
-            r(tally(num)) == "EO"[num % 2]
-        ), f"Expect {num} is {['even', 'odd'][num % 2]}"
+        assert r(tally(num)) == "EO"[num % 2], (
+            f"Expect {num} is {['even', 'odd'][num % 2]}"
+        )
 
 
 def test_solution3(r):
     assert r("1010") == "1011"
     assert r("0") == "1"
     for num in range(1, 10):
-        assert r(to_bin(num)) == to_bin(num + 1)
+        assert r(f"{num:b}") == f"{num + 1:b}"
 
 
 def test_solution4(r):
@@ -313,3 +309,10 @@ def test_solution13(r):
         input_str = ",".join(tally(num) for num in nums)
         expected_output_str = ",".join(tally(num) for num in sorted(nums))
         assert r(input_str) == expected_output_str
+
+
+def test_solution14(r):
+    assert r("1010") == "10"
+
+    for num in range(1000):
+        assert r(f"{num:b}") == str(num)
