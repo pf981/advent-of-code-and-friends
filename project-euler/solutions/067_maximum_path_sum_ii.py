@@ -1,23 +1,11 @@
-def get_triangle():
-    triangle = []
-    with open("data/p067_triangle.txt") as in_file:
-        for row in in_file:
-            triangle.append([int(word) for word in row.split()])
-    return triangle
+with open("data/0067_triangle.txt") as f:
+    text = f.read()
 
+triangle = [[int(num) for num in line.split()] for line in text.splitlines()]
 
-def main():
-    triangle = get_triangle()
+for r in reversed(range(len(triangle) - 1)):
+    for c in range(len(triangle[r])):
+        triangle[r][c] += max(triangle[r + 1][c], triangle[r + 1][c + 1])
 
-    for row in reversed(range(len(triangle) - 1)):
-        for col in range(len(triangle[row])):
-            triangle[row][col] += max(
-                triangle[row + 1][col], triangle[row + 1][col + 1]
-            )
-
-    answer = triangle[0][0]
-    print(answer)
-
-
-if __name__ == "__main__":
-    main()
+answer = triangle[0][0]
+print(answer)

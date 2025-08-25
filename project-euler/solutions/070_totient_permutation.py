@@ -1,39 +1,40 @@
 import math
-import sympy
 
-UPPER_BOUND = 10**7
 
-# Initially, I tried only getting primes up to sqrt(UPPER_BOUND) but this was
-# excluding many pairs whose product was still less than UPPER_BOUND. So I
-# added 50% to the sqrt so we would encompass all prime pairs whose product
-# was less than UPPER_BOUND
-PRIMES = list(sympy.sieve.primerange(2, 1.5 * math.sqrt(UPPER_BOUND)))
+def get_primes(limit: int) -> list[int]:
+    is_prime = [True] * (limit + 1)
+    is_prime[0:2] = [False, False]
+    for i in range(2, int(math.isqrt(limit)) + 1):
+        if is_prime[i]:
+            for j in range(i * i, limit + 1, i):
+                is_prime[j] = False
+    return [i for i, prime in enumerate(is_prime) if prime]
 
-def is_permutation(a, b):
+
+def is_permutation(a: int, b: int) -> bool:
     return sorted(str(a)) == sorted(str(b))
 
-def main():
-    answer = None
-    best_ratio = None
 
-    prime_pairs = ((p1, p2) for p1 in PRIMES for p2 in PRIMES)
+limit = 10_000_000
+primes = get_primes(2 * int(math.isqrt(limit)))
 
-    for p1, p2 in prime_pairs:
-        # Construct n as the product of two primes
-        n = p1 * p2
+best_n = 0
+best_ratio = float("inf")
 
-        if n > UPPER_BOUND:
+for i, p in enumerate(primes):
+    for q in primes[i:]:
+        n = p * q
+        if n > limit:
+            break
+
+        phi_n = (p - 1) * (q - 1)
+        if not is_permutation(n, phi_n):
             continue
 
-        # As n is the product of two primes, phi is simply (p1-1)(p2-1)
-        totient = (p1 - 1) * (p2 - 1)
+        ratio = n / phi_n
+        if ratio < best_ratio:
+            best_ratio = ratio
+            best_n = n
 
-        if is_permutation(n, totient):
-            if not best_ratio or n / totient < best_ratio:
-                answer = n
-                best_ratio = n / totient
-
-    print(answer)
-
-if __name__ == '__main__':
-    main()
+answer = best_n
+print(answer)

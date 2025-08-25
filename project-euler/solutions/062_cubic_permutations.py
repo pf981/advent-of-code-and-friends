@@ -1,37 +1,17 @@
-# This will probably work, but it takes too long to compute. This method gets
-# all permutations of each cube and determines if they are cubes too. A better
-# way is to generate all cubes in a range and count them. This better solution
-# is implemented in 062_cubic_permutations.py
-import itertools
+import collections
 
-def is_cube(n):
-    return round(n**(1/3.0))**3 == n
+MAX_CUBES = 50000
 
-def generate_permutations(n):
-    for permutation in set(itertools.permutations(str(n))):
-        permutation_value = int(''.join(permutation))
+cube_counts: collections.defaultdict[str, int] = collections.defaultdict(int)
+cubes = collections.defaultdict(list)
 
-        # If it has leading zeros, ignore it
-        if len(str(permutation_value)) != len(str(n)):
-            continue
+for n in range(MAX_CUBES):
+    cube = n**3
+    sorted_cube = "".join(sorted(str(cube)))
+    cube_counts[sorted_cube] += 1
+    cubes[sorted_cube].append(cube)
 
-        yield permutation_value
-
-
-def main():
-    for n in itertools.count(1):
-        cube = n**3
-
-        # For each permutation of that cube
-        cubes = [permutation for permutation in generate_permutations(cube) if is_cube(permutation)]
-        counts = len(cubes)
-
-        # If five of those permutations were cubes
-        if counts == 5:
-            answer = min(cubes)
-            break
-
-    print(answer)
-
-if __name__ == '__main__':
-    main()
+answer = min(
+    min(cubes[sorted_cube]) for sorted_cube, count in cube_counts.items() if count == 5
+)
+print(answer)

@@ -1,65 +1,79 @@
 import collections
-import sympy
-from sympy.ntheory.primetest import isprime
+import math
+import random
 
-MAX_PRIMES = 10000
-TARGET_PAIRS = 5
+random.seed(0)
 
-def generate_valid_paths(tree):
-    """
-    This generates paths from a depth-first tree traversal such that the path
-    is TARGET_PAIRS long and every element is adjacent to every other element
-    """
-    for node, _ in tree.items():
-        # nodes_to_visit is a list of tuples. The first element of the tuple
-        # is the node to visit. The second is a list representing the path
-        # taken to get to that node.
-        nodes_to_visit = [(node, set())]
 
-        while nodes_to_visit:
-            cur_node = nodes_to_visit.pop()
-            cur_path = cur_node[1] | {cur_node[0]}
+def is_prime_mr(n: int, k: int = 1) -> bool:
+    if n < 2:
+        return False
+    if n == 2 or n == 3:
+        return True
+    if n % 2 == 0:
+        return False
 
-            for child in tree[cur_node[0]]:
-                # If the child is not adjacent to every element in the path
-                if not all(child in tree[path_node] for path_node in cur_path):
-                    continue
+    r = 0
+    d = n - 1
+    while d % 2 == 0:
+        r += 1
+        d //= 2
 
-                # If the child hasn't been visited and the child contains
-                # every element in the path
-                if child not in cur_path and tree[child] >= cur_path:
-                    # Prepend the node and the path
-                    nodes_to_visit.insert(0, (child, cur_path))
+    for _ in range(k):
+        a = random.randrange(2, n - 1)
+        x = pow(a, d, n)
+        if x == 1 or x == n - 1:
+            continue
+        for _ in range(r - 1):
+            x = pow(x, 2, n)
+            if x == n - 1:
+                break
+        else:
+            return False
+    return True
 
-            if len(cur_path) == TARGET_PAIRS:
-                yield cur_path
 
-def concat_ints(a, b):
-    return int(str(a) + str(b))
+def get_primes(limit: int) -> list[int]:
+    is_prime = [True] * (limit + 1)
+    is_prime[0] = is_prime[1] = False
+    for i in range(2, int(math.sqrt(limit)) + 1):
+        if is_prime[i]:
+            for j in range(i * i, limit + 1, i):
+                is_prime[j] = False
+    return [i for i in range(limit + 1) if is_prime[i]]
 
-def is_cat_pair(pair):
-    return isprime(concat_ints(pair[0], pair[1]))
 
-def main():
-    primes = list(sympy.sieve.primerange(2, MAX_PRIMES))
+def find_sets(
+    current: list[int], remaining: list[int], target_size: int
+) -> list[list[int]]:
+    if len(current) == target_size:
+        return [current]
 
-    all_pairs = [(p1, p2)
-             for p1 in primes
-             for p2 in primes]
+    results = []
+    for i, p in enumerate(remaining):
+        if all(p in pairs.get(q, set()) for q in current):
+            new_remaining = [x for x in remaining[i + 1 :] if x in pairs.get(p, set())]
+            results.extend(find_sets(current + [p], new_remaining, target_size))
+    return results
 
-    # paired_with maps a prime to a list of primes. This means that all the
-    # elements in the value can be appended to the key to form a prime
-    # paired_with[2] = [3, 11, 23] means that 23, 211 and 223 are all primes
-    paired_with = collections.defaultdict(set)
-    for p1, p2 in all_pairs:
-        if is_cat_pair((p1, p2)):
-            paired_with[p1].add(p2)
 
-    best_set = min(generate_valid_paths(paired_with), key=lambda x: sum(x))
-    answer = sum(best_set)
+limit = 10_000
+primes = get_primes(limit)
+primes_set = set(primes)
 
-    print(best_set)
-    print(answer)
+pairs = collections.defaultdict(set)
 
-if __name__ == '__main__':
-    main()
+for i, p1 in enumerate(primes):
+    for p2 in primes[i + 1 :]:
+        c1 = int(str(p1) + str(p2))
+        c2 = int(str(p2) + str(p1))
+
+        if (c1 <= limit and c1 in primes_set or c1 > limit and is_prime_mr(c1)) and (
+            c2 <= limit and c2 in primes_set or c2 > limit and is_prime_mr(c2)
+        ):
+            pairs[p1].add(p2)
+            pairs[p2].add(p1)
+
+
+answer = min(sum(s) for s in find_sets([], sorted(pairs.keys()), 5))
+print(answer)
