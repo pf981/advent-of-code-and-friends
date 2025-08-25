@@ -1,21 +1,14 @@
-#     a^b > c^d
-#     => b ln a > c ln d
-# So we just have to find the max exponent*ln(base)
 import math
-import re
-import numpy as np
 
 
-def main():
-    text = open("data/p099_base_exp.txt").read()
-    pairs = [
-        (int(base), int(exponent))
-        for base, exponent in re.findall(r"(\d+),(\d+)", text)
-    ]
+with open("data/0099_base_exp.txt") as f:
+    text = f.read()
 
-    answer = np.argmax([exponent * math.log(base) for base, exponent in pairs]) + 1
-    print(answer)
+best = (0.0, 0)
+for i, line in enumerate(text.splitlines(), 1):
+    base, exponent = line.split(",")
+    d = int(exponent) * math.log(int(base))
+    best = max(best, (d, i))
 
-
-if __name__ == "__main__":
-    main()
+answer = best[1]
+print(answer)
