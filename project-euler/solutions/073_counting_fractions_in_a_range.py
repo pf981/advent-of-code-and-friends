@@ -1,21 +1,16 @@
-# This brute force approach takes too long to compute. See
-# 073_counting_fractions_in_a_range2.py for a better approach
-from fractions import Fraction
+import math
 
-MAX_DENOMINATOR = 12000
+LEFT = 1 / 3
+RIGHT = 1 / 2
+LIMIT = 12_000
 
-def main():
-    left = Fraction(1, 3)
-    right = Fraction(1, 2)
+answer = 0
+for d in range(2, LIMIT + 1):
+    n_min = d // 3 + 1
+    n_max = (d - 1) // 2
 
-    # Generate all the fractions and put them in order
-    fractions = sorted(list(set(Fraction(n, d)
-                                for d in range(1, MAX_DENOMINATOR + 1)
-                                for n in range(1, d))))
+    for n in range(n_min, n_max + 1):
+        if math.gcd(n, d) == 1:
+            answer += 1
 
-    fractions_between = fractions[fractions.index(left)+1 : fractions.index(right)]
-    answer = len(fractions_between)
-    print(answer)
-
-if __name__ == '__main__':
-    main()
+print(answer)

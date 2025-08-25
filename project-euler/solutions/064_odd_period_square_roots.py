@@ -2,7 +2,7 @@ import math
 
 
 def get_period(n: int) -> int:
-    a0 = int(math.isqrt(n))
+    a0 = math.isqrt(n)
     if a0 * a0 == n:
         return 0
 

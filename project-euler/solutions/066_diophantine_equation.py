@@ -3,7 +3,7 @@ import math
 
 # https://en.wikipedia.org/wiki/Pell's_equation
 def solve_pell(D: int) -> tuple[int, int] | None:
-    a0 = int(math.isqrt(D))
+    a0 = math.isqrt(D)
     if a0 * a0 == D:
         return None
 
