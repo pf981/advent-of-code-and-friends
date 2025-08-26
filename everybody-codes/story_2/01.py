@@ -1,5 +1,6 @@
 import functools
-from typing import Literal
+import sys
+from typing import Callable
 
 
 @functools.cache
@@ -74,32 +75,24 @@ balls = len(instructions_list)
 
 
 @functools.cache
-def get_best_coins(
-    i: int, used_slots: int, func_type: Literal["max"] | Literal["min"]
-) -> int:
+def get_best_coins(i: int, used_slots: int, f: Callable[[int, int], int]) -> int:
     if i == len(instructions_list):
         return 0
 
-    if func_type == "max":
-        f = max
-        best_coins = 0
-    else:
-        f = min
-        best_coins = 2 * max_slot * len(instructions_list)
-
+    best_coins = 0 if f == max else sys.maxsize
     for toss_slot in range(1, max_slot + 1):
         mask = 1 << toss_slot
         if used_slots & mask == 0:
             best_coins = f(
                 best_coins,
                 get_coins(instructions_list[i], toss_slot, board)
-                + get_best_coins(i + 1, used_slots | mask, func_type),
+                + get_best_coins(i + 1, used_slots | mask, f),
             )
     return best_coins
 
 
-max_coins_won = get_best_coins(0, 0, "max")
-min_coins_won = get_best_coins(0, 0, "min")
+max_coins_won = get_best_coins(0, 0, max)
+min_coins_won = get_best_coins(0, 0, min)
 
 answer3 = f"{min_coins_won} {max_coins_won}"
 print(answer3)
