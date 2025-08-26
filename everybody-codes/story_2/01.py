@@ -1,39 +1,15 @@
-with open("./story_2/input/everybody_codes_e2_q01_p1.txt") as f:
-    text = f.read()
+import functools
+import itertools
 
-text = """*.*.*.*.*.*.*.*.*
-.*.*.*.*.*.*.*.*.
-*.*.*...*.*...*..
-.*.*.*.*.*...*.*.
-*.*.....*...*.*.*
-.*.*.*.*.*.*.*.*.
-*...*...*.*.*.*.*
-.*.*.*.*.*.*.*.*.
-*.*.*...*.*.*.*.*
-.*...*...*.*.*.*.
-*.*.*.*.*.*.*.*.*
-.*.*.*.*.*.*.*.*.
 
-RRRLRLRRRRRL
-LLLLRLRRRRRR
-RLLLLLRLRLRL
-LRLLLRRRLRLR
-LLRLLRLLLRRL
-LRLRLLLRRRRL
-LRLLLLLLRLLL
-RRLLLRLLRLRR
-RLLLLLRLLLRL"""
+@functools.cache
+def get_coins(instructions: str, toss_slot: int, board: tuple[str]) -> int:
+    nrows = len(board)
+    ncols = len(board[0])
 
-board_str, inst = text.split("\n\n")
-board = board_str.splitlines()
-nrows = len(board)
-ncols = len(board[0])
-answer1 = 0
-for i, line in enumerate(inst.splitlines()):
-    c = 2 * i
+    c = 2 * (toss_slot - 1)
     r = 0
-    for move in line:
-        # print(f"{r=} {c=} {move=} {line=}")
+    for move in instructions:
         while r < nrows and board[r][c] != "*":
             r += 1
         if r == nrows:
@@ -44,157 +20,64 @@ for i, line in enumerate(inst.splitlines()):
         if c == -1:
             c = 1
 
-    toss_slot = i + 1
     final_slot = c // 2 + 1
     coins_won = max(2 * final_slot - toss_slot, 0)
-    answer1 += coins_won
-    # print(f"  {r=} {c=} {toss_slot=} {final_slot=} {coins_won=}")
+    return coins_won
 
-# Coins Won = (final slot number * 2) - toss slot number
+
+with open("./story_2/input/everybody_codes_e2_q01_p1.txt") as f:
+    text = f.read()
+
+board_str, instructions_str = text.split("\n\n")
+board = tuple(board_str.splitlines())
+instructions_list = instructions_str.splitlines()
+answer1 = 0
+
+for toss_slot, instructions in enumerate(instructions_list, 1):
+    answer1 += get_coins(instructions, toss_slot, board)
 
 print(answer1)
 
 
 # Part 2
 
+
 with open("./story_2/input/everybody_codes_e2_q01_p2.txt") as f:
     text = f.read()
 
-# text = """*.*.*.*.*.*.*.*.*.*.*.*.*
-# .*.*.*.*.*.*.*.*.*.*.*.*.
-# ..*.*.*.*...*.*...*.*.*..
-# .*...*.*.*.*.*.*.....*.*.
-# *.*...*.*.*.*.*.*...*.*.*
-# .*.*.*.*.*.*.*.*.......*.
-# *.*.*.*.*.*.*.*.*.*...*..
-# .*.*.*.*.*.*.*.*.....*.*.
-# *.*...*.*.*.*.*.*.*.*....
-# .*.*.*.*.*.*.*.*.*.*.*.*.
-# *.*.*.*.*.*.*.*.*.*.*.*.*
-# .*.*.*.*.*.*.*.*.*...*.*.
-# *.*.*.*.*.*.*.*.*...*.*.*
-# .*.*.*.*.*.*.*.*.....*.*.
-# *.*.*.*.*.*.*.*...*...*.*
-# .*.*.*.*.*.*.*.*.*.*.*.*.
-# *.*.*...*.*.*.*.*.*.*.*.*
-# .*...*.*.*.*...*.*.*...*.
-# *.*.*.*.*.*.*.*.*.*.*.*.*
-# .*.*.*.*.*.*.*.*.*.*.*.*.
-
-# RRRLLRRRLLRLRRLLLRLR
-# RRRRRRRRRRLRRRRRLLRR
-# LLLLLLLLRLRRLLRRLRLL
-# RRRLLRRRLLRLLRLLLRRL
-# RLRLLLRRLRRRLRRLRRRL
-# LLLLLLLLRLLRRLLRLLLL
-# LRLLRRLRLLLLLLLRLRRL
-# LRLLRRLLLRRRRRLRRLRR
-# LRLLRRLRLLRLRRLLLRLL
-# RLLRRRRLRLRLRLRLLRRL"""
-
-
-board_str, inst = text.split("\n\n")
-board = board_str.splitlines()
-nrows = len(board)
-ncols = len(board[0])
+board_str, instructions_str = text.split("\n\n")
+board = tuple(board_str.splitlines())
+instructions_list = instructions_str.splitlines()
+max_slot = len(board[0]) // 2 + 2
 answer2 = 0
-for i, line in enumerate(inst.splitlines()):
+
+for i, instructions in enumerate(instructions_list):
     max_coins_won = 0
-    for j in range(ncols // 2 + 1):
-        c = 2 * j
-        r = 0
-        for move in line:
-            # print(f"{r=} {c=} {move=} {line=}")
-            while r < nrows and board[r][c] != "*":
-                r += 1
-            if r == nrows:
-                break
-            c += (move == "R") - (move == "L")
-            if c == ncols:
-                c = ncols - 2
-            if c == -1:
-                c = 1
-
-        toss_slot = j + 1
-        final_slot = c // 2 + 1
-        coins_won = max(2 * final_slot - toss_slot, 0)
-        max_coins_won = max(max_coins_won, coins_won)
-        # print(f"  {r=} {c=} {toss_slot=} {final_slot=} {coins_won=}")
-    # print(f"{i=} {max_coins_won=}")
+    for toss_slot in range(1, max_slot):
+        max_coins_won = max(max_coins_won, get_coins(instructions, toss_slot, board))
     answer2 += max_coins_won
-
 
 print(answer2)
 
-# part 3
 
-import functools
-import itertools
+# Part 3
+
 
 with open("./story_2/input/everybody_codes_e2_q01_p3.txt") as f:
     text = f.read()
 
-# text = """*.*.*.*.*.*.*.*.*
-# .*.*.*.*.*.*.*.*.
-# *.*.*...*.*...*..
-# .*.*.*.*.*...*.*.
-# *.*.....*...*.*.*
-# .*.*.*.*.*.*.*.*.
-# *...*...*.*.*.*.*
-# .*.*.*.*.*.*.*.*.
-# *.*.*...*.*.*.*.*
-# .*...*...*.*.*.*.
-# *.*.*.*.*.*.*.*.*
-# .*.*.*.*.*.*.*.*.
-
-# RRRLRLRRRRRL
-# LLLLRLRRRRRR
-# RLLLLLRLRLRL
-# LRLLLRRRLRLR
-# LLRLLRLLLRRL
-# LRLRLLLRRRRL"""
-
-board_str, inst = text.split("\n\n")
-board = board_str.splitlines()
-nrows = len(board)
-ncols = len(board[0])
-answer3 = 0
-
-slots = ncols // 2 + 1
-instructions_list = inst.splitlines()
+board_str, instructions_str = text.split("\n\n")
+board = tuple(board_str.splitlines())
+instructions_list = instructions_str.splitlines()
+max_slot = len(board[0]) // 2 + 2
 balls = len(instructions_list)
-
-
-@functools.cache
-def get_coins(instructions, slot):
-    j = slot
-
-    c = 2 * j
-    r = 0
-    for move in instructions:
-        # print(f"{r=} {c=} {move=} {line=}")
-        while r < nrows and board[r][c] != "*":
-            r += 1
-        if r == nrows:
-            break
-        c += (move == "R") - (move == "L")
-        if c == ncols:
-            c = ncols - 2
-        if c == -1:
-            c = 1
-
-    toss_slot = j + 1
-    final_slot = c // 2 + 1
-    coins_won = max(2 * final_slot - toss_slot, 0)
-    return coins_won
-
 
 max_coins_won = 0
 min_coins_won = float("inf")
-for perm in itertools.permutations(range(slots), balls):
+for perm in itertools.permutations(range(1, max_slot), balls):
     coins_won = 0
     for i, slot in enumerate(perm):
-        coins_won += get_coins(instructions_list[i], slot)
+        coins_won += get_coins(instructions_list[i], slot, board)
     max_coins_won = max(max_coins_won, coins_won)
     min_coins_won = min(min_coins_won, coins_won)
 
