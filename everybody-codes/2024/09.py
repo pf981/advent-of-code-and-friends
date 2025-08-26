@@ -6,18 +6,20 @@ with open("./2024/input/everybody_codes_e2024_q09_p1.txt") as f:
 
 stamps = [1, 3, 5, 10]
 
+
 @functools.cache
 def min_stamps(i, target):
     if i == len(stamps):
         if target == 0:
             return 0
-        return float('inf')
+        return float("inf")
 
-    best = float('inf')
+    best = float("inf")
     for n in range(target // stamps[i] + 1):
         required = n + min_stamps(i + 1, target - n * stamps[i])
         best = min(best, required)
     return best
+
 
 nums = [int(line) for line in lines]
 answer1 = 0
@@ -34,18 +36,20 @@ with open("./2024/input/everybody_codes_e2024_q09_p2.txt") as f:
 
 stamps = [1, 3, 5, 10, 15, 16, 20, 24, 25, 30]
 
+
 @functools.cache
 def min_stamps(i, target):
     if i == len(stamps) - 1:
         if target % stamps[len(stamps) - 1] == 0:
             return target // stamps[len(stamps) - 1]
-        return float('inf')
+        return float("inf")
 
-    best = float('inf')
+    best = float("inf")
     for n in range(target // stamps[i] + 1):
         required = n + min_stamps(i + 1, target - n * stamps[i])
         best = min(best, required)
     return best
+
 
 nums = [int(line) for line in lines]
 answer2 = 0
@@ -75,8 +79,8 @@ def solve(target: int) -> int:
     s2_formula = 0
 
     for i, stamp in enumerate(stamps):
-        x = z3.Int(f'x{i}')
-        y = z3.Int(f'y{i}')
+        x = z3.Int(f"x{i}")
+        y = z3.Int(f"y{i}")
 
         o.add(x >= 0)
         o.add(y >= 0)
@@ -85,12 +89,12 @@ def solve(target: int) -> int:
         part2_formula += stamp * y
         s1_formula += x
         s2_formula += y
-    
-    s1 = z3.Int('s1')
-    s2 = z3.Int('s2')
-    part1 = z3.Int('part1')
-    part2 = z3.Int('part2')
-    total = z3.Int('total')
+
+    s1 = z3.Int("s1")
+    s2 = z3.Int("s2")
+    part1 = z3.Int("part1")
+    part2 = z3.Int("part2")
+    total = z3.Int("total")
 
     o.add(total == s1 + s2)
     o.add(z3abs(part1 - part2) <= 100)

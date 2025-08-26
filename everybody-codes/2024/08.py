@@ -56,15 +56,15 @@ blocks = 1
 width = 1
 extra_height = 1
 while blocks < target:
-    extra_height = (extra_height * priests) % mod + extra # AKA thickness
+    extra_height = (extra_height * priests) % mod + extra  # AKA thickness
     width += 2
     blocks += width * extra_height
-    
+
     heights.appendleft(0)
     heights.append(0)
     for i in range(len(heights)):
         heights[i] += extra_height
-    
+
 to_remove = 0
 for i in range(1, len(heights) - 1):
     to_remove += (priests * width * heights[i]) % mod

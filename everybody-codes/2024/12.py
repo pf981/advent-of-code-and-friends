@@ -34,13 +34,22 @@ def power_to_hit(x: int, y: int) -> int | None:
 
 
 def min_ranking_to_hit(x: int, y: int) -> int:
-    return min(power * (start_y + 1) for start_y in range(3) if (power := power_to_hit(x, y - start_y)) is not None)
+    return min(
+        power * (start_y + 1)
+        for start_y in range(3)
+        if (power := power_to_hit(x, y - start_y)) is not None
+    )
 
 
 with open("./2024/input/everybody_codes_e2024_q12_p1.txt") as f:
     lines = f.read().splitlines()
 
-targets = [(x - 1, y - 1) for y, line in enumerate(reversed(lines)) for x, c in enumerate(line) if c == 'T']
+targets = [
+    (x - 1, y - 1)
+    for y, line in enumerate(reversed(lines))
+    for x, c in enumerate(line)
+    if c == "T"
+]
 answer1 = sum(min_ranking_to_hit(x, y) for x, y in targets)
 print(answer1)
 
@@ -54,9 +63,9 @@ with open("./2024/input/everybody_codes_e2024_q12_p2.txt") as f:
 targets = []
 for y, line in enumerate(reversed(lines)):
     for x, c in enumerate(line):
-        if c == 'T':
+        if c == "T":
             targets.append((x - 1, y - 1))
-        elif c == 'H':
+        elif c == "H":
             targets.append((x - 1, y - 1))
             targets.append((x - 1, y - 1))
 

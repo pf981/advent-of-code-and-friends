@@ -5,7 +5,7 @@ import itertools
 with open("./2024/input/everybody_codes_e2024_q05_p1.txt") as f:
     lines = f.read().splitlines()
 
-columns = list(zip(*([int(num) for num in line.split(' ')] for line in lines)))
+columns = list(zip(*([int(num) for num in line.split(" ")] for line in lines)))
 columns = [list(column) for column in columns]
 n = len(columns)
 
@@ -14,7 +14,7 @@ for round in range(10):
     num = columns[i].pop(0)
     columns[(i + 1) % n].insert(num - 1, num)
 
-answer1 = ''.join(str(column[0]) for column in columns)
+answer1 = "".join(str(column[0]) for column in columns)
 print(answer1)
 
 
@@ -24,7 +24,7 @@ print(answer1)
 with open("./2024/input/everybody_codes_e2024_q05_p2.txt") as f:
     lines = f.read().splitlines()
 
-columns = list(zip(*([int(num) for num in line.split(' ')] for line in lines)))
+columns = list(zip(*([int(num) for num in line.split(" ")] for line in lines)))
 columns = [list(column) for column in columns]
 n = len(columns)
 counts = collections.Counter()
@@ -43,8 +43,8 @@ for round in itertools.count(1):
         next_column.insert(j, num)
     else:
         next_column.insert(len(next_column) - j, num)
-    
-    s = ''.join(str(column[0]) for column in columns)
+
+    s = "".join(str(column[0]) for column in columns)
     counts[s] += 1
     if counts[s] == 2024:
         answer2 = int(s) * round
@@ -59,7 +59,7 @@ print(answer2)
 with open("./2024/input/everybody_codes_e2024_q05_p3.txt") as f:
     lines = f.read().splitlines()
 
-columns = list(zip(*([int(num) for num in line.split(' ')] for line in lines)))
+columns = list(zip(*([int(num) for num in line.split(" ")] for line in lines)))
 columns = [list(column) for column in columns]
 n = len(columns)
 counts = collections.Counter()
@@ -81,8 +81,8 @@ for round in itertools.count(1):
         next_column.insert(j, num)
     else:
         next_column.insert(len(next_column) - j, num)
-    
-    best = max(best, int(''.join(str(column[0]) for column in columns)))
+
+    best = max(best, int("".join(str(column[0]) for column in columns)))
     tup = (i, tuple(tuple(tuple(col) for col in columns)))
     if tup in seen:
         answer3 = best

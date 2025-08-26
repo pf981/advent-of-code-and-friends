@@ -13,13 +13,13 @@ class UnionFind:
         self.distances[j] += self.distances[i] + d
         self.distances[i] = 0
         self.parents[i] = j
-    
+
     def find(self, i: int) -> int:
         while self.parents[i] != i:
             self.parents[i] = self.parents[self.parents[i]]
             i = self.parents[i]
         return i
-    
+
     def get_sizes(self) -> list[int]:
         combined_distances = collections.Counter()
         counts = collections.Counter()
@@ -40,11 +40,11 @@ def parse(lines: list[str]) -> tuple[list[tuple[int, int, int]], int]:
     nodes = []
     for r, line in enumerate(lines):
         for c, ch in enumerate(line):
-            if ch == '*':
+            if ch == "*":
                 nodes.append((r, c))
 
     n_nodes = len(nodes)
-    edges = [] # d, i, j
+    edges = []  # d, i, j
     for i in range(n_nodes):
         for j in range(n_nodes):
             if i == j:
@@ -96,7 +96,7 @@ print(answer2)
 
 
 with open("./2024/input/everybody_codes_e2024_q17_p3.txt") as f:
-    lines = f.read().splitlines() 
+    lines = f.read().splitlines()
 
 edges, n_nodes = parse(lines)
 uf = UnionFind(n_nodes)

@@ -4,15 +4,15 @@ import heapq
 def solve(lines: list[str]) -> int:
     m = {}
     heap = []
-    end = None # r, c
+    end = None  # r, c
     for row, line in enumerate(lines):
         for col, c in enumerate(line):
-            if c in '# ':
+            if c in "# ":
                 continue
-            if c == 'S':
+            if c == "S":
                 heap.append((0, row, col))
                 m[(row, col)] = 0
-            elif c == 'E':
+            elif c == "E":
                 end = row, col
                 m[(row, col)] = 0
             else:
@@ -37,7 +37,7 @@ def solve(lines: list[str]) -> int:
             d2 = min(
                 abs(m[(r, c)] - m[(r2, c2)]),
                 abs(m[(r, c)] - m[(r2, c2)] - 10),
-                abs(m[(r, c)] - m[(r2, c2)] + 10)
+                abs(m[(r, c)] - m[(r2, c2)] + 10),
             )
             heapq.heappush(heap, (1 + d + d2, r2, c2))
 

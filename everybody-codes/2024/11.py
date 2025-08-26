@@ -4,8 +4,8 @@ import collections
 def parse_lines(lines: list[str]) -> dict[str, list[str]]:
     m = {}
     for line in lines:
-        a, b = line.split(':')
-        m[a] = collections.Counter(b.split(','))
+        a, b = line.split(":")
+        m[a] = collections.Counter(b.split(","))
     return m
 
 
@@ -26,7 +26,7 @@ with open("./2024/input/everybody_codes_e2024_q11_p1.txt") as f:
     lines = f.read().splitlines()
 
 m = parse_lines(lines)
-answer1 = simulate('A', 4, m)
+answer1 = simulate("A", 4, m)
 print(answer1)
 
 
@@ -37,7 +37,7 @@ with open("./2024/input/everybody_codes_e2024_q11_p2.txt") as f:
     lines = f.read().splitlines()
 
 m = parse_lines(lines)
-answer2 = simulate('Z', 10, m)
+answer2 = simulate("Z", 10, m)
 print(answer2)
 
 

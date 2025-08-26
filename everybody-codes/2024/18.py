@@ -6,21 +6,21 @@ def bfs(lines: list[str], start_positions: list[tuple[int, int]]) -> int:
 
     q = collections.deque(start_positions)
     d = 0
-    remaining_p = sum(c == 'P' for line in lines for c in line)
+    remaining_p = sum(c == "P" for line in lines for c in line)
     seen = set(start_positions)
     while q:
         for _ in range(len(q)):
             r, c = q.popleft()
 
-            if lines[r][c] == 'P':
+            if lines[r][c] == "P":
                 remaining_p -= 1
                 if not remaining_p:
                     return d
-            
+
             for dr, dc in [(-1, 0), (0, -1), (0, 1), (1, 0)]:
                 r2 = r + dr
                 c2 = c + dc
-                if not (0 <= c2 < ncols) or (r2, c2) in seen or lines[r2][c2] == '#':
+                if not (0 <= c2 < ncols) or (r2, c2) in seen or lines[r2][c2] == "#":
                     continue
                 seen.add((r2, c2))
                 q.append((r2, c2))
@@ -56,21 +56,21 @@ with open("./2024/input/everybody_codes_e2024_q18_p3.txt") as f:
 nrows = len(lines)
 ncols = len(lines[0])
 
-q = collections.deque() # [(r, c, p_index), ...]
+q = collections.deque()  # [(r, c, p_index), ...]
 seen = {}
 p_index = 0
 for r, line in enumerate(lines):
     for c, ch in enumerate(line):
-        if ch == 'P':
+        if ch == "P":
             q.append((r, c, p_index))
             seen[(r, c)] = {p_index: 0}
             p_index += 1
-        elif ch == '.':
+        elif ch == ".":
             seen[(r, c)] = {}
 n_ps = p_index
 
 d = 0
-answer3 = float('inf')
+answer3 = float("inf")
 while q and d <= answer3:
     for _ in range(len(q)):
         r, c, p_index = q.popleft()
@@ -78,13 +78,13 @@ while q and d <= answer3:
         for dr, dc in [(-1, 0), (0, -1), (0, 1), (1, 0)]:
             r2 = r + dr
             c2 = c + dc
-            if lines[r2][c2] == '#':
+            if lines[r2][c2] == "#":
                 continue
 
             if p_index in seen[(r2, c2)]:
                 continue
             seen[(r2, c2)][p_index] = d
-            if len(seen[(r2, c2)]) == n_ps and lines[r2][c2] == '.':
+            if len(seen[(r2, c2)]) == n_ps and lines[r2][c2] == ".":
                 answer3 = min(answer3, sum(dd + 1 for dd in seen[(r2, c2)].values()))
             q.append((r2, c2, p_index))
     d += 1

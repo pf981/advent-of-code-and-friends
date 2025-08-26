@@ -1,4 +1,3 @@
-
 with open("./2024/input/everybody_codes_e2024_q04_p1.txt") as f:
     lines = f.read().splitlines()
 
