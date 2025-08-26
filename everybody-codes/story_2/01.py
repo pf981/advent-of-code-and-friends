@@ -1,5 +1,5 @@
 import functools
-import itertools
+from typing import Literal
 
 
 @functools.cache
@@ -48,12 +48,12 @@ with open("./story_2/input/everybody_codes_e2_q01_p2.txt") as f:
 board_str, instructions_str = text.split("\n\n")
 board = tuple(board_str.splitlines())
 instructions_list = instructions_str.splitlines()
-max_slot = len(board[0]) // 2 + 2
+max_slot = len(board[0]) // 2 + 1
 answer2 = 0
 
 for i, instructions in enumerate(instructions_list):
     max_coins_won = 0
-    for toss_slot in range(1, max_slot):
+    for toss_slot in range(1, max_slot + 1):
         max_coins_won = max(max_coins_won, get_coins(instructions, toss_slot, board))
     answer2 += max_coins_won
 
@@ -69,17 +69,37 @@ with open("./story_2/input/everybody_codes_e2_q01_p3.txt") as f:
 board_str, instructions_str = text.split("\n\n")
 board = tuple(board_str.splitlines())
 instructions_list = instructions_str.splitlines()
-max_slot = len(board[0]) // 2 + 2
+max_slot = len(board[0]) // 2 + 1
 balls = len(instructions_list)
 
-max_coins_won = 0
-min_coins_won = float("inf")
-for perm in itertools.permutations(range(1, max_slot), balls):
-    coins_won = 0
-    for i, slot in enumerate(perm):
-        coins_won += get_coins(instructions_list[i], slot, board)
-    max_coins_won = max(max_coins_won, coins_won)
-    min_coins_won = min(min_coins_won, coins_won)
+
+@functools.cache
+def get_best_coins(
+    i: int, used_slots: int, func_type: Literal["max"] | Literal["min"]
+) -> int:
+    if i == len(instructions_list):
+        return 0
+
+    if func_type == "max":
+        f = max
+        best_coins = 0
+    else:
+        f = min
+        best_coins = 2 * max_slot * len(instructions_list)
+
+    for toss_slot in range(1, max_slot + 1):
+        mask = 1 << toss_slot
+        if used_slots & mask == 0:
+            best_coins = f(
+                best_coins,
+                get_coins(instructions_list[i], toss_slot, board)
+                + get_best_coins(i + 1, used_slots | mask, func_type),
+            )
+    return best_coins
+
+
+max_coins_won = get_best_coins(0, 0, "max")
+min_coins_won = get_best_coins(0, 0, "min")
 
 answer3 = f"{min_coins_won} {max_coins_won}"
 print(answer3)
