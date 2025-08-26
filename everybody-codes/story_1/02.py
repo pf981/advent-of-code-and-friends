@@ -52,10 +52,12 @@ left_root = None
 right_root = None
 
 for line in lines:
-    _id, l_rank, l_symbol, r_rank, r_symbol = re.match(
+    match = re.match(
         r"ADD id=(-?[0-9]+) left=\[(-?[0-9]+),(.)\] right=\[(-?[0-9]+),(.)\]",
         line,
-    ).groups()
+    )
+    assert match
+    _id, l_rank, l_symbol, r_rank, r_symbol = match.groups()
 
     _id = int(_id)
     l_rank = int(l_rank)
@@ -76,20 +78,22 @@ with open("./story_1/input/everybody_codes_e1_q02_p2.txt") as f:
 
 left_root = None
 right_root = None
-m = {}
+m: dict[int, list[Node]] = {}
 
 for line in lines:
     if line.startswith("SWAP"):
         _id = int(line.split()[1])
-        l, r = m[_id]
-        l.rank, r.rank = r.rank, l.rank
-        l.symbol, r.symbol = r.symbol, l.symbol
+        left, right = m[_id]
+        left.rank, right.rank = right.rank, left.rank
+        left.symbol, right.symbol = right.symbol, left.symbol
         continue
 
-    _id, l_rank, l_symbol, r_rank, r_symbol = re.match(
+    match = re.match(
         r"ADD id=(-?[0-9]+) left=\[(-?[0-9]+),(.)\] right=\[(-?[0-9]+),(.)\]",
         line,
-    ).groups()
+    )
+    assert match
+    _id, l_rank, l_symbol, r_rank, r_symbol = match.groups()
 
     _id = int(_id)
     l_rank = int(l_rank)
@@ -121,17 +125,19 @@ m = {}
 for line in lines:
     if line.startswith("SWAP"):
         _id = int(line.split()[1])
-        l, r = m[_id]
-        l.rank, r.rank = r.rank, l.rank
-        l.symbol, r.symbol = r.symbol, l.symbol
-        l.left, r.left = r.left, l.left
-        l.right, r.right = r.right, l.right
+        left, right = m[_id]
+        left.rank, right.rank = right.rank, left.rank
+        left.symbol, right.symbol = right.symbol, left.symbol
+        left.left, right.left = right.left, left.left
+        left.right, right.right = right.right, left.right
         continue
 
-    _id, l_rank, l_symbol, r_rank, r_symbol = re.match(
+    match = re.match(
         r"ADD id=(-?[0-9]+) left=\[(-?[0-9]+),(.)\] right=\[(-?[0-9]+),(.)\]",
         line,
-    ).groups()
+    )
+    assert match
+    _id, l_rank, l_symbol, r_rank, r_symbol = match.groups()
 
     _id = int(_id)
     l_rank = int(l_rank)

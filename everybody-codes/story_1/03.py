@@ -71,6 +71,7 @@ for i, line in enumerate(lines):
             y = x - y - 1
             x = 1
 
+    assert cycle_start is not None
     cycle_length = day - cycle_start
 
     nums.append(cycle_length)
@@ -104,6 +105,7 @@ for i, line in enumerate(lines):
             y = x - y - 1
             x = 1
 
+    assert cycle_start is not None
     cycle_length = day - cycle_start
 
     nums.append(cycle_length)

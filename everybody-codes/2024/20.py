@@ -1,5 +1,6 @@
 import collections
 import heapq
+import itertools
 
 
 with open("./2024/input/everybody_codes_e2024_q20_p1.txt") as f:
@@ -15,7 +16,7 @@ delta = {"S": -1, ".": -1, "+": +1, "-": -2}
 targets = {(20, c) for c, ch in enumerate(lines[20]) if ch == "+"}
 
 
-def find_best():
+def find_best() -> int:
     heap = [(-100, 100, 1000, start_r, start_c)]  # neg_potential, t, altitude, r, c
     heapq.heapify(heap)
 
@@ -41,6 +42,7 @@ def find_best():
             t2 = t - 1
             neg_potential2 = -(altitude2 + t2)
             heapq.heappush(heap, (neg_potential2, t2, altitude2, r2, c2))
+    assert False
 
 
 answer1 = find_best()
@@ -56,7 +58,7 @@ with open("./2024/input/everybody_codes_e2024_q20_p2.txt") as f:
 nrows = len(lines)
 ncols = len(lines[0])
 
-next_target = {}
+next_target: dict[str | None, tuple[tuple[int, int], str]] = {}
 for r, line in enumerate(lines):
     for c, ch in enumerate(line):
         if ch == "S":
@@ -81,9 +83,7 @@ valid_directions = {
 start_altitude = 10_000
 
 
-def find_best():
-    test = set()
-
+def find_best2() -> int:
     q = collections.deque(
         [(start_altitude, *start, None, "S")]
     )  # altitude, r, c, last_checkpoint, direction
@@ -117,29 +117,27 @@ def find_best():
                             return d + 1
                         continue
 
-                if seen[r2, c2, last_checkpoint2, direction2] >= altitude2:
+                if seen[(r2, c2, last_checkpoint2, direction2)] >= altitude2:
                     continue
 
                 seen[(r2, c2, last_checkpoint2, direction2)] = altitude2
                 q.append((altitude2, r2, c2, last_checkpoint2, direction2))
         d += 1
+    assert False
 
 
-answer2 = find_best()
+answer2 = find_best2()
 print(answer2)
 
 
 # Part 3
 
 
-import itertools
-
-
 # with open("./2024/input/everybody_codes_e2024_q20_p3.txt") as f:
 #     lines = f.read().splitlines()
 
 
-def get_distance(start_altitude):
+def get_distance(start_altitude: int) -> int:
     start_altitude += sum(delta[c] for c in "..")
     segment = itertools.cycle(".+...+...+..")
     distance = 0
