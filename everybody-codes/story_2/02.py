@@ -4,7 +4,6 @@ import itertools
 with open("./story_2/input/everybody_codes_e2_q02_p1.txt") as f:
     text = f.read()
 
-# text = "GRBGGGBBBRRRRRRRR"
 greens = [i for i, c in enumerate(text) if c == "G"]
 reds = [i for i, c in enumerate(text) if c == "R"]
 
@@ -21,7 +20,6 @@ while greens and reds:
             greens.pop()
     answer1 += 1
 
-
 print(answer1)
 
 
@@ -32,29 +30,19 @@ with open("./story_2/input/everybody_codes_e2_q02_p2.txt") as f:
     text = f.read()
 repeat = 100
 
-# text = "GGBR"
-# repeat = 5
-# text = "BBRGGRRGBBRGGBRGBBRRBRRRBGGRRRBGBGG"
-# repeat = 10
-
 balloons = list(text) * repeat
 
 it = itertools.cycle("RGB")
-for answer2 in itertools.count(1):
+answer2 = 0
+while balloons:
     col = next(it)
-    if col != balloons[0]:
-        balloons.pop(0)
-        # print(answer2, "\t", col, "\t", " ".join(balloons))
-        if not balloons:
-            break
-        continue
 
-    if len(balloons) % 2 == 0:  # and col != balloons[len(balloons) // 2]:
+    if col == balloons[0] and len(balloons) % 2 == 0:
         balloons.pop(len(balloons) // 2)
+
     balloons.pop(0)
-    # print(answer2, "\t", col, "\t", " ".join(balloons))
-    if not balloons:
-        break
+
+    answer2 += 1
 
 print(answer2)
 
@@ -70,17 +58,20 @@ left = collections.deque(balloons[: len(balloons) // 2])
 right = collections.deque(balloons[len(balloons) // 2 :])
 
 it = itertools.cycle("RGB")
-for answer3 in itertools.count(1):
+answer3 = 0
+while right or left:
     col = next(it)
-    if len(left) != len(right):
+
+    if len(left) > len(right):
         left.popleft()
-    elif left[0] == col:
-        left.popleft()
-        right.popleft()
-    else:
-        left.popleft()
+    elif len(right) > len(left):
         left.append(right.popleft())
-    if not left and not right:
-        break
+        left.popleft()
+    else:
+        if left[0] == col:
+            right.popleft()
+        left.popleft()
+
+    answer3 += 1
 
 print(answer3)
