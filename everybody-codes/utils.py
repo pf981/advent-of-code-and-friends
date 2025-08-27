@@ -138,15 +138,15 @@ class _EverybodyCodesAPI:
         except:
             return None
     
-    def get_aes_keys(self, event: str, quest: int) -> dict:
-        """Get AES keys for all parts of a quest."""
+    def get_aes_keys_and_answers(self, event: str, quest: int) -> dict:
+        """Get AES keys and answers for all parts of a quest."""
         cache_key = f"{event}_{quest}"
         
         if cache_key not in self._aes_keys_cache:
             # Try to load from cache first
-            cached_keys = self._load_cache_file('aes_keys', cache_key)
-            if cached_keys:
-                self._aes_keys_cache[cache_key] = cached_keys
+            cached_data = self._load_cache_file('aes_keys', cache_key)
+            if cached_data:
+                self._aes_keys_cache[cache_key] = cached_data.get('keys', {})
             else:
                 try:
                     url = f"https://everybody.codes/api/event/{event}/quest/{quest}"
@@ -155,19 +155,42 @@ class _EverybodyCodesAPI:
                     data = response.json()
                     
                     keys = {}
+                    answers = {}
                     for p in [1, 2, 3]:
-                        part_key = data.get(f"key{p}", {})
+                        part_key = data.get(f"key{p}")
                         if part_key:
                             keys[p] = part_key
+                        
+                        part_answer = data.get(f"answer{p}")
+                        if part_answer:
+                            answers[p] = part_answer
+                    
+                    # Cache both keys and answers
+                    cache_data = {
+                        'keys': keys,
+                        'answers': answers
+                    }
                     
                     self._aes_keys_cache[cache_key] = keys
                     
                     # Save to cache
-                    self._save_cache_file('aes_keys', cache_key, keys)
+                    self._save_cache_file('aes_keys', cache_key, cache_data)
+                    
+                    # Also cache answers separately for easy access
+                    self._save_cache_file('answers', cache_key, answers)
                 except:
                     self._aes_keys_cache[cache_key] = {}
         
         return self._aes_keys_cache[cache_key]
+    
+    def get_cached_answers(self, event: str, quest: int) -> dict:
+        """Get cached answers for a quest."""
+        cache_key = f"{event}_{quest}"
+        cached_answers = self._load_cache_file('answers', cache_key)
+        if cached_answers:
+            # Convert string keys back to integers (JSON serialization converts them to strings)
+            return {int(k): v for k, v in cached_answers.items()}
+        return {}
     
     def get_encrypted_input(self, event: str, quest: int, part: int) -> Optional[str]:
         """Get encrypted input for a specific part."""
@@ -224,6 +247,9 @@ class _EverybodyCodesAPI:
                 'timestamp': str(response.headers.get('date', ''))
             })
             
+            if not result.get('correct', False):
+                print(f"Response: {result.get('message', '')}")
+            
             return result.get('correct', False)
         except Exception as e:
             # Cache failed attempts too
@@ -268,7 +294,7 @@ def get_data(event: int, quest: int, part: int) -> str:
         raise Exception(f"Could not fetch encrypted input for event={event}, quest={quest}, part={part}")
     
     # Get AES keys
-    aes_keys = _api.get_aes_keys(event_str, quest)
+    aes_keys = _api.get_aes_keys_and_answers(event_str, quest)
     aes_key = aes_keys.get(part)
     if not aes_key:
         raise Exception(f"Could not fetch AES key for event={event}, quest={quest}, part={part}")
@@ -287,7 +313,7 @@ def get_data(event: int, quest: int, part: int) -> str:
     return decrypted_input
 
 
-def submit(answer, event: int, quest: int, part: int) -> bool:
+def submit(answer, event: int, quest: int, part: int) -> None:
     """
     Submit an answer for a challenge part.
     
@@ -298,10 +324,29 @@ def submit(answer, event: int, quest: int, part: int) -> bool:
         part: Part number (1, 2, or 3)
     
     Returns:
-        True if submission was successful, False otherwise
+        None on success
+    
+    Raises:
+        Exception: If the answer is incorrect
     """
     event_str = str(event)
-    return _api.submit_answer(str(answer), event_str, quest, part)
+    
+    # Check if we have a cached answer for this quest/part
+    cached_answers = _api.get_cached_answers(event_str, quest)
+    cached_answer = cached_answers.get(part)
+    
+    if cached_answer:
+        if str(answer) == str(cached_answer):
+            print(f"Answer {answer} is already known to be correct for event={event}, quest={quest}, part={part}")
+            return None
+        else:
+            raise Exception(f"Answer {answer} is incorrect. Correct answer is {cached_answer}")
+    
+    result = _api.submit_answer(str(answer), event_str, quest, part)
+    if not result:
+        raise Exception(f"Answer {answer} is incorrect")
+    
+    return None
 
 
 def check_auth() -> bool:
