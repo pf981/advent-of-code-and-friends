@@ -84,10 +84,10 @@ ncols = len(grid[0])
 all_rolls = parse_rolls(dice_str, nrows * ncols * 3)
 
 good = set()  # {(r, c), ..}
-seen = set()  # r ,c, dice_i, roll_i
+seen = set()  # {(r, c, dice_i, roll_i), ...}
 
 
-def dfs(r, c, dice_i, roll_i):
+def dfs(r: int, c: int, dice_i: int, roll_i: int) -> None:
     if (r, c, dice_i, roll_i) in seen:
         return
     seen.add(((r, c, dice_i, roll_i)))
