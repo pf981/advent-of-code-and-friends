@@ -187,9 +187,9 @@ def test_solution2(r):
     assert r("|||||||") == "O"
     assert r("||||||") == "E"
     for num in range(1, 10):
-        assert r(tally(num)) == "EO"[num % 2], (
-            f"Expect {num} is {['even', 'odd'][num % 2]}"
-        )
+        assert (
+            r(tally(num)) == "EO"[num % 2]
+        ), f"Expect {num} is {['even', 'odd'][num % 2]}"
 
 
 def test_solution3(r):
@@ -316,3 +316,13 @@ def test_solution14(r):
 
     for num in range(1000):
         assert r(f"{num:b}") == str(num)
+
+
+def test_solution15(r):
+    assert r("|||||||||") == "|||"
+
+    for num in range(1, 20):
+        assert r(tally(num * num)) == tally(num)
+
+    assert r(tally(67 * 67)) == tally(67)
+    assert r(tally(80 * 80)) == tally(80)
