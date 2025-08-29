@@ -26,12 +26,13 @@ def generate_code() -> str:
 
     a("NEXT | ACC_2 X L")
 
-    max_accumulate = 256
+    max_accumulate = 104
     for i in range(2, max_accumulate, 2):
         a(f"ACC_{i} | ACC_{i + 2} X L")
         a(f"ACC_{i} _ APPEND_{i} _ R")
 
     a(f"ACC_{max_accumulate} | APPEND_{max_accumulate} | R")
+    a(f"ACC_{max_accumulate} _ APPEND_{max_accumulate} _ R")
 
     for i in range(2, max_accumulate + 1, 2):
         for c in "X,Y":

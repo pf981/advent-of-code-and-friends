@@ -326,3 +326,4 @@ def test_solution15(r):
 
     assert r(tally(67 * 67)) == tally(67)
     assert r(tally(80 * 80)) == tally(80)
+    assert r(tally(81 * 81)) == tally(81)
