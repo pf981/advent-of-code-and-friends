@@ -1,0 +1,9 @@
+[project]
+name = "i18n"
+version = "0.1.0"
+description = "Solutions to i18n-puzzles.com"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "ipykernel>=6.30.1",
+]
