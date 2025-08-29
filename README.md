@@ -11,7 +11,7 @@ A collection of solutions to various coding challenges and puzzles, all in one p
 | [`coding-mystery/`](coding-mystery/) | [Coding Mystery](https://codingmystery.com/) | Escape-room-inspired mysteries full of coding puzzles | ✅ 1/1 Free Quest |
 | [`coding-quest/`](coding-quest/) | [Coding Quest](https://codingquest.io/) | Annual programming puzzles | ✅ 2022,2023,2024 |
 | [`codyssi/`](codyssi/) | [Codyssi](https://www.codyssi.com/) | Puzzles similar to Advent of Code | ✅ 2024,2025 |
-| [`everybody-codes/`](everybody-codes/) | [Everybody Codes](https://everybody.codes/) | Puzzles similar to Advent of Code | ✅ Events: 1/1; Stories: 1/1 |
+| [`everybody-codes/`](everybody-codes/) | [Everybody Codes](https://everybody.codes/) | Puzzles similar to Advent of Code | ✅ 78/78 🦆 |
 | [`exercism/`](exercism/) | [Exercism](https://exercism.org/) | Coding practice and mentorship platform | ✅ 125/125 Gleam Puzzles |
 | [`hanukkah-of-data/`](hanukkah-of-data/) | [Hanukkah of Data](https://hanukkah.bluebird.sh/) | Data challenges | ✅ |
 | [`marches-and-gnats/`](marches-and-gnats/) | [Marches and Gnats](https://mng.quest/) | Puzzles using a primitive turing machine | ✅ 13/13 |
