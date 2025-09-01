@@ -19,8 +19,6 @@ def caesar(plaintext: str, shift: int) -> str:
 
 
 pattern = re.compile("οδυσσευς|οδυσσεως|οδυσσει|οδυσσεα|οδυσσευ", re.UNICODE)
-caesar(text.splitlines()[0].lower(), 1)
-
 answer = 0
 for line in text.lower().splitlines():
     for shift in range(len(alphabet)):
