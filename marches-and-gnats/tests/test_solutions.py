@@ -327,3 +327,61 @@ def test_solution15(r):
     assert r(tally(67 * 67)) == tally(67)
     assert r(tally(80 * 80)) == tally(80)
     assert r(tally(81 * 81)) == tally(81)
+
+
+def test_solution16(r):
+    random.seed(0)
+    assert r("IX") == "|||||||||"
+
+    def roman(n: int) -> str:
+        values = [
+            ("I", 1),
+            ("IV", 4),
+            ("V", 5),
+            ("IX", 9),
+            ("X", 10),
+            ("XL", 40),
+            ("L", 50),
+            ("XC", 90),
+            ("C", 100),
+            ("CD", 400),
+            ("D", 500),
+            ("CM", 900),
+            ("M", 1000),
+        ]
+
+        result = ""
+        while n:
+            while values[-1][1] > n:
+                values.pop()
+            result += values[-1][0]
+            n -= values[-1][1]
+
+        return result
+
+    for num in [
+        1,
+        4,
+        5,
+        9,
+        10,
+        40,
+        49,
+        50,
+        90,
+        99,
+        100,
+        400,
+        499,
+        500,
+        900,
+        999,
+        1000,
+        3999,
+    ]:
+        assert (r(roman(num))) == tally(num)
+
+    # for num in range(1, 4000):
+    for _ in range(100):
+        num = random.randint(1, 3999)
+        assert (r(roman(num))) == tally(num)
