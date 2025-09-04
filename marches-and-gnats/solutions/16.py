@@ -6,17 +6,6 @@ def generate_code() -> str:
 
     letters = "IVXLCDM"
     subtractive = {"I": {"V", "X"}, "X": {"L", "C"}, "C": {"D", "M"}}
-    # non_subtractive = "VLDM"
-
-    # Rule 4: Only I, X, and C can be used as subtractive numerals.
-    # There can be 6 combinations when we subtract. These are
-    # IV = 5 - 1 = 4;
-    # IX = 10 - 1 = 9;
-    # XL = 50 - 10 = 40;
-    # XC = 100 - 10 = 90;
-    # CD = 500 - 100 = 400;
-    # and CM = 1000 - 100 = 900
-
     m = {"I": 1, "V": 5, "X": 10, "L": 50, "C": 100, "D": 500, "M": 1000}
 
     for c in letters:
