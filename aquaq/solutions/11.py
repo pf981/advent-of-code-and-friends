@@ -1,7 +1,7 @@
 with open("./input/11.txt") as f:
     text = f.read()
 
-used: dict[tuple[int, int], int] = {}  # (x, y) -> id_
+used: dict[tuple[int, int], int] = {}  # (x, y) -> i
 keep = set()
 
 for i, line in enumerate(text.splitlines()[1:]):
@@ -14,5 +14,5 @@ for i, line in enumerate(text.splitlines()[1:]):
             else:
                 used[(x, y)] = i
 
-answer = sum(id_ in keep for _, id_ in used.items())
+answer = sum(i in keep for i in used.values())
 print(answer)
