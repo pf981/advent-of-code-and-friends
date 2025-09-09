@@ -25,7 +25,7 @@ for line in text.splitlines()[1:]:
         neutral,
     ) = line.split(",")
 
-    date = dateutil.parser.parse(date_str)
+    date = dateutil.parser.parse(date_str).date()
 
     for team, score in [(home_team, home_score), (away_team, away_score)]:
         if int(score) == 0:
