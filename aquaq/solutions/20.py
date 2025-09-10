@@ -3,26 +3,27 @@ with open("./input/20.txt") as f:
 
 answer = 0
 possibilities = {0}
-for card in text.strip().split():
-    if card == "A":
-        val = 11
-    elif card in "JQK":
-        val = 10
-    else:
-        val = int(card)
 
-    possibilities2 = set()
+values = {
+    "A": [1, 11],
+    "J": [10],
+    "Q": [10],
+    "K": [10],
+    **{str(i): [i] for i in range(2, 11)},
+}
+
+for card in text.split():
+    next_poss = set()
     for p in possibilities:
-        possibilities2.add(p + val)
-        if card == "A":
-            possibilities2.add(p + 1)
+        for val in values[card]:
+            total = p + val
+            if total <= 21:
+                next_poss.add(total)
 
-    possibilities = {p for p in possibilities2 if p <= 21}
-
-    if 21 in possibilities:
-        possibilities = {0}
+    if 21 in next_poss:
         answer += 1
-    if not possibilities:
         possibilities = {0}
+    else:
+        possibilities = next_poss or {0}
 
 print(answer)
