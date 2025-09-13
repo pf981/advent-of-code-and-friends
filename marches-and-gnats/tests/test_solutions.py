@@ -385,3 +385,35 @@ def test_solution16(r):
     for _ in range(100):
         num = random.randint(1, 3999)
         assert (r(roman(num))) == tally(num)
+
+
+def test_solution17(r):
+    random.seed(0)
+    assert r("+") == "+++-----+++"
+
+    def sim(state: str) -> str:
+        for _ in range(5):
+            state2 = []
+            for i in range(-1, len(state) + 1):
+                print(f"{i=} {state=} {len(state)=}")
+                neighbors = 0
+                if i - 1 >= 0 and state[i - 1] == "+":
+                    print("a")
+                    neighbors += 1
+                if 0 <= i < len(state) and state[i] == "+":
+                    print("b")
+                    neighbors += 1
+                if i + 1 < len(state) and state[i + 1] == "+":
+                    print("c")
+                    neighbors += 1
+
+                print(f"{i=} {neighbors=}")
+
+                state2.append("+" if neighbors == 1 else "-")
+            state = "".join(state2)
+        return state
+
+    for _ in range(1000):
+        n = random.randint(1, 100)
+        state = "".join(random.choice("+-") for _ in range(n))
+        assert r(state) == sim(state)
