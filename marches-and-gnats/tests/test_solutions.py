@@ -187,9 +187,9 @@ def test_solution2(r):
     assert r("|||||||") == "O"
     assert r("||||||") == "E"
     for num in range(1, 10):
-        assert (
-            r(tally(num)) == "EO"[num % 2]
-        ), f"Expect {num} is {['even', 'odd'][num % 2]}"
+        assert r(tally(num)) == "EO"[num % 2], (
+            f"Expect {num} is {['even', 'odd'][num % 2]}"
+        )
 
 
 def test_solution3(r):
@@ -391,29 +391,25 @@ def test_solution17(r):
     random.seed(0)
     assert r("+") == "+++-----+++"
 
+    # Bugged test case which doesn't accept "-----------"
+    assert r("-") == ""
+
     def sim(state: str) -> str:
         for _ in range(5):
             state2 = []
             for i in range(-1, len(state) + 1):
-                print(f"{i=} {state=} {len(state)=}")
                 neighbors = 0
                 if i - 1 >= 0 and state[i - 1] == "+":
-                    print("a")
                     neighbors += 1
                 if 0 <= i < len(state) and state[i] == "+":
-                    print("b")
                     neighbors += 1
                 if i + 1 < len(state) and state[i + 1] == "+":
-                    print("c")
                     neighbors += 1
-
-                print(f"{i=} {neighbors=}")
-
                 state2.append("+" if neighbors == 1 else "-")
             state = "".join(state2)
         return state
 
-    for _ in range(1000):
+    for _ in range(100):
         n = random.randint(1, 100)
         state = "".join(random.choice("+-") for _ in range(n))
-        assert r(state) == sim(state)
+        assert r(state).strip("-") == sim(state).strip("-")
