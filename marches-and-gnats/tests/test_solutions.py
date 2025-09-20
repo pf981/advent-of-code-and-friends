@@ -413,3 +413,19 @@ def test_solution17(r):
         n = random.randint(1, 100)
         state = "".join(random.choice("+-") for _ in range(n))
         assert r(state).strip("-") == sim(state).strip("-")
+
+
+def test_solution18(r):
+    random.seed(0)
+    assert r("||||||÷||||") == "|,||"
+    assert r("||||||÷|||") == "||,"
+    assert r("|÷|") == "|,"
+    assert r(f"{tally(4600)}÷{tally(74)}") == ",".join(
+        tally(num) for num in divmod(4600, 74)
+    )
+
+    for _ in range(100):
+        numerator = random.randint(1, 100)
+        denominator = random.randint(1, 100)
+        expected = ",".join(tally(num) for num in divmod(numerator, denominator))
+        assert r(f"{tally(numerator)}÷{tally(denominator)}") == expected
