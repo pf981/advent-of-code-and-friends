@@ -3,12 +3,12 @@ import heapq
 with open("./input/34.txt") as f:
     text = f.read()
 
-text = """station,r1,r2,r3
-a,00:01,,00:02
-b,00:16,,00:17
-c,,00:21,
-d,00:46,00:51,00:47
-"""
+# text = """station,r1,r2,r3
+# a,00:01,,00:02
+# b,00:16,,00:17
+# c,,00:21,
+# d,00:46,00:51,00:47
+# """
 
 n_routes = len(text.splitlines()[0].split(",")) - 1
 routes: list[list[int | None]] = [[] for _ in range(n_routes)]
@@ -41,26 +41,16 @@ for line in text.splitlines()[1:]:
 
         prevs[route] = t
 
-assert all(start is not None for start in starts)
-
-# for route, stops in enumerate(routes):
-#     for station, t in enumerate(stops):
-#         if t is None:
-#             continue
-#         heapq.heappush(heap, (station, t, route))
-#         starts[route] = t
-#         break
 ends = starts.copy()
-
 n_stations = len(routes[0])
 occupied_until = [0] * n_stations
 
 while heap:
     t, station, route = heapq.heappop(heap)
-    print(f"{t=} {station=} {route=}")
+    # print(f"{t=} {station=} {route=}")
 
     if occupied_until[station] > t:
-        print(f"  Delayed until {occupied_until[station]}")
+        # print(f"  Delayed until {occupied_until[station]}")
         heapq.heappush(heap, (occupied_until[station], station, route))
         continue
 
@@ -74,5 +64,11 @@ while heap:
             break
 
 
-answer = max(end - start for start, end in zip(starts, ends))
+answer = 0
+for start, end in zip(starts, ends):
+    assert start is not None
+    assert end is not None
+    answer = max(answer, end - start)
 print(answer)
+
+# Try to submit 2370
