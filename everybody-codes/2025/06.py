@@ -1,16 +1,18 @@
 import collections
 
+from typing import Deque, DefaultDict
+
 
 with open("./2025/input/everybody_codes_e2025_q06_p1.txt") as f:
     text = f.read().strip()
 
 answer1 = 0
-mentors = 0
+a_mentors = 0
 for c in text:
     if c == "A":
-        mentors += 1
+        a_mentors += 1
     elif c == "a":
-        answer1 += mentors
+        answer1 += a_mentors
 
 print(answer1)
 
@@ -22,7 +24,7 @@ with open("./2025/input/everybody_codes_e2025_q06_p2.txt") as f:
     text = f.read().strip()
 
 answer2 = 0
-mentors = collections.Counter()
+mentors: collections.Counter[str] = collections.Counter()
 for c in text:
     if c.isupper():
         mentors[c] += 1
@@ -37,12 +39,14 @@ print(answer2)
 
 def count_left_to_right(text: str, max_dist: int) -> int:
     result = 0
-    mentors = collections.defaultdict(collections.deque)
+    mentors_qs: DefaultDict[str, Deque[int]] = collections.defaultdict(
+        collections.deque
+    )
     for i, c in enumerate(text):
         if c.isupper():
-            mentors[c].append(i)
+            mentors_qs[c].append(i)
         else:
-            q = mentors[c.upper()]
+            q = mentors_qs[c.upper()]
             while q and q[0] < i - max_dist:
                 q.popleft()
             result += len(q)
