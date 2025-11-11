@@ -1,3 +1,17 @@
+def parse(text: str) -> tuple[list[str], dict[str, list[str]]]:
+    names_str, instrs_str = text.split("\n\n")
+
+    names = names_str.split(",")
+    instructions = {}
+
+    for line in instrs_str.splitlines():
+        a, b = line.split(" > ")
+        assert a not in instructions
+        instructions[a] = b.split(",")
+
+    return names, instructions
+
+
 def is_valid(name: str) -> bool:
     for a, b in zip(name[:-1], name[1:]):
         if b not in instructions[a]:
@@ -8,21 +22,9 @@ def is_valid(name: str) -> bool:
 with open("./2025/input/everybody_codes_e2025_q07_p1.txt") as f:
     text = f.read()
 
-names_str, instrs_str = text.split("\n\n")
+names, instructions = parse(text)
 
-names = names_str.split(",")
-instructions = {}
-
-for line in instrs_str.splitlines():
-    a, b = line.split(" > ")
-    assert a not in instructions
-    instructions[a] = b.split(",")
-
-for name in names:
-    if is_valid(name):
-        answer1 = name
-        break
-
+answer1 = next(name for name in names if is_valid(name))
 print(answer1)
 
 
@@ -32,35 +34,13 @@ print(answer1)
 with open("./2025/input/everybody_codes_e2025_q07_p2.txt") as f:
     text = f.read()
 
-names_str, instrs_str = text.split("\n\n")
-
-names = names_str.split(",")
-instructions = {}
-
-for line in instrs_str.splitlines():
-    a, b = line.split(" > ")
-    assert a not in instructions
-    instructions[a] = b.split(",")
+names, instructions = parse(text)
 
 answer2 = sum(i for i, name in enumerate(names, 1) if is_valid(name))
 print(answer2)
 
 
 # Part 3
-
-
-with open("./2025/input/everybody_codes_e2025_q07_p3.txt") as f:
-    text = f.read()
-
-prefixes_str, instrs_str = text.split("\n\n")
-
-prefixes = prefixes_str.split(",")
-instructions = {}
-
-for line in instrs_str.splitlines():
-    a, b = line.split(" > ")
-    assert a not in instructions
-    instructions[a] = b.split(",")
 
 
 cur_name: list[str] = []
@@ -81,6 +61,10 @@ def backtrack(prev: str, length: int) -> None:
         cur_name.pop()
 
 
+with open("./2025/input/everybody_codes_e2025_q07_p3.txt") as f:
+    text = f.read()
+
+prefixes, instructions = parse(text)
 for prefix in prefixes:
     if not is_valid(prefix):
         continue
