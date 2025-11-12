@@ -1,3 +1,6 @@
+import functools
+
+
 def parse(text: str) -> tuple[list[str], dict[str, list[str]]]:
     names_str, instrs_str = text.split("\n\n")
 
@@ -43,36 +46,42 @@ print(answer2)
 # Part 3
 
 
-cur_name: list[str] = []
-all_names: set[str] = set()
-
-
-def backtrack(prev: str, length: int) -> None:
+@functools.cache
+def get_suffixes(prev: str, length: int) -> frozenset[str]:
+    # print(f"{prev=} {length=}")
     if length == 0:
-        all_names.add("".join(cur_name))
-        return
+        return frozenset([""])
 
     if prev not in instructions:
-        return
+        return frozenset()
 
-    for nxt in instructions[prev]:
-        cur_name.append(nxt)
-        backtrack(nxt, length - 1)
-        cur_name.pop()
+    result: set[str] = set()
+    for c in instructions[prev]:
+        suffixes = get_suffixes(c, length - 1)
+        # print(f"  {prev=} {length=} {suffixes=}")
+
+        for suffix in suffixes:
+            result.add(c + suffix)
+
+    # print(f"  {prev=} {length=} {result=}")
+    return frozenset(result)
 
 
 with open("./2025/input/everybody_codes_e2025_q07_p3.txt") as f:
     text = f.read()
 
+
 prefixes, instructions = parse(text)
+
+all_names: set[str] = set()
 for prefix in prefixes:
     if not is_valid(prefix):
+        print(f"Skipping {prefix=}")
         continue
 
     for length in range(7 - len(prefix), 11 - len(prefix) + 1):
-        cur_name.append(prefix)
-        backtrack(prefix[-1], length)
-        cur_name.pop()
+        for suffix in get_suffixes(prefix[-1], length):
+            all_names.add(prefix + suffix)
 
 answer3 = len(all_names)
 print(answer3)
