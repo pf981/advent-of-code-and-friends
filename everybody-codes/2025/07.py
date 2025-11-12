@@ -47,24 +47,22 @@ print(answer2)
 
 
 @functools.cache
-def get_suffixes(prev: str, length: int) -> frozenset[str]:
-    # print(f"{prev=} {length=}")
+def count_ways(prev: str, length: int) -> int | None:
     if length == 0:
-        return frozenset([""])
+        return 1
 
     if prev not in instructions:
-        return frozenset()
+        return None
 
-    result: set[str] = set()
+    ways = None
     for c in instructions[prev]:
-        suffixes = get_suffixes(c, length - 1)
-        # print(f"  {prev=} {length=} {suffixes=}")
+        result = count_ways(c, length - 1)
+        if result is not None:
+            if ways is None:
+                ways = 0
+            ways += result
 
-        for suffix in suffixes:
-            result.add(c + suffix)
-
-    # print(f"  {prev=} {length=} {result=}")
-    return frozenset(result)
+    return ways
 
 
 with open("./2025/input/everybody_codes_e2025_q07_p3.txt") as f:
@@ -73,15 +71,25 @@ with open("./2025/input/everybody_codes_e2025_q07_p3.txt") as f:
 
 prefixes, instructions = parse(text)
 
-all_names: set[str] = set()
-for prefix in prefixes:
+# If two strings share a prefix, keep only the shortest
+# to prevent double-counting
+prefixes.sort(key=len, reverse=True)
+final_prefixes = []
+for i in range(len(prefixes)):
+    for j in range(i + 1, len(prefixes)):
+        if prefixes[i].startswith(prefixes[j]):
+            break
+    else:
+        final_prefixes.append(prefixes[i])
+
+answer3 = 0
+for prefix in final_prefixes:
     if not is_valid(prefix):
-        print(f"Skipping {prefix=}")
         continue
 
     for length in range(7 - len(prefix), 11 - len(prefix) + 1):
-        for suffix in get_suffixes(prefix[-1], length):
-            all_names.add(prefix + suffix)
+        result = count_ways(prefix[-1], length)
+        if result is not None:
+            answer3 += result
 
-answer3 = len(all_names)
 print(answer3)
