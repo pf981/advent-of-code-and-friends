@@ -77,16 +77,13 @@ prefixes.sort(key=len, reverse=True)
 final_prefixes = []
 for i in range(len(prefixes)):
     for j in range(i + 1, len(prefixes)):
-        if prefixes[i].startswith(prefixes[j]):
+        if prefixes[i].startswith(prefixes[j]) or not is_valid(prefixes[i]):
             break
     else:
         final_prefixes.append(prefixes[i])
 
 answer3 = 0
 for prefix in final_prefixes:
-    if not is_valid(prefix):
-        continue
-
     for length in range(7 - len(prefix), 11 - len(prefix) + 1):
         result = count_ways(prefix[-1], length)
         if result is not None:
