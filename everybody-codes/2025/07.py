@@ -2,12 +2,12 @@ import functools
 
 
 def parse(text: str) -> tuple[list[str], dict[str, list[str]]]:
-    names_str, instrs_str = text.split("\n\n")
+    names_str, instructions_str = text.split("\n\n")
 
     names = names_str.split(",")
     instructions = {}
 
-    for line in instrs_str.splitlines():
+    for line in instructions_str.splitlines():
         a, b = line.split(" > ")
         assert a not in instructions
         instructions[a] = b.split(",")
@@ -47,22 +47,14 @@ print(answer2)
 
 
 @functools.cache
-def count_ways(prev: str, length: int) -> int | None:
+def count_ways(prev: str, length: int) -> int:
     if length == 0:
         return 1
 
     if prev not in instructions:
-        return None
+        return 0
 
-    ways = None
-    for c in instructions[prev]:
-        result = count_ways(c, length - 1)
-        if result is not None:
-            if ways is None:
-                ways = 0
-            ways += result
-
-    return ways
+    return sum(count_ways(c, length - 1) for c in instructions[prev])
 
 
 with open("./2025/input/everybody_codes_e2025_q07_p3.txt") as f:
@@ -73,17 +65,15 @@ prefixes, instructions = parse(text)
 
 # If two strings share a prefix, keep only the shortest
 # to prevent double-counting
-prefixes.sort(key=len, reverse=True)
-final_prefixes = []
-for i in range(len(prefixes)):
-    for j in range(i + 1, len(prefixes)):
-        if prefixes[i].startswith(prefixes[j]) or not is_valid(prefixes[i]):
-            break
-    else:
-        final_prefixes.append(prefixes[i])
+prefixes = [
+    prefix
+    for prefix in prefixes
+    if not any(other != prefix and prefix.startswith(other) for other in prefixes)
+    and is_valid(prefix)
+]
 
 answer3 = 0
-for prefix in final_prefixes:
+for prefix in prefixes:
     for length in range(7 - len(prefix), 11 - len(prefix) + 1):
         result = count_ways(prefix[-1], length)
         if result is not None:
