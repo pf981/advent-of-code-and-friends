@@ -69,13 +69,8 @@ nums = [int(x) - 1 for x in lines[0].split(",")]
 pair_counts = collections.Counter(zip(nums[:-1], nums[1:]))
 
 answer3 = 0
-for a1 in range(nails):
-    for b1 in range(nails):
-        if a1 < b1:
-            a1, b1 = b1, a1
-        if a1 == b1:
-            continue
-
+for a1 in range(1, nails):
+    for b1 in range(a1):
         cuts = 0
         for (a, b), count in pair_counts.items():
             if a in (a1, b1) or b in (a1, b1):
