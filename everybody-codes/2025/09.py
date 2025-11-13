@@ -1,21 +1,15 @@
+import collections
+
+
 with open("./2025/input/everybody_codes_e2025_q09_p1.txt") as f:
     lines = f.read().splitlines()
 
-# lines = """1:CAAGCGCTAAGTTCGCTGGATGTGTGCCCGCG
-# 2:CTTGAATTGGGCCGTTTACCTGGTTTAACCAT
-# 3:CTAGCGCTGAGCTGGCTGCCTGGTTGACCGCG""".splitlines()
+p1, p2, child = [line.split(":")[1] for line in lines]
 
-child = lines[2][2:]
-p1 = lines[1][2:]
-p2 = lines[0][2:]
+s1 = sum(a == b for a, b in zip(child, p1))
+s2 = sum(a == b for a, b in zip(child, p2))
 
-x = y = 0
-for a, b in zip(child, p1):
-    x += a == b
-for a, b in zip(child, p2):
-    y += a == b
-
-answer1 = x * y
+answer1 = s1 * s2
 print(answer1)
 
 
@@ -25,45 +19,27 @@ print(answer1)
 with open("./2025/input/everybody_codes_e2025_q09_p2.txt") as f:
     lines = f.read().splitlines()
 
-# lines = """1:GCAGGCGAGTATGATACCCGGCTAGCCACCCC
-# 2:TCTCGCGAGGATATTACTGGGCCAGACCCCCC
-# 3:GGTGGAACATTCGAAAGTTGCATAGGGTGGTG
-# 4:GCTCGCGAGTATATTACCGAACCAGCCCCTCA
-# 5:GCAGCTTAGTATGACCGCCAAATCGCGACTCA
-# 6:AGTGGAACCTTGGATAGTCTCATATAGCGGCA
-# 7:GGCGTAATAATCGGATGCTGCAGAGGCTGCTG""".splitlines()
-
-scales = []
-for line in lines:
-    scales.append(line.split(":")[1])
-
+scales = [line.split(":")[1] for line in lines]
 n = len(scales)
 
-assert len(scales) == len(set(scales))
-
-similarities = []
-for i in range(n):
-    child = scales[i]
-    for p1i in range(n):
-        p1 = scales[p1i]
-        if p1 == child:
+answer2 = 0
+for i_child in range(n):
+    for i_p1 in range(n):
+        if i_p1 == i_child:
             continue
-        for p2i in range(p1i + 1, n):
-            p2 = scales[p2i]
-            if p2 in (p1, child):
+        for i_p2 in range(i_p1 + 1, n):
+            if i_p2 in (i_p1, i_child):
                 continue
 
-            # print(f"{child=} {p1=} {p2=}")
             d1 = d2 = 0
-            for cc, a, b in zip(child, p1, p2):
-                if cc not in (a, b):
+            for child, p1, p2 in zip(scales[i_child], scales[i_p1], scales[i_p2]):
+                if child not in (p1, p2):
                     break
-                d1 += cc == a
-                d2 += cc == b
+                d1 += child == p1
+                d2 += child == p2
             else:
-                similarities.append(d1 * d2)
+                answer2 += d1 * d2
 
-answer2 = sum(similarities)
 print(answer2)
 
 
@@ -74,23 +50,8 @@ with open("./2025/input/everybody_codes_e2025_q09_p3.txt") as f:
     lines = f.read().splitlines()
 
 
-# lines = """1:GCAGGCGAGTATGATACCCGGCTAGCCACCCC
-# 2:TCTCGCGAGGATATTACTGGGCCAGACCCCCC
-# 3:GGTGGAACATTCGAAAGTTGCATAGGGTGGTG
-# 4:GCTCGCGAGTATATTACCGAACCAGCCCCTCA
-# 5:GCAGCTTAGTATGACCGCCAAATCGCGACTCA
-# 6:AGTGGAACCTTGGATAGTCTCATATAGCGGCA
-# 7:GGCGTAATAATCGGATGCTGCAGAGGCTGCTG
-# 8:GGCGTAAAGTATGGATGCTGGCTAGGCACCCG""".splitlines()
-
-scales = []
-for line in lines:
-    scales.append(line.split(":")[1])
-
+scales = [line.split(":")[1] for line in lines]
 n = len(scales)
-
-assert len(scales) == len(set(scales))
-
 parents = list(range(n))
 
 
@@ -107,33 +68,23 @@ def find(i):
     return i
 
 
-similarities = []
-for i in range(n):
-    child = scales[i]
-    for p1i in range(n):
-        p1 = scales[p1i]
-        if p1 == child:
+for i_child in range(n):
+    for i_p1 in range(n):
+        if i_p1 == i_child:
             continue
-        for p2i in range(p1i + 1, n):
-            p2 = scales[p2i]
-            if p2 in (p1, child):
+        for i_p2 in range(i_p1 + 1, n):
+            if i_p2 in (i_p1, i_child):
                 continue
 
-            # print(f"{child=} {p1=} {p2=}")
-            d1 = d2 = 0
-            for cc, a, b in zip(child, p1, p2):
-                if cc not in (a, b):
-                    break
-                d1 += cc == a
-                d2 += cc == b
-            else:
-                similarities.append(d1 * d2)
-                union(i, p1i)
-                union(i, p2i)
+            if all(
+                child in (p1, p2)
+                for child, p1, p2 in zip(scales[i_child], scales[i_p1], scales[i_p2])
+            ):
+                union(i_child, i_p1)
+                union(i_child, i_p2)
 
-import collections
 
-groups = collections.Counter()
+groups: collections.Counter[int] = collections.Counter()
 for i in range(n):
     groups[find(i)] += i + 1
 
