@@ -121,9 +121,14 @@ for r, line in enumerate(lines):
         valid.add((r, c))
 assert dragon
 
-target = frozenset(sheep)
 sheep_cols = [c for _, c in sheep]
 nrows = len(lines)
+ncols = len(lines[0])
+
+escape_rows = [nrows] * ncols
+for c in range(ncols):
+    while escape_rows[c] > 0 and lines[escape_rows[c] - 1][c] == "#":
+        escape_rows[c] -= 1
 
 
 @functools.cache
@@ -137,26 +142,30 @@ def count_ways(r, c, sheep_rows):
     sheep_rows = tuple(sheep_rows)
 
     # Check
-    if any(r_sheep == nrows for r_sheep in sheep_rows):
-        return 0
     if all(r_sheep is None for r_sheep in sheep_rows):
         return 1
 
     # Sheep move
-    next_sheep_rows = []
+    next_sheep_rows = None
     for i, (r2, c2) in enumerate(zip(sheep_rows, sheep_cols)):
         if r2 is None:  # Already eaten
             continue
         if (r, c) not in hideouts and (r2 + 1, c2) == (r, c):  # Would be eaten
             continue
 
+        if next_sheep_rows is None:  # Sheep can move
+            next_sheep_rows = []
+
+        if r2 + 1 == escape_rows[c2]:  # Sheep would exit
+            continue
+
         nxt = list(sheep_rows)
         nxt[i] += 1
         next_sheep_rows.append(tuple(nxt))
-    if not next_sheep_rows:
-        next_sheep_rows.append(sheep_rows)
+    if next_sheep_rows is None:  # No sheep can move
+        next_sheep_rows = [sheep_rows]
 
-    # D move
+    # Dragon move
     result = 0
     for dr, dc in [
         (-2, -1),
