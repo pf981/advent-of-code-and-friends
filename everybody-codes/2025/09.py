@@ -1,13 +1,25 @@
 import collections
 
 
+def parse(text: str) -> list[int]:
+    m = {"A": 0b0001, "T": 0b0010, "C": 0b0100, "G": 0b1000}
+    nums = []
+    for line in text.splitlines():
+        num = 0
+        for i, c in enumerate(line.split(":")[1]):
+            num |= m[c] << (i * 4)
+        nums.append(num)
+
+    return nums
+
+
 with open("./2025/input/everybody_codes_e2025_q09_p1.txt") as f:
-    lines = f.read().splitlines()
+    text = f.read()
 
-p1, p2, child = [line.split(":")[1] for line in lines]
+p1, p2, child = parse(text)
 
-s1 = sum(a == b for a, b in zip(child, p1))
-s2 = sum(a == b for a, b in zip(child, p2))
+s1 = (p1 & child).bit_count()
+s2 = (p2 & child).bit_count()
 
 answer1 = s1 * s2
 print(answer1)
@@ -17,28 +29,34 @@ print(answer1)
 
 
 with open("./2025/input/everybody_codes_e2025_q09_p2.txt") as f:
-    lines = f.read().splitlines()
+    text = f.read()
 
-scales = [line.split(":")[1] for line in lines]
+scales = parse(text)
 n = len(scales)
+n_set_bits = scales[0].bit_count()
 
 answer2 = 0
 for i_child in range(n):
-    for i_p1 in range(n):
-        if i_p1 == i_child:
-            continue
-        for i_p2 in range(i_p1 + 1, n):
-            if i_p2 in (i_p1, i_child):
-                continue
+    similarities = [
+        ((scales[i_child] & scales[i_p]).bit_count(), i_p) for i_p in range(n)
+    ]
+    similarities.sort(reverse=True)
 
-            d1 = d2 = 0
-            for child, p1, p2 in zip(scales[i_child], scales[i_p1], scales[i_p2]):
-                if child not in (p1, p2):
-                    break
-                d1 += child == p1
-                d2 += child == p2
-            else:
-                answer2 += d1 * d2
+    for i1 in range(1, n):
+        s1, i_p1 = similarities[i1]
+        if s1 < n_set_bits // 2:
+            break
+
+        for i2 in range(i1 + 1, n):
+            s2, i_p2 = similarities[i2]
+            if s1 + s2 < n_set_bits:
+                break
+
+            child = scales[i_child]
+            p1 = scales[i_p1]
+            p2 = scales[i_p2]
+            if (child & p1) | (child & p2) == child:
+                answer2 += s1 * s2
 
 print(answer2)
 
@@ -47,21 +65,21 @@ print(answer2)
 
 
 with open("./2025/input/everybody_codes_e2025_q09_p3.txt") as f:
-    lines = f.read().splitlines()
+    text = f.read()
 
-
-scales = [line.split(":")[1] for line in lines]
+scales = parse(text)
 n = len(scales)
+n_set_bits = scales[0].bit_count()
 parents = list(range(n))
 
 
-def union(i, j):
+def union(i: int, j: int) -> None:
     i = find(i)
     j = find(j)
     parents[i] = j
 
 
-def find(i):
+def find(i: int) -> int:
     while parents[i] != i:
         parents[i] = parents[parents[i]]
         i = parents[i]
@@ -69,24 +87,36 @@ def find(i):
 
 
 for i_child in range(n):
-    for i_p1 in range(n):
-        if i_p1 == i_child:
-            continue
-        for i_p2 in range(i_p1 + 1, n):
-            if i_p2 in (i_p1, i_child):
-                continue
+    similarities = [
+        ((scales[i_child] & scales[i_p]).bit_count(), i_p) for i_p in range(n)
+    ]
+    similarities.sort(reverse=True)
 
-            if all(
-                child in (p1, p2)
-                for child, p1, p2 in zip(scales[i_child], scales[i_p1], scales[i_p2])
-            ):
+    for i1 in range(1, n):
+        s1, i_p1 = similarities[i1]
+        if s1 < n_set_bits // 2:
+            break
+
+        for i2 in range(i1 + 1, n):
+            s2, i_p2 = similarities[i2]
+            if s1 + s2 < n_set_bits:
+                break
+
+            child = scales[i_child]
+            p1 = scales[i_p1]
+            p2 = scales[i_p2]
+            if (child & p1) | (child & p2) == child:
                 union(i_child, i_p1)
                 union(i_child, i_p2)
 
 
-groups: collections.Counter[int] = collections.Counter()
+groups: collections.defaultdict[int, list[int]] = collections.defaultdict(
+    lambda: [0, 0]
+)
 for i in range(n):
-    groups[find(i)] += i + 1
+    p = find(i)
+    groups[p][0] += 1
+    groups[p][1] += i + 1
 
-answer3 = max(groups.values())
+answer3 = max(groups.values())[1]
 print(answer3)
