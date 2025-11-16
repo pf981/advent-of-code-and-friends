@@ -187,9 +187,9 @@ def test_solution2(r):
     assert r("|||||||") == "O"
     assert r("||||||") == "E"
     for num in range(1, 10):
-        assert r(tally(num)) == "EO"[num % 2], (
-            f"Expect {num} is {['even', 'odd'][num % 2]}"
-        )
+        assert (
+            r(tally(num)) == "EO"[num % 2]
+        ), f"Expect {num} is {['even', 'odd'][num % 2]}"
 
 
 def test_solution3(r):
@@ -435,6 +435,7 @@ def test_solution26(r):
     random.seed(0)
     assert r("auatau") == "aut"
 
+    # This is biased but produces reasonable tests
     for _ in range(100):
         target = random.randint(1, 50)
         freqs = []
@@ -443,6 +444,8 @@ def test_solution26(r):
             freq = random.randint(1, target - total)
             freqs.append(freq)
             total += freq
+
+        freqs = list(set(freqs))
 
         letters = random.sample("abcdefghijklmnopqrstuvwxyz", len(freqs))
         lhs = [c for c, freq in zip(letters, freqs) for _ in range(freq)]
