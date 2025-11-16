@@ -429,3 +429,25 @@ def test_solution18(r):
         denominator = random.randint(1, 100)
         expected = ",".join(tally(num) for num in divmod(numerator, denominator))
         assert r(f"{tally(numerator)}÷{tally(denominator)}") == expected
+
+
+def test_solution26(r):
+    random.seed(0)
+    assert r("auatau") == "aut"
+
+    for _ in range(100):
+        target = random.randint(1, 50)
+        freqs = []
+        total = 0
+        while total < target:
+            freq = random.randint(1, target - total)
+            freqs.append(freq)
+            total += freq
+
+        letters = random.sample("abcdefghijklmnopqrstuvwxyz", len(freqs))
+        lhs = [c for c, freq in zip(letters, freqs) for _ in range(freq)]
+        random.shuffle(lhs)
+
+        lhs = "".join(lhs)
+        rhs = "".join(sorted(letters, key=lambda c: lhs.count(c), reverse=True))
+        assert r(lhs) == rhs
