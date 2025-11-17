@@ -431,6 +431,67 @@ def test_solution18(r):
         assert r(f"{tally(numerator)}÷{tally(denominator)}") == expected
 
 
+def test_solution25(r):
+    random.seed(0)
+    assert r("vingt-et-un") == "21"
+
+    def int_to_french(n: int) -> str:
+        units = [
+            "",
+            "un",
+            "deux",
+            "trois",
+            "quatre",
+            "cinq",
+            "six",
+            "sept",
+            "huit",
+            "neuf",
+        ]
+        teens = ["dix", "onze", "douze", "treize", "quatorze", "quinze", "seize"]
+        tens = ["", "dix", "vingt", "trente", "quarante", "cinquante", "soixante"]
+
+        def under_hundred(x):
+            if x < 10:
+                return units[x]
+            if 10 <= x <= 16:
+                return teens[x - 10]
+            if 17 <= x <= 19:
+                return "dix-" + units[x - 10]
+            if 20 <= x <= 69:
+                q, r = divmod(x, 10)
+                if r == 1:
+                    return tens[q] + "-et-un"
+                return tens[q] + "-" + units[r] if r else tens[q]
+            if 70 <= x <= 79:
+                return under_hundred(60) + "-" + under_hundred(x - 60)
+            if 80 <= x <= 99:
+                return (
+                    "quatre-vingts"
+                    if x == 80
+                    else "quatre-vingt-" + under_hundred(x - 80)
+                )
+
+        def under_thousand(x):
+            h, r = divmod(x, 100)
+            prefix = "" if h == 0 else ("cent" if h == 1 else units[h] + " cent")
+            return (
+                prefix
+                if r == 0
+                else prefix + " " + under_hundred(r) if prefix else under_hundred(r)
+            )
+
+        m, r = divmod(n, 1000)
+        prefix = "" if m == 0 else ("mille" if m == 1 else units[m] + " mille")
+        if r == 0:
+            return prefix
+        return prefix + " " + under_thousand(r) if prefix else under_thousand(r)
+
+    for _ in range(100):
+        num = random.randint(1, 1100)
+        assert r(int_to_french(num)) == str(num)
+
+
 def test_solution26(r):
     random.seed(0)
     assert r("auatau") == "aut"
