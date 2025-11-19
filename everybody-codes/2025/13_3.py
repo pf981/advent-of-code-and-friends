@@ -1,16 +1,29 @@
-import collections
-
-
 with open("./2025/input/everybody_codes_e2025_q13_p3.txt") as f:
     lines = f.read().splitlines()
 turns = 202520252025
 
-q = collections.deque([1])
+ranges = [range(1, 2)]
+left: list[range] = []
 for i, line in enumerate(lines):
-    start, end = line.split("-")
-    fn = q.append if i % 2 == 0 else q.appendleft
-    for num in range(int(start), int(end) + 1):
-        fn(num)
+    start, end = (int(s) for s in line.split("-"))
 
-answer = q[(q.index(1) + turns) % len(q)]
+    if i % 2 == 0:
+        ranges.append(range(start, end + 1))
+    else:
+        left.append(range(end, start - 1, -1))
+
+left.reverse()
+ranges.extend(left)
+ranges.reverse()
+
+remaining = turns % sum(len(rng) for rng in ranges)
+answer = None
+while remaining >= 0:
+    rng = ranges.pop()
+    if remaining < len(rng):
+        answer = rng[remaining]
+        break
+    remaining -= len(rng)
+
+assert answer is not None
 print(answer)
