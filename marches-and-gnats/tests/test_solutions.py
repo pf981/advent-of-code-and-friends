@@ -431,6 +431,32 @@ def test_solution18(r):
         assert r(f"{tally(numerator)}÷{tally(denominator)}") == expected
 
 
+def test_solution22(r):
+    random.seed(0)
+    assert r("mdzgstf:thkrg") == "hello"
+
+    letters = "abcdefghijklmnopqrstuvwxyz"
+
+    def decipher(key: str, cipher: str) -> str:
+        assert len(key) >= len(cipher)
+
+        result = []
+        for k, m in zip(key, cipher):
+            result.append(letters[(letters.index(m) - letters.index(k)) % len(letters)])
+
+        return "".join(result)
+
+    assert decipher("mdzgstf", "thkrg") == "hello"
+
+    for _ in range(100):
+        message_len = random.randint(1, 30)
+        key_len = random.randint(message_len, 40)
+        cipher = "".join(random.choices(letters, k=message_len))
+        key = "".join(random.choices(letters, k=key_len))
+
+        assert r(f"{key}:{cipher}") == decipher(key, cipher)
+
+
 def test_solution25(r):
     random.seed(0)
     assert r("vingt-et-un") == "21"
