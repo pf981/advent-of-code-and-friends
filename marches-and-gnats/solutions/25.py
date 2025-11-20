@@ -42,19 +42,39 @@ def int_to_french(n: int) -> str:
 
     def under_thousand(x: int) -> str:
         h, r = divmod(x, 100)
-        prefix = "" if h == 0 else ("cent" if h == 1 else units[h] + " cent")
+        prefix = "" if h == 0 else ("cent" if h == 1 else units[h] + "-cent")
         return (
             prefix
             if r == 0
-            else prefix + " " + under_hundred(r) if prefix else under_hundred(r)
+            else prefix + "-" + under_hundred(r) if prefix else under_hundred(r)
         )
 
     m, r = divmod(n, 1000)
-    prefix = "" if m == 0 else ("mille" if m == 1 else units[m] + " mille")
+    prefix = "" if m == 0 else ("mille" if m == 1 else units[m] + "-mille")
     if r == 0:
         return prefix
-    return prefix + " " + under_thousand(r) if prefix else under_thousand(r)
+    return prefix + "-" + under_thousand(r) if prefix else under_thousand(r)
 
+
+l = []
+for num in range(1, 1101):
+    l.append((int_to_french(num), num))
+
+l.sort()
+print("\n".join(f"{a}\t{b}" for a, b in l))
+
+import collections
+
+firsts = collections.defaultdict(list)
+for french, num in l:
+    digit1 = str(num)[0]
+    part1 = french.split("-")[0]
+    firsts[digit1].append(part1)
+
+for digit1 in sorted(firsts):
+    print(
+        f"{digit1}:\t{' '.join(sorted(f'{s}({collections.Counter(firsts[digit1])[s]})' for s  in set(firsts[digit1])))}"
+    )
 
 trie: Any = {}
 
