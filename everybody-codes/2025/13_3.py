@@ -14,12 +14,10 @@ for i, line in enumerate(lines):
 
 left.reverse()
 ranges.extend(left)
-ranges.reverse()
 
 remaining = turns % sum(len(rng) for rng in ranges)
 answer = None
-while remaining >= 0:
-    rng = ranges.pop()
+for rng in ranges:
     if remaining < len(rng):
         answer = rng[remaining]
         break
