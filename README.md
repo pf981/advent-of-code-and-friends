@@ -18,7 +18,7 @@ A collection of solutions to various coding challenges and puzzles, all in one p
 | [`exercism/`](exercism/) | [Exercism](https://exercism.org/) | Coding practice and mentorship platform | ✅ 125/125 Gleam Puzzles |
 | [`hanukkah-of-data/`](hanukkah-of-data/) | [Hanukkah of Data](https://hanukkah.bluebird.sh/) | Data challenges | ✅ |
 | [`i18n/`](i18n/) | [Internationalization Puzzles](https://i18n-puzzles.com/) | A series of programming puzzles, designed to teach you about internationalization | ⏳ 12/20 |
-| [`marches-and-gnats/`](marches-and-gnats/) | [Marches and Gnats](https://mng.quest/) | Puzzles using a primitive turing machine | ✅ 15/15 |
+| [`marches-and-gnats/`](marches-and-gnats/) | [Marches and Gnats](https://mng.quest/) | Puzzles using a primitive turing machine | ⏳ 20/26 |
 | [`pi-coding-quest/`](pi-coding-quest/) | [Pi Coding Quest](https://ivanr3d.com/projects/pi/) | Coding challenges inspired by the mystical number Pi | ✅ 2024,2025 |
 | [`project-euler/`](project-euler/) | [Project Euler](https://projecteuler.net/) | Mathematical computation problems | ⏳ 94/957 |
 | [`synacor-challenge/`](synacor-challenge/) | [Synacor Challenge](https://github.com/Aneurysm9/vm_challenge) | Virtual machine and reverse engineering puzzle | ✅ |
