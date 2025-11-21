@@ -13,6 +13,7 @@ A collection of solutions to various coding challenges and puzzles, all in one p
 | [`coding-quest/`](coding-quest/) | [Coding Quest](https://codingquest.io/) | Annual programming puzzles | ✅ 2022,2023,2024 |
 | [`codyssi/`](codyssi/) | [Codyssi](https://www.codyssi.com/) | Puzzles similar to Advent of Code | ✅ 2024,2025 |
 | [`cryptopals/`](crptopals/) | [The Cryptopals Crypto Challenges](https://www.cryptopals.com/) | Cryptography challenges | ⏳ 3/66 |
+| [`dimity-jones-solutions`](https://github.com/pf981/dimity-jones-solutions/) | [Dimity Jones in Puzzle Castle](https://obnakwa.itch.io/dimityjones) | Progressively decrypt chapters in a book to reveal the story | ⏳ 87/89 |
 | [`eldarverse/`](eldarverse/) | [Eldarverse](https://www.eldarverse.com/) | Puzzles similar to Advent of Code | ⏳ 1/18 |
 | [`everybody-codes/`](everybody-codes/) | [Everybody Codes](https://everybody.codes/) | Puzzles similar to Advent of Code | ✅ 120/120 🦆 |
 | [`exercism/`](exercism/) | [Exercism](https://exercism.org/) | Coding practice and mentorship platform | ✅ 125/125 Gleam Puzzles |
