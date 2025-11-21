@@ -1,59 +1,10 @@
 with open("./2025/input/everybody_codes_e2025_q14_p3.txt") as f:
     lines = f.read().splitlines()
 
-# 1_000_000_000
-
-lines = """#......#
-..#..#..
-.##..##.
-...##...
-...##...
-.##..##.
-..#..#..
-#......#""".splitlines()
-
-
-# x = """#......#.#..#..####..#..#.#......#
-# .####.#.#......#..#......#.#.####.
-# .#.####.###..#.####.#..###.####.#.
-# .##..#...##.##.####.##.##...#..##.
-# .##....##..##.######.##..##....##.
-# ..##.##.#..##.#.##.#.##..#.##.##..
-# .##..#.#...#.##....##.#...#.#..##.
-# #...#.##..##..#....#..##..##.#...#
-# .##.##..###.#........#.###..##.##.
-# #.##....##.###.#..#.###.##....##.#
-# ..##...##...###....###...##...##..
-# ....####.#..#.#....#.#..#.####....
-# #..###..######.####.######..###..#
-# ..##..#..##.##......##.##..#..##..
-# ....####..##...#..#...##..####....
-# #####....#..#.##..##.#..#....#####
-# #.####......#...##...#......####.#
-# #.####......#...##...#......####.#
-# #####....#..#.##..##.#..#....#####
-# ....####..##...#..#...##..####....
-# ..##..#..##.##......##.##..#..##..
-# #..###..######.####.######..###..#
-# ....####.#..#.#....#.#..#.####....
-# ..##...##...###....###...##...##..
-# #.##....##.###.#..#.###.##....##.#
-# .##.##..###.#........#.###..##.##.
-# #...#.##..##..#....#..##..##.#...#
-# .##..#.#...#.##....##.#...#.#..##.
-# ..##.##.#..##.#.##.#.##..#.##.##..
-# .##....##..##.######.##..##....##.
-# .##..#...##.##.####.##.##...#..##.
-# .#.####.###..#.####.#..###.####.#.
-# .####.#.#......#..#......#.#.####.
-# #......#.#..#..####..#..#.#......#""".splitlines()
-
-# nrows = len(lines)
-# ncols = len(lines[0])
 n = 34
 
 
-def sim(active):
+def sim(active: set[tuple[int, int]]) -> set[tuple[int, int]]:
     result = set()
     for r in range(n):
         for c in range(n):
@@ -74,77 +25,53 @@ def sim(active):
     return result
 
 
-def does_match_pattern(active):
-    # print(active)
+def does_match_pattern(active: set[tuple[int, int]]) -> bool:
     r_start, c_start = (13, 13)
     for dr in range(len(lines)):
         for dc in range(len(lines[0])):
             r = r_start + dr
             c = c_start + dc
-
-            # print(".#"[(r, c) in active], end="")
-            # print(r, c)
-
             if lines[dr][dc] == "#":
                 if (r, c) not in active:
                     return False
             else:
                 if (r, c) in active:
                     return False
-        # print()
 
     return True
 
 
-# for r, line in enumerate(x):
-#     print(line)
+active: set[tuple[int, int]] = set()  # {(r, c), ...}
+rounds = []
+active_counts = []
 
-# tmp = {(r, c) for r, line in enumerate(x) for c, ch in enumerate(line) if ch == "#"}
-# does_match_pattern(tmp)
-
-active = set()  # {(r, c), ...}
-result = []  # [rnd, ...]
-sum_active = []
-
-# for rnd in range(1, 125 + 1):
 for rnd in range(1, 10_000 + 1):
     active = sim(active.copy())
-    if does_match_pattern(active):
-        s = len(active)
-        print(rnd, s)
-        result.append(rnd)
-        sum_active.append(s)
-print(result)
 
-for a, b in zip(result[:-1], result[1:]):
-    print(a, b, a - b)
+    if not does_match_pattern(active):
+        continue
 
-first_hit = 125
-d1 = 892
-d2 = 3203
-s1 = 552
-s2 = 588
+    rounds.append(rnd)
+    active_counts.append(len(active))
+
+first_round, *round_deltas = [rnd2 - rnd1 for rnd1, rnd2 in zip([0] + rounds, rounds)]
+first_active_count, *active_counts = active_counts
+
+cycle_len = round_deltas[1:].index(round_deltas[0]) + 1
+
+round_deltas = round_deltas[:cycle_len]
+active_counts = active_counts[:cycle_len]
 
 target_round = 1000000000
+times = (target_round - first_round) // sum(round_deltas)
 
-times = (target_round - first_hit) // (d1 + d2)
+answer = first_active_count + times * sum(active_counts)
+remaining = target_round - (first_round + times * sum(round_deltas))
 
-ans = times * (s1 + s2)  # This is too big!
+i = 0
+while i < len(round_deltas) and remaining > round_deltas[i]:
+    remaining -= round_deltas[i]
+    answer += active_counts[i]
+    i += 1
 
-remaining = target_round - (first_hit + times * (d1 + d2))
-if remaining >= d1:
-    ans += s1
-    remaining -= d1
-if remaining >= d2:
-    ans += s2
-    remaining -= d2
-
-print(ans)
-
-# 278388552
-# 278388000
-
-# 278388000 + s1
-
-# answer = 0
-# print(answer)
+print(answer)

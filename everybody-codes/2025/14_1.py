@@ -4,12 +4,8 @@ with open("./2025/input/everybody_codes_e2025_q14_p1.txt") as f:
 nrows = len(lines)
 ncols = len(lines[0])
 
-active = {
-    (r, c) for r, line in enumerate(lines) for c, ch in enumerate(line) if ch == "#"
-}
 
-
-def sim(active):
+def sim(active: set[tuple[int, int]]) -> set[tuple[int, int]]:
     result = set()
     for r in range(nrows):
         for c in range(ncols):
@@ -30,10 +26,13 @@ def sim(active):
     return result
 
 
+active = {
+    (r, c) for r, line in enumerate(lines) for c, ch in enumerate(line) if ch == "#"
+}
+
 answer = 0
 for _ in range(10):
     active = sim(active.copy())
     answer += len(active)
-
 
 print(answer)
