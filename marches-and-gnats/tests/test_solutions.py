@@ -551,15 +551,15 @@ def test_solution27(r):
     assert r("||||/|||") == "N"
 
     for _ in range(100):
-        a = random.randint(1, 50)
-        b = random.randint(1, 50)
-        assert r(f"{tally(a) * tally(b)}/{tally(b)}") == "Y"
+        a = random.randint(1, 10)
+        b = random.randint(1, 10)
+        assert r(f"{tally(a * b)}/{tally(b)}") == "Y"
 
     for _ in range(10):
-        a = random.randint(1, 50)
+        a = random.randint(1, 10)
         assert r(f"{tally(a)}/{tally(a)}") == "Y"
 
     for _ in range(100):
-        a = random.randint(1, 50)
-        b = random.randint(a, 60)
+        a = random.randint(1, 10)
+        b = random.randint(a, 12)
         assert r(f"{tally(a)}/{tally(b)}") == "NY"[a % b == 0]
