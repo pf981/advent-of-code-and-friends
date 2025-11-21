@@ -187,9 +187,9 @@ def test_solution2(r):
     assert r("|||||||") == "O"
     assert r("||||||") == "E"
     for num in range(1, 10):
-        assert (
-            r(tally(num)) == "EO"[num % 2]
-        ), f"Expect {num} is {['even', 'odd'][num % 2]}"
+        assert r(tally(num)) == "EO"[num % 2], (
+            f"Expect {num} is {['even', 'odd'][num % 2]}"
+        )
 
 
 def test_solution3(r):
@@ -504,7 +504,9 @@ def test_solution25(r):
             return (
                 prefix
                 if r == 0
-                else prefix + " " + under_hundred(r) if prefix else under_hundred(r)
+                else prefix + " " + under_hundred(r)
+                if prefix
+                else under_hundred(r)
             )
 
         m, r = divmod(n, 1000)
@@ -541,3 +543,23 @@ def test_solution26(r):
         lhs = "".join(lhs)
         rhs = "".join(sorted(letters, key=lambda c: lhs.count(c), reverse=True))
         assert r(lhs) == rhs
+
+
+def test_solution27(r):
+    random.seed(0)
+    assert r("||||/||") == "Y"
+    assert r("||||/|||") == "N"
+
+    for _ in range(100):
+        a = random.randint(1, 50)
+        b = random.randint(1, 50)
+        assert r(f"{tally(a) * tally(b)}/{tally(b)}") == "Y"
+
+    for _ in range(10):
+        a = random.randint(1, 50)
+        assert r(f"{tally(a)}/{tally(a)}") == "Y"
+
+    for _ in range(100):
+        a = random.randint(1, 50)
+        b = random.randint(a, 60)
+        assert r(f"{tally(a)}/{tally(b)}") == "NY"[a % b == 0]
