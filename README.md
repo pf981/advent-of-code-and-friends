@@ -8,12 +8,13 @@ A collection of solutions to various coding challenges and puzzles, all in one p
 |--------------|----------------------|----------------|---------------|
 | [`advent-of-code/`](advent-of-code/) | [Advent of Code](https://adventofcode.com/) | Annual December programming advent calendar | ✅ 500/500 ⭐|
 | [`advent-of-sql/`](advent-of-sql/) | [Advent of SQL](https://adventofsql.com/) | SQL puzzles | ✅ 2024: 24/24 |
-| [`aquaq/`](aquaq/) | [AquaQ](https://challenges.aquaq.co.uk/) | Puzzles similar to Advent of Code | ⏳ 10/40 |
+| [`aquaq/`](aquaq/) | [AquaQ](https://challenges.aquaq.co.uk/) | Puzzles similar to Advent of Code | ⏳ 35/40 |
 | [`coding-mystery/`](coding-mystery/) | [Coding Mystery](https://codingmystery.com/) | Escape-room-inspired mysteries full of coding puzzles | ✅ 1/1 Free Quest |
 | [`coding-quest/`](coding-quest/) | [Coding Quest](https://codingquest.io/) | Annual programming puzzles | ✅ 2022,2023,2024 |
 | [`codyssi/`](codyssi/) | [Codyssi](https://www.codyssi.com/) | Puzzles similar to Advent of Code | ✅ 2024,2025 |
+| [`cryptopals/`](crptopals/) | [The Cryptopals Crypto Challenges](https://www.cryptopals.com/) | Cryptography challenges | ⏳ 3/66 |
 | [`eldarverse/`](eldarverse/) | [Eldarverse](https://www.eldarverse.com/) | Puzzles similar to Advent of Code | ⏳ 1/18 |
-| [`everybody-codes/`](everybody-codes/) | [Everybody Codes](https://everybody.codes/) | Puzzles similar to Advent of Code | ✅ 78/78 🦆 |
+| [`everybody-codes/`](everybody-codes/) | [Everybody Codes](https://everybody.codes/) | Puzzles similar to Advent of Code | ✅ 120/120 🦆 |
 | [`exercism/`](exercism/) | [Exercism](https://exercism.org/) | Coding practice and mentorship platform | ✅ 125/125 Gleam Puzzles |
 | [`hanukkah-of-data/`](hanukkah-of-data/) | [Hanukkah of Data](https://hanukkah.bluebird.sh/) | Data challenges | ✅ |
 | [`i18n/`](i18n/) | [Internationalization Puzzles](https://i18n-puzzles.com/) | A series of programming puzzles, designed to teach you about internationalization | ⏳ 12/20 |
