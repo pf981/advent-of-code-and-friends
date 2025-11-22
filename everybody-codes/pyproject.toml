@@ -9,4 +9,6 @@ dependencies = [
     "ruff>=0.12.10",
     "requests>=2.31.0",
     "pycryptodome>=3.19.0",
+    "z3>=0.2.0",
+    "sortedcontainers>=2.4.0",
 ]
