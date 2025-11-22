@@ -73,13 +73,10 @@ def is_on_wall(r: int, c: int) -> bool:
     return False
 
 
-r_to_i = {r: i for i, r in enumerate(interesting_r)}
-c_to_i = {c: i for i, c in enumerate(interesting_c)}
-
-start_i_r = r_to_i[start[0]]
-start_i_c = c_to_i[start[1]]
-end_i_r = r_to_i[end[0]]
-end_i_c = c_to_i[end[1]]
+start_i_r = interesting_r.index(start[0])
+start_i_c = interesting_c.index(start[1])
+end_i_r = interesting_r.index(end[0])
+end_i_c = interesting_c.index(end[1])
 
 heap = [(0, start_i_r, start_i_c)]  # [(d, i_r, i_c), ...)
 
