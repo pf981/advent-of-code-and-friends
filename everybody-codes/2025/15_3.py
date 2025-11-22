@@ -1,11 +1,12 @@
-with open("./2025/input/everybody_codes_e2025_q15_p3.txt") as f:
-    lines = f.read().splitlines()
+import heapq
 
-# lines = """L6,L3,L6,R3,L6,L3,L3,R6,L6,R6,L6,L6,R3,L3,L3,R3,R3,L6,L6,L3""".splitlines()
+
+with open("./2025/input/everybody_codes_e2025_q15_p3.txt") as f:
+    text = f.read().strip()
 
 heading = "N"
 turn = {
-    ("N", "R"): "E",  # from, turn -> to
+    ("N", "R"): "E",  # (heading, turn) -> new_heading
     ("N", "L"): "W",
     ("E", "R"): "S",
     ("E", "L"): "N",
@@ -15,65 +16,109 @@ turn = {
     ("W", "L"): "S",
 }
 
-r = 0
-c = 0
-walls = set()
-for a, *b in lines[0].split(","):
-    b = int("".join(b))
-    heading = turn[(heading, a)]
+r = c = 0
+segments: list[tuple[int, int, int, int]] = []  # [(r1, c1, r2, c2), ...]
+interesting_r = [-1, 0, 1]
+interesting_c = [-1, 0, 1]
 
-    for _ in range(b):
-        r = r + ((heading == "S") - (heading == "N"))
-        c = c + ((heading == "E") - (heading == "W"))
-        walls.add((r, c))
-target = (r, c)
+for instruction in text.split(","):
+    heading = turn[(heading, instruction[0])]
+    steps = int(instruction[1:])
+
+    r2 = r + ((heading == "S") - (heading == "N")) * steps
+    c2 = c + ((heading == "E") - (heading == "W")) * steps
+
+    segments.append((r, c, r2, c2))
+
+    interesting_r.extend([r2 - 1, r2, r2 + 1])
+    interesting_c.extend([c2 - 1, c2, c2 + 1])
+
+    r, c = r2, c2
 
 
-for r in range(-30, 20):
-    for c in range(-30, 20):
-        ch = "#" if (r, c) in walls else "."
-        if (r, c) == target:
-            ch = "E"
-        if (r, c) == (0, 0):
-            ch = "S"
-        print(ch, end="")
-    print()
+end = (r, c)
+start = (0, 0)
 
-#     print(f"{r=} {c=}")
-# print(r, c)
+interesting_r = sorted(set(interesting_r))
+interesting_c = sorted(set(interesting_c))
 
-# answer = "TODO"
-# print(answer)
+vertical_walls: dict[int, list[tuple[int, int]]] = {}  # c -> {(r1, r2), ...}
+horizontal_walls: dict[int, list[tuple[int, int]]] = {}  # r -> {(c1, c2), ...}
 
-import collections
-
-q = collections.deque([(0, 0)])
-d = 0
-answer = None
-while q:
-    for _ in range(len(q)):
-        r, c = q.popleft()
-        # print(f"{r=} {c=}")
-        if (r, c) == target:
-            answer = d
-            # print(f"{answer=}")
-            break
-        for dr, dc in [(-1, 0), (0, -1), (0, 1), (1, 0)]:
-            r2 = r + dr
-            c2 = c + dc
-            # print(f"{r2, c2}")
-            if (r2, c2) != target and (r2, c2) in walls:
-                continue
-            walls.add((r2, c2))
-            q.append((r2, c2))
+for r1, c1, r2, c2 in segments:
+    if c1 == c2:
+        if c1 not in vertical_walls:
+            vertical_walls[c1] = []
+        vertical_walls[c1].append((min(r1, r2), max(r1, r2)))
     else:
-        d += 1
+        if r1 not in horizontal_walls:
+            horizontal_walls[r1] = []
+        horizontal_walls[r1].append((min(c1, c2), max(c1, c2)))
+
+
+def is_on_wall(r: int, c: int) -> bool:
+    if (r, c) in [start, end]:
+        return False
+
+    if c in vertical_walls:
+        for r1, r2 in vertical_walls[c]:
+            if r1 <= r <= r2:
+                return True
+
+    if r in horizontal_walls:
+        for c1, c2 in horizontal_walls[r]:
+            if c1 <= c <= c2:
+                return True
+
+    return False
+
+
+r_to_i = {r: i for i, r in enumerate(interesting_r)}
+c_to_i = {c: i for i, c in enumerate(interesting_c)}
+
+start_i_r = r_to_i[start[0]]
+start_i_c = c_to_i[start[1]]
+end_i_r = r_to_i[end[0]]
+end_i_c = c_to_i[end[1]]
+
+heap = [(0, start_i_r, start_i_c)]  # [(d, i_r, i_c), ...)
+
+visited = set()
+answer = None
+
+while heap:
+    d, i_r, i_c = heapq.heappop(heap)
+
+    if (i_r, i_c) == (end_i_r, end_i_c):
+        answer = d
+        break
+
+    if (i_r, i_c) in visited:
         continue
-    break
+    visited.add((i_r, i_c))
 
+    r = interesting_r[i_r]
+    c = interesting_c[i_c]
+
+    for dr, dc in [(-1, 0), (0, -1), (0, 1), (1, 0)]:
+        i_r2 = i_r + dr
+        i_c2 = i_c + dc
+
+        if not (0 <= i_r2 < len(interesting_r) and 0 <= i_c2 < len(interesting_c)):
+            continue
+
+        if (i_r2, i_c2) in visited:
+            continue
+
+        r2 = interesting_r[i_r2]
+        c2 = interesting_c[i_c2]
+
+        if is_on_wall(r2, c2):
+            continue
+
+        d2 = d + abs(r2 - r) + abs(c2 - c)
+
+        heapq.heappush(heap, (d2, i_r2, i_c2))
+
+assert answer is not None
 print(answer)
-
-# 105
-
-# Your answer length is: correct
-# The first character of your answer is: correct
