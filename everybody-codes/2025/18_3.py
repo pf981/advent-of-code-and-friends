@@ -7,7 +7,6 @@ with open("./2025/input/everybody_codes_e2025_q18_p3.txt") as f:
 
 # Free branches at index 0
 node_thickness = [1]  # id -> thickness
-incoming_energy = [1]  # id -> incoming_energy
 edges = collections.defaultdict(list)  # from -> [(to, thickness), ...]
 
 plant_text, grid_text = text.split("\n\n\n")
@@ -17,7 +16,6 @@ for part in plant_text.split("\n\n"):
     plant_id, plant_thickness = (int(s) for s in re.findall(r"-?\d+", plant_line))
 
     node_thickness.append(plant_thickness)
-    incoming_energy.append(0)
 
     for branch_line in branch_lines:
         nums = [int(s) for s in re.findall(r"-?\d+", branch_line)]
