@@ -29,6 +29,8 @@ for part in plant_text.split("\n\n"):
         else:
             edges[nums[0]].append((plant_id, nums[1]))
 
+n_nodes = len(node_thickness)
+
 
 def run_test(
     test_case: list[int],
@@ -40,14 +42,14 @@ def run_test(
     edges = copy.deepcopy(edges)
     edges[0] = [edge for edge, test in zip(edges[0], test_case) if test]
 
-    for node in range(len(node_thickness)):
+    for node in range(n_nodes):
         if incoming_energy[node] < node_thickness[node]:
             continue
 
         for to, thickness in edges[node]:
             incoming_energy[to] += incoming_energy[node] * thickness
 
-    last_node = len(node_thickness) - 1
+    last_node = n_nodes - 1
     if incoming_energy[last_node] < node_thickness[last_node]:
         return 0
     return incoming_energy[last_node]
@@ -65,16 +67,16 @@ def get_max_energy() -> int:
     incoming_energy_z3 = collections.defaultdict(int)
     incoming_energy_z3[0] = 1
 
-    for node in range(len(node_thickness)):
+    for node in range(n_nodes):
         for to, thickness in edges[node]:
-            input_z3 = inputs_z3[to - 1] if node == 0 else 1
             incoming_energy_z3[to] += (
                 z3_zero_below(incoming_energy_z3[node], node_thickness[node])
                 * thickness
-                * input_z3
             )
+            if node == 0:
+                incoming_energy_z3[to] *= inputs_z3[to - 1]
 
-    last_node = len(node_thickness) - 1
+    last_node = n_nodes - 1
     output = z3.Int("output")
 
     o.add(
