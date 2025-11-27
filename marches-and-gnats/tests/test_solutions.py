@@ -33,7 +33,7 @@ def make_runner(code: str) -> typing.Callable[[str], str]:
     def run(input: str) -> str:
         try:
             mill = logic_mill.LogicMill(transition_rules)
-            result, _ = mill.run(input)
+            result, _ = mill.run(input, max_steps=8_000_000)
         except Exception as e:
             pytest.fail(f"Failed to run: {e}")
         return RunResult(result.strip("_"), input)
@@ -187,9 +187,9 @@ def test_solution2(r):
     assert r("|||||||") == "O"
     assert r("||||||") == "E"
     for num in range(1, 10):
-        assert (
-            r(tally(num)) == "EO"[num % 2]
-        ), f"Expect {num} is {['even', 'odd'][num % 2]}"
+        assert r(tally(num)) == "EO"[num % 2], (
+            f"Expect {num} is {['even', 'odd'][num % 2]}"
+        )
 
 
 def test_solution3(r):
@@ -591,7 +591,9 @@ def test_solution25(r):
             return (
                 prefix
                 if r == 0
-                else prefix + " " + under_hundred(r) if prefix else under_hundred(r)
+                else prefix + " " + under_hundred(r)
+                if prefix
+                else under_hundred(r)
             )
 
         m, r = divmod(n, 1000)
@@ -648,3 +650,17 @@ def test_solution27(r):
         a = random.randint(1, 10)
         b = random.randint(a, 12)
         assert r(f"{tally(a)}/{tally(b)}") == "NY"[a % b == 0]
+
+
+def test_solution28(r):
+    def fib(n: int) -> int:
+        if n <= 1:
+            return n
+        a, b = 0, 1
+        for _ in range(2, n + 1):
+            a, b = b, a + b
+        return b
+
+    assert r("||||||") == "||||||||"
+    for n in range(1, 16):
+        assert r(tally(n)) == tally(fib(n))
