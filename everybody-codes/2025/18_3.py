@@ -62,7 +62,7 @@ def get_max_energy(test_case: list[int] | list[z3.Bool]) -> int:
 
 
 test_cases = [[int(s) for s in line.split()] for line in grid_text.splitlines()]
-max_energy = get_max_energy([z3.Bool(f"input_{i}") for i in range(len(test_cases))])
+max_energy = get_max_energy([z3.Bool(f"input_{i}") for i in range(len(test_cases[0]))])
 answer = 0
 for test_case in test_cases:
     energy = get_max_energy(test_case)
