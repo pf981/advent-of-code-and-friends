@@ -1,5 +1,4 @@
 import collections
-import copy
 import re
 import z3  # type: ignore
 
