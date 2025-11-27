@@ -1,7 +1,7 @@
 import collections
 import copy
 import re
-import z3
+import z3  # type: ignore
 
 with open("./2025/input/everybody_codes_e2025_q18_p3.txt") as f:
     text = f.read().strip()
