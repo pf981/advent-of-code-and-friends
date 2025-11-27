@@ -32,30 +32,25 @@ for part in plant_text.split("\n\n"):
 n_nodes = len(node_thickness)
 
 
-def run_test(
-    test_case: list[int],
-    node_thickness: list[int],
-    incoming_energy: list[int],
-    edges: dict[int, list[tuple[int, int]]],
-) -> int:
-    incoming_energy = incoming_energy.copy()
-    edges = copy.deepcopy(edges)
-    edges[0] = [edge for edge, test in zip(edges[0], test_case) if test]
+def run_test(test_case: list[int]) -> int:
+    test_incoming_energy = incoming_energy.copy()
+    test_edges = copy.deepcopy(edges)
+    test_edges[0] = [edge for edge, test in zip(edges[0], test_case) if test]
 
     for node in range(n_nodes):
-        if incoming_energy[node] < node_thickness[node]:
+        if test_incoming_energy[node] < node_thickness[node]:
             continue
 
-        for to, thickness in edges[node]:
-            incoming_energy[to] += incoming_energy[node] * thickness
+        for to, thickness in test_edges[node]:
+            test_incoming_energy[to] += test_incoming_energy[node] * thickness
 
     last_node = n_nodes - 1
-    if incoming_energy[last_node] < node_thickness[last_node]:
+    if test_incoming_energy[last_node] < node_thickness[last_node]:
         return 0
-    return incoming_energy[last_node]
+    return test_incoming_energy[last_node]
 
 
-def z3_zero_below(value, threshold):
+def z3_zero_below(value: int | z3.ArithRef, threshold: int) -> z3.ArithRef:
     return z3.If(value < threshold, 0, value)
 
 
@@ -64,7 +59,7 @@ def get_max_energy() -> int:
 
     inputs_z3 = [z3.Bool(f"inputs_{i}") for i in range(len(edges[0]))]
 
-    incoming_energy_z3 = collections.defaultdict(int)
+    incoming_energy_z3 = [0] * n_nodes
     incoming_energy_z3[0] = 1
 
     for node in range(n_nodes):
@@ -76,13 +71,9 @@ def get_max_energy() -> int:
             if node == 0:
                 incoming_energy_z3[to] *= inputs_z3[to - 1]
 
-    last_node = n_nodes - 1
     output = z3.Int("output")
 
-    o.add(
-        output
-        == z3_zero_below(incoming_energy_z3[last_node], node_thickness[last_node])
-    )
+    o.add(output == z3_zero_below(incoming_energy_z3[-1], node_thickness[-1]))
     o.maximize(output)
 
     assert o.check() == z3.sat
@@ -93,7 +84,7 @@ max_energy = get_max_energy()
 answer = 0
 for line in grid_text.splitlines():
     test_case = [int(s) for s in line.split()]
-    energy = run_test(test_case, node_thickness, incoming_energy, edges)
+    energy = run_test(test_case)
 
     if energy > 0:
         answer += max_energy - energy
