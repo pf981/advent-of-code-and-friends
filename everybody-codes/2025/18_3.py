@@ -35,10 +35,8 @@ def z3_zero_below(value: int | z3.ArithRef, threshold: int) -> z3.ArithRef:
     return z3.If(value < threshold, 0, value)
 
 
-def get_max_energy(test_case: list[int] | list[z3.Bool]) -> int:
+def get_max_energy(test_case_z3: list[int] | list[z3.Bool]) -> int:
     o = z3.Optimize()
-
-    inputs_z3 = test_case
 
     incoming_energy_z3 = [0] * n_nodes
     incoming_energy_z3[0] = 1
@@ -50,7 +48,7 @@ def get_max_energy(test_case: list[int] | list[z3.Bool]) -> int:
                 * thickness
             )
             if node == 0:
-                incoming_energy_z3[to] *= inputs_z3[to - 1]
+                incoming_energy_z3[to] *= test_case_z3[to - 1]
 
     output = z3.Int("output")
 
