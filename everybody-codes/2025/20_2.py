@@ -1,94 +1,56 @@
 import collections
 
+
+def get_nei(r: int, c: int) -> list[tuple[int, int]]:
+    neis = [(r, c), (r, c + 1), (r, c - 1)]
+    if c % 2 == r % 2:
+        neis.append((r - 1, c))
+    else:
+        neis.append((r + 1, c))
+
+    return list(neis)
+
+
 with open("./2025/input/everybody_codes_e2025_q20_p2.txt") as f:
     lines = f.read().splitlines()
-    # text = f.read().strip()
-
-# lines = """TTTTTTTTTTTTTTTTT
-# .TTTT#T#T#TTTTTT.
-# ..TT#TTTETT#TTT..
-# ...TT#T#TTT#TT...
-# ....TTT#T#TTT....
-# .....TTTTTT#.....
-# ......TT#TT......
-# .......#TT.......
-# ........S........""".splitlines()
 
 nrows = len(lines)
 ncols = len(lines[0])
 
-pairs = 0
-m = collections.defaultdict(list)  # (r, c) -> (r, c)
-for r, row in enumerate(lines):
-    # print("." * r + row.strip("."))
-    for c, ch in enumerate("." * r + row.strip(".")):
-        if ch not in "EST":
-            continue
-
-        p1 = (r, c)
-
-        # if r % 2 == 0:
-        #     # R
-        #     if c + 1 < ncols and lines[r][c + 1] == "T":
-        #         print(f"{r=} {c+1=}")
-        #         pairs += 1
-        # else:
-        if True:
-            # UR
-            if c + 1 < ncols and lines[r][c + 1] in "EST":
-                # print(f"{r=} {c+1=}")
-                pairs += 1
-                p2 = (r, c + 1)
-                m[p1].append(p2)
-                m[p2].append(p1)
-
-            parity = r % 2
-            if c % 2 == parity:
-                # if True:
-                # Check parity first
-                if r - 1 >= 0 and lines[r - 1][c] in "EST":
-                    # print(f"{r-1=} {c=}")
-                    pairs += 1
-                    p2 = (r - 1, c)
-                    m[p1].append(p2)
-                    m[p2].append(p1)
-
-
-q = collections.deque()
-# for c in range(ncols):
-#     if lines[0][c] != "T":
-#         continue
-#     q.append((0, c))
-for r, row in enumerate(lines):
-    for c, ch in enumerate("." * r + row.strip(".")):
-        if ch == "E":
-            q.append((r, c))
-            break
-    else:
-        continue
-    break
-
-
+q = collections.deque(
+    [
+        (r, c)
+        for r, row in enumerate(lines)
+        for c, ch in enumerate("." * r + row.strip("."))
+        if ch == "S"
+    ]
+)
 jumps = 0
 seen = set(q)
 while q:
     for _ in range(len(q)):
         r, c = q.popleft()
-        # print(f"{r=} {c=}")
-        if lines[r][c] == "S":
-            print("FOUND")
-            print(jumps)
+        if lines[r][c] == "E":
             break
 
-        for r2, c2 in m[(r, c)]:
+        for r2, c2 in get_nei(r, c):
             if (r2, c2) in seen:
                 continue
+
+            if not (0 <= r < nrows and 0 <= c < ncols):
+                continue
+
+            if lines[r][c] not in "EST":
+                continue
+
             seen.add((r2, c2))
             q.append((r2, c2))
     else:
         jumps += 1
         continue
     break
+else:
+    raise ValueError("Unable to find solution")
 
 answer = jumps
 print(jumps)
