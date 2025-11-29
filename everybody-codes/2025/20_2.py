@@ -53,4 +53,4 @@ else:
     raise ValueError("Unable to find solution")
 
 answer = jumps
-print(jumps)
+print(answer)
