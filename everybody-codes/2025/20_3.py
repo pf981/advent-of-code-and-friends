@@ -47,12 +47,7 @@ with open("./2025/input/everybody_codes_e2025_q20_p3.txt") as f:
     lines = f.read().splitlines()
 
 q = collections.deque(
-    [
-        (r, c)
-        for r, row in enumerate(lines)
-        for c, ch in enumerate("." * r + row.strip("."))
-        if ch == "S"
-    ]
+    [(r, c) for r, row in enumerate(lines) for c, ch in enumerate(row) if ch == "S"]
 )
 nrows = len(lines)
 ncols = len(lines[0])

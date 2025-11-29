@@ -18,12 +18,7 @@ nrows = len(lines)
 ncols = len(lines[0])
 
 q = collections.deque(
-    [
-        (r, c)
-        for r, row in enumerate(lines)
-        for c, ch in enumerate("." * r + row.strip("."))
-        if ch == "S"
-    ]
+    [(r, c) for r, row in enumerate(lines) for c, ch in enumerate(row) if ch == "S"]
 )
 jumps = 0
 seen = set(q)
