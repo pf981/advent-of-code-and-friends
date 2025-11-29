@@ -30,17 +30,14 @@ def rot120(lines: list[str]) -> list[str]:
     return result2
 
 
-def get_nei(r, c):
-    result = {(r, c)}
-    result.add((r, c + 1))
-    result.add((r, c - 1))
-    parity = r % 2
-    if c % 2 == parity:
-        result.add((r - 1, c))
+def get_nei(r: int, c: int) -> list[tuple[int, int]]:
+    neis = [(r, c), (r, c + 1), (r, c - 1)]
+    if c % 2 == r % 2:
+        neis.append((r - 1, c))
     else:
-        result.add((r + 1, c))
+        neis.append((r + 1, c))
 
-    return list(result)
+    return list(neis)
 
 
 with open("./2025/input/everybody_codes_e2025_q20_p3.txt") as f:
@@ -54,18 +51,8 @@ ncols = len(lines[0])
 
 all_lines = [lines, rot120(lines), rot120(rot120(lines))]
 
-
-def is_valid_square(r: int, c: int, rot_index: int) -> bool:
-    cur_lines = all_lines[rot_index]
-    if not (0 <= r < nrows and 0 <= c < ncols):
-        return False
-    if cur_lines[r][c] not in "EST":
-        return False
-    return True
-
-
 jumps = 0
-seen = {(*q[0], 0)}  # r, c, rot_index
+seen = {(*q[0], 0)}  # r, c, rot
 while q:
     for _ in range(len(q)):
         r, c = q.popleft()
@@ -73,11 +60,15 @@ while q:
             break
 
         for r2, c2 in get_nei(r, c):
-            if (r2, c2, (jumps + 1) % 3) in seen:
+            rot2 = (jumps + 1) % 3
+            if (r2, c2, rot2) in seen:
                 continue
-            seen.add((r2, c2, (jumps + 1) % 3))
+            seen.add((r2, c2, rot2))
 
-            if not is_valid_square(r2, c2, (jumps + 1) % 3):
+            if not (0 <= r2 < nrows and 0 <= c2 < ncols):
+                continue
+
+            if all_lines[rot2][r2][c2] not in "EST":
                 continue
 
             q.append((r2, c2))
