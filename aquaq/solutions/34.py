@@ -1,19 +1,13 @@
 import heapq
 
+
 with open("./input/34.txt") as f:
     text = f.read()
-
-# text = """station,r1,r2,r3
-# a,00:01,,00:02
-# b,00:16,,00:17
-# c,,00:21,
-# d,00:46,00:51,00:47
-# """
 
 n_routes = len(text.splitlines()[0].split(",")) - 1
 routes: list[list[int | None]] = [[] for _ in range(n_routes)]
 starts: list[int | None] = [None] * n_routes
-heap: list[tuple[int, int, int]] = []
+heap: list[tuple[int, int, int, int, int]] = []
 
 prevs: list[int | None] = [None] * n_routes
 for line in text.splitlines()[1:]:
@@ -32,7 +26,7 @@ for line in text.splitlines()[1:]:
             routes[route].append(0)
 
             station = len(routes[route]) - 1
-            heapq.heappush(heap, (t, station, route))
+            heapq.heappush(heap, (t, -1, station, t, route))
         else:
             p = prevs[route]
             assert p is not None
@@ -46,23 +40,24 @@ n_stations = len(routes[0])
 occupied_until = [0] * n_stations
 
 while heap:
-    t, station, route = heapq.heappop(heap)
-    # print(f"{t=} {station=} {route=}")
+    t, prev_station, station, first_arrival, route = heapq.heappop(heap)
 
     if occupied_until[station] > t:
-        # print(f"  Delayed until {occupied_until[station]}")
-        heapq.heappush(heap, (occupied_until[station], station, route))
+        heapq.heappush(
+            heap, (occupied_until[station], prev_station, station, first_arrival, route)
+        )
         continue
 
     occupied_until[station] = t + 5
 
-    ends[route] = t
     for station2 in range(station + 1, n_stations):
         dt = routes[route][station2]
         if dt is not None:
-            heapq.heappush(heap, (t + dt + 5, station2, route))
+            t2 = t + dt + 5
+            heapq.heappush(heap, (t2, station, station2, t2, route))
             break
-
+    else:
+        ends[route] = t + 5
 
 answer = 0
 for start, end in zip(starts, ends):
@@ -70,5 +65,3 @@ for start, end in zip(starts, ends):
     assert end is not None
     answer = max(answer, end - start)
 print(answer)
-
-# Try to submit 2370
