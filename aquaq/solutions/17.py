@@ -1,7 +1,7 @@
 import dateutil
 import datetime
 
-with open("./input/17.txt") as f:
+with open("./input/17.txt", encoding="utf8") as f:
     text = f.read()
 
 shame_start: dict[str, datetime.date] = {}

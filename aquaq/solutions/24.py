@@ -61,4 +61,5 @@ while plaintext:
     else:
         raise ValueError(f"Unable to identify prefix from: {plaintext!r}")
 
+answer = answer.split(": ")[-1]
 print(answer)
