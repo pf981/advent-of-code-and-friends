@@ -43,20 +43,6 @@ with open("./input/37.txt") as f:
 with open("./input/words.txt") as f:
     words = f.read().splitlines()
 
-# text = """guess,result
-# guess,0 0 0 0 2
-# twins,0 1 0 0 2
-# bowls,0 2 1 0 2
-# worms,2 2 2 0 2
-# works,2 2 2 0 2
-# mince,2 2 2 2 2
-# """
-
-# text = """guess,result
-# buxom,0 0 0 0 0
-# three,2 2 1 1 2
-# """
-
 candidates = {word for word in words if len(word) == 5}
 
 knowledge = Knowledge()
@@ -90,13 +76,9 @@ for line in text.splitlines()[1:]:
     for c in apply_max_count:
         knowledge.letter_max_counts[c] = knowledge.letter_min_counts[c]
 
-    print(f"{guess=} {outcomes=}")
-    print(f"{knowledge=}")
-
     cur_candidates = {
         candidate for candidate in cur_candidates if is_valid(candidate, knowledge)
     }
-    print(f"{cur_candidates=}")
 
     assert cur_candidates
     if len(cur_candidates) == 1:
@@ -104,10 +86,5 @@ for line in text.splitlines()[1:]:
         knowledge = Knowledge()
         cur_candidates = candidates.copy()
 
-# final_words
 answer = sum(ord(c) - ord("a") for c in itertools.chain.from_iterable(final_words))
 print(answer)
-
-
-# knowledge
-# is_valid("these", knowledge)

@@ -74,4 +74,3 @@ for seq, key in seqs.items():
 assert len(candidates) == 1
 answer = candidates[0][0]
 print(answer)
-# nonsense
