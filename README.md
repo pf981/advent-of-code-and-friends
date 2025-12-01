@@ -27,7 +27,7 @@ A collection of solutions to various coding challenges and puzzles, all in one p
 | [`synacor-challenge/`](synacor-challenge/) | [Synacor Challenge](https://github.com/Aneurysm9/vm_challenge) | Virtual machine and reverse engineering puzzle | ✅ |
 | [`xint/`](xint/) | [[X]INT](https://salza.dk/xint/) | An API-Based game for programmers and hackers | ✅ |
 
-## 🎯 About
+## ℹ️ About
 
 This repository combines solutions from multiple coding challenge platforms and competitions. Each subdirectory contains solutions for a specific platform or challenge series.
 
