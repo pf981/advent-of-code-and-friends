@@ -8,7 +8,7 @@ inp = get_data(day=x, year=2025)
 
 lines = inp.splitlines()
 
-answer1 = "todo"
+answer1 = None
 print(answer1)
 
 # submit(answer1, part='a', day=x, year=2025)
@@ -17,7 +17,7 @@ print(answer1)
 # Part 2
 
 
-answer2 = "todo"
+answer2 = None
 print(answer2)
 
 # submit(answer2, part='b', day=x, year=2025)
