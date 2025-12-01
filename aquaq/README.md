@@ -7,8 +7,6 @@ This projct contains code (and tests) for solving [AquaQ Challenge](https://chal
 
 This project uses uv to manage the virtual environment and dependencies.
 
-To get started:
-
 Install uv from https://github.com/astral-sh/uv
 
 ```bash
@@ -46,4 +44,5 @@ aquaq/
 ├── tests/           # — pytest test files
 └── pyproject.toml   # — project config
 ```
+
 
