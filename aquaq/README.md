@@ -35,7 +35,7 @@ To run all tests with pytest, use:
 uv run pytest
 ```
 
-## 📁 Project structure
+## 📁 Project Structure
 
 ```
 aquaq/
@@ -44,5 +44,6 @@ aquaq/
 ├── tests/           # — pytest test files
 └── pyproject.toml   # — project config
 ```
+
 
 
