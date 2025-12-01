@@ -13,7 +13,7 @@ Install uv from https://github.com/astral-sh/uv
 uv sync
 ````
 
-## Input files
+## 📥 Input files
 
 Before running any solution or tests, **download the puzzle input files** and place them under `input/`.
 
@@ -44,6 +44,7 @@ aquaq/
 ├── tests/           # — pytest test files
 └── pyproject.toml   # — project config
 ```
+
 
 
 
