@@ -21,11 +21,11 @@ Before running any solution or tests, **download the puzzle input files** and pl
 
 ```
 input/
-  └── 0.txt
-  └── 1.txt
-  └── ...
-  └── 40.txt
-  └── asciialphabet.txt
+  ├── 0.txt
+  ├── 1.txt
+  ├── ...
+  ├── 40.txt
+  ├── asciialphabet.txt
   └── words.txt
 ```
 
@@ -46,3 +46,4 @@ aquaq/
 ├── tests/           # — pytest test files
 └── pyproject.toml   # — project config
 ```
+
