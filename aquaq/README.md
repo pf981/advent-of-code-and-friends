@@ -46,8 +46,3 @@ aquaq/
 ├── tests/           # — pytest test files
 └── pyproject.toml   # — project config
 ```
-
-## Why uv + pytest
-
-* Using **uv** simplifies dependency and virtual-environment management, keeping project setup clean and reproducible.
-* Using **pytest** gives you automated testing for your solutions — helps catch regressions and ensures correctness.
