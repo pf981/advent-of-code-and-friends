@@ -28,7 +28,7 @@ while True:
             nei += (r2, c2) in rolls
         if nei < 4:
             to_remove.append((r, c))
-        answer2 += nei < 4
+            answer2 += 1
 
     if not to_remove:
         break
