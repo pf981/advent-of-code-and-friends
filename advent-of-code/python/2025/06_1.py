@@ -14,5 +14,4 @@ for col in cols:
     op = {"+": sum, "*": math.prod}[col[-1]]
     answer1 += op(nums)
 
-print(answer1)
 submit(answer1, part="a", day=6, year=2025)
