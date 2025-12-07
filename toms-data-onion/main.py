@@ -15,7 +15,7 @@ def get_payload(layer: int) -> bytes:
         text = f.read()
 
     payload = text.split(PAYLOAD_SEP)[1].strip()
-    return base64.a85decode(payload[2:-2])
+    return base64.a85decode(payload, adobe=True)
 
 
 def process(layer: int, decrypt_fn: Callable[[bytes], bytes]) -> None:
