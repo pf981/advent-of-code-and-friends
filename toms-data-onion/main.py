@@ -26,10 +26,48 @@ def process(decrypt_fn: Callable[[str], str], layer: int) -> None:
 
 
 def decrypt1(cipher: str) -> str:
+    """
+    This payload has been encoded with Adobe-flavoured ASCII85.
+    """
     return base64.a85decode(cipher[2:-2]).decode("utf-8")
 
 
-decrypters = [decrypt1]
+def decrypt2(cipher: str) -> str:
+    """
+    Like all the layers, the payload is again encoded with
+    Adobe-flavoured ASCII85. After ASCII85 decoding the payload,
+    apply the following operations to each byte:
+
+      1. Flip every second bit
+      2. Rotate the bits one position to the right
+    """
+    bytes_ = base64.a85decode(cipher[2:-2])
+    nums = []
+    for byte in bytes_:
+        flipped = byte ^ 0b01010101
+        rotated = (flipped >> 1) | ((flipped & 1) << 7)
+        nums.append(rotated)
+
+    return bytearray(nums).decode()
+
+
+def decrypt3(cipher: str) -> str:
+    raise NotImplementedError
+
+
+def decrypt4(cipher: str) -> str:
+    raise NotImplementedError
+
+
+def decrypt5(cipher: str) -> str:
+    raise NotImplementedError
+
+
+def decrypt6(cipher: str) -> str:
+    raise NotImplementedError
+
+
+decrypters = [decrypt1, decrypt2, decrypt3, decrypt4, decrypt5, decrypt6]
 
 
 def main() -> None:
