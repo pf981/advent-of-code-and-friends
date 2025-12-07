@@ -1,9 +1,11 @@
-import sys
-import re
-import requests
-import zipfile
 import io
+import re
+import sys
+import zipfile
 from pathlib import Path
+from typing import Union
+
+import requests
 
 # Config
 CONFIG_DIR = Path.home() / ".config" / "cses"
@@ -11,7 +13,7 @@ TOKEN_FILE = CONFIG_DIR / "token"
 DATA_DIR = Path(__file__).parent.parent / "data"
 
 
-def get_session_id() -> str | None:
+def get_session_id() -> Union[str, None]:
     """Reads PHPSESSID from configuration file."""
     if not TOKEN_FILE.exists():
         return None

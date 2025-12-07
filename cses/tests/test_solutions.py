@@ -1,8 +1,10 @@
-import pytest
-import sys
 import subprocess
+import sys
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, Union
+
+import pytest
+
 from utils.downloader import ensure_test_data
 
 # Get the project root directory
@@ -47,7 +49,7 @@ def make_test_function(
     return test_func
 
 
-def create_test_class(solution_file: Path, problem_id: str) -> type | None:
+def create_test_class(solution_file: Path, problem_id: str) -> Union[type, None]:
     """
     Dynamically create a test class for a specific problem with explicit test methods.
     """
