@@ -1,3 +1,4 @@
+import sys
 import re
 import requests
 import zipfile
@@ -82,3 +83,12 @@ def ensure_test_data(problem_id: str) -> bool:
         if problem_dir.exists() and not any(problem_dir.iterdir()):
             problem_dir.rmdir()
         return False
+
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: uv run utils/downloader.py <problem_id>")
+        sys.exit(1)
+
+    problem_id = sys.argv[1]
+    ensure_test_data(problem_id)
