@@ -8,14 +8,15 @@ beams = {lines[0].index("S")}
 answer1 = 0
 for line in lines[1:]:
     new_beams = beams.copy()
-    for i, ch in enumerate(line):
-        if ch != "^":
+    for i in beams:
+        if line[i] != "^":
             continue
-        if i in beams:
-            new_beams.add(i - 1)
-            new_beams.add(i + 1)
-            new_beams.remove(i)
-            answer1 += 1
+
+        new_beams.add(i - 1)
+        new_beams.add(i + 1)
+        new_beams.remove(i)
+        answer1 += 1
+
     beams = new_beams
 
 submit(answer1, part="a", day=7, year=2025)
