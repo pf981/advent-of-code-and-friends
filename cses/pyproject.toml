@@ -9,6 +9,7 @@ dependencies = [
     "ruff>=0.14.8",
     "requests>=2.31.0",
     "ty>=0.0.1a32",
+    "ipykernel>=7.1.0",
 ]
 
 [tool.pytest.ini_options]
