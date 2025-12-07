@@ -7,5 +7,10 @@ requires-python = ">=3.13"
 dependencies = [
     "pytest>=9.0.2",
     "ruff>=0.14.8",
+    "requests>=2.31.0",
     "ty>=0.0.1a32",
 ]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

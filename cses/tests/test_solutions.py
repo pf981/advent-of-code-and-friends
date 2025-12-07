@@ -3,6 +3,7 @@ import sys
 import subprocess
 from pathlib import Path
 from typing import Any, Callable
+from utils.downloader import ensure_test_data
 
 # Get the project root directory
 PROJECT_ROOT = Path(__file__).parent.parent
@@ -102,7 +103,23 @@ for solution_file in SOLUTIONS_DIR.rglob("*.py"):
     except IndexError:
         continue
 
+    # Ensure data exists (download if possible)
+    download_success = ensure_test_data(problem_id)
+
     test_class = create_test_class(solution_file, problem_id)
+
     if test_class:
         # Inject the class into global namespace so pytest discovers it
         globals()[test_class.__name__] = test_class
+    elif not download_success:
+        # If no tests found AND download failed, create a failing test class to alert user
+        class_name = f"Test_{solution_file.stem}_MissingData"
+
+        class TestMissingData:
+            def test_error(self):
+                pytest.fail(
+                    f"No test data found for {solution_file.name} and auto-download failed. Check ~/.config/cses/token configuration."
+                )
+
+        TestMissingData.__name__ = class_name
+        globals()[class_name] = TestMissingData
