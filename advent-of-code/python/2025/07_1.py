@@ -2,40 +2,20 @@ from aocd import get_data, submit
 
 
 inp = get_data(day=7, year=2025)
-# inp = """.......S.......
-# ...............
-# .......^.......
-# ...............
-# ......^.^......
-# ...............
-# .....^.^.^.....
-# ...............
-# ....^.^...^....
-# ...............
-# ...^.^...^.^...
-# ...............
-# ..^...^.....^..
-# ...............
-# .^.^.^.^.^...^.
-# ...............
-# """
-
 lines = inp.splitlines()
+
 beams = {lines[0].index("S")}
 answer1 = 0
 for line in lines[1:]:
-    splitters = [i for i, ch in enumerate(line) if ch == "^"]
-    print(f"{beams=} {splitters=}")
     new_beams = beams.copy()
-    for sp in splitters:
-        if sp in beams:
-            new_beams.add(sp - 1)
-            new_beams.add(sp + 1)
-            new_beams.remove(sp)
+    for i, ch in enumerate(line):
+        if ch != "^":
+            continue
+        if i in beams:
+            new_beams.add(i - 1)
+            new_beams.add(i + 1)
+            new_beams.remove(i)
             answer1 += 1
     beams = new_beams
-print(answer1)
 
-# answer1 = None
 submit(answer1, part="a", day=7, year=2025)
-# 1773 wrong
