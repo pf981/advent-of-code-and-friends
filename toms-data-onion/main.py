@@ -1,4 +1,5 @@
 import base64
+import itertools
 import pathlib
 
 from typing import Callable
@@ -8,19 +9,18 @@ PAYLOAD_SEP = "==[ Payload ]===============================================\n\n"
 DATA_PATH = pathlib.Path("./data/")
 
 
-def get_payload(layer: int) -> str:
+def get_payload(layer: int) -> bytes:
     path = DATA_PATH / f"{layer:>02}.txt"
     with open(path) as f:
         text = f.read()
 
-    return text.split(PAYLOAD_SEP)[1].strip()
+    payload = text.split(PAYLOAD_SEP)[1].strip()
+    return base64.a85decode(payload[2:-2])
 
 
-def process(layer: int, decrypters: list[Callable[[bytes], bytes]]) -> None:
-    payload = get_payload(layer - 1).encode()
-    for i in range(layer):
-        payload = decrypters[i](payload)
-    plaintext = payload.decode("utf-8")
+def process(layer: int, decrypt_fn: Callable[[bytes], bytes]) -> None:
+    payload = get_payload(layer - 1)
+    plaintext = decrypt_fn(payload).decode("utf-8")
     path = DATA_PATH / f"{layer:>02}.txt"
 
     with open(path, "w", newline="") as f:
@@ -31,7 +31,7 @@ def decrypt1(data: bytes) -> bytes:
     """
     This payload has been encoded with Adobe-flavoured ASCII85.
     """
-    return base64.a85decode(data[2:-2])
+    return data
 
 
 def decrypt2(data: bytes) -> bytes:
@@ -65,29 +65,34 @@ def decrypt3(data: bytes) -> bytes:
     is odd, the parity bit should be '1'. If the count is even,
     the parity bit should be '0'.
     """
-    output = bytearray()
-    cur_byte = 0
-    cur_byte_size = 0
+    seven_bits_array = bytearray()
     for byte in data:
         parity_bit = byte & 1
-        byte >>= 1
+        seven_bits = byte >> 1
 
-        if (byte.bit_count() & 1) != parity_bit:
+        if (seven_bits.bit_count() & 1) != parity_bit:
             continue
 
-        # Take at most 7 bits from this byte and add it to cur_byte
-        # If cur_byte is size 8, append to output, Update cur_byte with the remaining if any
-        raise NotImplementedError
-        # to_take = max(8 - cur_byte_size, 7)
-        # cur_byte_size += to_take
+        seven_bits_array.append(seven_bits)
 
-        # if to_take < 7:
-        #     cur_byte
+    cur_byte = 0
+    cur_byte_size = 0
+    output = bytearray()
+    for seven_bits in seven_bits_array:
+        if cur_byte_size == 0:
+            cur_byte = seven_bits << 1
+            cur_byte_size = 7
+            continue
 
-        # if cur_byte_size == 8:
-        #     output.append(cur_byte)
-        #     cur_byte = 0
-        #     cur_byte_size = 0
+        # Guaranteed to fill byte
+        to_take = 8 - cur_byte_size
+        cur_byte |= seven_bits >> (7 - to_take)
+        output.append(cur_byte & 0b1111111)
+
+        cur_byte_size = 7 - to_take
+        cur_byte = (seven_bits & ((1 << cur_byte_size) - 1)) << (to_take + 1)
+
+    assert cur_byte_size == 0
 
     return bytes(output)
 
@@ -108,8 +113,8 @@ decrypters = [decrypt1, decrypt2, decrypt3, decrypt4, decrypt5, decrypt6]
 
 
 def main() -> None:
-    for layer in range(1, 7):
-        process(layer, decrypters)
+    for layer, decrypt_fn in enumerate(decrypters, 1):
+        process(layer, decrypt_fn)
 
 
 if __name__ == "__main__":
