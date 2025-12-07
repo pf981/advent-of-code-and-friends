@@ -1,0 +1,11 @@
+[project]
+name = "cses"
+version = "0.1.0"
+description = "Solutions to https://cses.fi/"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "pytest>=9.0.2",
+    "ruff>=0.14.8",
+    "ty>=0.0.1a32",
+]
