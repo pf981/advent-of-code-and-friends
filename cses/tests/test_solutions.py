@@ -62,7 +62,12 @@ def create_test_class(solution_file: Path, problem_id: str) -> type | None:
 
     found_tests = False
 
-    for input_file in problem_data_dir.glob("*.in"):
+    input_files = sorted(
+        problem_data_dir.glob("*.in"),
+        key=lambda p: int(p.stem) if p.stem.isdigit() else p.stem,
+    )
+
+    for input_file in input_files:
         expected_output_file = input_file.with_suffix(".out")
         if expected_output_file.exists():
             found_tests = True
