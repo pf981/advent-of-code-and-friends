@@ -1,0 +1,9 @@
+[project]
+name = "toms-data-onion"
+version = "1.0.0"
+description = "Solutions to https://www.tomdalling.com/toms-data-onion/"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "ipykernel>=7.1.0",
+]
