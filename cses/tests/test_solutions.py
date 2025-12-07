@@ -27,7 +27,7 @@ def make_test_function(
 
         # Read expected output
         with open(expected_output_path, "r") as f:
-            expected_output = f.read().strip()
+            expected_output = "\n".join(line.strip() for line in f.read().splitlines())
 
         # Run the solution
         process = subprocess.run(
@@ -38,7 +38,7 @@ def make_test_function(
             check=True,
         )
 
-        actual_output = process.stdout.strip()
+        actual_output = "\n".join(line.strip() for line in process.stdout.splitlines())
 
         assert actual_output == expected_output, (
             f"Failed for {Path(solution_path).name} with input {Path(input_path).name}.\n"
