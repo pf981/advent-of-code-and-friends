@@ -1,6 +1,8 @@
 import base64
+import collections
 import itertools
 import pathlib
+import string
 
 from typing import Callable
 
@@ -98,7 +100,42 @@ def decrypt3(data: bytes) -> bytes:
 
 
 def decrypt4(data: bytes) -> bytes:
-    raise NotImplementedError
+    path = DATA_PATH / "03.txt"
+    with open(path) as f:
+        text = f.read()
+    reference_text = text.split(PAYLOAD_SEP)[0].strip()
+    reference_counts = collections.Counter(reference_text.encode("utf-8"))
+    s = sum(reference_counts.values())
+    reference_freqs = {byte: count / s for byte, count in reference_counts.items()}
+
+    all_freqs = []
+    for i in range(32):
+        freqs = collections.Counter(data[i:1024:32])
+        s = sum(freqs.values())
+        for byte in freqs:
+            freqs[byte] /= s
+        all_freqs.append(freqs)
+
+    key = []
+    for freqs in all_freqs:
+        best = (float("inf"), 0)  # d, k
+        for k in range(256):
+            new_freqs = collections.Counter()
+            for byte, w in freqs.items():
+                new_freqs[byte ^ k] = w
+
+            d = 0
+            for byte in set(new_freqs.keys()) | set(reference_freqs.keys()):
+                if chr(byte) not in string.printable:
+                    d = float("inf")
+                    break
+                freq1 = new_freqs.get(byte, 0)
+                freq2 = reference_freqs.get(byte, 0)
+                d += abs(freq1 - freq2)
+            best = min(best, (d, k))
+        key.append(best[1])
+
+    return bytes(byte ^ k for byte, k in zip(data, itertools.cycle(key)))
 
 
 def decrypt5(data: bytes) -> bytes:
