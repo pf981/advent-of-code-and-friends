@@ -9,8 +9,10 @@ positions = [tuple(int(x) for x in line.split(",")) for line in lines]
 n = len(positions)
 
 parents = {}
+sizes = {}
 for pos in positions:
     parents[pos] = pos
+    sizes[pos] = 1
 
 P = tuple[int, int, int]
 
@@ -20,7 +22,12 @@ def union(i: P, j: P) -> bool:
     j = find(j)
     if i == j:
         return False
+
+    if sizes[j] < sizes[i]:
+        i, j = j, i
     parents[i] = j
+    sizes[j] += sizes[i]
+    sizes[i] = 0
     return True
 
 

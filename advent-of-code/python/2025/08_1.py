@@ -1,4 +1,3 @@
-import collections
 import heapq
 import math
 
@@ -28,7 +27,12 @@ def union(i: P, j: P) -> bool:
     j = find(j)
     if i == j:
         return False
+
+    if sizes[j] < sizes[i]:
+        i, j = j, i
     parents[i] = j
+    sizes[j] += sizes[i]
+    sizes[i] = 0
     return True
 
 
@@ -39,7 +43,7 @@ def find(i: P) -> P:
     return i
 
 
-distances = []  # d, p1, p2
+distances = []  # [(d, p1, p2), ...]
 for i in range(n):
     for j in range(i + 1, n):
         x1, y1, z1 = positions[i]
@@ -54,9 +58,5 @@ for i in range(N_CONNECTIONS):
     _, p1, p2 = distances[i]
     union(p1, p2)
 
-groups = collections.Counter()
-for p in parents:
-    groups[find(p)] += 1
-
-answer1 = math.prod(heapq.nlargest(3, groups.values()))
+answer1 = math.prod(heapq.nlargest(3, sizes.values()))
 submit(answer1, part="a", day=8, year=2025)
