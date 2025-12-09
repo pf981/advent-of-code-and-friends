@@ -25,9 +25,9 @@ for X, Y in nums + [nums[0]]:
         border.add((x, y))
 
 prefix_sums = collections.defaultdict(int)
-for y in range(-1, len(decompress_y)):
+for y in range(len(decompress_y)):
     is_outside = True
-    for x in range(-1, len(decompress_x)):
+    for x in range(len(decompress_x)):
         if (x, y) in border and (x - 1, y) not in border:
             is_outside = not is_outside
 
