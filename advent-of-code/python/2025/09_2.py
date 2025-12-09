@@ -1,5 +1,4 @@
 import collections
-import heapq
 
 from aocd import get_data, submit
 
@@ -25,7 +24,6 @@ for X, Y in nums + [nums[0]]:
         y += (y < y2) - (y > y2)
         border.add((x, y))
 
-
 prefix_sums = collections.defaultdict(int)
 for y in range(-1, len(decompress_y)):
     is_outside = True
@@ -40,42 +38,32 @@ for y in range(-1, len(decompress_y)):
             + is_outside
         )
 
-
-def is_valid_rect(x1: int, x2: int, y1: int, y2: int) -> bool:
-    if x1 > x2:
-        x1, x2 = x2, x1
-    if y1 > y2:
-        y1, y2 = y2, y1
-
-    return (
-        prefix_sums[(x2, y2)]
-        - prefix_sums[(x1 - 1, y2)]
-        - prefix_sums[(x2, y1 - 1)]
-        + prefix_sums[(x1 - 1, y1 - 1)]
-    ) == 0
-
-
-heap = []
+answer2 = 0
 for i in range(len(nums)):
     for j in range(i + 1, len(nums)):
         X1, Y1 = nums[i]
         X2, Y2 = nums[j]
-        w = abs(X2 - X1) + 1
-        h = abs(Y2 - Y1) + 1
 
         x1 = compress_X[X1]
         y1 = compress_Y[Y1]
         x2 = compress_X[X2]
         y2 = compress_Y[Y2]
 
-        heapq.heappush(heap, (-w * h, x1, x2, y1, y2))
+        if x1 > x2:
+            x1, x2 = x2, x1
+        if y1 > y2:
+            y1, y2 = y2, y1
 
-answer2 = None
-while heap:
-    neg_area, x1, x2, y1, y2 = heapq.heappop(heap)
-    if is_valid_rect(x1, x2, y1, y2):
-        answer2 = -neg_area
-        break
+        is_valid_rect = (
+            prefix_sums[(x2, y2)]
+            - prefix_sums[(x1 - 1, y2)]
+            - prefix_sums[(x2, y1 - 1)]
+            + prefix_sums[(x1 - 1, y1 - 1)]
+        ) == 0
 
-assert answer2
+        if is_valid_rect:
+            w = abs(X2 - X1) + 1
+            h = abs(Y2 - Y1) + 1
+            answer2 = max(answer2, w * h)
+
 submit(answer2, part="b", day=9, year=2025)
