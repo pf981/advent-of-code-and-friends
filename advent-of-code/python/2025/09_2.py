@@ -25,16 +25,11 @@ for X, Y in nums + [nums[0]]:
         border.add((x, y))
 
 
-x_min = -1
-x_max = len(decompress_x)
-y_min = -1
-y_max = len(decompress_y)
-
 prefix_sums = {}
-for y in range(y_min, y_max + 1):
+for y in range(len(decompress_y)):
     s = 0
     is_outside = True
-    for x in range(x_min, x_max + 1):
+    for x in range(-1, len(decompress_x)):
         if (x, y) in border and (x - 1, y) not in border:
             is_outside = not is_outside
         s += is_outside
