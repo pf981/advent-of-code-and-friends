@@ -3,11 +3,12 @@ name = "cses"
 version = "1.0.0"
 description = "Solutions to https://cses.fi/"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = "==3.8.13"
 dependencies = [
-    "ipykernel>=6.31.0",
-    "pytest>=8.4.2",
-    "requests>=2.32.5",
+    "ipykernel>=6.29.5",
+    "psutil==5.8.0",
+    "pytest>=8.3.5",
+    "requests>=2.32.4",
 ]
 
 [tool.pytest.ini_options]

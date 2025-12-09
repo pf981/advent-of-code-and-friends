@@ -26,6 +26,7 @@ A collection of solutions to various coding challenges and puzzles, all in one p
 | [`pi-coding-quest/`](pi-coding-quest/) | [Pi Coding Quest](https://ivanr3d.com/projects/pi/) | Coding challenges inspired by the mystical number Pi | ✅ 2024,2025 |
 | [`project-euler/`](project-euler/) | [Project Euler](https://projecteuler.net/) | Mathematical computation problems | ⏳ 94/957 |
 | [`synacor-challenge/`](synacor-challenge/) | [Synacor Challenge](https://github.com/Aneurysm9/vm_challenge) | Virtual machine and reverse engineering puzzle | ✅ |
+| [`toms-data-onion/`](toms-data-onion/) | [Tom's Data Onion](https://www.tomdalling.com/toms-data-onion/) | Solve many puzzles wrapped inside each other, like a matryoshka doll, or the layers of an onion | ⏳ 4/6 |
 | [`xint/`](xint/) | [[X]INT](https://salza.dk/xint/) | An API-Based game for programmers and hackers | ✅ |
 
 ## ℹ️ About
