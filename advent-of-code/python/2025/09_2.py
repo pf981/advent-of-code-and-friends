@@ -1,4 +1,3 @@
-import collections
 import heapq
 
 from aocd import get_data, submit
@@ -25,50 +24,20 @@ for X, Y in nums + [nums[0]]:
         y += (y < y2) - (y > y2)
         border.add((x, y))
 
+
 x_min = -1
 x_max = len(decompress_x)
 y_min = -1
 y_max = len(decompress_y)
 
-outside = {(x_min, y_min)}
-q = collections.deque([(x_min, y_min)])
-while q:
-    x, y = q.popleft()
-
-    for dx, dy in [(-1, 0), (0, -1), (0, 1), (1, 0)]:
-        x2 = x + dx
-        y2 = y + dy
-
-        if (x2, y2) in border or (x2, y2) in outside:
-            continue
-
-        if not (x_min <= x2 <= x_max and y_min <= y2 <= y_max):
-            continue
-
-        outside.add((x2, y2))
-        q.append((x2, y2))
-
-heap = []
-
-for i in range(len(nums)):
-    for j in range(i + 1, len(nums)):
-        X1, Y1 = nums[i]
-        X2, Y2 = nums[j]
-        w = abs(X2 - X1) + 1
-        h = abs(Y2 - Y1) + 1
-
-        x1 = compress_X[X1]
-        y1 = compress_Y[Y1]
-        x2 = compress_X[X2]
-        y2 = compress_Y[Y2]
-
-        heapq.heappush(heap, (-w * h, x1, x2, y1, y2))
-
 prefix_sums = {}
 for y in range(y_min, y_max + 1):
     s = 0
+    is_outside = True
     for x in range(x_min, x_max + 1):
-        s += (x, y) in outside
+        if (x, y) in border and (x - 1, y) not in border:
+            is_outside = not is_outside
+        s += is_outside
         prefix_sums[(x, y)] = s
 
 
@@ -83,6 +52,21 @@ def is_valid_rect(x1: int, x2: int, y1: int, y2: int) -> bool:
             return False
     return True
 
+
+heap = []
+for i in range(len(nums)):
+    for j in range(i + 1, len(nums)):
+        X1, Y1 = nums[i]
+        X2, Y2 = nums[j]
+        w = abs(X2 - X1) + 1
+        h = abs(Y2 - Y1) + 1
+
+        x1 = compress_X[X1]
+        y1 = compress_Y[Y1]
+        x2 = compress_X[X2]
+        y2 = compress_Y[Y2]
+
+        heapq.heappush(heap, (-w * h, x1, x2, y1, y2))
 
 answer2 = None
 while heap:
