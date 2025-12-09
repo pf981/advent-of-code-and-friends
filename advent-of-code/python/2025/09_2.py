@@ -10,8 +10,8 @@ nums = [[int(X) for X in line.split(",")] for line in lines]
 decompress_x = sorted({X for X, _ in nums})
 decompress_y = sorted({Y for _, Y in nums})
 
-compress_X = {X: decompress_x.index(X) for X, _ in nums}
-compress_Y = {Y: decompress_y.index(Y) for _, Y in nums}
+compress_X = {X: x for x, X in enumerate(decompress_x)}
+compress_Y = {Y: y for y, Y in enumerate(decompress_y)}
 
 x = compress_X[nums[0][0]]
 y = compress_Y[nums[0][1]]
