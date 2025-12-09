@@ -64,6 +64,13 @@ for i in range(len(nums)):
 
         heapq.heappush(heap, (-w * h, x1, x2, y1, y2))
 
+prefix_sums = {}
+for y in range(y_min, y_max + 1):
+    s = 0
+    for x in range(x_min, x_max + 1):
+        s += (x, y) in outside
+        prefix_sums[(x, y)] = s
+
 
 def is_valid_rect(x1: int, x2: int, y1: int, y2: int) -> bool:
     if x1 > x2:
@@ -71,10 +78,9 @@ def is_valid_rect(x1: int, x2: int, y1: int, y2: int) -> bool:
     if y1 > y2:
         y1, y2 = y2, y1
 
-    for x in range(x1, x2 + 1):
-        for y in range(y1, y2 + 1):
-            if (x, y) in outside:
-                return False
+    for y in range(y1, y2 + 1):
+        if prefix_sums[(x2, y)] - prefix_sums[(x1 - 1, y)] != 0:
+            return False
     return True
 
 
