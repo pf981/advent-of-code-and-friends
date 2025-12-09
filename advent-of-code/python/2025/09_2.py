@@ -1,3 +1,4 @@
+import collections
 import heapq
 
 from aocd import get_data, submit
@@ -25,15 +26,19 @@ for X, Y in nums + [nums[0]]:
         border.add((x, y))
 
 
-prefix_sums = {}
-for y in range(len(decompress_y)):
-    s = 0
+prefix_sums = collections.defaultdict(int)
+for y in range(-1, len(decompress_y)):
     is_outside = True
     for x in range(-1, len(decompress_x)):
         if (x, y) in border and (x - 1, y) not in border:
             is_outside = not is_outside
-        s += is_outside
-        prefix_sums[(x, y)] = s
+
+        prefix_sums[(x, y)] = (
+            prefix_sums[(x - 1, y)]
+            + prefix_sums[(x, y - 1)]
+            - prefix_sums[(x - 1, y - 1)]
+            + is_outside
+        )
 
 
 def is_valid_rect(x1: int, x2: int, y1: int, y2: int) -> bool:
@@ -42,10 +47,12 @@ def is_valid_rect(x1: int, x2: int, y1: int, y2: int) -> bool:
     if y1 > y2:
         y1, y2 = y2, y1
 
-    for y in range(y1, y2 + 1):
-        if prefix_sums[(x2, y)] - prefix_sums[(x1 - 1, y)] != 0:
-            return False
-    return True
+    return (
+        prefix_sums[(x2, y2)]
+        - prefix_sums[(x1 - 1, y2)]
+        - prefix_sums[(x2, y1 - 1)]
+        + prefix_sums[(x1 - 1, y1 - 1)]
+    ) == 0
 
 
 heap = []
