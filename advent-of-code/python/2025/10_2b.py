@@ -1,7 +1,9 @@
 from aocd import get_data, submit
 import copy
+import functools
 
 
+@functools.cache
 def get_min_presses(i, target, buttons):
     # print(f"{i=} {target=} {buttons=}")
     if i == len(buttons):
@@ -13,7 +15,7 @@ def get_min_presses(i, target, buttons):
     result = get_min_presses(i + 1, target, buttons)
 
     # Press
-    joltage2 = copy.deepcopy(target)
+    joltage2 = list(target)
     press = float("inf")
     for press_count in range(1, 200):
         for j in buttons[i]:
@@ -23,7 +25,9 @@ def get_min_presses(i, target, buttons):
                 #     print(f"Stopping i=0 at {press_count=} {joltage2=} {joltage2[i]=}")
                 break
         else:
-            press = min(press, press_count + get_min_presses(i + 1, joltage2, buttons))
+            press = min(
+                press, press_count + get_min_presses(i + 1, tuple(joltage2), buttons)
+            )
             continue
         break
 
@@ -47,7 +51,7 @@ for line in lines:
     buttons = [[int(x) for x in part[1:-1].split(",")] for part in buttons]
     joltage = [int(x) for x in costs[1:-1].split(",")]
     # print(f"{target=} {buttons=} {costs}")
-    answer2 += get_min_presses(0, joltage, buttons)
+    answer2 += get_min_presses(0, tuple(joltage), tuple(tuple(b) for b in buttons))
 
 print(answer2)
 submit(answer2, part="b", day=10, year=2025)
