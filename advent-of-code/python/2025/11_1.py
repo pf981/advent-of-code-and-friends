@@ -12,7 +12,7 @@ for line in lines:
 
 
 @functools.cache
-def count_ways(node, parent):
+def count_ways(node: str, parent: str) -> int:
     if node == "out":
         return 1
 
