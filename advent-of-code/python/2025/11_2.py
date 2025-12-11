@@ -1,6 +1,8 @@
-from aocd import get_data, submit
-import re
 import functools
+import re
+
+from aocd import get_data, submit
+
 
 inp = get_data(day=11, year=2025)
 lines = inp.splitlines()
