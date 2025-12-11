@@ -210,6 +210,7 @@ def decrypt5(data: bytes) -> bytes:
     +---------------- ...
     """
 
+    # TODO: MAKE PACKED
     class TcpHeader(ctypes.Structure):
         _fields_ = [
             ("version", ctypes.c_uint8, 4),
@@ -217,7 +218,8 @@ def decrypt5(data: bytes) -> bytes:
             ("type_of_service", ctypes.c_uint8),
             ("total_length", ctypes.c_uint16),
             ("identification", ctypes.c_uint16),
-            ("flags_fragment_offset", ctypes.c_uint16),
+            ("flags", ctypes.c_uint, 3),
+            ("ffragment_offset", ctypes.c_uint16, 12),
             ("time_to_live", ctypes.c_uint8),
             ("protocol", ctypes.c_uint8),
             ("header_checksum", ctypes.c_uint16),
