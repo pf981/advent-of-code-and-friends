@@ -1,5 +1,8 @@
 import base64
 import collections
+import ctypes
+import io
+import ipaddress
 import itertools
 import pathlib
 import string
@@ -100,6 +103,13 @@ def decrypt3(data: bytes) -> bytes:
 
 
 def decrypt4(data: bytes) -> bytes:
+    """
+    The payload has been encrypted by XOR'ing each byte with a
+    secret, cycling key. The key is 32 bytes of random data,
+    which I'm not going to give you. You will need to use your
+    hacker skills to discover what the key is, in order to
+    decrypt the payload.
+    """
     path = DATA_PATH / "03.txt"
     with open(path) as f:
         text = f.read()
@@ -139,6 +149,131 @@ def decrypt4(data: bytes) -> bytes:
 
 
 def decrypt5(data: bytes) -> bytes:
+    """
+    The payload for this layer is encoded as a stream of raw
+    network data, as if the solution was being received over the
+    internet. The data is a series of IPv4 packets with User
+    Datagram Protocol (UDP) inside. Extract the payload data
+    from inside each packet, and combine them together to form
+    the solution.
+
+    However, the payload contains extra packets that are not
+    part of the solution. Discard these corrupted and irrelevant
+    packets when forming the solution.
+
+    Each valid packet of the solution has the following
+    properties. Discard packets that do not have all of these
+    properties.
+
+     - The packet was sent FROM any port of 10.1.1.10
+     - The packet was sent TO port 42069 of 10.1.1.200
+     - The IPv4 header checksum is correct
+     - The UDP header checksum is correct
+
+    WARNING: Failing to do this properly WILL cause the next
+    layer to be unsolveable. If you include incorrect packets in
+    your solution, the result may be readable and look correct,
+    but its payload WILL be corrupted in ways that are
+    impossible to detect. Trust me.
+
+    The packets appear in the correct order. No reordering is
+    necessary.
+
+    IPv4 Header:
+     0                   1                   2                   3
+     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |Version|  IHL  |Type of Service|          Total Length         |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |         Identification        |Flags|      Fragment Offset    |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |  Time to Live |    Protocol   |         Header Checksum       |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                       Source Address                          |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                    Destination Address                        |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                    Options                    |    Padding    |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+    UDP Header:
+     0      7 8     15 16    23 24    31
+    +--------+--------+--------+--------+
+    |     Source      |   Destination   |
+    |      Port       |      Port       |
+    +--------+--------+--------+--------+
+    |                 |                 |
+    |     Length      |    Checksum     |
+    +--------+--------+--------+--------+
+    |
+    |          data octets ...
+    +---------------- ...
+    """
+
+    class TcpHeader(ctypes.Structure):
+        _fields_ = [
+            ("version", ctypes.c_uint8, 4),
+            ("ihl", ctypes.c_uint8, 4),
+            ("type_of_service", ctypes.c_uint8),
+            ("total_length", ctypes.c_uint16),
+            ("identification", ctypes.c_uint16),
+            ("flags_fragment_offset", ctypes.c_uint16),
+            ("time_to_live", ctypes.c_uint8),
+            ("protocol", ctypes.c_uint8),
+            ("header_checksum", ctypes.c_uint16),
+            ("source_address", ctypes.c_uint32),
+            ("destination_address", ctypes.c_uint32),
+            # ("options", ctypes.c_uint32, 24),
+            # ("padding", ctypes.c_uint8),
+        ]
+
+        def __repr__(self):
+            fields = []
+            for name, *_ in self._fields_:
+                value = getattr(self, name)
+                if name.endswith("_address"):
+                    value = str(ipaddress.IPv4Address(value))
+                fields.append(f"{name}={value}")
+            return f"TcpHeader({', '.join(fields)})"
+
+    class UdpHeader(ctypes.Structure):
+        _fields_ = [
+            ("source_port", ctypes.c_uint16),
+            ("destination_port", ctypes.c_uint16),
+            ("length", ctypes.c_uint16),
+            ("checksum", ctypes.c_uint16),
+        ]
+
+        def __repr__(self):
+            fields = []
+            for name, *_ in self._fields_:
+                value = getattr(self, name)
+                if name.endswith("_address"):
+                    value = str(ipaddress.IPv4Address(value))
+                fields.append(f"{name}={value}")
+            return f"UdpHeader({', '.join(fields)})"
+
+    def read_struct(stream: io.BytesIO, cls):
+        size = ctypes.sizeof(cls)
+        data = stream.read(size)
+        if len(data) != size:
+            raise EOFError(f"Expected {size} bytes, got {len(data)}")
+        return cls.from_buffer_copy(data)
+
+    stream = io.BytesIO(data)
+
+    while stream:
+        tcp_header = read_struct(stream, TcpHeader)
+        udp_header = read_struct(stream, UdpHeader)
+        print("-------")
+        print(f"{tcp_header=}")
+        print(f"{udp_header=}")
+        print(f"{tcp_header.total_length=}")
+        print(f"{udp_header.length=}")
+        print(f"{udp_header.length + 20=}")
+        print(f"{udp_header.length + 20 - tcp_header.total_length=}")
+        print("-----")
+        break
     raise NotImplementedError
 
 
