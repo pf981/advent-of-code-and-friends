@@ -3,23 +3,8 @@ import re
 import functools
 
 inp = get_data(day=11, year=2025)
-# inp = """svr: aaa bbb
-# aaa: fft
-# fft: ccc
-# bbb: tty
-# tty: ccc
-# ccc: ddd eee
-# ddd: hub
-# hub: fff
-# eee: dac
-# dac: fff
-# fff: ggg hhh
-# ggg: out
-# hhh: out
-# """
-
-
 lines = inp.splitlines()
+
 m = {}
 for line in lines:
     from_, *to = re.findall(r"[a-z]{3}", line)
@@ -45,7 +30,4 @@ def count_ways(node, parent, has_dac, has_fft):
 
 
 answer2 = count_ways("svr", "", False, False)
-print(answer2)
 submit(answer2, part="b", day=11, year=2025)
-# 278341040353001229
-# not right
