@@ -14,7 +14,7 @@ for line in lines:
 @functools.cache
 def count_ways(node: str, parent: str, has_dac: bool, has_fft: bool) -> int:
     if node == "out":
-        return int(has_dac) and int(has_fft)
+        return int(has_dac and has_fft)
 
     if node == "dac":
         has_dac = True
