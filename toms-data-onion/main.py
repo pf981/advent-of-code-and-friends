@@ -227,15 +227,6 @@ def decrypt5(data: bytes) -> bytes:
             ("destination_address", ctypes.c_uint32),
         ]
 
-        def __repr__(self):
-            fields = []
-            for name, *_ in self._fields_:
-                value = getattr(self, name)
-                if name.endswith("_address"):
-                    value = str(ipaddress.IPv4Address(value))
-                fields.append(f"{name}={value}")
-            return f"TcpHeader({', '.join(fields)})"
-
     class UdpHeader(ctypes.BigEndianStructure):
         _pack_ = 1
         _fields_ = [
@@ -244,15 +235,6 @@ def decrypt5(data: bytes) -> bytes:
             ("length", ctypes.c_uint16),
             ("checksum", ctypes.c_uint16),
         ]
-
-        def __repr__(self):
-            fields = []
-            for name, *_ in self._fields_:
-                value = getattr(self, name)
-                if name.endswith("_address"):
-                    value = str(ipaddress.IPv4Address(value))
-                fields.append(f"{name}={value}")
-            return f"UdpHeader({', '.join(fields)})"
 
     def read_struct(stream: io.BytesIO, cls):
         size = ctypes.sizeof(cls)
@@ -281,11 +263,7 @@ def decrypt5(data: bytes) -> bytes:
         udp_header = read_struct(stream, UdpHeader)
         content = stream.read(udp_header.length - ctypes.sizeof(UdpHeader))
 
-        print(f"\n----\n{ipv4_header=}")
-        print(f"\n{udp_header=}\n")
-        # print(content.decode())
-
-        # assert ipv4_header.ihl == 5
+        assert ipv4_header.ihl == 5
         assert ipv4_header.total_length == udp_header.length + ctypes.sizeof(IPv4Header)
 
         if str(ipaddress.IPv4Address(ipv4_header.source_address)) != "10.1.1.10":
@@ -294,8 +272,6 @@ def decrypt5(data: bytes) -> bytes:
             continue
         if udp_header.destination_port != 42069:
             continue
-
-        print("    Source/Dest Correct")
 
         udp_pseudo_header = b"".join(
             [
@@ -310,15 +286,10 @@ def decrypt5(data: bytes) -> bytes:
 
         if checksum16(bytes(ipv4_header)) != 0:
             continue
-        print("    IPv4 Checksum Correct")
         if checksum16(udp_checksum_data) != 0:
             continue
-        print("    UDP Checksum Correct")
 
         stream_out.write(content)
-
-    print(stream_out.getvalue().decode())
-    print(f"----------------------")
 
     return stream_out.getvalue()
 
