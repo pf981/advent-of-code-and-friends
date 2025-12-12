@@ -210,23 +210,21 @@ def decrypt5(data: bytes) -> bytes:
     +---------------- ...
     """
 
-    # TODO: MAKE PACKED
-    class TcpHeader(ctypes.Structure):
+    class IPv4Header(ctypes.BigEndianStructure):
+        _pack_ = 1
         _fields_ = [
             ("version", ctypes.c_uint8, 4),
             ("ihl", ctypes.c_uint8, 4),
             ("type_of_service", ctypes.c_uint8),
             ("total_length", ctypes.c_uint16),
             ("identification", ctypes.c_uint16),
-            ("flags", ctypes.c_uint, 3),
-            ("ffragment_offset", ctypes.c_uint16, 12),
+            ("flags", ctypes.c_uint16, 3),
+            ("fragment_offset", ctypes.c_uint16, 13),
             ("time_to_live", ctypes.c_uint8),
             ("protocol", ctypes.c_uint8),
             ("header_checksum", ctypes.c_uint16),
             ("source_address", ctypes.c_uint32),
             ("destination_address", ctypes.c_uint32),
-            # ("options", ctypes.c_uint32, 24),
-            # ("padding", ctypes.c_uint8),
         ]
 
         def __repr__(self):
@@ -238,7 +236,8 @@ def decrypt5(data: bytes) -> bytes:
                 fields.append(f"{name}={value}")
             return f"TcpHeader({', '.join(fields)})"
 
-    class UdpHeader(ctypes.Structure):
+    class UdpHeader(ctypes.BigEndianStructure):
+        _pack_ = 1
         _fields_ = [
             ("source_port", ctypes.c_uint16),
             ("destination_port", ctypes.c_uint16),
@@ -262,21 +261,66 @@ def decrypt5(data: bytes) -> bytes:
             raise EOFError(f"Expected {size} bytes, got {len(data)}")
         return cls.from_buffer_copy(data)
 
-    stream = io.BytesIO(data)
+    def checksum16(data: bytes) -> int:
+        if len(data) % 2 == 1:
+            data += b"\x00"
 
-    while stream:
-        tcp_header = read_struct(stream, TcpHeader)
+        checksum = 0
+        for i in range(0, len(data), 2):
+            word = int.from_bytes(data[i : i + 2], "big")
+            checksum += word
+            checksum = (checksum & 0xFFFF) + (checksum >> 16)
+
+        return ~checksum & 0xFFFF
+
+    stream = io.BytesIO(data)
+    stream_out = io.BytesIO()
+
+    while stream.tell() < len(stream.getbuffer()):
+        ipv4_header = read_struct(stream, IPv4Header)
         udp_header = read_struct(stream, UdpHeader)
-        print("-------")
-        print(f"{tcp_header=}")
-        print(f"{udp_header=}")
-        print(f"{tcp_header.total_length=}")
-        print(f"{udp_header.length=}")
-        print(f"{udp_header.length + 20=}")
-        print(f"{udp_header.length + 20 - tcp_header.total_length=}")
-        print("-----")
-        break
-    raise NotImplementedError
+        content = stream.read(udp_header.length - ctypes.sizeof(UdpHeader))
+
+        print(f"\n----\n{ipv4_header=}")
+        print(f"\n{udp_header=}\n")
+        # print(content.decode())
+
+        # assert ipv4_header.ihl == 5
+        assert ipv4_header.total_length == udp_header.length + ctypes.sizeof(IPv4Header)
+
+        if str(ipaddress.IPv4Address(ipv4_header.source_address)) != "10.1.1.10":
+            continue
+        if str(ipaddress.IPv4Address(ipv4_header.destination_address)) != "10.1.1.200":
+            continue
+        if udp_header.destination_port != 42069:
+            continue
+
+        print("    Source/Dest Correct")
+
+        udp_pseudo_header = b"".join(
+            [
+                ipv4_header.source_address.to_bytes(4, "big"),
+                ipv4_header.destination_address.to_bytes(4, "big"),
+                b"\x00",
+                ipv4_header.protocol.to_bytes(1, "big"),
+                udp_header.length.to_bytes(2, "big"),
+            ]
+        )
+        udp_checksum_data = udp_pseudo_header + bytes(udp_header) + content
+
+        if checksum16(bytes(ipv4_header)) != 0:
+            continue
+        print("    IPv4 Checksum Correct")
+        if checksum16(udp_checksum_data) != 0:
+            continue
+        print("    UDP Checksum Correct")
+
+        stream_out.write(content)
+
+    print(stream_out.getvalue().decode())
+    print(f"----------------------")
+
+    return stream_out.getvalue()
 
 
 def decrypt6(data: bytes) -> bytes:
