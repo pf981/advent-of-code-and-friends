@@ -7,7 +7,7 @@ import itertools
 import pathlib
 import string
 
-from typing import Callable
+from typing import Callable, Literal
 
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
@@ -470,30 +470,20 @@ def layer6(data_: bytes) -> bytes:
 
         return op, args, pc
 
-    def get8(src: int) -> int:
-        if not (1 <= src <= 7):
-            raise ValueError(f"get8 encountered invalid src: {src}")
-        if src == 7:
+    def get_reg(src: int, reg_width: Literal[8, 32]) -> int:
+        if reg_width == 8 and src == 7:
             return instructions[reg[PTR] + reg[C]]
-        return reg[src - 1]
 
-    def set8(dest: int, val: int) -> None:
-        if not (1 <= dest <= 7):
-            raise ValueError(f"set8 encountered invalid dest: {dest}")
-        if dest == 7:
+        src += -(reg_width == 8) + 5 * (reg_width == 32)
+        return reg[src]
+
+    def set_reg(dest: int, val: int, reg_width: Literal[8, 32]) -> None:
+        if reg_width == 8 and dest == 7:
             instructions[reg[PTR] + reg[C]] = val
-        else:
-            reg[dest - 1] = val
+            return
 
-    def get32(src: int) -> int:
-        if not (1 <= src <= 6):
-            raise ValueError(f"get32 encountered invalid src: {src}")
-        return reg[src + 5]
-
-    def set32(dest: int, val: int) -> None:
-        if not (1 <= dest <= 6):
-            raise ValueError(f"set32 encountered invalid dest: {dest}")
-        reg[dest + 5] = val
+        dest += -(reg_width == 8) + 5 * (reg_width == 32)
+        reg[dest] = val
 
     instructions = bytearray(data_)
     stream_out = io.BytesIO()
@@ -522,13 +512,13 @@ def layer6(data_: bytes) -> bytes:
                 if reg[F] != 0:
                     reg[PC] = imm32
             case "MV", (dest, src):
-                set8(dest, get8(src))
+                set_reg(dest, get_reg(src, 8), 8)
             case "MV32", (dest, src):
-                set32(dest, get32(src))
+                set_reg(dest, get_reg(src, 32), 32)
             case "MVI", (dest, imm8):
-                set8(dest, imm8)
+                set_reg(dest, imm8, 8)
             case "MVI32", (dest, imm32):
-                set32(dest, imm32)
+                set_reg(dest, imm32, 32)
             case "OUT", ():
                 stream_out.write(reg[A].to_bytes())
             case "SUB", ():
