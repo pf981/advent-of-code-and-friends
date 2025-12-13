@@ -9,9 +9,9 @@ import string
 
 from typing import Callable
 
-import struct
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
+
 
 PAYLOAD_SEP = "==[ Payload ]===============================================\n\n"
 DATA_PATH = pathlib.Path("./data/")
@@ -27,22 +27,22 @@ def get_payload(layer: int) -> bytes:
 
 
 def process(layer: int, decrypt_fn: Callable[[bytes], bytes]) -> None:
-    payload = get_payload(layer - 1)
+    payload = get_payload(layer)
     plaintext = decrypt_fn(payload).decode("utf-8")
-    path = DATA_PATH / f"{layer:>02}.txt"
+    path = DATA_PATH / f"{layer + 1:>02}.txt"
 
     with open(path, "w", newline="") as f:
         f.write(plaintext)
 
 
-def decrypt1(data: bytes) -> bytes:
+def layer0(data: bytes) -> bytes:
     """
     This payload has been encoded with Adobe-flavoured ASCII85.
     """
     return data
 
 
-def decrypt2(data: bytes) -> bytes:
+def layer1(data: bytes) -> bytes:
     """
     Like all the layers, the payload is again encoded with
     Adobe-flavoured ASCII85. After ASCII85 decoding the payload,
@@ -60,7 +60,7 @@ def decrypt2(data: bytes) -> bytes:
     return bytes(output)
 
 
-def decrypt3(data: bytes) -> bytes:
+def layer2(data: bytes) -> bytes:
     """
     For each byte of the payload, the seven most significant
     bits carry data, and the least significant bit is the parity
@@ -105,7 +105,7 @@ def decrypt3(data: bytes) -> bytes:
     return bytes(output)
 
 
-def decrypt4(data: bytes) -> bytes:
+def layer3(data: bytes) -> bytes:
     """
     The payload has been encrypted by XOR'ing each byte with a
     secret, cycling key. The key is 32 bytes of random data,
@@ -151,7 +151,7 @@ def decrypt4(data: bytes) -> bytes:
     return bytes(byte ^ k for byte, k in zip(data, itertools.cycle(key)))
 
 
-def decrypt5(data: bytes) -> bytes:
+def layer4(data: bytes) -> bytes:
     """
     The payload for this layer is encoded as a stream of raw
     network data, as if the solution was being received over the
@@ -159,10 +159,6 @@ def decrypt5(data: bytes) -> bytes:
     Datagram Protocol (UDP) inside. Extract the payload data
     from inside each packet, and combine them together to form
     the solution.
-
-    However, the payload contains extra packets that are not
-    part of the solution. Discard these corrupted and irrelevant
-    packets when forming the solution.
 
     Each valid packet of the solution has the following
     properties. Discard packets that do not have all of these
@@ -172,12 +168,6 @@ def decrypt5(data: bytes) -> bytes:
      - The packet was sent TO port 42069 of 10.1.1.200
      - The IPv4 header checksum is correct
      - The UDP header checksum is correct
-
-    WARNING: Failing to do this properly WILL cause the next
-    layer to be unsolveable. If you include incorrect packets in
-    your solution, the result may be readable and look correct,
-    but its payload WILL be corrupted in ways that are
-    impossible to detect. Trust me.
 
     The packets appear in the correct order. No reordering is
     necessary.
@@ -297,7 +287,7 @@ def decrypt5(data: bytes) -> bytes:
     return stream_out.getvalue()
 
 
-def decrypt6(data: bytes) -> bytes:
+def layer5(data: bytes) -> bytes:
     """
     The payload is structured like this:
 
@@ -352,12 +342,247 @@ def decrypt6(data: bytes) -> bytes:
     return plaintext
 
 
-decrypters = [decrypt1, decrypt2, decrypt3, decrypt4, decrypt5, decrypt6]
+def layer6(data_: bytes) -> bytes:
+    """
+    - 12 registers (see [ Spec: Registers ])
+    - a fixed amount of memory (see [ Spec: Memory ])
+    - an output stream (see [ Spec: Output ])
+    - 13 distinct instructions (see [ Spec: Instruction Set ])
+
+    1. Reads one instruction from memory, at the address stored
+    in the `pc` register.
+
+    2. Adds the byte size of the instruction to the `pc`
+        register.
+
+    3. Executes the instruction.
+
+
+    The 8-bit registers are:
+
+    `a`  Accumulation register -- Used to store the result
+            of various instructions.
+
+    `b`  Operand register -- This is 'right hand side' of
+            various operations.
+
+    `c`  Count/offset register -- Holds an offset or index
+            value that is used when reading memory.
+
+    `d`  General purpose register
+
+    `e`  General purpose register
+
+    `f`  Flags register -- Holds the result of the
+            comparison instruction (CMP), and is used by
+            conditional jump instructions (JEZ, JNZ).
+
+    The 32-bit registers are:
+
+        `la`   General purpose register
+
+        `lb`   General purpose register
+
+        `lc`   General purpose register
+
+        `ld`   General purpose register
+
+        `ptr`  Pointer to memory -- holds a memory address which
+                is used by instructions that read or write
+                memory.
+
+        `pc`   Program counter -- holds a memory address that
+                points to the next instruction to be executed.
+
+    In addition to these 12 registers, there is an 8-bit
+    pseudo-register used to read and write memory. This is only
+    used by the 8-bit move instructions (MV, MVI).
+
+        `(ptr+c)`  Memory cursor -- Used to access one byte of
+                    memory. Using this pseudo-register as the
+                    {dst} of a move instruction will write to
+                    memory. Using this as the {src} of a move
+                    instruction will read from memory. The memory
+                    address of the byte to be read/written is the
+                    sum of the `ptr` and `c` registers.
+
+    """
+
+    def get_op(pc: int) -> tuple[str, tuple[int, ...], int]:
+        # print(f"  get_op({pc=})")
+        opcode = data[pc]
+        args = ()
+        pc += 1
+        match opcode:
+            case 0xC2:
+                op = "ADD"
+            case 0xE1:
+                op = "APTR"
+                args = (data[pc],)
+                pc += 1
+            case 0xC1:
+                op = "CMP"
+            case 0x01:
+                op = "HALT"
+            case 0x21:
+                op = "JEZ"
+                args = (int.from_bytes(data[pc : pc + 4], "little"),)
+                pc += 4
+            case 0x22:
+                op = "JNZ"
+                args = (int.from_bytes(data[pc : pc + 4], "little"),)
+                pc += 4
+            case 0x02:
+                op = "OUT"
+            case 0xC3:
+                op = "SUB"
+            case 0xC4:
+                op = "XOR"
+            case _:
+                # print(f"  {bin(opcode)=} {bin(opcode >> 6)=}")
+                match opcode >> 6:
+                    case 0b01:
+                        dest = (opcode >> 3) & 0b111
+                        src = opcode & 0b111
+                        if src == 0:
+                            op = "MVI"
+                            # print(f"  {data[pc : pc + 1].hex()=}")
+                            args = (dest, int.from_bytes(data[pc : pc + 1], "little"))
+                            pc += 1
+                        else:
+                            op = "MV"
+                            args = (dest, src)
+                    case 0b10:
+                        dest = (opcode >> 3) & 0b111
+                        src = opcode & 0b111
+                        if src == 0:
+                            op = "MVI32"
+                            args = (dest, int.from_bytes(data[pc : pc + 4], "little"))
+                            pc += 4
+                        else:
+                            op = "MV32"
+                            args = (dest, src)
+                    case _:
+                        raise ValueError(f"Unknown opcode: {opcode}")
+
+        return op, args, pc
+
+    def get8(src: int) -> int:
+        if not (1 <= src <= 7):
+            raise ValueError(f"get8 encountered invalid src: {src}")
+        if src == 7:
+            return data[ptr + c]
+        return [0, a, b, c, d, e, f][src]
+
+    def set8(dest: int, val: int) -> None:
+        nonlocal a, b, c, d, e, f
+        match dest:
+            case 1:
+                a = val
+            case 2:
+                b = val
+            case 3:
+                c = val
+            case 4:
+                d = val
+            case 5:
+                e = val
+            case 6:
+                f = val
+            case 7:
+                assert val == val & 0xFF
+                data[ptr + c] = val
+            case _:
+                raise ValueError(f"set8 encountered invalid dest: {dest}")
+
+    def get32(src: int) -> int:
+        if not (1 <= src <= 6):
+            raise ValueError(f"get32 encountered invalid src: {src}")
+        return [0, la, lb, lc, ld, ptr, pc][src]
+
+    def set32(dest: int, val: int) -> None:
+        nonlocal la, lb, lc, ld, ptr, pc
+        match dest:
+            case 1:
+                la = val
+            case 2:
+                lb = val
+            case 3:
+                lc = val
+            case 4:
+                ld = val
+            case 5:
+                ptr = val
+            case 6:
+                pc = val
+            case _:
+                raise ValueError(f"set32 encountered invalid dest: {dest}")
+
+    data = bytearray(data_)
+    # stream_out = io.BytesIO()
+    stream_out = STREAM_OUT
+
+    # 8 bit registers (0xFF)
+    a = b = c = d = e = f = 0
+
+    # 32 bit registers (0xFFFF_FFFF)
+    la = lb = lc = ld = ptr = pc = 0
+
+    # print(f"  {len(data)=}")
+
+    while True:
+        op, args, pc = get_op(pc)
+        # print(f"{op=} {args=} {pc=}")
+
+        match op, args:
+            case "ADD", ():
+                a = (a + b) & 0xFF
+            case "APTR", (imm8,):
+                ptr = (ptr + imm8) & 0xFFFF_FFFF
+            case "CMP", ():
+                f = 0 if a == b else 0x01
+            case "HALT", ():
+                break
+            case "JEZ", (imm32,):
+                if f == 0:
+                    pc = imm32
+            case "JNZ", (imm32,):
+                if f != 0:
+                    pc = imm32
+            case "MV", (dest, src):
+                set8(dest, get8(src))
+            case "MV32", (dest, src):
+                set32(dest, get32(src))
+            case "MVI", (dest, imm8):
+                set8(dest, imm8)
+            case "MVI32", (dest, imm32):
+                set32(dest, imm32)
+            case "OUT", ():
+                # print(a.decode("utf-8"))  # FIXME: DEBUG
+                # print(f"  -> OUT: {a=}")
+                # print(f"  -> OUT: {a.to_bytes().decode('utf-8')=}")
+                assert a == a & 0xFF
+                stream_out.write(a.to_bytes())
+            case "SUB", ():
+                a = (a - b) & 0xFF
+            case "XOR", ():
+                a = (a ^ b) & 0xFF
+
+    return stream_out.getvalue()
+
+
+layers = [layer0, layer1, layer2, layer3, layer4, layer5, layer6]
+
+STREAM_OUT = io.BytesIO()  # FIXME:DEBUG
 
 
 def main() -> None:
-    for layer, decrypt_fn in enumerate(decrypters, 1):
-        process(layer, decrypt_fn)
+    try:
+        for layer, decrypt_fn in enumerate(layers):
+            process(layer, decrypt_fn)
+    except Exception as e:
+        print(STREAM_OUT.getvalue().decode())
+        raise e
 
 
 if __name__ == "__main__":
