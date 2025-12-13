@@ -409,8 +409,7 @@ def layer6(data_: bytes) -> bytes:
     """
 
     def get_op(pc: int) -> tuple[str, tuple[int, ...], int]:
-        # print(f"  get_op({pc=})")
-        opcode = data[pc]
+        opcode = instructions[pc]
         args = ()
         pc += 1
         match opcode:
@@ -418,7 +417,7 @@ def layer6(data_: bytes) -> bytes:
                 op = "ADD"
             case 0xE1:
                 op = "APTR"
-                args = (data[pc],)
+                args = (instructions[pc],)
                 pc += 1
             case 0xC1:
                 op = "CMP"
@@ -426,11 +425,11 @@ def layer6(data_: bytes) -> bytes:
                 op = "HALT"
             case 0x21:
                 op = "JEZ"
-                args = (int.from_bytes(data[pc : pc + 4], "little"),)
+                args = (int.from_bytes(instructions[pc : pc + 4], "little"),)
                 pc += 4
             case 0x22:
                 op = "JNZ"
-                args = (int.from_bytes(data[pc : pc + 4], "little"),)
+                args = (int.from_bytes(instructions[pc : pc + 4], "little"),)
                 pc += 4
             case 0x02:
                 op = "OUT"
@@ -439,15 +438,16 @@ def layer6(data_: bytes) -> bytes:
             case 0xC4:
                 op = "XOR"
             case _:
-                # print(f"  {bin(opcode)=} {bin(opcode >> 6)=}")
                 match opcode >> 6:
                     case 0b01:
                         dest = (opcode >> 3) & 0b111
                         src = opcode & 0b111
                         if src == 0:
                             op = "MVI"
-                            # print(f"  {data[pc : pc + 1].hex()=}")
-                            args = (dest, int.from_bytes(data[pc : pc + 1], "little"))
+                            args = (
+                                dest,
+                                int.from_bytes(instructions[pc : pc + 1], "little"),
+                            )
                             pc += 1
                         else:
                             op = "MV"
@@ -457,7 +457,10 @@ def layer6(data_: bytes) -> bytes:
                         src = opcode & 0b111
                         if src == 0:
                             op = "MVI32"
-                            args = (dest, int.from_bytes(data[pc : pc + 4], "little"))
+                            args = (
+                                dest,
+                                int.from_bytes(instructions[pc : pc + 4], "little"),
+                            )
                             pc += 4
                         else:
                             op = "MV32"
@@ -471,84 +474,53 @@ def layer6(data_: bytes) -> bytes:
         if not (1 <= src <= 7):
             raise ValueError(f"get8 encountered invalid src: {src}")
         if src == 7:
-            return data[ptr + c]
-        return [0, a, b, c, d, e, f][src]
+            return instructions[reg[PTR] + reg[C]]
+        return reg[src - 1]
 
     def set8(dest: int, val: int) -> None:
-        nonlocal a, b, c, d, e, f
-        match dest:
-            case 1:
-                a = val
-            case 2:
-                b = val
-            case 3:
-                c = val
-            case 4:
-                d = val
-            case 5:
-                e = val
-            case 6:
-                f = val
-            case 7:
-                assert val == val & 0xFF
-                data[ptr + c] = val
-            case _:
-                raise ValueError(f"set8 encountered invalid dest: {dest}")
+        if not (1 <= dest <= 7):
+            raise ValueError(f"set8 encountered invalid dest: {dest}")
+        if dest == 7:
+            instructions[reg[PTR] + reg[C]] = val
+        else:
+            reg[dest - 1] = val
 
     def get32(src: int) -> int:
         if not (1 <= src <= 6):
             raise ValueError(f"get32 encountered invalid src: {src}")
-        return [0, la, lb, lc, ld, ptr, pc][src]
+        return reg[src + 5]
 
     def set32(dest: int, val: int) -> None:
-        nonlocal la, lb, lc, ld, ptr, pc
-        match dest:
-            case 1:
-                la = val
-            case 2:
-                lb = val
-            case 3:
-                lc = val
-            case 4:
-                ld = val
-            case 5:
-                ptr = val
-            case 6:
-                pc = val
-            case _:
-                raise ValueError(f"set32 encountered invalid dest: {dest}")
+        if not (1 <= dest <= 6):
+            raise ValueError(f"set32 encountered invalid dest: {dest}")
+        reg[dest + 5] = val
 
-    data = bytearray(data_)
-    # stream_out = io.BytesIO()
-    stream_out = STREAM_OUT
+    instructions = bytearray(data_)
+    stream_out = io.BytesIO()
 
-    # 8 bit registers (0xFF)
-    a = b = c = d = e = f = 0
-
-    # 32 bit registers (0xFFFF_FFFF)
-    la = lb = lc = ld = ptr = pc = 0
-
-    # print(f"  {len(data)=}")
+    # 8 bit registers: a, b, c, d, e, f
+    # 32 bit registers: la, lb, lc, ld, ptr, pc
+    A, B, C, D, E, F, LA, LB, LC, LD, PTR, PC = range(12)
+    reg = [0] * 12
 
     while True:
-        op, args, pc = get_op(pc)
-        # print(f"{op=} {args=} {pc=}")
+        op, args, reg[PC] = get_op(reg[PC])
 
         match op, args:
             case "ADD", ():
-                a = (a + b) & 0xFF
+                reg[A] = (reg[A] + reg[B]) & 0xFF
             case "APTR", (imm8,):
-                ptr = (ptr + imm8) & 0xFFFF_FFFF
+                reg[PTR] = (reg[PTR] + imm8) & 0xFFFF_FFFF
             case "CMP", ():
-                f = 0 if a == b else 0x01
+                reg[F] = 0 if reg[A] == reg[B] else 0x01
             case "HALT", ():
                 break
             case "JEZ", (imm32,):
-                if f == 0:
-                    pc = imm32
+                if reg[F] == 0:
+                    reg[PC] = imm32
             case "JNZ", (imm32,):
-                if f != 0:
-                    pc = imm32
+                if reg[F] != 0:
+                    reg[PC] = imm32
             case "MV", (dest, src):
                 set8(dest, get8(src))
             case "MV32", (dest, src):
@@ -558,31 +530,21 @@ def layer6(data_: bytes) -> bytes:
             case "MVI32", (dest, imm32):
                 set32(dest, imm32)
             case "OUT", ():
-                # print(a.decode("utf-8"))  # FIXME: DEBUG
-                # print(f"  -> OUT: {a=}")
-                # print(f"  -> OUT: {a.to_bytes().decode('utf-8')=}")
-                assert a == a & 0xFF
-                stream_out.write(a.to_bytes())
+                stream_out.write(reg[A].to_bytes())
             case "SUB", ():
-                a = (a - b) & 0xFF
+                reg[A] = (reg[A] - reg[B]) & 0xFF
             case "XOR", ():
-                a = (a ^ b) & 0xFF
+                reg[A] = (reg[A] ^ reg[B]) & 0xFF
 
     return stream_out.getvalue()
 
 
 layers = [layer0, layer1, layer2, layer3, layer4, layer5, layer6]
 
-STREAM_OUT = io.BytesIO()  # FIXME:DEBUG
-
 
 def main() -> None:
-    try:
-        for layer, decrypt_fn in enumerate(layers):
-            process(layer, decrypt_fn)
-    except Exception as e:
-        print(STREAM_OUT.getvalue().decode())
-        raise e
+    for layer, decrypt_fn in enumerate(layers):
+        process(layer, decrypt_fn)
 
 
 if __name__ == "__main__":
