@@ -5,6 +5,7 @@ description = "Solutions to https://www.tomdalling.com/toms-data-onion/"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "cryptography>=46.0.3",
     "ipykernel>=7.1.0",
     "pytest>=9.0.2",
 ]

@@ -9,6 +9,9 @@ import string
 
 from typing import Callable
 
+import struct
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.backends import default_backend
 
 PAYLOAD_SEP = "==[ Payload ]===============================================\n\n"
 DATA_PATH = pathlib.Path("./data/")
@@ -295,7 +298,58 @@ def decrypt5(data: bytes) -> bytes:
 
 
 def decrypt6(data: bytes) -> bytes:
-    raise NotImplementedError
+    """
+    The payload is structured like this:
+
+    - First 32 bytes: The 256-bit key encrypting key (KEK).
+    - Next 8 bytes: The 64-bit initialization vector (IV) for
+    the wrapped key.
+    - Next 40 bytes: The wrapped (encrypted) key. When
+    decrypted, this will become the 256-bit encryption key.
+    - Next 16 bytes: The 128-bit initialization vector (IV) for
+    the encrypted payload.
+    - All remaining bytes: The encrypted payload.
+
+    The first step is to use the KEK and the 64-bit IV to unwrap
+    the wrapped key. The second step is to use the unwrapped key
+    and the 128-bit IV to decrypt the rest of the payload.
+    """
+
+    def aes_key_unwrap_with_iv(kek: bytes, wrapped: bytes) -> tuple[bytes, int]:
+        n = len(wrapped) // 8 - 1
+
+        A = int.from_bytes(wrapped[:8], "big")
+        R = [None] + [wrapped[i * 8 : (i + 1) * 8] for i in range(1, n + 1)]
+
+        cipher = Cipher(algorithms.AES(kek), modes.ECB(), backend=default_backend())
+        decryptor = cipher.decryptor()
+
+        for j in range(5, -1, -1):
+            for i in range(n, 0, -1):
+                t = n * j + i
+                B = decryptor.update((A ^ t).to_bytes(8, "big") + R[i])
+                A = int.from_bytes(B[:8], "big")
+                R[i] = B[8:]
+
+        return b"".join(R[1:]), A
+
+    kek = data[:32]
+    expected_iv = int.from_bytes(data[32:40], "big")
+    wrapped_key = data[40:80]
+    payload_iv = data[80:96]
+    encrypted_payload = data[96:]
+
+    data_key, got_iv = aes_key_unwrap_with_iv(kek, wrapped_key)
+    assert got_iv == expected_iv
+    assert len(data_key) == 32
+
+    cipher = Cipher(
+        algorithms.AES(data_key), modes.CTR(payload_iv), backend=default_backend()
+    )
+    decryptor = cipher.decryptor()
+    plaintext = decryptor.update(encrypted_payload) + decryptor.finalize()
+
+    return plaintext
 
 
 decrypters = [decrypt1, decrypt2, decrypt3, decrypt4, decrypt5, decrypt6]
