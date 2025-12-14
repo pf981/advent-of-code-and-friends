@@ -664,3 +664,48 @@ def test_solution28(r):
     assert r("||||||") == "||||||||"
     for n in range(1, 16):
         assert r(tally(n)) == tally(fib(n))
+
+
+def test_solution29(r):
+    random.seed(0)
+    assert r("a@a:c,c:W") == "W"
+    assert r("afg@a:W,f:a,g:M") == "WWM"
+
+    for _ in range(50):
+        n_parts = random.randint(1, 50)
+        freqs = []
+        total = 0
+        while total < n_parts:
+            freq = random.randint(1, n_parts - total)
+            freqs.append(freq)
+            total += freq
+
+        n_letters = len(freqs)
+        letters = random.sample("abcdefghij", n_letters)
+
+        n_edges = random.randint(0, n_letters - 1)
+        edge_strs = []
+        edges = {}
+        for i in range(n_edges):
+            a, b = random.sample(range(i, n_letters), 2)
+            edges[letters[a]] = letters[b]
+            edge_strs.append(f"{letters[a]}:{letters[b]}")
+            letters[a], letters[i] = letters[i], letters[a]
+
+        for j in range(n_edges, n_letters):
+            material = random.choice("WMP")
+            edges[letters[j]] = material
+            edge_strs.append(f"{letters[j]}:{material}")
+
+        random.shuffle(letters)
+        random.shuffle(edge_strs)
+
+        rhs = []
+        for ch in letters:
+            while ch not in "WMP":
+                ch = edges[ch]
+            rhs.append(ch)
+
+        lhs = f"{''.join(letters)}@{','.join(edge_strs)}"
+
+        assert r(lhs) == "".join(rhs)
