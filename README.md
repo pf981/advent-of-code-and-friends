@@ -19,6 +19,7 @@ A collection of solutions to various coding challenges and puzzles, all in one p
 | [`eldarverse/`](eldarverse/) | [Eldarverse](https://www.eldarverse.com/) | Puzzles similar to Advent of Code | ⏳ 1/18 |
 | [`everybody-codes/`](everybody-codes/) | [Everybody Codes](https://everybody.codes/) | Puzzles similar to Advent of Code | ✅ 138/138 🦆 |
 | [`exercism/`](exercism/) | [Exercism](https://exercism.org/) | Coding practice and mentorship platform | ✅ 125/125 Gleam Puzzles |
+| [`flipflop/`](flipflop/) | [FlipFlop Codes](https://flipflop.slome.org/) | Puzzles similar to Advent of Code | ✅ 7/7 |
 | [`hanukkah-of-data/`](hanukkah-of-data/) | [Hanukkah of Data](https://hanukkah.bluebird.sh/) | Data challenges | ✅ |
 | [`i18n/`](i18n/) | [Internationalization Puzzles](https://i18n-puzzles.com/) | A series of programming puzzles, designed to teach you about internationalization | ⏳ 12/20 |
 | [`leetcode`](https://leetcode.com/u/PaulFoster/) | [LeetCode](https://leetcode.com/) | LeetCode | ⏳ 2000/3758+ |
