@@ -1,0 +1,19 @@
+[project]
+name = "hackattic"
+version = "1.0.0"
+description = "Solutions to https://hackattic.com/"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "dotenv>=0.9.9",
+    "ipykernel>=7.1.0",
+    "requests>=2.32.5",
+]
+
+[build-system]
+requires = ["uv_build"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-root = ""
+module-name = "api"
