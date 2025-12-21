@@ -9,6 +9,7 @@ A collection of solutions to various coding challenges and puzzles, all in one p
 | [`advent-of-code/`](advent-of-code/) | [Advent of Code](https://adventofcode.com/) | Annual December programming advent calendar | ✅ 524/524 ⭐|
 | [`advent-of-sql/`](advent-of-sql/) | [Advent of SQL](https://adventofsql.com/) | SQL puzzles | ✅ 2024: 24/24 |
 | [`aquaq/`](aquaq/) | [AquaQ](https://challenges.aquaq.co.uk/) | Puzzles similar to Advent of Code | ✅ 40/40 |
+| [`code-abbey-solutions`](https://github.com/pf981/codeabbey-solutions) ([private](https://www.codeabbey.com/index/wiki/storing-solutions)) | [CodeAbbey](https://www.codeabbey.com/) | Short programming problems | ⏳ 1/482 |
 | [`coding-mystery/`](coding-mystery/) | [Coding Mystery](https://codingmystery.com/) | Escape-room-inspired mysteries full of coding puzzles | ✅ 1/1 Free Quest |
 | [`coding-quest/`](coding-quest/) | [Coding Quest](https://codingquest.io/) | Annual programming puzzles | ✅ 2022,2023,2024 |
 | [`codingame`](https://www.codingame.com/profile/3c40eeb9da06a41207bd61e8811ca5b14533072) | [CodinGame](https://www.codingame.com/) | Community made puzzles | ⏳ 457/1000+ |
