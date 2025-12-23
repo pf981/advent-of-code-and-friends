@@ -50,6 +50,7 @@ def r(request: pytest.FixtureRequest) -> typing.Callable[[str], str]:
     if not match:
         pytest.fail(f"Could not extract solution number from test name: {test_name}")
 
+    assert match
     solution_number = int(match.group(1))
     solution_file = SOLUTIONS_DIR / f"{solution_number}.txt"
 
@@ -91,6 +92,8 @@ def test_codegen(solution_file):
     if test_func is None:
         pytest.fail(f"No {test_func_name} defined while processing {solution_file}")
 
+    assert test_func
+
     # Ensure test function takes correct parameters
     sig = inspect.signature(test_func)
     params = list(sig.parameters.keys())
@@ -102,8 +105,8 @@ def test_codegen(solution_file):
         )
 
     # Load the solution and build runner
-    spec = importlib.util.spec_from_file_location(solution_file.stem, solution_file)
-    module = importlib.util.module_from_spec(spec)
+    spec = importlib.util.spec_from_file_location(solution_file.stem, solution_file)  # ty:ignore[possibly-missing-attribute]
+    module = importlib.util.module_from_spec(spec)  # ty:ignore[possibly-missing-attribute]
     spec.loader.exec_module(module)
 
     # Ensure generate_code exists, is callable, and has no arguments
@@ -150,6 +153,8 @@ def test_templates(template_file):
     test_func = getattr(current_module, test_func_name, None)
     if test_func is None:
         pytest.fail(f"No {test_func_name} defined while processing {template_file}")
+
+    assert test_func
 
     # Ensure test function takes correct parameters
     sig = inspect.signature(test_func)
@@ -709,3 +714,24 @@ def test_solution29(r):
         lhs = f"{''.join(letters)}@{','.join(edge_strs)}"
 
         assert r(lhs) == "".join(rhs)
+
+
+def test_solution30(r):
+    random.seed(0)
+    assert r("aba") == "Y"
+    assert r("ab") == "N"
+    assert r("abccba") == "Y"
+
+    letters = "abcdef"
+    for _ in range(100):
+        length = random.randint(1, 16)
+        half = "".join(random.choices(letters, k=length // 2))
+        mid = "" if length % 2 else random.choice(letters)
+        lhs = half + mid + half[::-1]
+        assert r(lhs) == "Y"
+
+    for _ in range(100):
+        length = random.randint(1, 16)
+        lhs = random.choices(letters, k=length)
+        rhs = "Y" if lhs == lhs[::-1] else "N"
+        assert r(lhs) == rhs

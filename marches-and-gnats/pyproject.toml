@@ -13,6 +13,7 @@ dependencies = [
 dev = [
     "ipykernel>=6.29.5",
     "ruff>=0.12.3",
+    "ty>=0.0.5",
 ]
 
 [tool.pytest.ini_options]
