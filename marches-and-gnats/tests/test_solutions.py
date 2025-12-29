@@ -32,7 +32,7 @@ def make_runner(code: str) -> typing.Callable[[str], str]:
 
     def run(input: str) -> str:
         try:
-            mill = logic_mill.LogicMill(transition_rules)
+            mill = logic_mill.LogicMill(transition_rules, max_states=10_000)
             result, _ = mill.run(input, max_steps=8_000_000)
         except Exception as e:
             pytest.fail(f"Failed to run: {e}")
@@ -735,3 +735,11 @@ def test_solution30(r):
         lhs = random.choices(letters, k=length)
         rhs = "Y" if lhs == lhs[::-1] else "N"
         assert r(lhs) == rhs
+
+
+def test_solution31(r):
+    random.seed(0)
+    assert r("||||") == "4"
+    for _ in range(10):
+        num = random.randint(1, 2000)
+        assert r(tally(num)) == str(num)
