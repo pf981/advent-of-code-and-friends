@@ -1,7 +1,7 @@
 [project]
-name = "project-euler"
+name = "project-euler-first-100"
 version = "1.0.0"
-description = "Project Euler solutions"
+description = "Project Euler first 100 solutions"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [

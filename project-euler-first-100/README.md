@@ -1,4 +1,6 @@
-# 🧮 Project Euler – Solutions
+# 🧮 Project Euler First 100 Solutions
+
+Only contains solutions to **first 100 problems** as sharing solutions later problems is discouraged.
 
 This repository contains Python scripts solving problems from [Project Euler](https://projecteuler.net/).
 
