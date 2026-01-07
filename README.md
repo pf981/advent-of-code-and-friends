@@ -6,7 +6,7 @@ A collection of solutions to various coding challenges and puzzles, all in one p
 
 | 📂 Directory | 🌐 Challenge Platform | 📝 Description | ✅ Completion |
 |--------------|----------------------|----------------|---------------|
-| [`advent-of-lmbee/`](advent-of-lmbee/) | [Advent of Lmbee](https://lovemathboy.github.io/) | Puzzles similar to Advent of Code | ✅ 2/26 ⭐|
+| [`advent-of-lmbee/`](advent-of-lmbee/) | [Advent of Lmbee](https://lovemathboy.github.io/) | Puzzles similar to Advent of Code | ✅ 11/26 ⭐|
 | [`advent-of-code/`](advent-of-code/) | [Advent of Code](https://adventofcode.com/) | Annual December programming advent calendar | ✅ 524/524 ⭐|
 | [`advent-of-sql/`](advent-of-sql/) | [Advent of SQL](https://adventofsql.com/) | SQL puzzles | ✅ 2024: 24/24 |
 | [`aquaq/`](aquaq/) | [AquaQ](https://challenges.aquaq.co.uk/) | Puzzles similar to Advent of Code | ✅ 40/40 |
@@ -17,7 +17,7 @@ A collection of solutions to various coding challenges and puzzles, all in one p
 | [`codyssi/`](codyssi/) | [Codyssi](https://www.codyssi.com/) | Puzzles similar to Advent of Code | ✅ 2024,2025 |
 | [`cryptopals/`](crptopals/) | [The Cryptopals Crypto Challenges](https://www.cryptopals.com/) | Cryptography challenges | ⏳ 3/66 |
 | [`cses/`](cses/) | [Code Submission Evaluation System](https://cses.fi/) | High quality problem set for learning algorithmic programming | ⏳ 16/400+ |
-| [`dimity-jones-solutions`](https://github.com/pf981/dimity-jones-solutions/) | [Dimity Jones in Puzzle Castle](https://obnakwa.itch.io/dimityjones) | Progressively decrypt chapters in a book to reveal the story | ⏳ 87/89 |
+| [`dimity-jones-solutions`](https://github.com/pf981/dimity-jones-solutions/) | [Dimity Jones in Puzzle Castle](https://obnakwa.itch.io/dimityjones) | Progressively decrypt chapters in a book to reveal the story | ✅ 89/89 |
 | [`eldarverse/`](eldarverse/) | [Eldarverse](https://www.eldarverse.com/) | Puzzles similar to Advent of Code | ⏳ 1/18 |
 | [`everybody-codes/`](everybody-codes/) | [Everybody Codes](https://everybody.codes/) | Puzzles similar to Advent of Code | ✅ 138/138 🦆 |
 | [`exercism/`](exercism/) | [Exercism](https://exercism.org/) | Coding practice and mentorship platform | ✅ 125/125 Gleam Puzzles |
