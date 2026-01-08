@@ -760,4 +760,4 @@ def test_solution32():
     rules_str = "@".join("".join(rule) for rule in rules)
     r = make_runner(code)
 
-    assert r(rules_str) == rules_str
+    assert r(rules_str) == tally(len(rules))

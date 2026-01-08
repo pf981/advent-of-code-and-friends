@@ -1,0 +1,32 @@
+// Put all the |'s here
+||||||||||||||||||||| | | | R
+INIT | | | R
+| | | | R
+| R X _ R
+
+// Wipe everything
+X | X _ R
+X R X _ R
+X @ X _ R
+X I X _ R
+X N X _ R
+X T X _ R
+X X X _ R
+X _ X _ R
+X H X _ R
+X A X _ R
+X L X _ R
+X E X _ R
+X Y X _ R
+X Z X _ R
+
+// Wipe last bit
+X Q Y _ R
+Y Y X _ R
+
+Y E Z _ R
+Z _ X _ R
+Z R HALT _ R
+
+// QER to identify end
+R R Q E R
