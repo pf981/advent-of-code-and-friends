@@ -746,9 +746,8 @@ def test_solution31(r):
         assert r(tally(num)) == str(num)
 
 
-def test_solution32():
-    solution_number = 32
-    solution_file = SOLUTIONS_DIR / f"{solution_number}.txt"
+def test_solution32(r):
+    solution_file = SOLUTIONS_DIR / "32.txt"
 
     if not solution_file.exists():
         pytest.fail(f"Solution file {solution_file} does not exist")
@@ -758,10 +757,7 @@ def test_solution32():
 
     rules = logic_mill.parse_transition_rules(code)
 
-    # Seems like the website includes comments
+    # Note that this keeps comments
     rules_str = code.replace("\n", "@").replace(" ", "")
-    # rules_str = "@".join("".join(rule) for rule in rules)
-
-    r = make_runner(code)
 
     assert r(rules_str) == tally(len(rules))
