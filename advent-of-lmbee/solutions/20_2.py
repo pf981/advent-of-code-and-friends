@@ -51,6 +51,7 @@ with open("data/day20.txt") as f:
     text = f.read()
 
 circles = [[int(x) for x in re.findall(r"\d+", line)] for line in text.splitlines()]
+n = len(circles)
 
 # I believe there are two possibilities for where the point could be.
 #     1. If a circle is fully contained within the region of most overlap,
@@ -67,11 +68,9 @@ circles = [[int(x) for x in re.findall(r"\d+", line)] for line in text.splitline
 
 
 best = 0, 0, 0  # overlap, x, y
-for c1 in circles:
-    for c2 in circles:
-        if c1 == c2:
-            continue
-        for x, y in circle_circle_intersections(*c1, *c2):
+for i in range(n):
+    for j in range(i + 1, n):
+        for x, y in circle_circle_intersections(*circles[i], *circles[j]):
             best = max(best, (count_overlaps(x, y, circles), x, y))
 
 answer = best[1] * best[2]
