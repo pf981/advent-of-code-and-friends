@@ -6,7 +6,7 @@ A collection of solutions to various coding challenges and puzzles, all in one p
 
 | 📂 Directory | 🌐 Challenge Platform | 📝 Description | ✅ Completion |
 |--------------|----------------------|----------------|---------------|
-| [`advent-of-lmbee/`](advent-of-lmbee/) | [Advent of Lmbee](https://lovemathboy.github.io/) | Fan-made continuation of Advent of Code 2025 for days 13 to 25 | ⏳ 14/26 ⭐|
+| [`advent-of-lmbee/`](advent-of-lmbee/) | [Advent of Lmbee](https://lovemathboy.github.io/) | Fan-made continuation of Advent of Code 2025 for days 13 to 25 | ⏳ 17/26 ⭐|
 | [`advent-of-code/`](advent-of-code/) | [Advent of Code](https://adventofcode.com/) | Annual December programming advent calendar | ✅ 524/524 ⭐|
 | [`advent-of-sql/`](advent-of-sql/) | [Advent of SQL](https://adventofsql.com/) | SQL puzzles | ✅ 2024: 24/24 |
 | [`aquaq/`](aquaq/) | [AquaQ](https://challenges.aquaq.co.uk/) | Puzzles similar to Advent of Code | ✅ 40/40 |
@@ -22,10 +22,11 @@ A collection of solutions to various coding challenges and puzzles, all in one p
 | [`everybody-codes/`](everybody-codes/) | [Everybody Codes](https://everybody.codes/) | Puzzles similar to Advent of Code | ✅ 138/138 🦆 |
 | [`exercism/`](exercism/) | [Exercism](https://exercism.org/) | Coding practice and mentorship platform | ✅ 125/125 Gleam Puzzles |
 | [`flipflop/`](flipflop/) | [FlipFlop Codes](https://flipflop.slome.org/) | Puzzles similar to Advent of Code | ✅ 7/7 |
+| [`hackattic/`](hackattic/) | [hackattic](https://hackattic.com/) | Real-world infrastructure and system challenges (SSL, Redis, etc.) | ⏳ 3/18 |
 | [`hanukkah-of-data/`](hanukkah-of-data/) | [Hanukkah of Data](https://hanukkah.bluebird.sh/) | Data challenges | ✅ |
 | [`i18n/`](i18n/) | [Internationalization Puzzles](https://i18n-puzzles.com/) | A series of programming puzzles, designed to teach you about internationalization | ⏳ 12/20 |
 | [`leetcode`](https://leetcode.com/u/PaulFoster/) | [LeetCode](https://leetcode.com/) | LeetCode | ⏳ 2023/3758+ |
-| [`marches-and-gnats/`](marches-and-gnats/) | [Marches and Gnats](https://mng.quest/) | Puzzles using a primitive turing machine | ⏳ 22/28 |
+| [`marches-and-gnats/`](marches-and-gnats/) | [Marches and Gnats](https://mng.quest/) | Puzzles using a primitive turing machine | ⏳ 26/32 |
 | [`pi-coding-quest/`](pi-coding-quest/) | [Pi Coding Quest](https://ivanr3d.com/projects/pi/) | Coding challenges inspired by the mystical number Pi | ✅ 2024,2025 |
 | [`project-euler-first-100/`](project-euler-first-100/), [`project-euler-solutions`](https://github.com/pf981/project-euler-solutions)(private)| [Project Euler](https://projecteuler.net/) | Mathematical computation problems | ⏳ 95/957 |
 | [`synacor-challenge/`](synacor-challenge/) | [Synacor Challenge](https://github.com/Aneurysm9/vm_challenge) | Virtual machine and reverse engineering puzzle | ✅ |
