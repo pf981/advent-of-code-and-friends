@@ -6,7 +6,7 @@ A collection of solutions to various coding challenges and puzzles, all in one p
 
 | 📂 Directory | 🌐 Challenge Platform | 📝 Description | ✅ Completion |
 |--------------|----------------------|----------------|---------------|
-| [`advent-of-lmbee/`](advent-of-lmbee/) | [Advent of Lmbee](https://lovemathboy.github.io/) | Puzzles similar to Advent of Code | ✅ 11/26 ⭐|
+| [`advent-of-lmbee/`](advent-of-lmbee/) | [Advent of Lmbee](https://lovemathboy.github.io/) | Fan-made continuation of Advent of Code 2025 for days 13 to 25 | ⏳ 14/26 ⭐|
 | [`advent-of-code/`](advent-of-code/) | [Advent of Code](https://adventofcode.com/) | Annual December programming advent calendar | ✅ 524/524 ⭐|
 | [`advent-of-sql/`](advent-of-sql/) | [Advent of SQL](https://adventofsql.com/) | SQL puzzles | ✅ 2024: 24/24 |
 | [`aquaq/`](aquaq/) | [AquaQ](https://challenges.aquaq.co.uk/) | Puzzles similar to Advent of Code | ✅ 40/40 |
