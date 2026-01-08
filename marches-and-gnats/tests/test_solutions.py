@@ -1,11 +1,12 @@
 import importlib
 import inspect
 import pathlib
-import pytest
 import random
 import re
 import sys
 import typing
+
+import pytest
 
 import logic_mill
 import template
@@ -743,3 +744,20 @@ def test_solution31(r):
     for _ in range(10):
         num = random.randint(1, 2000)
         assert r(tally(num)) == str(num)
+
+
+def test_solution32():
+    solution_number = 32
+    solution_file = SOLUTIONS_DIR / f"{solution_number}.txt"
+
+    if not solution_file.exists():
+        pytest.fail(f"Solution file {solution_file} does not exist")
+
+    with open(solution_file, "r", encoding="utf-8") as f:
+        code = f.read()
+
+    rules = logic_mill.parse_transition_rules(code)
+    rules_str = "@".join("".join(rule) for rule in rules)
+    r = make_runner(code)
+
+    assert r(rules_str) == rules_str
