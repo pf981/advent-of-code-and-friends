@@ -757,7 +757,11 @@ def test_solution32():
         code = f.read()
 
     rules = logic_mill.parse_transition_rules(code)
-    rules_str = "@".join("".join(rule) for rule in rules)
+
+    # Seems like the website includes comments
+    rules_str = code.replace("\n", "@").replace(" ", "")
+    # rules_str = "@".join("".join(rule) for rule in rules)
+
     r = make_runner(code)
 
     assert r(rules_str) == tally(len(rules))

@@ -1,9 +1,6 @@
-// Put all the |'s here
-||||||||||||||| | | | R
+|||||||||||||| | | | R
 INIT | INIT | R
 INIT R _ _ R
-
-// Wipe everything
 _ | _ _ R
 _ R _ _ R
 _ @ _ _ R
@@ -15,11 +12,7 @@ _ H _ _ R
 _ A _ _ R
 _ L _ _ R
 _ X _ _ R
-
-// Wipe last bit
-_ ! X _ R
-X X _ _ R
-X R HALT _ R
-
-// !! to identify end
-R R R ! R
+_ / H _ R
+H H _ _ R
+H / HALT _ R
+//
