@@ -65,6 +65,22 @@ n = len(circles)
 #
 # So just iterate through all of the intesections and count the overlaps at
 # those points. Try integer coordinates around the intersections.
+#
+# ---
+#
+# Another way to reason about it is: suppose that the point (x, y) had the maximum overlap.
+# By nature of it being the maximum, every other point must have less overlap - including
+# its neighbors. So that means neighboring point, (x - 1, y) must have less overlap. This means
+# that there was a circle which contains (x, y) but does not contain (x - 1, y). Ie, (x, y) is
+# on a circle boundary - call this circle C1.
+#
+# Additionally, assuming C1 contains more than a single point, there must be some other
+# neighboring point which C1 DOES contain. Using the previous argument, there must be
+# some other circle, C2, for which (x, y) is on the boundary.
+#
+# Therefore, (x, y) must lie on the edge intersection of two circles. (Asuming at least two
+# circles, all circles contain more than one point, and there being exactly one point of maximum
+# overlap).
 
 
 best = 0, 0, 0  # overlap, x, y
