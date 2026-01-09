@@ -69,7 +69,7 @@ n = len(circles)
 # ---
 #
 # Another way to reason about it is: suppose that the point (x, y) had the maximum overlap.
-# By nature of it being the maximum, every other point must have less overlap - including
+# Assuming it is the only maximum, every other point must have less overlap - including
 # its neighbors. So that means neighboring point, (x - 1, y) must have less overlap. This means
 # that there was a circle which contains (x, y) but does not contain (x - 1, y). Ie, (x, y) is
 # on a circle boundary - call this circle C1.
