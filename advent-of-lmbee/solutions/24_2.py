@@ -38,9 +38,10 @@ for i, v in enumerate(nums):
     d_right = right[i] - i
     # There are d_left ways to choose the start and d_right ways to choose the
     # end such that the pyramid with base start-to-end has the maximum value v.
-    # Each of these pyramids has a unique top node which is v. These pyramids
-    # have v in other locations, but those are the top nodes of other pyramids
-    # which are included. So include one node (the top) for each of the pyramids.
+    # Each of these pyramids has a uniquely positioned top node which is v.
+    # These pyramids have v in other locations, but those are the top nodes of
+    # other pyramids which are included. So include one node (the top) for each
+    # of the pyramids.
     total += v * d_left * d_right
 
 # Add the layer increments
