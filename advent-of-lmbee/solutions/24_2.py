@@ -14,15 +14,15 @@ for initial, b, c, mod, n in itertools.batched(params, 5):
 n = len(nums)
 left = [-1] * n
 right = [n] * n
-stack = []
 
+stack = []
 for i, v in enumerate(nums):
     while stack and nums[stack[-1]] < v:
         stack.pop()
     left[i] = stack[-1] if stack else -1
     stack.append(i)
 
-stack.clear()
+stack = []
 for i in range(n - 1, -1, -1):
     v = nums[i]
     while stack and nums[stack[-1]] <= v:
