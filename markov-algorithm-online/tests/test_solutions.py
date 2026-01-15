@@ -69,3 +69,7 @@ def test_solution001(r):
 
 def test_solution002(r):
     assert r("sample_Ss") == "ample_S"
+
+
+def test_solution003(r):
+    assert r("uzuki") == "suzuki"
