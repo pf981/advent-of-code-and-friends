@@ -1,3 +1,4 @@
+import math
 import pathlib
 import random
 import re
@@ -170,3 +171,14 @@ def test_solution014(r):
         lhs = "".join(random.choices("01", k=length))
         rhs = lhs + lhs
         assert r(lhs) == rhs
+
+
+def test_solution015(r):
+    assert r("1001") == "yes"
+
+    for _ in range(100):
+        length = random.randint(1, 15)
+        left = "".join(random.choices("01", k=math.ceil(length / 2)))
+        right = left[::-1][length % 2 :]
+        lhs = left + right
+        assert r(lhs) == "yes"
