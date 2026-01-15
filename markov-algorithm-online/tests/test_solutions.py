@@ -321,7 +321,19 @@ def test_solution026(r):
 def test_solution027(r):
     assert r("2513") == "4"
 
-    for perm in itertools.permutations("12345"):
-        for rhs in perm:
-            lhs = "".join(ch for ch in perm if ch != rhs)
+    for perm in itertools.permutations("1234"):
+        lhs = "".join(perm)
+        assert r(lhs) == "5"
+
+        for rhs in "1234":
+            assert r(lhs.replace(rhs, "5")) == rhs
+
+
+def test_solution028(r):
+    assert r("5+9") == "14"
+
+    for a in range(1, 9 + 1):
+        for b in range(1, 9 + 1):
+            lhs = f"{a}+{b}"
+            rhs = f"{a + b}"
             assert r(lhs) == rhs
