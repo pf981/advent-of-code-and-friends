@@ -1,0 +1,3 @@
+BA:AB
+CB:BC
+CA:AC

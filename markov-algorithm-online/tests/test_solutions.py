@@ -1,4 +1,5 @@
 import pathlib
+import random
 import re
 import typing
 
@@ -79,3 +80,17 @@ def test_solution004(r):
     assert r("R") == "P"
     assert r("P") == "S"
     assert r("S") == "R"
+
+
+def test_solution005(r):
+    assert r("iii") == "iwiwi"
+
+
+def test_solution006(r):
+    assert r("BCABBA") == "AABBBC"
+
+    for _ in range(100):
+        length = random.randint(1, 15)
+        lhs = "".join(random.choices("ABC", k=length))
+        rhs = "".join(sorted(lhs))
+        assert r(lhs) == rhs
