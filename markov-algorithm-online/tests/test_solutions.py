@@ -118,3 +118,15 @@ def test_solution009(r):
         lhs = "".join(random.choices("01", k=length))
         rhs = "".join("0" if ch == "1" else "1" for ch in lhs)
         assert r(lhs) == rhs
+
+
+def test_solution010(r):
+    assert r("11001") == "11010"
+    assert r("1") == "10"
+
+    upper = 2**30
+    for _ in range(100):
+        num = random.randint(1, upper)
+        lhs = f"{num:0b}"
+        rhs = f"{num + 1:0b}"
+        assert r(lhs) == rhs
