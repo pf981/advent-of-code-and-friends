@@ -14,13 +14,13 @@ HEADERS = {
 }
 
 
-def get_next_id() -> int:
+def get_next_id(skip: tuple[int] = (21,)) -> int:
     """Finds the first missing ID based on files in solutions/."""
     if not SOLUTIONS_DIR.exists():
         SOLUTIONS_DIR.mkdir()
         return 1
 
-    existing_ids = set()
+    existing_ids = set(skip)
     for f in SOLUTIONS_DIR.glob("*.mao"):
         match = re.match(r"^(\d+)", f.stem)
         if match:

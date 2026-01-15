@@ -1,3 +1,4 @@
+import collections
 import itertools
 import math
 import pathlib
@@ -247,4 +248,28 @@ def test_solution020(r):
         length = random.randint(2, 50)
         lhs = "".join(random.choices("1234567890", k=length))
         rhs = ".".join(lhs)
+        assert r(lhs) == rhs
+
+
+# 021 doesn't exist
+
+
+def test_solution022(r):
+    random.seed(0)
+    assert r("abbacbc") == "b"
+
+    for _ in range(100):
+        length = random.randint(2, 16)
+        rhs = random.choice("abc")
+        lhs = list(random.choices("abc", k=length))
+
+        # Very inefficient but good enough
+        counts = collections.Counter(lhs)
+        while counts[rhs] <= max(
+            (count for ch, count in counts.items() if ch != rhs), default=0
+        ):
+            lhs[random.randint(0, length - 1)] = rhs
+            counts = collections.Counter(lhs)
+
+        lhs = "".join(lhs)
         assert r(lhs) == rhs
