@@ -316,3 +316,12 @@ def test_solution026(r):
         lhs = "".join(random.choices("01", k=2 * half))
         rhs = f"{lhs[:half]}|{lhs[half:]}"
         assert r(lhs) == rhs
+
+
+def test_solution027(r):
+    assert r("2513") == "4"
+
+    for perm in itertools.permutations("12345"):
+        for rhs in perm:
+            lhs = "".join(ch for ch in perm if ch != rhs)
+            assert r(lhs) == rhs
