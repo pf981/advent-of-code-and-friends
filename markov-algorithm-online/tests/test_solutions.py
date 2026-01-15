@@ -31,7 +31,7 @@ def make_runner(code: str) -> typing.Callable[[str], str]:
             result = mao.run(input_, rules)
         except Exception as e:
             pytest.fail(f"Failed to run: {e}")
-        return RunResult(result.strip("_"), input_)
+        return RunResult(result, input_)
 
     return run
 
@@ -65,3 +65,7 @@ def r(request: pytest.FixtureRequest) -> typing.Callable[[str], str]:
 
 def test_solution001(r):
     assert r("Hello,") == "World!"
+
+
+def test_solution002(r):
+    assert r("sample_Ss") == "ample_S"

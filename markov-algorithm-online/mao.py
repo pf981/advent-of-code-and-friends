@@ -14,9 +14,9 @@ def parse(code: str, code_length_limit: int = 1000) -> list[Rule]:
 
         match line.split(":"):
             case [pattern, replacement]:
-                rules.append((pattern, replacement, False))
+                rules.append((pattern.strip(), replacement.strip(), False))
             case [pattern, "", replacement]:
-                rules.append((pattern, replacement, True))
+                rules.append((pattern.strip(), replacement.strip(), True))
             case _:
                 raise ValueError(f"Unable to parse as line: {line!r}")
 
