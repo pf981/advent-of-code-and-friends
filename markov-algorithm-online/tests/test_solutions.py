@@ -160,3 +160,13 @@ def test_solution013(r):
         lhs = "".join(random.choices("01", k=length))
         rhs = lhs[::-1]
         assert r(lhs) == rhs
+
+
+def test_solution014(r):
+    assert r("00101") == "0010100101"
+
+    for _ in range(100):
+        length = random.randint(1, 15)
+        lhs = "".join(random.choices("01", k=length))
+        rhs = lhs + lhs
+        assert r(lhs) == rhs
