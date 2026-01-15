@@ -35,7 +35,7 @@ def run(
             raise ValueError(f"Number of steps exceeds {step_limit} limit")
         if len(input_) > string_length_limit:
             raise ValueError(
-                f"String length exceeds {string_length_limit} limit: {input!r}"
+                f"String length exceeds {string_length_limit} limit: {input_!r}"
             )
 
         for pattern, replacement, terminate in rules:

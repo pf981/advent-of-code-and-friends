@@ -383,3 +383,12 @@ def test_solution031(r):
     lhs = f"{a:b}+{b:b}"
     rhs = f"{a + b:b}"
     assert r(lhs) == rhs
+
+
+def test_solution032(r):
+    assert r("ooooo") == "2"
+
+    for num in range(1, 32 + 1):
+        lhs = "o" * num
+        rhs = str(math.floor(math.log2(num)))
+        assert r(lhs) == rhs
