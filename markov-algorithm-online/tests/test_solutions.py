@@ -94,3 +94,13 @@ def test_solution006(r):
         lhs = "".join(random.choices("ABC", k=length))
         rhs = "".join(sorted(lhs))
         assert r(lhs) == rhs
+
+
+def test_solution007(r):
+    assert r("ooooo") == "odd"
+
+    for _ in range(100):
+        length = random.randint(1, 20)
+        lhs = "o" * length
+        rhs = "odd" if length % 2 else "even"
+        assert r(lhs) == rhs
