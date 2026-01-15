@@ -104,3 +104,7 @@ def test_solution007(r):
         lhs = "o" * length
         rhs = "odd" if length % 2 else "even"
         assert r(lhs) == rhs
+
+
+def test_solution008(r):
+    assert r("bb") == "bbs"
