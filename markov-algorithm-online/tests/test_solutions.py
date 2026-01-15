@@ -108,3 +108,13 @@ def test_solution007(r):
 
 def test_solution008(r):
     assert r("bb") == "bbs"
+
+
+def test_solution009(r):
+    assert r("00101") == "11010"
+
+    for _ in range(100):
+        length = random.randint(1, 20)
+        lhs = "".join(random.choices("01", k=length))
+        rhs = "".join("0" if ch == "1" else "1" for ch in lhs)
+        assert r(lhs) == rhs
