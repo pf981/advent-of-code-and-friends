@@ -366,3 +366,20 @@ def test_solution030(r):
     lhs = f"{a:b}+{b:b}"
     rhs = f"{a + b:b}"
     assert r(lhs) == rhs
+
+
+def test_solution031(r):
+    random.seed(0)
+    assert r("10110+1011101") == "1110011"
+
+    for _ in range(100):
+        a = random.randint(1, 65535)
+        b = random.randint(1, 65535)
+        lhs = f"{a:b}+{b:b}"
+        rhs = f"{a + b:b}"
+        assert r(lhs) == rhs
+
+    a = b = 65535
+    lhs = f"{a:b}+{b:b}"
+    rhs = f"{a + b:b}"
+    assert r(lhs) == rhs
