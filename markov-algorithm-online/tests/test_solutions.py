@@ -306,3 +306,13 @@ def test_solution025(r):
     assert r("(") == "no"
     assert r(")(") == "no"
     assert r("()(()") == "no"
+
+
+def test_solution026(r):
+    assert r("01101000") == "0110|1000"
+
+    for _ in range(100):
+        half = random.randint(1, 8)
+        lhs = "".join(random.choices("01", k=2 * half))
+        rhs = f"{lhs[:half]}|{lhs[half:]}"
+        assert r(lhs) == rhs
