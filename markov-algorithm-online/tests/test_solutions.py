@@ -90,6 +90,7 @@ def test_solution005(r):
 
 
 def test_solution006(r):
+    random.seed(0)
     assert r("BCABBA") == "AABBBC"
 
     for _ in range(100):
@@ -100,6 +101,7 @@ def test_solution006(r):
 
 
 def test_solution007(r):
+    random.seed(0)
     assert r("ooooo") == "odd"
 
     for _ in range(100):
@@ -114,6 +116,7 @@ def test_solution008(r):
 
 
 def test_solution009(r):
+    random.seed(0)
     assert r("00101") == "11010"
 
     for _ in range(100):
@@ -124,6 +127,7 @@ def test_solution009(r):
 
 
 def test_solution010(r):
+    random.seed(0)
     assert r("11001") == "11010"
     assert r("1") == "10"
 
@@ -154,6 +158,7 @@ def test_solution012(r):
 
 
 def test_solution013(r):
+    random.seed(0)
     assert r("00101") == "10100"
 
     for _ in range(100):
@@ -164,6 +169,7 @@ def test_solution013(r):
 
 
 def test_solution014(r):
+    random.seed(0)
     assert r("00101") == "0010100101"
 
     for _ in range(100):
@@ -174,6 +180,7 @@ def test_solution014(r):
 
 
 def test_solution015(r):
+    random.seed(0)
     assert r("1001") == "yes"
 
     for _ in range(100):
@@ -182,3 +189,12 @@ def test_solution015(r):
         right = left[::-1][length % 2 :]
         lhs = left + right
         assert r(lhs) == "yes"
+
+
+def test_solution016(r):
+    assert r("ooooooo") == "ooooo"
+
+    for length in range(1, 15 + 1):
+        lhs = "o" * length
+        rhs = "o" * min(length, 5)
+        assert r(lhs) == rhs
