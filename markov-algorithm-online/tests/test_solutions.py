@@ -207,3 +207,24 @@ def test_solution017(r):
         lhs = "o" * length
         rhs = "o" * max(length, 5)
         assert r(lhs) == rhs
+
+
+def test_solution018(r):
+    random.seed(0)
+    assert r("xoxoo") == "win"
+
+    for _ in range(100):
+        length = random.randint(1, 50)
+        lhs = "".join(random.choices("xo", k=length))
+
+        o_count = lhs.count("o")
+        x_count = length - o_count
+
+        if o_count > x_count:
+            rhs = "win"
+        elif o_count < x_count:
+            rhs = "lose"
+        else:
+            rhs = "draw"
+
+        assert r(lhs) == rhs
