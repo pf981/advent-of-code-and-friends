@@ -273,3 +273,14 @@ def test_solution022(r):
 
         lhs = "".join(lhs)
         assert r(lhs) == rhs
+
+
+def test_solution023(r):
+    random.seed(0)
+    assert r("01210") == "1"
+
+    for _ in range(100):
+        length = random.randint(1, 15)
+        lhs = "".join(random.choices("012", k=length))
+        rhs = str(sum(int(ch) for ch in lhs) % 3)
+        assert r(lhs) == rhs
