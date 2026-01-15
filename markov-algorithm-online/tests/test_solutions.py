@@ -237,3 +237,14 @@ def test_solution019(r):
     for perm in itertools.permutations("12345"):
         lhs = "".join(perm)
         assert r(lhs) == "12345"
+
+
+def test_solution020(r):
+    random.seed(0)
+    assert r("3141592") == "3.1.4.1.5.9.2"
+
+    for _ in range(100):
+        length = random.randint(2, 50)
+        lhs = "".join(random.choices("1234567890", k=length))
+        rhs = ".".join(lhs)
+        assert r(lhs) == rhs
