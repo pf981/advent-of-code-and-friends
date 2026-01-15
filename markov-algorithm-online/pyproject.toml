@@ -5,7 +5,9 @@ description = "Solutions to https://mao.snuke.org/"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "bs4>=0.0.2",
     "pytest>=8.4.1",
+    "requests>=2.32.5",
 ]
 
 [dependency-groups]
