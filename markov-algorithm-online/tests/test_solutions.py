@@ -1,3 +1,4 @@
+import itertools
 import math
 import pathlib
 import random
@@ -228,3 +229,11 @@ def test_solution018(r):
             rhs = "draw"
 
         assert r(lhs) == rhs
+
+
+def test_solution019(r):
+    assert r("31425") == "12345"
+
+    for perm in itertools.permutations("12345"):
+        lhs = "".join(perm)
+        assert r(lhs) == "12345"
