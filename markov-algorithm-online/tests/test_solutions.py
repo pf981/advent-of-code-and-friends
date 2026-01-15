@@ -198,3 +198,12 @@ def test_solution016(r):
         lhs = "o" * length
         rhs = "o" * min(length, 5)
         assert r(lhs) == rhs
+
+
+def test_solution017(r):
+    assert r("oo") == "ooooo"
+
+    for length in range(1, 15 + 1):
+        lhs = "o" * length
+        rhs = "o" * max(length, 5)
+        assert r(lhs) == rhs
