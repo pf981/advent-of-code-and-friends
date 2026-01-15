@@ -28,14 +28,14 @@ def run(
     rules: list[Rule],
     step_limit: int = 50000,
     string_length_limit: int = 1000,
-) -> str:
-    steps = 0
+) -> tuple[str, list[str]]:
+    steps = [input_]
     while True:
-        if steps > step_limit:
+        if len(steps) > step_limit:
             raise ValueError(f"Number of steps exceeds {step_limit} limit")
         if len(input_) > string_length_limit:
             raise ValueError(
-                f"String length exceeds {string_length_limit} limit: {input:!r}"
+                f"String length exceeds {string_length_limit} limit: {input!r}"
             )
 
         for pattern, replacement, terminate in rules:
@@ -52,6 +52,6 @@ def run(
         if terminate:
             break
 
-        steps += 1
+        steps.append(input_)
 
-    return input_
+    return input_, steps

@@ -18,10 +18,12 @@ def make_runner(code: str) -> typing.Callable[[str], str]:
 
     class RunResult(str):
         input_str: str
+        steps: list[str]
 
-        def __new__(cls, value: str, input_str: str):
+        def __new__(cls, value: str, input_str: str, steps: list[str]):
             obj = super().__new__(cls, value)
             obj.input_str = input_str
+            obj.steps = steps
             return obj
 
         def __repr__(self):
@@ -29,10 +31,10 @@ def make_runner(code: str) -> typing.Callable[[str], str]:
 
     def run(input_: str) -> str:
         try:
-            result = mao.run(input_, rules)
+            result, steps = mao.run(input_, rules)
         except Exception as e:
             pytest.fail(f"Failed to run: {e}")
-        return RunResult(result, input_)
+        return RunResult(result, input_, steps)
 
     return run
 
@@ -138,4 +140,13 @@ def test_solution011(r):
     for length in range(1, 123 + 1):
         lhs = "o" * length
         rhs = str(length)
+        assert r(lhs) == rhs
+
+
+def test_solution012(r):
+    assert r("16") == "oooooooooooooooo"
+
+    for length in range(1, 200 + 1):
+        lhs = str(length)
+        rhs = "o" * length
         assert r(lhs) == rhs

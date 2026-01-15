@@ -5,4 +5,7 @@ def pytest_assertrepr_compare(op, left, right):
             f"INPUT:    {left.input_str!r}",
             f"OUTPUT:   {str(left)!r}",
             f"EXPECTED: {right!r}",
+            "--- START STEPS ---",
+            *left.steps,
+            "--- END STEPS ---",
         ]
