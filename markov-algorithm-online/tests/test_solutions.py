@@ -337,3 +337,15 @@ def test_solution028(r):
             lhs = f"{a}+{b}"
             rhs = f"{a + b}"
             assert r(lhs) == rhs
+
+
+def test_solution029(r):
+    random.seed(0)
+    assert r("101110+110001") == "1011111"
+
+    for _ in range(100):
+        a = random.randint(1, 63)
+        b = random.randint(1, 63)
+        lhs = f"{a:b}+{b:b}"
+        rhs = f"{a + b:b}"
+        assert r(lhs) == rhs
