@@ -295,3 +295,14 @@ def test_solution024(r):
         lhs = "".join(random.choices("12345", k=length))
         rhs = min(lhs)
         assert r(lhs) == rhs
+
+
+def test_solution025(r):
+    assert r("(()(()()))()") == "yes"
+    assert r("()") == "yes"
+    assert r("()()") == "yes"
+    assert r("(())()") == "yes"
+    assert r(")") == "no"
+    assert r("(") == "no"
+    assert r(")(") == "no"
+    assert r("()(()") == "no"
