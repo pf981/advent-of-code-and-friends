@@ -130,3 +130,12 @@ def test_solution010(r):
         lhs = f"{num:0b}"
         rhs = f"{num + 1:0b}"
         assert r(lhs) == rhs
+
+
+def test_solution011(r):
+    assert r("oooooooooooooooo") == "16"
+
+    for length in range(1, 123 + 1):
+        lhs = "o" * length
+        rhs = str(length)
+        assert r(lhs) == rhs
