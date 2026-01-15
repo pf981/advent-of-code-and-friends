@@ -73,3 +73,9 @@ def test_solution002(r):
 
 def test_solution003(r):
     assert r("uzuki") == "suzuki"
+
+
+def test_solution004(r):
+    assert r("R") == "P"
+    assert r("P") == "S"
+    assert r("S") == "R"
