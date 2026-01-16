@@ -402,3 +402,13 @@ def test_solution033(r):
             lhs = f"{'o' * a}|{'o' * b}"
             rhs = "o" * math.gcd(a, b)
             assert r(lhs) == rhs
+
+
+def test_solution034(r):
+    assert r("ooo*oooo") == "oooooooooooo"
+
+    for a in range(1, 10 + 1):
+        for b in range(1, 10 + 1):
+            lhs = f"{'o' * a}*{'o' * b}"
+            rhs = "o" * (a * b)
+            assert r(lhs) == rhs
