@@ -1,4 +1,5 @@
 import collections
+import functools
 import itertools
 import math
 import pathlib
@@ -32,9 +33,11 @@ def make_runner(code: str) -> typing.Callable[[str], str]:
         def __repr__(self):
             return f"<output={super().__repr__()} for input={self.input_str!r}>"
 
-    def run(input_: str) -> str:
+    def run(
+        input_: str, step_limit: int = 50000, string_length_limit: int = 1000
+    ) -> str:
         try:
-            result, steps = mao.run(input_, rules)
+            result, steps = mao.run(input_, rules, step_limit, string_length_limit)
         except Exception as e:
             pytest.fail(f"Failed to run: {e}")
         return RunResult(result, input_, steps)
@@ -492,4 +495,16 @@ def test_solution041(r):
         lhs = "".join(comb)
         winners = sum(wins[c] in lhs and loses[c] not in lhs for c in lhs)
         rhs = str(winners)
+        assert r(lhs) == rhs
+
+
+def test_solution042(r):
+    r = functools.partial(r, step_limit=420)
+    random.seed(0)
+    assert r("0010110") == "0000111"
+
+    for _ in range(10):
+        length = random.randint(1, 200)
+        lhs = "".join(random.choices("01", k=length))
+        rhs = "".join(sorted(lhs))
         assert r(lhs) == rhs
