@@ -412,3 +412,12 @@ def test_solution034(r):
             lhs = f"{'o' * a}*{'o' * b}"
             rhs = "o" * (a * b)
             assert r(lhs) == rhs
+
+
+def test_solution035(r):
+    assert r("oooo") == "ooxo"
+
+    for length in range(3, 10 + 1):
+        lhs = "o" * length
+        rhs = "oox" + ("o" * (length - 3))
+        assert r(lhs) == rhs
