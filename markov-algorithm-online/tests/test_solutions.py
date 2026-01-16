@@ -508,3 +508,12 @@ def test_solution042(r):
         lhs = "".join(random.choices("01", k=length))
         rhs = "".join(sorted(lhs))
         assert r(lhs) == rhs
+
+
+def test_solution043(r):
+    assert r("ooooooooo") == "ooo"
+
+    for num in range(1, 14 + 1):
+        lhs = "o" * (num * num)
+        rhs = "o" * num
+        assert r(lhs) == rhs
