@@ -454,3 +454,14 @@ def test_solution038(r):
         )
         rhs = "o" * bob_count
         assert r(lhs) == rhs
+
+
+def test_solution039(r):
+    random.seed(0)
+    assert r("1ll1l1") == "1oloolooo1oooolooooo1"
+
+    for _ in range(100):
+        length = random.randint(1, 6)
+        lhs = "".join(random.choices("1l", k=length))
+        rhs = "".join(("o" * i) + ch for i, ch in enumerate(lhs))
+        assert r(lhs) == rhs

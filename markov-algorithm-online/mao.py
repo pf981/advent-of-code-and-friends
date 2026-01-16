@@ -42,10 +42,12 @@ def run(
         for pattern, replacement, terminate in rules:
             if not pattern:
                 input_ = replacement + input_
+                steps.append(input_)
                 break
 
             if pattern in input_:
                 input_ = input_.replace(pattern, replacement, 1)
+                steps.append(input_)
                 break
         else:
             break
