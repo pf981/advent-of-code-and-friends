@@ -314,6 +314,7 @@ def test_solution025(r):
 
 
 def test_solution026(r):
+    random.seed(0)
     assert r("01101000") == "0110|1000"
 
     for _ in range(100):
@@ -516,4 +517,14 @@ def test_solution043(r):
     for num in range(1, 14 + 1):
         lhs = "o" * (num * num)
         rhs = "o" * num
+        assert r(lhs) == rhs
+
+
+def test_solution044(r):
+    assert r("oooooooo") == "oooo|oooo"
+
+    for half_length in range(1, 15 + 1):
+        half = "o" * half_length
+        lhs = f"{half}{half}"
+        rhs = f"{half}|{half}"
         assert r(lhs) == rhs
