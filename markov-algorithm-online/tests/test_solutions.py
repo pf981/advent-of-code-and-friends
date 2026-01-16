@@ -528,3 +528,14 @@ def test_solution044(r):
         lhs = f"{half}{half}"
         rhs = f"{half}|{half}"
         assert r(lhs) == rhs
+
+
+def test_solution045(r):
+    assert r("-45") == "45"
+
+    for num in range(100 + 1):
+        lhs = rhs = str(num)
+        assert r(lhs) == rhs
+
+        lhs = str(-num)
+        assert r(lhs) == rhs
