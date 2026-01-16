@@ -440,3 +440,17 @@ def test_solution037(r):
     for _ in range(100):
         lhs = "".join(random.choice([ch, "?"]) for ch in rhs)
         assert r(lhs) == rhs
+
+
+def test_solution038(r):
+    random.seed(0)
+    assert r("bbobooobobob") == "ooo"
+
+    for _ in range(100):
+        length = random.randint(1, 15)
+        lhs = "".join(random.choices("bo", k=length))
+        bob_count = sum(
+            a + b + c == "bob" for a, b, c in zip(lhs[:-2], lhs[1:-1], lhs[2:])
+        )
+        rhs = "o" * bob_count
+        assert r(lhs) == rhs
