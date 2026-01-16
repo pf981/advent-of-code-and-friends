@@ -421,3 +421,12 @@ def test_solution035(r):
         lhs = "o" * length
         rhs = "oox" + ("o" * (length - 3))
         assert r(lhs) == rhs
+
+
+def test_solution036(r):
+    assert r("oooooo") == "oooxoo"
+
+    for length in range(3, 10 + 1):
+        lhs = "o" * length
+        rhs = ("o" * (length - 3)) + "xoo"
+        assert r(lhs) == rhs
