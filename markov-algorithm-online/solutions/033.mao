@@ -9,12 +9,13 @@ jx:xj
 // RHS is smaller
 j:<
 
-// Similarly for </{
+// "<" keeps by converting "x" to "o" and shifting left
+// "{" removes by converting "x" to "" and shifting left
+// Flips from "<" to "{" when crosses middle
 x<:<o
 x|<:{o|
 x{:{
 i{:
-    
 
 // Consume "o" and spawn "j" from "i"
 oi:ixj
@@ -22,22 +23,13 @@ oi:ixj
 // Spawn "i"
 o|o:oi|o
 
-
-// ">" keeps. Ie converts "x" to "o"
-// "}" removes. Ie converts "x" to ""
-// Flips from >/} when crosses middle. That is, it removes on
-// one side and keeps on other
+// ">"/"}" similar to "<","{"
 >x:o>
 >|:|}
 }x:}
 
-
-
-
 // LHS is smaller
 i:>
-
-
 
 }:
 {:
