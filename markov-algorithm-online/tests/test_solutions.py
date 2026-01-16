@@ -392,3 +392,13 @@ def test_solution032(r):
         lhs = "o" * num
         rhs = str(math.floor(math.log2(num)))
         assert r(lhs) == rhs
+
+
+def test_solution033(r):
+    assert r("oooooo|ooooooooooooooo") == "ooo"
+
+    for a in range(1, 50 + 1):
+        for b in range(1, 50 + 1):
+            lhs = f"{'o' * a}|{'o' * b}"
+            rhs = "o" * math.gcd(a, b)
+            assert r(lhs) == rhs
