@@ -430,3 +430,13 @@ def test_solution036(r):
         lhs = "o" * length
         rhs = ("o" * (length - 3)) + "xoo"
         assert r(lhs) == rhs
+
+
+def test_solution037(r):
+    random.seed(0)
+    assert r("ma??o?") == "markov"
+
+    rhs = "markov"
+    for _ in range(100):
+        lhs = "".join(random.choice([ch, "?"]) for ch in rhs)
+        assert r(lhs) == rhs
