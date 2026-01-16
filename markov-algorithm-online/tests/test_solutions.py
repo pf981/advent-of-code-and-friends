@@ -539,3 +539,13 @@ def test_solution045(r):
 
         lhs = str(-num)
         assert r(lhs) == rhs
+
+
+def test_solution046(r):
+    random.seed(0)
+    assert r("01011") == "1"
+
+    for _ in range(100):
+        lhs = "".join(random.choices("01", k=5))
+        rhs = lhs[3]
+        assert r(lhs) == rhs
