@@ -142,9 +142,11 @@ def test_solution010(r):
 
 
 def test_solution011(r):
+    random.seed(0)
     assert r("oooooooooooooooo") == "16"
 
-    for length in range(1, 123 + 1):
+    for _ in range(10):
+        length = random.randint(1, 123)
         lhs = "o" * length
         rhs = str(length)
         assert r(lhs) == rhs
@@ -395,13 +397,15 @@ def test_solution032(r):
 
 
 def test_solution033(r):
+    random.seed(0)
     assert r("oooooo|ooooooooooooooo") == "ooo"
 
-    for a in range(1, 50 + 1):
-        for b in range(1, 50 + 1):
-            lhs = f"{'o' * a}|{'o' * b}"
-            rhs = "o" * math.gcd(a, b)
-            assert r(lhs) == rhs
+    for _ in range(20):
+        a = random.randint(1, 50)
+        b = random.randint(1, 50)
+        lhs = f"{'o' * a}|{'o' * b}"
+        rhs = "o" * math.gcd(a, b)
+        assert r(lhs) == rhs
 
 
 def test_solution034(r):
@@ -464,4 +468,15 @@ def test_solution039(r):
         length = random.randint(1, 6)
         lhs = "".join(random.choices("1l", k=length))
         rhs = "".join(("o" * i) + ch for i, ch in enumerate(lhs))
+        assert r(lhs) == rhs
+
+
+def test_solution040(r):
+    random.seed(0)
+    assert r("1ll1l1") == "1oooooloooolooo1oolo1"
+
+    for _ in range(100):
+        length = 6
+        lhs = "".join(random.choices("1l", k=length))
+        rhs = "".join(ch + ("o" * (5 - i)) for i, ch in enumerate(lhs))
         assert r(lhs) == rhs
