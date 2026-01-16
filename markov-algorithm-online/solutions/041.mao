@@ -1,0 +1,14 @@
+PR:RP
+SR:RS
+SP:PS
+
+RRR::0
+RRP::1
+RRS::2
+RPP::2
+RPS::0
+RSS::1
+PPP::0
+PPS::1
+PSS::2
+SSS::0

@@ -480,3 +480,16 @@ def test_solution040(r):
         lhs = "".join(random.choices("1l", k=length))
         rhs = "".join(ch + ("o" * (5 - i)) for i, ch in enumerate(lhs))
         assert r(lhs) == rhs
+
+
+def test_solution041(r):
+    assert r("PSP") == "1"
+
+    wins = {"R": "S", "P": "R", "S": "P"}
+    loses = {v: k for k, v in wins.items()}
+
+    for comb in itertools.product("RPS", repeat=3):
+        lhs = "".join(comb)
+        winners = sum(wins[c] in lhs and loses[c] not in lhs for c in lhs)
+        rhs = str(winners)
+        assert r(lhs) == rhs
