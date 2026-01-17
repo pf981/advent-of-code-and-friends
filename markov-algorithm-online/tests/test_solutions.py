@@ -618,3 +618,12 @@ def test_solution052(r):
         lhs = "o" * num
         rhs = "o" * (10 - num)
         assert r(lhs) == rhs
+
+
+def test_solution053(r):
+    assert r("oooooooo") == "oooo"
+
+    for num in range(1, 25 + 1):
+        lhs = "o" * (2 * num)
+        rhs = "o" * num
+        assert r(lhs) == rhs
