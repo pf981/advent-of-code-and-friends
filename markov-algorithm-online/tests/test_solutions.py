@@ -549,3 +549,22 @@ def test_solution046(r):
         lhs = "".join(random.choices("01", k=5))
         rhs = lhs[3]
         assert r(lhs) == rhs
+
+
+def test_solution047(r):
+    random.seed(0)
+    assert r("132968") == "yes"
+
+    upper = 10**15 - 1
+
+    for _ in range(100):
+        num = random.randint(0, upper)
+        lhs = str(num)
+        rhs = "no" if num % 11 else "yes"
+        assert r(lhs) == rhs
+
+    for _ in range(100):
+        num = 11 * random.randint(0, upper // 1)
+        lhs = str(num)
+        rhs = "yes"
+        assert r(lhs) == rhs
