@@ -627,3 +627,17 @@ def test_solution053(r):
         lhs = "o" * (2 * num)
         rhs = "o" * num
         assert r(lhs) == rhs
+
+
+def test_solution054(r):
+    random.seed(0)
+    assert r("abab?abb") == "<"
+
+    for _ in range(100):
+        length1 = random.randint(1, 10)
+        length2 = random.randint(1, 10)
+        s1 = "".join(random.choices("ab", k=length1))
+        s2 = "".join(random.choices("ab", k=length1))
+        lhs = f"{s1}?{s2}"
+        rhs = "<" if s1 < s2 else ">" if s1 > s2 else "="
+        assert r(lhs) == rhs
