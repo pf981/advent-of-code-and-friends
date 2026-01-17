@@ -568,3 +568,17 @@ def test_solution047(r):
         lhs = str(num)
         rhs = "yes"
         assert r(lhs) == rhs
+
+
+def test_solution048(r):
+    assert r("oooooooooooooooo") == "oofobfoofbofoozo"
+
+    for num in range(1, 100 + 1):
+        lhs = "o" * num
+        rhs = "".join(
+            {(True, False): "f", (False, True): "b", (True, True): "z"}.get(
+                (i % 3 == 0, i % 5 == 0), "o"
+            )
+            for i in range(1, num + 1)
+        )
+        assert r(lhs) == rhs
