@@ -737,3 +737,7 @@ def test_solution060(r):
 
 def test_solution061(r):
     assert r(":(") == "(:"
+
+
+def test_solution062(r):
+    assert r("22:00:00") == "22:00:01"
