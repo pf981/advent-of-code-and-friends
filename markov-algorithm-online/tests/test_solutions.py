@@ -637,7 +637,18 @@ def test_solution054(r):
         length1 = random.randint(1, 10)
         length2 = random.randint(1, 10)
         s1 = "".join(random.choices("ab", k=length1))
-        s2 = "".join(random.choices("ab", k=length1))
+        s2 = "".join(random.choices("ab", k=length2))
         lhs = f"{s1}?{s2}"
         rhs = "<" if s1 < s2 else ">" if s1 > s2 else "="
+        assert r(lhs) == rhs
+
+
+def test_solution055(r):
+    random.seed(0)
+    assert r("1523545") == "4"
+
+    for _ in range(100):
+        length = random.choice(range(1, 15 + 1, 2))
+        lhs = "".join(random.choices("12345", k=length))
+        rhs = sorted(lhs)[length // 2]
         assert r(lhs) == rhs
