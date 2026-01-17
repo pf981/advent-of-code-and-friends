@@ -842,7 +842,7 @@ def test_solution070(r):
     random.seed(0)
     assert r("seetssttet") == "testestest"
 
-    for _ in range(100):
+    for _ in range(1000):
         length = random.randint(1, 15)
         lhs = "".join(random.choices("tes", k=length))
         rhs = (
@@ -852,8 +852,43 @@ def test_solution070(r):
         )
         assert r(lhs) == rhs
 
-    for _ in range(1, 100):
+    for _ in range(1, 1000):
         n_est = random.randint(1, 4)
         rhs = "t" + ("est" * n_est)
         lhs = "".join(random.sample(rhs, len(rhs)))
         assert r(lhs) == rhs
+
+
+# text = """testestestestests::no
+# testestestesteste::no
+# testestestestestt::no
+# testestestestest::testestestestest
+
+# testestestests::no
+# testestesteste::no
+# testestestestt::no
+# testestestest::testestestest
+
+# testestests::no
+# testesteste::no
+# testestestt::no
+# testestest::testestest
+
+# testests::no
+# testeste::no
+# testestt::no
+# testest::testest
+
+# tests::no
+# teste::no
+# testt::no
+# test::test"""
+
+# for line in text.splitlines():
+#     if not line:
+#         print(line)
+#         continue
+
+#     left, right = line.split("::")
+#     left = "".join(sorted(left, key=lambda c:"set".index(c)))
+#     print(f"{left}::{right}")
