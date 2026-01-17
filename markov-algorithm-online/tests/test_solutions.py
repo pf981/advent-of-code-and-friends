@@ -777,3 +777,26 @@ def test_solution066(r):
         lhs = f"|{' ' * n}|"
         rhs = lhs.replace(" ", "", 1)
         assert r(lhs) == rhs
+
+
+def test_solution067(r):
+    random.seed(0)
+    assert (
+        r("reco?ered:r?c?v?r?d:?????????:recovered")
+        == "recovered:recovered:recovered:recovered"
+    )
+
+    for _ in range(50):
+        n_words = random.randint(1, 199 // 10)
+        words = []
+        for _ in range(n_words):
+            n_holes = random.randint(0, 9)
+            hole_positions = random.sample(range(9), k=n_holes)
+            word = "".join(
+                "?" if i in hole_positions else ch for i, ch in enumerate("recovered")
+            )
+            words.append(word)
+
+        lhs = ":".join(words)
+        rhs = ":".join(["recovered"] * n_words)
+        assert r(lhs) == rhs
