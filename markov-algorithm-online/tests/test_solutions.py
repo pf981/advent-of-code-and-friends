@@ -720,3 +720,17 @@ def test_solution059(r):
             lhs = "n".join("0" * ncols for _ in range(nrows)) + "n"
             rhs = "n".join("0" * nrows for _ in range(ncols)) + "n"
             assert r(lhs) == rhs
+
+
+def test_solution060(r):
+    assert r("101011n111110n110010n") == "111n011n110n010n111n100n"
+
+    for _ in range(100):
+        nrows = random.randint(1, 7)
+        ncols = random.randint(1, 7)
+        lhs = (
+            "n".join("".join(random.choices("01", k=ncols)) for _ in range(nrows)) + "n"
+        )
+
+        rhs = "n".join("".join(row) for row in zip(*lhs[:-1].split("n"))) + "n"
+        assert r(lhs) == rhs
