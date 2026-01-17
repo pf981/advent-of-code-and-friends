@@ -722,6 +722,7 @@ def test_solution059(r):
 
 
 def test_solution060(r):
+    random.seed(0)
     assert r("101011n111110n110010n") == "111n011n110n010n111n100n"
 
     for _ in range(20):
@@ -745,3 +746,14 @@ def test_solution062(r):
 
 def test_solution063(r):
     assert r("") == " "
+
+
+def test_solution064(r):
+    random.seed(0)
+    assert r("a b c b c") == "abcbc"
+
+    for _ in range(100):
+        n = random.randint(2, 5)
+        lhs = " ".join(random.choices("abc", k=n))
+        rhs = lhs.replace(" ", "")
+        assert r(lhs) == rhs

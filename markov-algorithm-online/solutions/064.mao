@@ -1,0 +1,9 @@
+a a:aa
+a b:ab
+a c:ac
+b a:ba
+b b:bb
+b c:bc
+c a:ca
+c b:cb
+c c:cc
