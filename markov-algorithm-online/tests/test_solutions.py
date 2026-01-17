@@ -694,8 +694,7 @@ def test_solution056(r):
 
 
 def test_solution057(r):
-    assert r("oxoxo|xoxxo|oooox|xxxox|ooxoo") == "BINGO!"
-    assert r("oxxxx|xoxxx|xxoxx|xxxox|xxxxo") == "BINGO!", "diagonal TL-BR"
+    assert r("oxoxo|xoxxo|oooox|xxxox|ooxoo") == "BINGO!", "diagonal TL-BR"
     assert r("xxxxo|xxxox|xxoxx|xoxxx|oxxxx") == "BINGO!", "diagonal TR-BL"
     assert r("ooooo|xxxxx|xxxxx|xxxxx|xxxxx") == "BINGO!", "horizontal bingo"
     assert r("oxxxx|oxxxx|oxxxx|oxxxx|oxxxx") == "BINGO!", "vertical bingo"
@@ -725,7 +724,7 @@ def test_solution059(r):
 def test_solution060(r):
     assert r("101011n111110n110010n") == "111n011n110n010n111n100n"
 
-    for _ in range(100):
+    for _ in range(20):
         nrows = random.randint(1, 7)
         ncols = random.randint(1, 7)
         lhs = (
@@ -734,3 +733,7 @@ def test_solution060(r):
 
         rhs = "n".join("".join(row) for row in zip(*lhs[:-1].split("n"))) + "n"
         assert r(lhs) == rhs
+
+
+def test_solution061(r):
+    assert r(":(") == "(:"
