@@ -761,3 +761,17 @@ def test_solution32(r):
     rules_str = code.replace("\n", "@").replace(" ", "")
 
     assert r(rules_str) == tally(len(rules))
+
+
+def test_solution33(r):
+    assert r("()") == "Y"
+    assert r("()[]") == "Y"
+    assert r("{}") == "Y"
+    assert r("([{}])") == "Y"
+    assert r("((()))") == "Y"
+    assert r("{[()]}") == "Y"
+    assert r("()(") == "N"
+    assert r("(]") == "N"
+    assert r("([)]") == "N"
+    assert r("((())") == "N"
+    assert r("())") == "N"
