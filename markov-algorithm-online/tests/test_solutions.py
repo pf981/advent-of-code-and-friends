@@ -800,3 +800,30 @@ def test_solution067(r):
         lhs = ":".join(words)
         rhs = ":".join(["recovered"] * n_words)
         assert r(lhs) == rhs
+
+
+def test_solution068(r):
+    random.seed(0)
+    assert r("wiwwiii") == "iwiwiwi"
+    assert r("iiiww:wiwwiii:iwi") == "iwiwi:iwiwiwi:iwi"
+
+    for _ in range(50):
+        n_words = random.randint(1, 10)
+        words = []
+        n_chars = 0  # Not counted precisely, but good enough
+        for _ in range(n_words):
+            n_i = random.randint(1, 10)
+
+            if n_chars + 2 * n_i > 50:
+                continue
+            n_chars += 2 * n_i
+
+            word = ["i"] * n_i + ["w"] * (n_i - 1)
+            random.shuffle(word)
+
+            word = "".join(word)
+            words.append(word)
+
+        lhs = ":".join(words)
+        rhs = ":".join("iw" * (len(word) // 2) + "i" for word in words)
+        assert r(lhs) == rhs
