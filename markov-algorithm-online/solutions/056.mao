@@ -3,7 +3,7 @@
 // 321|4567
 
 // Replace pile with card if the card is smaller.
-// Otherwise, continue left ot next pile.
+// Otherwise, continue left to next pile.
 1a:1
 2a:1
 3a:1
@@ -93,7 +93,6 @@
 7i:i7
 8i:i8
 9i:9
-
 
 // If card reaches left, create new pile
 a:1
