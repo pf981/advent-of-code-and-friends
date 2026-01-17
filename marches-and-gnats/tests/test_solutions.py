@@ -80,9 +80,11 @@ def test_codegen(solution_file):
 
     Requires each Python file to define a `generate_code()` function.
     """
+    if solution_file.stem.endswith("wip"):
+        pytest.skip(f"Skipping WIP file: {solution_file!r}")
     if not solution_file.stem.isdigit():
         pytest.fail(
-            f"Solution python module, '{solution_file}', does not have the correct format. Expected '{SOLUTIONS_DIR / '{solution_number}.py'}'"
+            f"Solution python module, {solution_file!r}, does not have the correct format. Expected '{SOLUTIONS_DIR / '{solution_number}.py'}'. Use '{SOLUTIONS_DIR / '{solution_number}_wip.py'}' for work in progress."
         )
     solution_number = int(solution_file.stem)
 
