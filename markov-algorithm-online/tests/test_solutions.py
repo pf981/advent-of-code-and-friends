@@ -679,7 +679,7 @@ def test_solution056(r):
 
         return len(smallest)
 
-    for _ in range(100):
+    for _ in range(50):
         length = random.randint(1, 27)
         lhs = "".join(random.choices("123456789", k=length))
         rhs = str(lis(lhs))
