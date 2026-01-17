@@ -591,3 +591,12 @@ def test_solution049(r):
         lhs = "b" * (2 * num)
         rhs = "ba" * num
         assert r(lhs) == rhs
+
+
+def test_solution050(r):
+    assert r("aaaa") == "baba"
+
+    for num in range(8 + 1):
+        lhs = "a" * (2 * num)
+        rhs = "ba" * num
+        assert r(lhs) == rhs
