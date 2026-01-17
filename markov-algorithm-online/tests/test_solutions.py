@@ -757,3 +757,14 @@ def test_solution064(r):
         lhs = " ".join(random.choices("abc", k=n))
         rhs = lhs.replace(" ", "")
         assert r(lhs) == rhs
+
+
+def test_solution065(r):
+    random.seed(0)
+    assert r("abcdd") == "a b c d d"
+
+    for _ in range(100):
+        n = random.randint(2, 5)
+        lhs = "".join(random.choices("abcd", k=n))
+        rhs = " ".join(lhs)
+        assert r(lhs) == rhs
