@@ -860,3 +860,45 @@ def test_solution070(r):
         rhs = "t" + ("est" * n_est)
         lhs = "".join(random.sample(rhs, len(rhs)))
         assert r(lhs) == rhs
+
+
+def test_solution071(r):
+    random.seed(0)
+    assert r("ooo+oooo-oo=ooooo") == "yes"
+
+    # Not specified, but I'm assuming LHS can't start with "+"
+    for _ in range(50):
+        n_ops = random.randint(0, 5)
+        ops = random.choices("+-", k=n_ops + 1)
+        nums = [random.randint(1, 6) for _ in range(n_ops)]
+
+        lhs = ""
+        rhs = 0
+        for op, num in zip(ops, nums):
+            lhs += op + "o" * num
+            rhs += (-1 if op == "-" else 1) * num
+        lhs.lstrip("+")
+
+        if rhs <= 0:
+            continue
+
+        rhs = "o" * rhs
+
+        assert r(f"{lhs}={rhs}") == "yes"
+        assert r(f"{lhs}={rhs}o") == "no"
+        assert r(f"{lhs}o={rhs}") == "no"
+
+
+# nums = [4, 1, 3, 5]
+# ops = ["", "+", "+", "+"]
+
+# lhs = ""
+# rhs = 0
+# for op, num in zip(ops, nums):
+#     lhs += op + "o" * num
+#     rhs += (-1 if op == "-" else 1) * num
+# rhs = "o" * rhs
+
+# assert r(f"{lhs}={rhs}") == "yes"
+# assert r(f"{lhs}={rhs}o") == "no"
+# assert r(f"{lhs}o={rhs}o") == "no"
