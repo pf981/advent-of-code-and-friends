@@ -842,17 +842,17 @@ def test_solution070(r):
     random.seed(0)
     assert r("seetssttet") == "testestest"
 
-    for _ in range(20):
+    for _ in range(100):
         length = random.randint(1, 15)
         lhs = "".join(random.choices("tes", k=length))
         rhs = (
-            "test" * (length // 3)
+            "t" + "est" * (length // 3)
             if lhs.count("s") == lhs.count("e") == lhs.count("t") - 1 > 0
             else "no"
         )
         assert r(lhs) == rhs
 
-    for _ in range(1, 20):
+    for _ in range(1, 100):
         n_est = random.randint(1, 4)
         rhs = "t" + ("est" * n_est)
         lhs = "".join(random.sample(rhs, len(rhs)))
