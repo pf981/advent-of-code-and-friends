@@ -768,3 +768,12 @@ def test_solution065(r):
         lhs = "".join(random.choices("abcd", k=n))
         rhs = " ".join(lhs)
         assert r(lhs) == rhs
+
+
+def test_solution066(r):
+    assert r("|   |") == "|  |"
+
+    for n in range(1, 10 + 1):
+        lhs = f"|{' ' * n}|"
+        rhs = lhs.replace(" ", "", 1)
+        assert r(lhs) == rhs
