@@ -1,4 +1,3 @@
-oxx:x
-ox::
-o:x
-:oooooooooo
+o|o:|
+|::
+:oooooooooo|
