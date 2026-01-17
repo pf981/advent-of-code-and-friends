@@ -15,11 +15,6 @@ SOLUTIONS_DIR = pathlib.Path("solutions")
 
 
 def make_runner(code: str) -> typing.Callable[[str], str]:
-    try:
-        rules = mao.parse(code)
-    except Exception as e:
-        pytest.fail(f"Failed to parse code: {e}")
-
     class RunResult(str):
         input_str: str
         steps: list[str]
@@ -33,9 +28,21 @@ def make_runner(code: str) -> typing.Callable[[str], str]:
         def __repr__(self):
             return f"<output={super().__repr__()} for input={self.input_str!r}>"
 
+    rules = None
+
     def run(
-        input_: str, step_limit: int = 50000, string_length_limit: int = 1000
+        input_: str,
+        code_length_limit: int = 1000,
+        step_limit: int = 50000,
+        string_length_limit: int = 1000,
     ) -> str:
+        nonlocal rules
+        if rules is None:
+            try:
+                rules = mao.parse(code, code_length_limit)
+            except Exception as e:
+                pytest.fail(f"Failed to parse code: {e}")
+
         try:
             result, steps = mao.run(input_, rules, step_limit, string_length_limit)
         except Exception as e:
@@ -684,3 +691,15 @@ def test_solution056(r):
         lhs = "".join(random.choices("123456789", k=length))
         rhs = str(lis(lhs))
         assert r(lhs) == rhs
+
+
+def test_solution057(r):
+    assert r("oxoxo|xoxxo|oooox|xxxox|ooxoo") == "BINGO!"
+    assert r("oxxxx|xoxxx|xxoxx|xxxox|xxxxo") == "BINGO!", "diagonal TL-BR"
+    assert r("xxxxo|xxxox|xxoxx|xoxxx|oxxxx") == "BINGO!", "diagonal TR-BL"
+    assert r("ooooo|xxxxx|xxxxx|xxxxx|xxxxx") == "BINGO!", "horizontal bingo"
+    assert r("oxxxx|oxxxx|oxxxx|oxxxx|oxxxx") == "BINGO!", "vertical bingo col 1"
+    assert r("xxoxx|xxoxx|xxoxx|xxoxx|xxoxx") == "BINGO!", "vertical bingo col 3"
+    assert r("ooooo|ooooo|ooooo|ooooo|ooooo") == "BINGO!", "everything bingo"
+    assert r("oooox|xxxxx|xxxxx|xxxxx|xxxxx") == ";_;"
+    assert r("xxoxo|xoxxo|oooox|xxxox|ooxoo") == ";_;"
