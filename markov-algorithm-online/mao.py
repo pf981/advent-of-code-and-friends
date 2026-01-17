@@ -29,9 +29,8 @@ def run(
     step_limit: int = 50000,
     string_length_limit: int = 1000,
 ) -> tuple[str, list[str]]:
-    steps = []
+    steps = [input_]
     while True:
-        steps.append(input_)
         if len(steps) > step_limit:
             raise ValueError(f"Number of steps exceeds {step_limit} limit")
         if len(input_) > string_length_limit:
@@ -42,16 +41,15 @@ def run(
         for pattern, replacement, terminate in rules:
             if not pattern:
                 input_ = replacement + input_
-                steps.append(input_)
                 break
 
             if pattern in input_:
                 input_ = input_.replace(pattern, replacement, 1)
-                steps.append(input_)
                 break
         else:
             break
 
+        steps.append(input_)
         if terminate:
             break
 

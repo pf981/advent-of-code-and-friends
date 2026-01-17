@@ -609,3 +609,12 @@ def test_solution051(r):
         lhs = "ab" * num
         rhs = "ba" * num
         assert r(lhs) == rhs
+
+
+def test_solution052(r):
+    assert r("ooo") == "ooooooo"
+
+    for num in range(1, 9 + 1):
+        lhs = "o" * num
+        rhs = "o" * (10 - num)
+        assert r(lhs) == rhs
