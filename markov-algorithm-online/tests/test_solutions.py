@@ -600,3 +600,12 @@ def test_solution050(r):
         lhs = "a" * (2 * num)
         rhs = "ba" * num
         assert r(lhs) == rhs
+
+
+def test_solution051(r):
+    assert r("abab") == "baba"
+
+    for num in range(10 + 1):
+        lhs = "ab" * num
+        rhs = "ba" * num
+        assert r(lhs) == rhs
