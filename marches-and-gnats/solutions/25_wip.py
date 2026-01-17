@@ -1,6 +1,5 @@
 import collections
 import itertools
-
 from typing import Any
 
 
@@ -46,7 +45,9 @@ def int_to_french(n: int) -> str:
         return (
             prefix
             if r == 0
-            else prefix + "-" + under_hundred(r) if prefix else under_hundred(r)
+            else prefix + "-" + under_hundred(r)
+            if prefix
+            else under_hundred(r)
         )
 
     m, r = divmod(n, 1000)
@@ -63,7 +64,6 @@ for num in range(1, 1101):
 l.sort()
 print("\n".join(f"{a}\t{b}" for a, b in l))
 
-import collections
 
 firsts = collections.defaultdict(list)
 for french, num in l:
@@ -73,7 +73,7 @@ for french, num in l:
 
 for digit1 in sorted(firsts):
     print(
-        f"{digit1}:\t{' '.join(sorted(f'{s}({collections.Counter(firsts[digit1])[s]})' for s  in set(firsts[digit1])))}"
+        f"{digit1}:\t{' '.join(sorted(f'{s}({collections.Counter(firsts[digit1])[s]})' for s in set(firsts[digit1])))}"
     )
 
 trie: Any = {}
