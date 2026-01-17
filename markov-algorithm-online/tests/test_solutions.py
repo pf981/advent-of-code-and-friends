@@ -652,3 +652,35 @@ def test_solution055(r):
         lhs = "".join(random.choices("12345", k=length))
         rhs = sorted(lhs)[length // 2]
         assert r(lhs) == rhs
+
+
+def test_solution056(r):
+    random.seed(0)
+    assert r("41259687899993") == "7"
+
+    def lis(s: str) -> int:
+        smallest = []  # subseq_len -> smallest_last_el
+        for num in map(int, s):
+            ll = 0
+            r = len(smallest) - 1
+            i = len(smallest)
+            while ll <= r:
+                m = (ll + r) // 2
+                if smallest[m] >= num:
+                    i = m
+                    r = m - 1
+                else:
+                    ll = m + 1
+
+            if i == len(smallest):
+                smallest.append(num)
+            else:
+                smallest[i] = num
+
+        return len(smallest)
+
+    for _ in range(100):
+        length = random.randint(1, 27)
+        lhs = "".join(random.choices("123456789", k=length))
+        rhs = str(lis(lhs))
+        assert r(lhs) == rhs
