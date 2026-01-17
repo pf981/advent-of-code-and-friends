@@ -582,3 +582,12 @@ def test_solution048(r):
             for i in range(1, num + 1)
         )
         assert r(lhs) == rhs
+
+
+def test_solution049(r):
+    assert r("bbbb") == "baba"
+
+    for num in range(6 + 1):
+        lhs = "b" * (2 * num)
+        rhs = "ba" * num
+        assert r(lhs) == rhs
