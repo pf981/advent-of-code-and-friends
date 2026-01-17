@@ -710,3 +710,13 @@ def test_solution058(r):
         lhs = "".join(random.choices("0123456789", k=length)).lstrip("0")
         rhs = "".join(sorted(lhs))
         assert r(lhs) == rhs
+
+
+def test_solution059(r):
+    assert r("000n000n") == "00n00n00n"
+
+    for nrows in range(1, 7 + 1):
+        for ncols in range(1, 7 + 1):
+            lhs = "n".join("0" * ncols for _ in range(nrows)) + "n"
+            rhs = "n".join("0" * nrows for _ in range(ncols)) + "n"
+            assert r(lhs) == rhs
