@@ -700,3 +700,13 @@ def test_solution057(r):
     assert r("ooooo|xxxxx|xxxxx|xxxxx|xxxxx") == "BINGO!", "horizontal bingo"
     assert r("oxxxx|oxxxx|oxxxx|oxxxx|oxxxx") == "BINGO!", "vertical bingo"
     assert r("xxoxo|xoxxo|oooox|xxxox|ooxoo") == ";_;"
+
+
+def test_solution058(r):
+    assert r("27182818284590452353") == "01122223344555788889"
+
+    for _ in range(50):
+        length = random.randint(1, 27)
+        lhs = "".join(random.choices("0123456789", k=length)).lstrip("0")
+        rhs = "".join(sorted(lhs))
+        assert r(lhs) == rhs
