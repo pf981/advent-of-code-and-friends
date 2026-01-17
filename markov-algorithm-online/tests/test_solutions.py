@@ -827,3 +827,12 @@ def test_solution068(r):
         lhs = ":".join(words)
         rhs = ":".join("iw" * (len(word) // 2) + "i" for word in words)
         assert r(lhs) == rhs
+
+
+def test_solution069(r):
+    assert r("tttttt") == "testtesttest"
+
+    for n in range(2, 15):
+        lhs = "t" * 2 * n
+        rhs = "test" * n
+        assert r(lhs) == rhs
