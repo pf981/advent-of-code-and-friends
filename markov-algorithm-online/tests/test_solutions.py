@@ -1109,3 +1109,8 @@ def test_solution079(r):
 
 def test_solution080(r):
     assert r("oo[o[oo][[]o]]o") == "ooooooooooooooooo"
+    assert r("[]o[[[o]]]") == "ooooooooo"
+
+
+def test_solution081(r):
+    assert r("[&1[|[&1[|00]]1]]") == "1"
