@@ -1084,3 +1084,9 @@ def test_solution077(r):
 
         rhs = "1st" if xor else "2nd"
         assert r(lhs) == rhs
+
+
+def test_solution078(r):
+    assert r("iwwiwii") == "iww[iwi]i"
+    assert r("iwiwwwiiiwwiww") == "[iwi]wwwiiiwwiww"
+    assert r("wwwiiiwwiwwiwi") == "wwwiiiwwiww[iwi]"
