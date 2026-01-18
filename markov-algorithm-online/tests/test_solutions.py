@@ -1090,3 +1090,18 @@ def test_solution078(r):
     assert r("iwwiwii") == "iww[iwi]i"
     assert r("iwiwwwiiiwwiww") == "[iwi]wwwiiiwwiww"
     assert r("wwwiiiwwiwwiwi") == "wwwiiiwwiww[iwi]"
+
+
+def test_solution079(r):
+    random.seed(0)
+    assert r("iwwiwiiwiwwiwi") == "iww[iwi][iwi]ww[iwi]"
+
+    for _ in range(100):
+        length = random.randint(1, 20)
+        lhs = "".join(random.choice("iw") for _ in range(length))
+
+        if "iwiwi" in lhs:
+            continue
+
+        rhs = lhs.replace("iwi", "[iwi]")
+        assert r(lhs) == rhs
