@@ -1105,3 +1105,7 @@ def test_solution079(r):
 
         rhs = lhs.replace("iwi", "[iwi]")
         assert r(lhs) == rhs
+
+
+def test_solution080(r):
+    assert r("oo[o[oo][[]o]]o") == "ooooooooooooooooo"
