@@ -65,12 +65,17 @@ def main():
             sol_file.write_text(boilerplate)
             print(f"Created solution: {sol_file}")
         else:
-            print(f"Solution {sol_file} already exists.")
+            print(f"Solution {sol_file} already exists. Skipping file creation.")
 
         with TEST_FILE.open("a") as f:
-            f.write(
-                f'\n\ndef test_solution{id_str}(r):\n    assert r("{ex_in}") == "{ex_out}"\n'
-            )
+            if f"test_solution{id_str}" in TEST_FILE.read_text():
+                print(
+                    f"Test function test_solution{id_str} already exists. Skipping adding test function."
+                )
+            else:
+                f.write(
+                    f'\n\ndef test_solution{id_str}(r):\n    assert r("{ex_in}") == "{ex_out}"\n'
+                )
         print(f"Added test case to {TEST_FILE}")
 
     except Exception as e:

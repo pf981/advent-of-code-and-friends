@@ -888,3 +888,15 @@ def test_solution071(r):
         assert r(f"{lhs}={rhs}") == "yes"
         assert r(f"{lhs}={rhs}o") == "no"
         assert r(f"{lhs}o={rhs}") == "no"
+
+
+def test_solution072(r):
+    random.seed(0)
+    assert r("ooooooooo,ooooo,oooooo,ooo") == "ooo"
+
+    for _ in range(50):
+        n_words = random.randint(1, 5)
+        words = ["o" * random.randint(0, 10) for _ in range(n_words)]
+        lhs = ",".join(words)
+        rhs = min(words)
+        assert r(lhs) == rhs
