@@ -1135,3 +1135,22 @@ def test_solution082(r):
 
         rhs = "".join(reversed(seq))
         assert r(lhs) == rhs
+
+
+def test_solution083(r):
+    random.seed(0)
+    assert r("012101210") == "yes"
+
+    for _ in range(100):
+        length = random.randint(1, 15)
+        lhs = "".join(random.choice("012") for _ in range(length))
+
+        stack = list(reversed("2020"))
+        for c in lhs:
+            if c == stack[-1]:
+                stack.pop()
+            if not stack:
+                break
+
+        rhs = "no" if stack else "yes"
+        assert r(lhs) == rhs
