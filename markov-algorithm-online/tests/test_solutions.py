@@ -927,3 +927,15 @@ def test_solution074(r):
             for word in words
         )
         assert r(lhs) == rhs
+
+
+def test_solution075(r):
+    random.seed(0)
+    assert r("|         |,|  |,|    |,|     |") == "|  |"
+
+    for _ in range(50):
+        n_words = random.randint(1, 5)
+        words = [f"|{' ' * random.randint(0, 10)}|" for _ in range(n_words)]
+        lhs = ",".join(words)
+        rhs = max(words)
+        assert r(lhs) == rhs
