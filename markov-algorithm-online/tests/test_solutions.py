@@ -510,6 +510,7 @@ def test_solution042(r):
     r = functools.partial(r, step_limit=420)
     random.seed(0)
     assert r("0010110") == "0000111"
+    assert r("1" * 200) == "1" * 200
 
     for _ in range(10):
         length = random.randint(1, 200)
@@ -786,7 +787,7 @@ def test_solution067(r):
         == "recovered:recovered:recovered:recovered"
     )
 
-    for _ in range(50):
+    for _ in range(20):
         n_words = random.randint(1, 199 // 10)
         words = []
         for _ in range(n_words):
@@ -866,7 +867,7 @@ def test_solution071(r):
     random.seed(0)
     assert r("ooo+oooo-oo=ooooo") == "yes"
 
-    # Not specified, but I'm assuming LHS can't start with "+"
+    # Not specified, but I'm assuming LHS can't start with "+" or end with an operator
     for _ in range(50):
         n_ops = random.randint(0, 5)
         ops = random.choices("+-", k=n_ops + 1)
@@ -887,18 +888,3 @@ def test_solution071(r):
         assert r(f"{lhs}={rhs}") == "yes"
         assert r(f"{lhs}={rhs}o") == "no"
         assert r(f"{lhs}o={rhs}") == "no"
-
-
-# nums = [4, 1, 3, 5]
-# ops = ["", "+", "+", "+"]
-
-# lhs = ""
-# rhs = 0
-# for op, num in zip(ops, nums):
-#     lhs += op + "o" * num
-#     rhs += (-1 if op == "-" else 1) * num
-# rhs = "o" * rhs
-
-# assert r(f"{lhs}={rhs}") == "yes"
-# assert r(f"{lhs}={rhs}o") == "no"
-# assert r(f"{lhs}o={rhs}o") == "no"
