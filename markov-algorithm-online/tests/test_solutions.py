@@ -1183,3 +1183,14 @@ def test_solution084(r):
         lhs = ":".join(lhss)
         rhs = ":".join(rhss)
         assert r(lhs) == rhs
+
+
+def test_solution085(r):
+    random.seed(0)
+    assert r("2021") == "1"
+
+    for _ in range(100):
+        length = random.randint(1, 15)
+        lhs = "".join(random.choice("012") for _ in range(length))
+        rhs = lhs[-1]
+        assert r(lhs) == rhs
