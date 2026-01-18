@@ -1145,7 +1145,7 @@ def test_solution083(r):
         length = random.randint(1, 15)
         lhs = "".join(random.choice("012") for _ in range(length))
 
-        stack = list(reversed("2020"))
+        stack = list(reversed("2021"))
         for c in lhs:
             if c == stack[-1]:
                 stack.pop()

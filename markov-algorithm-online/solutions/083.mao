@@ -10,8 +10,8 @@ c0:c
 c1:c
 c2:d
 
-d0:e
-d1:d
+d0:d
+d1:e
 d2:d
 
 e0:e
