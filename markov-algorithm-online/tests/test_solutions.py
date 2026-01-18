@@ -1070,9 +1070,9 @@ def test_solution077(r):
     random.seed(0)
     assert r("ooooo|ooo|oooooo") == "2nd"
 
-    for _ in range(50):
+    for _ in range(500):
         n_piles = random.randint(2, 10)
-        piles = [random.randint(1, 8) for _ in range(n_piles)]
+        piles = [random.randint(1, 50) for _ in range(n_piles)]
         lhs = "|".join("o" * pile for pile in piles)
 
         if len(lhs) > 50:
