@@ -939,3 +939,20 @@ def test_solution075(r):
         lhs = ",".join(words)
         rhs = max(words)
         assert r(lhs) == rhs
+
+
+def test_solution076(r):
+    assert r("a<b&c>b&b>a") == "c"
+
+    assert r("a>b&a>c") == "a"
+    assert r("c<b&a>b") == "a"
+    assert r("a>b&b>c&a>c") == "a"
+    assert r("c<a&b<a&c<b") == "a"
+    assert r("b>a&b>c") == "b"
+    assert r("a<b&c<b") == "b"
+    assert r("a<b&c<b&a<c") == "b"
+    assert r("c<b&a<b&c<a") == "b"
+    assert r("c>a&c>b") == "c"
+    assert r("b<c&a<c") == "c"
+    assert r("a<c&b<c&a<b") == "c"
+    assert r("b<c&a<c&b<a") == "c"
