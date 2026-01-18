@@ -15,74 +15,60 @@ c<a:ac
 c<b:bc
 >:
 
-// Shoot "x" left then replace with "A"
-ax:xa
-bx:xb
-cx:xc
-&x:x&
-Lx:A
-
-ay:ya
-by:yb
-cy:yc
-&y:y&
-Ly:B
-
-az:za
-bz:zb
-cz:zc
-&z:z&
-Lz:C
-
-// "A" means "a" is not the greateset so delete all "a"s
-// and anything less than "a"
+// "L}ba&bc" the "}ba" registers that "a" is the smaller letter
+// converts it to a "X" which gets shot left. Then all the
+// "a"s and smaller get deleted left-to-right
 }a:a]
 }b:b]
 }c:c]
 }&:&}
-]a:x
-]b:y
-]c:z
+]a:X
+]b:Y
+]c:Z
 ]&:&}
 
+// Shoot "X" left then replace with "A"
+aX:Xa
+bX:Xb
+cX:Xc
+&X:X&
+LX:A
 
-// "X" means delete everything until "&" then return to "A"
-// "X" -> "A"
-// "Y" -> "B"
-// "Z" -> "C"
-Aa:X
+aY:Ya
+bY:Yb
+cY:Yc
+&Y:Y&
+LY:B
+
+aZ:Za
+bZ:Zb
+cZ:Zc
+&Z:Z&
+LZ:C
+
+// "A" means "a" is not the greateset so delete all "a"s
+// and anything less than "a"
+Aab:A
+Aac:A
+Aa:A
 Ab:bA
 Ac:cA
 A&:&A
 
+Bba:B
+Bbc:B
+Bb:B
 Ba:aB
-Bb:Y
 Bc:cB
 B&:&B
 
+Cca:C
+Ccb:C
+Cc:C
 Ca:aC
 Cb:bC
-Cc:Z
 C&:&C
 
-Xa:X
-Xb:X
-Xc:X
-X&:&A
-
-Ya:Y
-Yb:Y
-Yc:Y
-Y&:&B
-
-Za:Z
-Zb:Z
-Zc:Z
-Z&:&C
-
-X:
-Y:
-Z:
 L:D
 
 // Clear
