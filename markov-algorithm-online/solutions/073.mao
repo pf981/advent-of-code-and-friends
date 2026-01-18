@@ -1,0 +1,24 @@
+// 2,3,5,7,11,13,17,19,23,29
+noo:no
+oooooooooooooooooooooooooooooo:no
+ooooooooooooooooooooooooooooo::yes
+oooooooooooooooooooooooo:no
+ooooooooooooooooooooooo::yes
+oooooooooooooooooooo:no
+ooooooooooooooooooo::yes
+oooooooooooooooooo:no
+ooooooooooooooooo::yes
+oooooooooooooo:no
+ooooooooooooo::yes
+oooooooooooo:no
+ooooooooooo::yes
+oooooooo:no
+ooooooo::yes
+oooooo:no
+ooooo::yes
+oooo:no
+ooo::yes
+ooo:no
+oo::yes
+no::no
+:no

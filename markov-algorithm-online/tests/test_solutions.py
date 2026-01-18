@@ -900,3 +900,12 @@ def test_solution072(r):
         lhs = ",".join(words)
         rhs = min(words)
         assert r(lhs) == rhs
+
+
+def test_solution073(r):
+    assert r("ooooooo") == "yes"
+
+    for n in range(1, 30 + 1):
+        lhs = "o" * n
+        rhs = "yes" if n in [2, 3, 5, 7, 11, 13, 17, 19, 23, 29] else "no"
+        assert r(lhs) == rhs
