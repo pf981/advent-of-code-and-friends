@@ -1114,3 +1114,24 @@ def test_solution080(r):
 
 def test_solution081(r):
     assert r("[&1[|[&1[|00]]1]]") == "1"
+
+
+def test_solution082(r):
+    r = functools.partial(r, step_limit=30)
+    random.seed(0)
+    assert r("[314152535]") == "11235"
+
+    for _ in range(100):
+        length = random.randint(1, 15)
+        lhs = "[" + "".join(random.choice("12345") for _ in range(length)) + "]"
+
+        seq = []
+        smallest = "5"
+        for c in lhs[1:-1][::-1]:
+            if c > smallest:
+                continue
+            smallest = min(smallest, c)
+            seq.append(smallest)
+
+        rhs = "".join(reversed(seq))
+        assert r(lhs) == rhs
