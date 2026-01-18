@@ -1064,3 +1064,23 @@ def test_solution076(r):
     assert r("b>c&c>a&c<b") == "b"
     assert r("b<c&c>a&c>b") == "c"
     assert r("b<c&c<a&c>b") == "a"
+
+
+def test_solution077(r):
+    random.seed(0)
+    assert r("ooooo|ooo|oooooo") == "2nd"
+
+    for _ in range(50):
+        n_piles = random.randint(2, 10)
+        piles = [random.randint(1, 8) for _ in range(n_piles)]
+        lhs = "|".join("o" * pile for pile in piles)
+
+        if len(lhs) > 50:
+            continue
+
+        xor = 0
+        for pile in piles:
+            xor ^= pile
+
+        rhs = "1st" if xor else "2nd"
+        assert r(lhs) == rhs
