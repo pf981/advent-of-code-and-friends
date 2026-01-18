@@ -909,3 +909,21 @@ def test_solution073(r):
         lhs = "o" * n
         rhs = "yes" if n in [2, 3, 5, 7, 11, 13, 17, 19, 23, 29] else "no"
         assert r(lhs) == rhs
+
+
+def test_solution074(r):
+    random.seed(0)
+    assert r("oooooo:ooooooooooo:oooo") == "yes:no:yes"
+
+    for _ in range(50):
+        n_words = random.randint(1, 12)
+        words = ["o" * random.randint(4, 25) for _ in range(n_words)]
+        lhs = ":".join(words)
+        rhs = ":".join(
+            "yes"
+            if len(word)
+            in [3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 18, 19, 20, 21, 22, 24, 25]
+            else "no"
+            for word in words
+        )
+        assert r(lhs) == rhs

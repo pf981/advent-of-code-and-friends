@@ -1,0 +1,24 @@
+// 3,4,5,6,7,8,9,10,12,13,14,15,16,18,19,20,21,22,24,25
+Yo:N
+No:N
+ooooooooooooooooooooooooo:Y
+oooooooooooooooooooooooo:Y
+oooooooooooooooooooooo:Y
+ooooooooooooooooooooo:Y
+oooooooooooooooooooo:Y
+ooooooooooooooooooo:Y
+oooooooooooooooooo:Y
+oooooooooooooooo:Y
+ooooooooooooooo:Y
+oooooooooooooo:Y
+ooooooooooooo:Y
+oooooooooooo:Y
+oooooooooo:Y
+ooooooooo:Y
+oooooooo:Y
+ooooooo:Y
+oooooo:Y
+ooooo:Y
+oooo:Y
+Y:yes
+N:no
