@@ -1,3 +1,11 @@
+// a<b&c>b&b>a
+// ba&cb&ba
+//
+// Get the first available second (smaller) element.
+// Pull it to the far left and iterate from left to right.
+// Delete all elements <= that element.
+// Continue until only one element is remaining.
+
 // Swap "a<b" and "b>a" to "ba"
 a<b:ba
 a<c:ca
@@ -6,7 +14,6 @@ b<c:cb
 c<a:ac
 c<b:bc
 >:
-
 
 // Shoot "x" left then replace with "A"
 ax:xa
@@ -32,6 +39,7 @@ Lz:C
 }a:a]
 }b:b]
 }c:c]
+}&:&}
 ]a:x
 ]b:y
 ]c:z
@@ -60,17 +68,17 @@ C&:&C
 Xa:X
 Xb:X
 Xc:X
-X&:A
+X&:&A
 
 Ya:Y
 Yb:Y
 Yc:Y
-Y&:B
+Y&:&B
 
 Za:Z
 Zb:Z
 Zc:Z
-Z&:C
+Z&:&C
 
 X:
 Y:
