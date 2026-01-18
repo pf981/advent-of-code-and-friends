@@ -1154,3 +1154,32 @@ def test_solution083(r):
 
         rhs = "no" if stack else "yes"
         assert r(lhs) == rhs
+
+
+def test_solution084(r):
+    random.seed(0)
+    assert r("012101210:2012:2021:1") == "yes:no:yes:no"
+
+    for _ in range(100):
+        n_words = random.randint(1, 5)
+        lhss = []
+        rhss = []
+        for _ in range(n_words):
+            length = random.randint(1, 15)
+            lhs = "".join(random.choice("012") for _ in range(length))
+
+            stack = list(reversed("2021"))
+            for c in lhs:
+                if c == stack[-1]:
+                    stack.pop()
+                if not stack:
+                    break
+
+            rhs = "no" if stack else "yes"
+
+            lhss.append(lhs)
+            rhss.append(rhs)
+
+        lhs = ":".join(lhss)
+        rhs = ":".join(rhss)
+        assert r(lhs) == rhs
