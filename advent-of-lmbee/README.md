@@ -13,8 +13,14 @@ Install uv from https://github.com/astral-sh/uv
 
 ### Running Tests
 
+Use `pytest` to run all solutions and check output against correct hash:
 ```bash
 uv run pytest
+```
+
+Or run an individual solution:
+```bash
+uv run solutions/13_1.py
 ```
 
 ## 🏗️ Project Structure
@@ -25,6 +31,8 @@ uv run pytest
 ├── README.md
 ├── pyproject.toml
 ├── uv.lock
+├── data/
+│   └── *.txt            # Input files
 ├── solutions/
 │   └── *.py             # Solutions
 └── tests/
