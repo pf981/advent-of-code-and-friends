@@ -32,9 +32,9 @@ uv run solutions/13_1.py
 ├── pyproject.toml
 ├── uv.lock
 ├── data/
-│   └── *.txt            # Input files
+│   └── *.txt             # Input files
 ├── solutions/
-│   └── *.py             # Solutions
+│   └── *.py              # Solutions
 └── tests/
     └── test_solutions.py # Solution validation tests
 ```
