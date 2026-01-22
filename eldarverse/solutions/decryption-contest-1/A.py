@@ -51,11 +51,6 @@ def score(s: str) -> float:
         freq = counts[pair] / total
         score += abs(freq - target_freqs[pair])
 
-    for pair in counts:
-        if pair in target_freqs:
-            continue
-        score += counts[pair] / total
-
     return score
 
 
