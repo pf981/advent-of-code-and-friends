@@ -13,5 +13,5 @@ for i, name in enumerate(names, 1):
     discount = 100 - 5 * len(set(name.lower()))
     result.append(f"Case #{i}: {discount}")
 
-with open("./output/A.txt", "w") as f:
+with open("./output/problem-sep-25-long-A.txt", "w") as f:
     f.write("\n".join(result))
