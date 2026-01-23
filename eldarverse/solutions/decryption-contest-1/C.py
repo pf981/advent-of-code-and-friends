@@ -45,25 +45,38 @@ def substitute(cipher: str, alphabet: list[str]) -> str:
     return "".join(result)
 
 
-def hill_climb(
-    cipher: str, n_iters: int = 2_000, n_restarts: int = 10
+def simulated_annealing(
+    cipher: str,
+    n_iters: int = 2_000,
+    n_restarts: int = 10,
+    T_start: float = 1.0,
+    T_end: float = 10_000.0,
 ) -> tuple[float, str, str]:
-    best = (float("-inf"), "", "")  # score, alphabet, decrypted
+    best = (float("-inf"), "", "")
     alphabet = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
     for _ in range(n_restarts):
         random.shuffle(alphabet)
 
-        for _ in range(n_iters):
+        decrypted = substitute(cipher, alphabet)
+        curr_score = get_score(decrypted)
+
+        for k in range(n_iters):
+            T = T_start * (T_end / T_start) ** (k / n_iters)
+
             i, j = random.sample(range(len(alphabet)), 2)
             alphabet[i], alphabet[j] = alphabet[j], alphabet[i]
-            decrypted = substitute(cipher, alphabet)
-            score = get_score(decrypted)
 
-            if score > best[0]:
-                # print(f"{score=} {decrypted=}")
+            new_decrypted = substitute(cipher, alphabet)
+            new_score = get_score(new_decrypted)
+            delta = new_score - curr_score
 
-                best = (score, "".join(alphabet), decrypted)
+            if delta > 0 or random.random() < math.exp(delta / T):
+                curr_score = new_score
+                decrypted = new_decrypted
+
+                if curr_score > best[0]:
+                    best = (curr_score, "".join(alphabet), decrypted)
             else:
                 alphabet[i], alphabet[j] = alphabet[j], alphabet[i]
 
@@ -77,11 +90,9 @@ parts = "\n".join(text.splitlines()[1:]).split(
     "==================================================================\n"
 )
 
-# As this uses random, it's not guaranteed to get the right answer.
-# However, it does get the right answer sometimes.
 result = []
 for i, part in enumerate(parts, 1):
-    score, alphabet, decrypted = hill_climb(part)
+    score, alphabet, decrypted = simulated_annealing(part)
     print(f"Case #{i}: {score=} {alphabet=} {decrypted=}")
     result.append(f"Case #{i}: {alphabet}")
 
