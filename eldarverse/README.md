@@ -30,10 +30,10 @@ uv run solutions/decryption-contest-1/A.py
 ├── uv.lock
 ├── solutions/
 │   ├── decryption-contest-1/
-│   |   ├── A.py
-│   |   ├── B.py
-│   |   ├── C.py
-│   |   └── D.py
+│   │   ├── A.py
+│   │   ├── B.py
+│   │   ├── C.py
+│   │   └── D.py
 │   └── */
 │       └── *.py
 ├── input/
