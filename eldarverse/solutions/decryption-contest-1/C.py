@@ -45,23 +45,27 @@ def substitute(cipher: str, alphabet: list[str]) -> str:
     return "".join(result)
 
 
-def hill_climb(cipher: str, n_iters: int = 10_000) -> tuple[float, str, str]:
-    alphabet = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
-    random.shuffle(alphabet)
-
+def hill_climb(
+    cipher: str, n_iters: int = 2_000, n_restarts: int = 10
+) -> tuple[float, str, str]:
     best = (float("-inf"), "", "")  # score, alphabet, decrypted
-    for _ in range(n_iters):
-        i, j = random.sample(range(len(alphabet)), 2)
-        alphabet[i], alphabet[j] = alphabet[j], alphabet[i]
-        decrypted = substitute(cipher, alphabet)
-        score = get_score(decrypted)
+    alphabet = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
-        if score > best[0]:
-            print(f"{score=} {decrypted=}")
+    for _ in range(n_restarts):
+        random.shuffle(alphabet)
 
-            best = (score, "".join(alphabet), decrypted)
-        else:
+        for _ in range(n_iters):
+            i, j = random.sample(range(len(alphabet)), 2)
             alphabet[i], alphabet[j] = alphabet[j], alphabet[i]
+            decrypted = substitute(cipher, alphabet)
+            score = get_score(decrypted)
+
+            if score > best[0]:
+                # print(f"{score=} {decrypted=}")
+
+                best = (score, "".join(alphabet), decrypted)
+            else:
+                alphabet[i], alphabet[j] = alphabet[j], alphabet[i]
 
     return best
 
@@ -74,10 +78,11 @@ parts = "\n".join(text.splitlines()[1:]).split(
 )
 
 # As this uses random, it's not guaranteed to get the right answer.
-# However, it does get the right answer most the time.
+# However, it does get the right answer sometimes.
 result = []
 for i, part in enumerate(parts, 1):
-    _, alphabet, _ = hill_climb(part)
+    score, alphabet, decrypted = hill_climb(part)
+    print(f"Case #{i}: {score=} {alphabet=} {decrypted=}")
     result.append(f"Case #{i}: {alphabet}")
 
 
