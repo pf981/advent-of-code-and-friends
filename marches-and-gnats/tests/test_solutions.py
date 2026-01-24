@@ -800,5 +800,55 @@ def test_solution34(r):
                     rhs = a ^ b
                 assert r(lhs) == str(rhs)
 
-    # for _ in range(100):
-    #     assert r(lhs) == str(rhs)
+    Node = int | tuple["Node", typing.Literal["&", "|", "^", "!"], "Node"]
+
+    def build_tree(min_depth: int, max_depth: int) -> Node:
+        if max_depth == 0:
+            return random.randint(0, 1)
+
+        choices = ["&", "|", "^", "!", "int"]
+        if min_depth > 0:
+            choices.pop()
+
+        op = random.choice(choices)
+
+        if op == "int":
+            return random.randint(0, 1)
+
+        a = build_tree(max(min_depth - 1, 0), max(max_depth - 1, 0))
+        b = build_tree(max(min_depth - 1, 0), max(max_depth - 1, 0))
+
+        return (a, op, b)
+
+    def to_str(node: Node) -> str:
+        if isinstance(node, int):
+            return str(node)
+        left, op, right = node
+        return f"({to_str(left)}{op}{to_str(right)})"
+
+    def evaluate(node: Node) -> int:
+        if isinstance(node, int):
+            return node
+        left, op, right = node
+
+        a = evaluate(left)
+        b = evaluate(right)
+
+        if op == "&":
+            return a & b
+        elif op == "|":
+            return a | b
+        elif op == "^":
+            return (~(a | b)) & 1
+        elif op == "!":
+            return a ^ b
+
+    for _ in range(100):
+        root = build_tree(1, 5)
+        if isinstance(root, int):
+            continue
+
+        lhs = to_str(root)
+        rhs = evaluate(root)
+
+        assert r(lhs) == str(rhs)
