@@ -777,3 +777,28 @@ def test_solution33(r):
     assert r("([)]") == "N"
     assert r("((())") == "N"
     assert r("())") == "N"
+
+
+def test_solution34(r):
+    random.seed(0)
+
+    assert r("(1&0)") == "0"
+    assert r("((0|1)!1)") == "0"
+    assert r("(1!(1!1))") == "1"
+
+    for a in [0, 1]:
+        for b in [0, 1]:
+            for op in "&|^!":
+                lhs = f"({a}{op}{b})"
+                if op == "&":
+                    rhs = a & b
+                elif op == "|":
+                    rhs = a | b
+                elif op == "^":
+                    rhs = (~(a | b)) & 1
+                elif op == "!":
+                    rhs = a ^ b
+                assert r(lhs) == str(rhs)
+
+    # for _ in range(100):
+    #     assert r(lhs) == str(rhs)
