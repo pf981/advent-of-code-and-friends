@@ -1,7 +1,9 @@
 import collections
+import functools
 
 
-def get_sparse_count(n: int, k: int):
+@functools.cache
+def get_point_counts(n: int):
     dp = collections.Counter()  # points -> ways
     dp[tuple([0] * n)] = 1
 
@@ -17,11 +19,10 @@ def get_sparse_count(n: int, k: int):
 
             dp = dp2
 
-    result = 0
-    for points, ways in dp.items():
-        if max(points) - min(points) > k:
-            result += ways
+    return dp
 
+
+def get_sparse_count(n: int, k: int):
     return result
 
 
@@ -34,15 +35,16 @@ assert int(n_queries) == len(queries)
 result = []
 for i, query in enumerate(queries, 1):
     n, k = (int(x) for x in query.split())
-    print(f"{n=} {k=}")
 
     assert 2 <= n <= 6
     assert 0 <= k <= 9
 
-    sparse_count = get_sparse_count(n, k)
-    result.append(f"Case #{i}: {sparse_count}")
+    sparse_count = 0
+    for points, ways in get_point_counts(n).items():
+        if max(points) - min(points) > k:
+            sparse_count += ways
 
-print("\n".join(result))
+    result.append(f"Case #{i}: {sparse_count}")
 
 with open("./output/problem-sep-25-long-B.txt", "w") as f:
     f.write("\n".join(result))
