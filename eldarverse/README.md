@@ -2,7 +2,7 @@
 
 Solutions to the [Eldarverse](https://www.eldarverse.com/) puzzles.
 
-- Language: Python 3.13
+- Language: Python 3.14
 - Package manager: [uv](https://github.com/astral-sh/uv)
 
 ## 🚀 Quick Start

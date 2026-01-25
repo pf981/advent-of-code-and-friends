@@ -1,13 +1,11 @@
-import collections
-import dataclasses
+from collections import defaultdict
+from dataclasses import dataclass, field
 
 
-@dataclasses.dataclass
+@dataclass
 class Node:
     count: int = 0
-    children: dict[str, "Node"] = dataclasses.field(
-        default_factory=lambda: collections.defaultdict(Node)
-    )
+    children: dict[str, Node] = field(default_factory=lambda: defaultdict(Node))
 
 
 with open("./input/problem-sep-25-long-C-input.txt") as f:
