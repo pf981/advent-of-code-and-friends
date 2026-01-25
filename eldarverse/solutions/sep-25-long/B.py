@@ -22,10 +22,6 @@ def get_point_counts(n: int):
     return dp
 
 
-def get_sparse_count(n: int, k: int):
-    return result
-
-
 with open("./input/problem-sep-25-long-B-input.txt") as f:
     text = f.read()
 
