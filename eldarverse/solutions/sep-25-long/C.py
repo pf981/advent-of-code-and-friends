@@ -1,16 +1,27 @@
+import collections
+import dataclasses
+
+
+@dataclasses.dataclass
+class Node:
+    count: int = 0
+    children: dict[str, "Node"] = dataclasses.field(
+        default_factory=lambda: collections.defaultdict(Node)
+    )
+
+
 with open("./input/problem-sep-25-long-C-input.txt") as f:
     text = f.read()
 
 _, *words, _, actions = text.splitlines()
 
-trie = {None: 0}
+trie = Node()
 for word in words:
     node = trie
-    node[None] += 1
+    node.count += 1
     for c in word:
-        node[c] = node.get(c, {None: 0})
-        node = node[c]
-        node[None] += 1
+        node = node.children[c]
+        node.count += 1
 
 stack = []
 node = trie
@@ -20,11 +31,10 @@ for action in actions:
         node = stack.pop()
     else:
         stack.append(node)
-        node = node.get(action, {None: 0})
-        assert isinstance(node, dict)
+        node = node.children[action]
 
     if len(stack) >= 3:
-        result.append(str(node[None]))
+        result.append(str(node.count))
 
 
 with open("./output/problem-sep-25-long-C.txt", "w") as f:
