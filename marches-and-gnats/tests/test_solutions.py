@@ -852,3 +852,27 @@ def test_solution34(r):
         rhs = evaluate(root)
 
         assert r(lhs) == str(rhs)
+
+
+def test_solution35(r):
+    random.seed(0)
+
+    assert r("|,||,||,|||,|") == "|,||,|||"
+    assert r("|,||,|,||") == "|,||"
+
+    for _ in range(100):
+        for _ in range(100):
+            n_nums = random.randint(1, 20)
+            nums = [random.randint(1, 20) for _ in range(n_nums)]
+            lhs = ",".join(tally(num) for num in nums)
+
+            seen = set()
+            rhs = []
+            for num in nums:
+                if num in seen:
+                    continue
+                seen.add(num)
+                rhs.append(tally(num))
+        rhs = ",".join(rhs)
+
+        assert r(lhs) == rhs
