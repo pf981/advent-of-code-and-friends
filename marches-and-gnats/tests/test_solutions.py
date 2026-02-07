@@ -874,3 +874,29 @@ def test_solution35(r):
         rhs = ",".join(rhs)
 
         assert r(lhs) == rhs
+
+
+def test_solution36(r):
+    random.seed(0)
+
+    assert r("||,|||,||") == "||,|,||"
+
+    for _ in range(100):
+        n_piles = random.randint(1, 20)
+        piles = [random.randint(1, 20) for _ in range(n_piles)]
+        lhs = ",".join(tally(pile) for pile in piles)
+
+        while True:
+            for i in range(n_piles):
+                if piles[i] >= 3:
+                    piles[i] -= 2
+                    if i:
+                        piles[i - 1] += 1
+                    if i + 1 < n_piles:
+                        piles[i + 1] += 1
+                    break
+            else:
+                break
+        rhs = ",".join(tally(pile) for pile in piles)
+
+        assert r(lhs) == rhs
