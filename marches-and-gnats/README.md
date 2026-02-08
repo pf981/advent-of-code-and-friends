@@ -22,6 +22,40 @@ uv run template.py solutions/*.template
 uv run pytest
 ```
 
+## 🎨 Code Formatting
+
+The `format.py` script ensures that Logic Mill transition rules are readable by aligning columns and standardizing comment spacing. It overwrites atomically.
+
+### Usage
+
+Format all `.txt` files in the solutions directory:
+
+```bash
+uv run format.py solutions/*.txt
+
+```
+
+Format a specific file and preview via stdout the changes without saving:
+
+```bash
+uv run format.py solutions/6.txt --preview
+```
+
+```
+--- Preview for solutions/6.txt ---
+INIT         |  INIT         |  R
+INIT         -  INIT         -  R
+INIT         _  ERASE_LEFT   _  L
+ERASE_LEFT   -  HALT         _  L
+ERASE_LEFT   |  SEEK_START   _  L
+SEEK_START   |  SEEK_START   |  L
+SEEK_START   -  SEEK_START   -  L
+SEEK_START   _  ERASE_RIGHT  _  R
+ERASE_RIGHT  -  HALT         _  R
+ERASE_RIGHT  |  INIT         _  R
+```
+
+
 ## 📝 Template Language
 
 Some transition rules are more easily expressed using a **template language**. This repository includes a `template.py` script that performs the translation.
@@ -138,6 +172,7 @@ SKIP_NUMS 9 SKIP_NUMS 9 R
 ├── uv.lock
 ├── logic_mill.py         # Turing machine simulator from mng.quest
 ├── template.py           # Template language compiler
+├── format.py             # Transition rules formatter
 ├── solutions/
 ├── *.py                  # Python code generators
 ├── *.template            # Template source files
