@@ -5,54 +5,69 @@ import typer
 
 app = typer.Typer(help="A CLI to format Logic Mill transition rules files atomically.")
 
-
-RIGHT = "R"
-LEFT = "L"
-BLANK = "_"
 COMMENT_PREFIX = "//"
 
 
+# BLANK
+# COMMENT
+# TRANSITION
+# TRANSITION_AND_COMMENT
 def format_content(text: str) -> str:
-    w1 = 15
-    w2 = 15
-
     lines = text.splitlines()
 
     if not lines:
         return ""
 
-    result = []
+    # First pass to do validation and get max width of state and state2 columns
+    tokens = []
+    w1 = w2 = 1
     for line in lines:
         line = line.strip()
 
-        # Blank line
         if not line:
-            result.append("")
+            tokens.append(("BLANK",))
             continue
 
-        # Comment only
         if line.startswith(COMMENT_PREFIX):
-            result.append(
-                f"{COMMENT_PREFIX} {line.removeprefix(COMMENT_PREFIX).strip()}"
-            )
+            tokens.append(("COMMENT", line.removeprefix(COMMENT_PREFIX).strip()))
             continue
 
         transition, *comment = line.split(COMMENT_PREFIX, 1)
         transition = transition.split()
 
-        comment = f"{COMMENT_PREFIX} {comment[0].strip()}" if comment else None
+        comment = comment[0].strip() if comment else None
 
         if len(transition) != 5:
             raise ValueError(
                 f"Expected 5 values per transition rule, got {len(transition)}: {transition}\n{line=}"
             )
 
-        state, symbol, state2, symbol2, move = transition
+        w1 = max(w1, len(transition[0]))
+        w2 = max(w2, len(transition[2]))
 
-        out = f"{state:<{w1}}  {symbol}  {state2:<{w2}}  {symbol2}  {move}"
         if comment:
-            out += f"  {comment}"
-        result.append(out)
+            tokens.append(("TRANSITION_AND_COMMENT", transition, comment))
+        else:
+            tokens.append(("TRANSITION", transition))
+
+    result = []
+    for token in tokens:
+        match token:
+            case ("BLANK",):
+                result.append("")
+            case ("COMMENT", comment):
+                result.append(f"{COMMENT_PREFIX} {comment}")
+            case ("TRANSITION", comment):
+                state, symbol, state2, symbol2, move = transition
+                out = f"{state:<{w1}}  {symbol}  {state2:<{w2}}  {symbol2}  {move}"
+                result.append(out)
+            case ("TRANSITION_AND_COMMENT", transition, comment):
+                state, symbol, state2, symbol2, move = transition
+                out = f"{state:<{w1}}  {symbol}  {state2:<{w2}}  {symbol2}  {move}"
+                result.append(f"{out}  {COMMENT_PREFIX} {comment}")
+            case _:
+                raise ValueError(f"Unexpected token: {token}")
+        line = line.strip()
 
     # End with blank line
     if result[-1]:
