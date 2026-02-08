@@ -1,41 +1,41 @@
-INIT | INIT2 _ R
-INIT2 _ HALT | R
-INIT2 | APPEND_FIRST_TWO _ R
+INIT                |  INIT2               _  R
+INIT2               _  HALT                |  R
+INIT2               |  APPEND_FIRST_TWO    _  R
 
-APPEND_FIRST_TWO | APPEND_FIRST_TWO | R
-APPEND_FIRST_TWO _ APPEND_FIRST_TWO_B a R
-APPEND_FIRST_TWO_B _ LEFT_THEN_NEXT 1 L
+APPEND_FIRST_TWO    |  APPEND_FIRST_TWO    |  R
+APPEND_FIRST_TWO    _  APPEND_FIRST_TWO_B  a  R
+APPEND_FIRST_TWO_B  _  LEFT_THEN_NEXT      1  L
 
-LEFT_THEN_NEXT a LEFT_THEN_NEXT a L
-LEFT_THEN_NEXT | LEFT_THEN_NEXT | L
-LEFT_THEN_NEXT . LEFT_THEN_NEXT . L
-LEFT_THEN_NEXT _ POP _ R
+LEFT_THEN_NEXT      a  LEFT_THEN_NEXT      a  L
+LEFT_THEN_NEXT      |  LEFT_THEN_NEXT      |  L
+LEFT_THEN_NEXT      .  LEFT_THEN_NEXT      .  L
+LEFT_THEN_NEXT      _  POP                 _  R
 
-POP | DOUBLE _ R
-POP a CLEANUP _ R
-POP . CLEANUP _ R
-DOUBLE | DOUBLE | R
-DOUBLE a APPEND_1 . R
-DOUBLE 1 APPEND_1 y R
-APPEND_1 a APPEND_1 a R
-APPEND_1 1 APPEND_1 1 R
-APPEND_1 x APPEND_1 x R
-APPEND_1 _ GO_BACK_AND_DOUBLE x L
+POP                 |  DOUBLE              _  R
+POP                 a  CLEANUP             _  R
+POP                 .  CLEANUP             _  R
+DOUBLE              |  DOUBLE              |  R
+DOUBLE              a  APPEND_1            .  R
+DOUBLE              1  APPEND_1            y  R
+APPEND_1            a  APPEND_1            a  R
+APPEND_1            1  APPEND_1            1  R
+APPEND_1            x  APPEND_1            x  R
+APPEND_1            _  GO_BACK_AND_DOUBLE  x  L
 
-GO_BACK_AND_DOUBLE 1 GO_BACK_AND_DOUBLE 1 L
-GO_BACK_AND_DOUBLE a GO_BACK_AND_DOUBLE a L
-GO_BACK_AND_DOUBLE x GO_BACK_AND_DOUBLE x L
-GO_BACK_AND_DOUBLE . DOUBLE . R
-GO_BACK_AND_DOUBLE y DOUBLE y R
+GO_BACK_AND_DOUBLE  1  GO_BACK_AND_DOUBLE  1  L
+GO_BACK_AND_DOUBLE  a  GO_BACK_AND_DOUBLE  a  L
+GO_BACK_AND_DOUBLE  x  GO_BACK_AND_DOUBLE  x  L
+GO_BACK_AND_DOUBLE  .  DOUBLE              .  R
+GO_BACK_AND_DOUBLE  y  DOUBLE              y  R
 
-DOUBLE x DOUBLE x R
-DOUBLE . DOUBLE . R
-DOUBLE _ REJIG_RHS _ L
-REJIG_RHS x REJIG_RHS 1 L
-REJIG_RHS y REJIG_RHS a L
-REJIG_RHS . LEFT_THEN_NEXT . L
+DOUBLE              x  DOUBLE              x  R
+DOUBLE              .  DOUBLE              .  R
+DOUBLE              _  REJIG_RHS           _  L
+REJIG_RHS           x  REJIG_RHS           1  L
+REJIG_RHS           y  REJIG_RHS           a  L
+REJIG_RHS           .  LEFT_THEN_NEXT      .  L
 
-CLEANUP . CLEANUP _ R
-CLEANUP a CLEANUP _ R
-CLEANUP 1 CLEANUP | R
-CLEANUP _ HALT _ R
+CLEANUP             .  CLEANUP             _  R
+CLEANUP             a  CLEANUP             _  R
+CLEANUP             1  CLEANUP             |  R
+CLEANUP             _  HALT                _  R

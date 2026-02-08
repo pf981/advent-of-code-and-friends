@@ -1,28 +1,28 @@
-INIT | INIT | R
-INIT / INIT / R
-INIT _ REPLACE_E _ L
-REPLACE_E | POPLEFT E L
+INIT             |  INIT             |  R
+INIT             /  INIT             /  R
+INIT             _  REPLACE_E        _  L
+REPLACE_E        |  POPLEFT          E  L
 
-POPLEFT X POPLEFT X L
-POPLEFT / POPLEFT / L
-POPLEFT | POPLEFT | L
-POPLEFT _ POP _ R
+POPLEFT          X  POPLEFT          X  L
+POPLEFT          /  POPLEFT          /  L
+POPLEFT          |  POPLEFT          |  L
+POPLEFT          _  POP              _  R
 
-POP / CHECK_IF_RESET _ R
-POP | RIGHT_THEN_MARK _ R
+POP              /  CHECK_IF_RESET   _  R
+POP              |  RIGHT_THEN_MARK  _  R
 
-RIGHT_THEN_MARK | RIGHT_THEN_MARK | R
-RIGHT_THEN_MARK / MARK / R
-MARK X MARK X R
-MARK | POPLEFT X L
-MARK E RESET E L
-RESET X RESET | L
-RESET / POPLEFT / L
+RIGHT_THEN_MARK  |  RIGHT_THEN_MARK  |  R
+RIGHT_THEN_MARK  /  MARK             /  R
+MARK             X  MARK             X  R
+MARK             |  POPLEFT          X  L
+MARK             E  RESET            E  L
+RESET            X  RESET            |  L
+RESET            /  POPLEFT          /  L
 
-CHECK_IF_RESET E HALT Y R
-CHECK_IF_RESET | WIPE_RIGHT Y R
-CHECK_IF_RESET X WIPE_RIGHT N R
+CHECK_IF_RESET   E  HALT             Y  R
+CHECK_IF_RESET   |  WIPE_RIGHT       Y  R
+CHECK_IF_RESET   X  WIPE_RIGHT       N  R
 
-WIPE_RIGHT | WIPE_RIGHT _ R
-WIPE_RIGHT X WIPE_RIGHT _ R
-WIPE_RIGHT E HALT _ R
+WIPE_RIGHT       |  WIPE_RIGHT       _  R
+WIPE_RIGHT       X  WIPE_RIGHT       _  R
+WIPE_RIGHT       E  HALT             _  R

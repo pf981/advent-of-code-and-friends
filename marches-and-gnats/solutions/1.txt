@@ -1,3 +1,3 @@
-INIT | FIND _ R
-FIND | FIND | R
-FIND + HALT | R
+INIT  |  FIND  _  R
+FIND  |  FIND  |  R
+FIND  +  HALT  |  R

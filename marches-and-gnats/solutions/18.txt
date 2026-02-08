@@ -1,32 +1,32 @@
-INIT | PREPEND_COMMA | L
-PREPEND_COMMA _ SEEK_END , R
+INIT                 |  PREPEND_COMMA        |  L
+PREPEND_COMMA        _  SEEK_END             ,  R
 
-SEEK_END , SEEK_END , R
-SEEK_END X SEEK_END X R
-SEEK_END | SEEK_END | R
-SEEK_END ÷ SEEK_END ÷ R
-SEEK_END _ POP _ L
+SEEK_END             ,  SEEK_END             ,  R
+SEEK_END             X  SEEK_END             X  R
+SEEK_END             |  SEEK_END             |  R
+SEEK_END             ÷  SEEK_END             ÷  R
+SEEK_END             _  POP                  _  L
 
-POP | SEEK_DIV _ L
-POP ÷ LHS_UNDO | L
+POP                  |  SEEK_DIV             _  L
+POP                  ÷  LHS_UNDO             |  L
 
-SEEK_DIV | SEEK_DIV | L
-SEEK_DIV ÷ LHS_CROSS_OFF ÷ L
+SEEK_DIV             |  SEEK_DIV             |  L
+SEEK_DIV             ÷  LHS_CROSS_OFF        ÷  L
 
-LHS_CROSS_OFF X LHS_CROSS_OFF X L
-LHS_CROSS_OFF | SEEK_END X R
-LHS_CROSS_OFF , FINISH , R
+LHS_CROSS_OFF        X  LHS_CROSS_OFF        X  L
+LHS_CROSS_OFF        |  SEEK_END             X  R
+LHS_CROSS_OFF        ,  FINISH               ,  R
 
-FINISH X FINISH | R
-FINISH | FINISH _ R
-FINISH ÷ FINISH _ R
-FINISH _ HALT _ R
+FINISH               X  FINISH               |  R
+FINISH               |  FINISH               _  R
+FINISH               ÷  FINISH               _  R
+FINISH               _  HALT                 _  R
 
-LHS_UNDO X LHS_UNDO | L
-LHS_UNDO | ADD_DIVISION_SYMBOL | R
-LHS_UNDO , ADD_DIVISION_SYMBOL , R
-ADD_DIVISION_SYMBOL | PREPEND ÷ L
+LHS_UNDO             X  LHS_UNDO             |  L
+LHS_UNDO             |  ADD_DIVISION_SYMBOL  |  R
+LHS_UNDO             ,  ADD_DIVISION_SYMBOL  ,  R
+ADD_DIVISION_SYMBOL  |  PREPEND              ÷  L
 
-PREPEND , PREPEND , L
-PREPEND | PREPEND | L
-PREPEND _ SEEK_END | R
+PREPEND              ,  PREPEND              ,  L
+PREPEND              |  PREPEND              |  L
+PREPEND              _  SEEK_END             |  R

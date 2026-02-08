@@ -1,12 +1,12 @@
-INIT I INIT _ R
-INIT N INIT _ R
-INIT T INIT _ R
-INIT _ INIT _ R
-INIT R INIT _ R
-INIT @ INIT _ R
-INIT H INIT _ R
-INIT A INIT _ R
-INIT L INIT _ R
-INIT / H _ R
-H H INIT _ R
-H / HALT _ R//||||||||||||
+INIT  I  INIT  _  R
+INIT  N  INIT  _  R
+INIT  T  INIT  _  R
+INIT  _  INIT  _  R
+INIT  R  INIT  _  R
+INIT  @  INIT  _  R
+INIT  H  INIT  _  R
+INIT  A  INIT  _  R
+INIT  L  INIT  _  R
+INIT  /  H     _  R
+H     H  INIT  _  R
+H     /  HALT  _  R  // ||||||||||||

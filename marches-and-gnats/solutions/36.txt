@@ -9,7 +9,7 @@ INIT2         _  HALT          _  R
 INIT3         _  HALT          _  R
 
 TOPPLE_LEFT   |  TOPPLE_LEFT   |  L
-TOPPLE_LEFT   ,  SHIFT_LEFT    |  R 
+TOPPLE_LEFT   ,  SHIFT_LEFT    |  R
 SHIFT_LEFT    |  TOPPLE_RIGHT  ,  R
 TOPPLE_LEFT   _  POP_LEFT      _  R  // No pile to the left
 POP_LEFT      |  TOPPLE_RIGHT  _  R

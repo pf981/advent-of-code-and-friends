@@ -43,7 +43,6 @@ def format_content(text: str) -> str:
                 f"Expected 5 values per transition rule, got {len(transition)}: {transition}\n{line=}"
             )
 
-        print(f"{transition[0]} -> {len(transition[0])}")
         w1 = max(w1, len(transition[0]))
         w2 = max(w2, len(transition[2]))
 
@@ -87,6 +86,11 @@ def main(
         writable=True,
         help="One or more Logic Mill transition rules files.",
     ),
+    preview: bool = typer.Option(
+        False,
+        "--preview",
+        help="Output formatted text to stdout instead of overwriting files.",
+    ),
 ):
     """
     Reads a Logic Mill transition rules file, formats, and overwrites it atomically.
@@ -95,6 +99,11 @@ def main(
         try:
             content = file_path.read_text(encoding="utf-8")
             formatted_content = format_content(content)
+
+            if preview:
+                typer.echo(f"--- Preview for {file_path} ---")
+                typer.echo(formatted_content)
+                continue
 
             temp_file = file_path.with_suffix(f"{file_path.suffix}.tmp")
             try:
