@@ -534,58 +534,38 @@ def test_solution21(r):
 
     for _ in range(50):
         max_word_len = random.randint(1, 10)
-        n_words = random.randint(2, 20)
+        min_words = random.randint(2, 20)
         wrap = random.randint(max_word_len, max_word_len + 15)
 
         line = ""
+        words = []
+        rhs = []
         while True:
             word = "".join(random.choices(letters, k=random.randint(1, max_word_len)))
+            words.append(word)
 
             if line:
-                TODO
-                line = f"{line}-{word}"
+                next_line = f"{line}-{word}"
+                if len(next_line) <= wrap:
+                    line = next_line
+                else:
+                    rhs.append(line)
+                    line = word
             else:
                 line = word
 
-        lhs = f"{tally(wrap)}:{words}"
+            if (
+                len(words) > min_words
+                and sum(len(word) for word in words) + len(words) - 1 > wrap
+            ):
+                break
 
-        rhs = []
-        line = []
-        w = -1
-        for word in words.split("-"):
-            w += len(word) + 1
-            if w > wrap:
-                rhs.append("-".join(line))
-                line = [word]
-                w = len(line)
-                continue
-            line.append(word)
-        rhs.append("-".join(line))
+        rhs.append(line)
+
+        lhs = f"{tally(wrap)}:{'-'.join(words)}"
         rhs = "+".join(rhs)
 
         assert r(lhs) == rhs
-
-
-# lhs = "|||||||||:imgvu-vbqdhvb-m-mws-vja"
-# words = "imgvu-vbqdhvb-m-mws-vja"
-# wrap = len("|||||||||")
-# rhs = []
-# line = []
-# w = -1
-# for word in words.split("-"):
-#     w += len(word) + 1
-#     if w > wrap:
-#         rhs.append("-".join(line))
-#         line = [word]
-#         w = len(line)
-#         continue
-#     line.append(word)
-# rhs.append("-".join(line))
-# rhs = "+".join(rhs)
-# print(rhs)
-
-# imgvu+vbqdhvb-m-mws+vja
-# ||||| |||||||||
 
 
 def test_solution22(r):
