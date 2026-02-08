@@ -1,25 +1,25 @@
-INIT | INIT2 | R
-INIT2 | INIT3 | R
-INIT3 | TOPPLE_LEFT | L
+INIT          |  INIT2         |  R
+INIT2         |  INIT3         |  R
+INIT3         |  TOPPLE_LEFT   |  L
 
-INIT2 , INIT , R
-INIT3 , INIT , R
+INIT2         ,  INIT          ,  R
+INIT3         ,  INIT          ,  R
 
-INIT2 _ HALT _ R
-INIT3 _ HALT _ R
+INIT2         _  HALT          _  R
+INIT3         _  HALT          _  R
 
-TOPPLE_LEFT | TOPPLE_LEFT | L
-TOPPLE_LEFT , SHIFT_LEFT | R 
-SHIFT_LEFT | TOPPLE_RIGHT , R
-TOPPLE_LEFT _ POP_LEFT _ R // No pile to the left
-POP_LEFT | TOPPLE_RIGHT _ R
+TOPPLE_LEFT   |  TOPPLE_LEFT   |  L
+TOPPLE_LEFT   ,  SHIFT_LEFT    |  R 
+SHIFT_LEFT    |  TOPPLE_RIGHT  ,  R
+TOPPLE_LEFT   _  POP_LEFT      _  R  // No pile to the left
+POP_LEFT      |  TOPPLE_RIGHT  _  R
 
-TOPPLE_RIGHT | TOPPLE_RIGHT | R
-TOPPLE_RIGHT , SHIFT_RIGHT | L
-SHIFT_RIGHT | RESTART , L
-TOPPLE_RIGHT _ POP_RIGHT _ L // No pile to the right
-POP_RIGHT | RESTART _ L
+TOPPLE_RIGHT  |  TOPPLE_RIGHT  |  R
+TOPPLE_RIGHT  ,  SHIFT_RIGHT   |  L
+SHIFT_RIGHT   |  RESTART       ,  L
+TOPPLE_RIGHT  _  POP_RIGHT     _  L  // No pile to the right
+POP_RIGHT     |  RESTART       _  L
 
-RESTART | RESTART | L
-RESTART , RESTART , L
-RESTART _ INIT _ R
+RESTART       |  RESTART       |  L
+RESTART       ,  RESTART       ,  L
+RESTART       _  INIT          _  R
