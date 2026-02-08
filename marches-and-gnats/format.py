@@ -26,11 +26,11 @@ def format_content(text: str) -> str:
         line = line.strip()
 
         if not line:
-            tokens.append(("BLANK",))
+            tokens.append((None, None))
             continue
 
         if line.startswith(COMMENT_PREFIX):
-            tokens.append(("COMMENT", line.removeprefix(COMMENT_PREFIX).strip()))
+            tokens.append((None, line.removeprefix(COMMENT_PREFIX).strip()))
             continue
 
         transition, *comment = line.split(COMMENT_PREFIX, 1)
@@ -45,22 +45,22 @@ def format_content(text: str) -> str:
         w2 = max(w2, len(transition[2]))
 
         if comment:
-            tokens.append(("TRANSITION_AND_COMMENT", transition, comment[0].strip()))
+            tokens.append((transition, comment[0].strip()))
         else:
-            tokens.append(("TRANSITION", transition))
+            tokens.append((transition, None))
 
     result = []
     for token in tokens:
         match token:
-            case ("BLANK",):
+            case (None, None):
                 result.append("")
-            case ("COMMENT", comment):
+            case (None, comment):
                 result.append(f"{COMMENT_PREFIX} {comment}")
-            case ("TRANSITION", transition):
+            case (transition, None):
                 state, symbol, state2, symbol2, move = transition
                 out = f"{state:<{w1}}  {symbol}  {state2:<{w2}}  {symbol2}  {move}"
                 result.append(out)
-            case ("TRANSITION_AND_COMMENT", transition, comment):
+            case (transition, comment):
                 state, symbol, state2, symbol2, move = transition
                 out = f"{state:<{w1}}  {symbol}  {state2:<{w2}}  {symbol2}  {move}"
                 result.append(f"{out}  {COMMENT_PREFIX} {comment}")
