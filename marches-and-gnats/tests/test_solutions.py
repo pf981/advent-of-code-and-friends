@@ -801,6 +801,9 @@ def test_solution32(r):
 
     rules = logic_mill.parse_transition_rules(code)
 
+    # Trim final newline
+    code = code.rstrip("\n")
+
     # Note that this keeps comments
     rules_str = code.replace("\n", "@").replace(" ", "")
 
