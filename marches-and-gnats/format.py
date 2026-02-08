@@ -1,4 +1,5 @@
 import os
+import shutil
 from pathlib import Path
 
 import typer
@@ -42,6 +43,7 @@ def format_content(text: str) -> str:
                 f"Expected 5 values per transition rule, got {len(transition)}: {transition}\n{line=}"
             )
 
+        print(f"{transition[0]} -> {len(transition[0])}")
         w1 = max(w1, len(transition[0]))
         w2 = max(w2, len(transition[2]))
 
@@ -57,7 +59,7 @@ def format_content(text: str) -> str:
                 result.append("")
             case ("COMMENT", comment):
                 result.append(f"{COMMENT_PREFIX} {comment}")
-            case ("TRANSITION", comment):
+            case ("TRANSITION", transition):
                 state, symbol, state2, symbol2, move = transition
                 out = f"{state:<{w1}}  {symbol}  {state2:<{w2}}  {symbol2}  {move}"
                 result.append(out)
@@ -78,36 +80,40 @@ def format_content(text: str) -> str:
 
 @app.command()
 def main(
-    file_path: Path = typer.Argument(
+    files: list[Path] = typer.Argument(
         ...,
         exists=True,
         readable=True,
         writable=True,
-        help="Path to the Logic Mill transition rules file.",
+        help="One or more Logic Mill transition rules files.",
     ),
 ):
     """
     Reads a Logic Mill transition rules file, formats, and overwrites it atomically.
     """
-    try:
-        content = file_path.read_text(encoding="utf-8")
-        formatted_content = format_content(content)
-
-        temp_file = file_path.with_suffix(f"{file_path.suffix}.tmp")
+    for file_path in files:
         try:
-            temp_file.write_text(formatted_content, encoding="utf-8")
+            content = file_path.read_text(encoding="utf-8")
+            formatted_content = format_content(content)
 
-            os.replace(temp_file, file_path)
-            typer.secho(f"Atomic update complete: {file_path}", fg=typer.colors.GREEN)
+            temp_file = file_path.with_suffix(f"{file_path.suffix}.tmp")
+            try:
+                temp_file.write_text(formatted_content, encoding="utf-8")
+                shutil.copymode(file_path, temp_file)
+
+                os.replace(temp_file, file_path)
+                typer.secho(
+                    f"Atomic update complete: {file_path}", fg=typer.colors.GREEN
+                )
+
+            except Exception as e:
+                if temp_file.exists():
+                    temp_file.unlink()
+                raise e
 
         except Exception as e:
-            if temp_file.exists():
-                temp_file.unlink()
-            raise e
-
-    except Exception as e:
-        typer.secho(f"Error: {e}", fg=typer.colors.RED, err=True)
-        raise typer.Exit(code=1)
+            typer.secho(f"Error: {e}", fg=typer.colors.RED, err=True)
+            raise typer.Exit(code=1)
 
 
 if __name__ == "__main__":
