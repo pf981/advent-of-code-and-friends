@@ -36,8 +36,6 @@ def format_content(text: str) -> str:
         transition, *comment = line.split(COMMENT_PREFIX, 1)
         transition = transition.split()
 
-        comment = comment[0].strip() if comment else None
-
         if len(transition) != 5:
             raise ValueError(
                 f"Expected 5 values per transition rule, got {len(transition)}: {transition}\n{line=}"
@@ -47,7 +45,7 @@ def format_content(text: str) -> str:
         w2 = max(w2, len(transition[2]))
 
         if comment:
-            tokens.append(("TRANSITION_AND_COMMENT", transition, comment))
+            tokens.append(("TRANSITION_AND_COMMENT", transition, comment[0].strip()))
         else:
             tokens.append(("TRANSITION", transition))
 
