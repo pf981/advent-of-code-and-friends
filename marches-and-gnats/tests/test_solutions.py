@@ -526,6 +526,68 @@ def test_solution19(r):
     )
 
 
+def test_solution21(r):
+    random.seed(0)
+    assert r("|||||||:hello-world-how-are-you") == "hello+world+how-are+you"
+
+    letters = "abcdefghijklmnopqrstuvwxyz"
+
+    for _ in range(50):
+        max_word_len = random.randint(1, 10)
+        n_words = random.randint(2, 20)
+        wrap = random.randint(max_word_len, max_word_len + 15)
+
+        line = ""
+        while True:
+            word = "".join(random.choices(letters, k=random.randint(1, max_word_len)))
+
+            if line:
+                TODO
+                line = f"{line}-{word}"
+            else:
+                line = word
+
+        lhs = f"{tally(wrap)}:{words}"
+
+        rhs = []
+        line = []
+        w = -1
+        for word in words.split("-"):
+            w += len(word) + 1
+            if w > wrap:
+                rhs.append("-".join(line))
+                line = [word]
+                w = len(line)
+                continue
+            line.append(word)
+        rhs.append("-".join(line))
+        rhs = "+".join(rhs)
+
+        assert r(lhs) == rhs
+
+
+# lhs = "|||||||||:imgvu-vbqdhvb-m-mws-vja"
+# words = "imgvu-vbqdhvb-m-mws-vja"
+# wrap = len("|||||||||")
+# rhs = []
+# line = []
+# w = -1
+# for word in words.split("-"):
+#     w += len(word) + 1
+#     if w > wrap:
+#         rhs.append("-".join(line))
+#         line = [word]
+#         w = len(line)
+#         continue
+#     line.append(word)
+# rhs.append("-".join(line))
+# rhs = "+".join(rhs)
+# print(rhs)
+
+# imgvu+vbqdhvb-m-mws+vja
+# ||||| |||||||||
+
+
 def test_solution22(r):
     random.seed(0)
     assert r("mdzgstf:thkrg") == "hello"
