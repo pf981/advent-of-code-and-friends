@@ -6,7 +6,7 @@ import "core:mem"
 import "core:os"
 import "core:time"
 
-timer :: proc(f: proc(input: string) -> string, input: string) -> (string, f64) {
+timer :: proc(f: proc(input: $T) -> $Out, input: T) -> (Out, f64) {
 	stopwatch: time.Stopwatch
 
 	time.stopwatch_reset(&stopwatch)
@@ -48,7 +48,7 @@ run :: proc(
 		mem.tracking_allocator_destroy(&tracking_allocator)
 	}
 
-	fmt.printfln("\nRunning solution year=%d day=%d", year, day)
+	fmt.printfln("Running solution year=%d day=%d", year, day)
 
 	filename := fmt.tprintf("input/%d_%02d.txt", year, day)
 	input, ok := os.read_entire_file(filename, context.temp_allocator)
@@ -63,8 +63,13 @@ run :: proc(
 	part2_result, part_2_time_ms := timer(part2, parsed_input)
 
 	fmt.printfln("Parsed input in %f ms", parse_time_ms)
-	fmt.printfln("Part 1: %s (took %f ms)", part1_result, part_1_time_ms)
-	fmt.printfln("Part 2: %s (took %f ms)", part2_result, part_2_time_ms)
+	when Out == int {
+		fmt.printfln("Part 1: %d (took %f ms)", part1_result, part_1_time_ms)
+		fmt.printfln("Part 2: %d (took %f ms)", part2_result, part_2_time_ms)
+	} else {
+		fmt.printfln("Part 1: %s (took %f ms)", part1_result, part_1_time_ms)
+		fmt.printfln("Part 2: %s (took %f ms)", part2_result, part_2_time_ms)
+	}
 
 	free_all(context.temp_allocator)
 }
