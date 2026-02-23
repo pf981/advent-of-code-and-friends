@@ -1,71 +1,44 @@
-INIT                  |  INIT                  |  L
-INIT                  _  COPY                  :  R
-COPY                  X  COPY                  X  R
-COPY                  :  COPY                  :  R
-COPY                  |  PREPEND               X  L
-PREPEND               X  PREPEND               X  L
-PREPEND               :  PREPEND               :  L
-PREPEND               _  COPY                  X  R
-COPY                  ,  X_TO_|                ,  L
-X_TO_|                X  X_TO_|                |  L
-X_TO_|                :  X_TO_|                :  L
-X_TO_|                _  SEEK:                 _  R
+INIT                        |  MARK_LAST                   X  R
+INIT                        _  INIT                        _  R
+INIT                        X  INIT                        X  R
+MARK_LAST                   |  MARK_LAST                   |  R
+MARK_LAST                   ,  MARK_LAST                   ,  R
+MARK_LAST                   _  MARK_LEFT                   _  L
+MARK_LAST                   X  MARK_LEFT                   X  L
+MARK_LEFT                   |  SEEK_LEFT                   X  L
 
-SEEK:                 |  SEEK:                 |  R
-SEEK:                 :  MARK                  :  L
+SEEK_LEFT                   X  SEEK_LEFT                   X  L
+SEEK_LEFT                   |  SEEK_LEFT                   |  L
+SEEK_LEFT                   ,  SEEK_LEFT                   ,  L
+SEEK_LEFT                   _  INIT                        _  R
 
-MARK                  X  MARK                  X  L
-MARK                  |  TRANSFER              X  R
-TRANSFER              :  TRANSFER              :  R
-TRANSFER              X  TRANSFER              X  R
-TRANSFER              ,  FAIL_RIGHT            ,  R
-TRANSFER              _  FAIL                  _  L
-TRANSFER              |  TRANSFER_NEXT         X  R
-TRANSFER_NEXT         |  TRANSFER_NEXT         |  R
-TRANSFER_NEXT         ,  TRANSFER              ,  R
-TRANSFER_NEXT         _  SEEK:_LEFT            _  L
+// All of RHS marked
+MARK_LEFT                   ,  REPLACE_ONE_THEN_TRIM_LEFT  ,  L
+REPLACE_ONE_THEN_TRIM_LEFT  |  REPLACE_ONE_THEN_TRIM_LEFT  |  L
+REPLACE_ONE_THEN_TRIM_LEFT  X  TRIM_LEFT                   |  L
+TRIM_LEFT                   X  TRIM_LEFT                   _  L
+TRIM_LEFT                   _  REPLACE_X                   _  R
 
-SEEK:_LEFT            |  SEEK:_LEFT            |  L
-SEEK:_LEFT            X  SEEK:_LEFT            X  L
-SEEK:_LEFT            ,  SEEK:_LEFT            ,  L
-SEEK:_LEFT            :  MARK                  :  L
+REPLACE_X                   |  REPLACE_X                   |  R
+REPLACE_X                   ,  REPLACE_X                   ,  R
+REPLACE_X                   X  REPLACE_X                   |  R
+REPLACE_X                   _  SEEK_LEFT                   _  L
 
-FAIL_RIGHT            X  FAIL_RIGHT            |  R
-FAIL_RIGHT            |  FAIL_RIGHT            |  R
-FAIL_RIGHT            y  FAIL                  _  L
-FAIL_RIGHT            _  FAIL                  _  L
-FAIL                  Y  FAIL                  ,  L
-FAIL                  X  FAIL                  |  L
-FAIL                  |  FAIL                  |  L
-FAIL                  ,  FAIL                  ,  L
-FAIL                  :  FAIL                  :  L
-FAIL                  _  POP                   _  R
-POP                   |  SEEK:                 _  R
+// All of LHS marked
+INIT                        ,  TRIM_RIGHT                  ,  R
+TRIM_RIGHT                  |  TRIM_RIGHT                  |  R
+TRIM_RIGHT                  X  TRIM_RIGHT                  _  R
+TRIM_RIGHT                  _  JUMP_THEN_REPLACE_X_LEFT    _  L
 
-MARK                  _  START_CHECK           _  R
-START_CHECK           X  START_CHECK           |  R
-START_CHECK           :  CHECK                 :  R
-CHECK                 X  CHECK                 X  R
-CHECK                 ,  CHECK                 Y  R
-CHECK                 |  CHECK_NEXT            |  R
-CHECK_NEXT            |  CHECK_NEXT            |  R
-CHECK_NEXT            ,  CHECK                 ,  R
-CHECK                 _  CONFIRM               y  L
-CHECK_NEXT            _  SEEK:_LEFT            _  L
+JUMP_THEN_REPLACE_X_LEFT    _  JUMP_THEN_REPLACE_X_LEFT    _  L
+JUMP_THEN_REPLACE_X_LEFT    |  REPLACE_X_LEFT              |  L
 
-TRANSFER              Y  TRANSFER              Y  R
-TRANSFER              y  SEEK:_LEFT            y  L  // Not sure
-SEEK:_LEFT            Y  SEEK:_LEFT            Y  L
+REPLACE_X_LEFT              |  REPLACE_X_LEFT              |  L
+REPLACE_X_LEFT              X  REPLACE_X_LEFT              |  L
+REPLACE_X_LEFT              ,  REPLACE_X_LEFT              ,  L
+REPLACE_X_LEFT              _  INIT                        _  R
 
-CHECK                 Y  CHECK                 Y  R
-CHECK                 y  CONFIRM               y  L
-CONFIRM               X  CONFIRM               X  L
-CONFIRM               Y  SEEK_RIGHT_THEN_WIPE  X  R
-
-CONFIRM               ,  SEEK:_LEFT            ,  L
-
-SEEK_RIGHT_THEN_WIPE  X  SEEK_RIGHT_THEN_WIPE  X  R
-SEEK_RIGHT_THEN_WIPE  y  SEEK_RIGHT_THEN_WIPE  X  R
-SEEK_RIGHT_THEN_WIPE  _  WIPE                  _  L
-WIPE                  X  WIPE                  _  L
-WIPE                  :  HALT                  _  L
+// All of RHS consumed
+JUMP_THEN_REPLACE_X_LEFT    ,  REPLACE_X_THEN_HALT         _  L
+REPLACE_X_THEN_HALT         X  REPLACE_X_THEN_HALT         |  L
+REPLACE_X_THEN_HALT         _  HALT                        _  L
