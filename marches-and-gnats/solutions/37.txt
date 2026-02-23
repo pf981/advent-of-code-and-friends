@@ -1,0 +1,71 @@
+INIT                  |  INIT                  |  L
+INIT                  _  COPY                  :  R
+COPY                  X  COPY                  X  R
+COPY                  :  COPY                  :  R
+COPY                  |  PREPEND               X  L
+PREPEND               X  PREPEND               X  L
+PREPEND               :  PREPEND               :  L
+PREPEND               _  COPY                  X  R
+COPY                  ,  X_TO_|                ,  L
+X_TO_|                X  X_TO_|                |  L
+X_TO_|                :  X_TO_|                :  L
+X_TO_|                _  SEEK:                 _  R
+
+SEEK:                 |  SEEK:                 |  R
+SEEK:                 :  MARK                  :  L
+
+MARK                  X  MARK                  X  L
+MARK                  |  TRANSFER              X  R
+TRANSFER              :  TRANSFER              :  R
+TRANSFER              X  TRANSFER              X  R
+TRANSFER              ,  FAIL_RIGHT            ,  R
+TRANSFER              _  FAIL                  _  L
+TRANSFER              |  TRANSFER_NEXT         X  R
+TRANSFER_NEXT         |  TRANSFER_NEXT         |  R
+TRANSFER_NEXT         ,  TRANSFER              ,  R
+TRANSFER_NEXT         _  SEEK:_LEFT            _  L
+
+SEEK:_LEFT            |  SEEK:_LEFT            |  L
+SEEK:_LEFT            X  SEEK:_LEFT            X  L
+SEEK:_LEFT            ,  SEEK:_LEFT            ,  L
+SEEK:_LEFT            :  MARK                  :  L
+
+FAIL_RIGHT            X  FAIL_RIGHT            |  R
+FAIL_RIGHT            |  FAIL_RIGHT            |  R
+FAIL_RIGHT            y  FAIL                  _  L
+FAIL_RIGHT            _  FAIL                  _  L
+FAIL                  Y  FAIL                  ,  L
+FAIL                  X  FAIL                  |  L
+FAIL                  |  FAIL                  |  L
+FAIL                  ,  FAIL                  ,  L
+FAIL                  :  FAIL                  :  L
+FAIL                  _  POP                   _  R
+POP                   |  SEEK:                 _  R
+
+MARK                  _  START_CHECK           _  R
+START_CHECK           X  START_CHECK           |  R
+START_CHECK           :  CHECK                 :  R
+CHECK                 X  CHECK                 X  R
+CHECK                 ,  CHECK                 Y  R
+CHECK                 |  CHECK_NEXT            |  R
+CHECK_NEXT            |  CHECK_NEXT            |  R
+CHECK_NEXT            ,  CHECK                 ,  R
+CHECK                 _  CONFIRM               y  L
+CHECK_NEXT            _  SEEK:_LEFT            _  L
+
+TRANSFER              Y  TRANSFER              Y  R
+TRANSFER              y  SEEK:_LEFT            y  L  // Not sure
+SEEK:_LEFT            Y  SEEK:_LEFT            Y  L
+
+CHECK                 Y  CHECK                 Y  R
+CHECK                 y  CONFIRM               y  L
+CONFIRM               X  CONFIRM               X  L
+CONFIRM               Y  SEEK_RIGHT_THEN_WIPE  X  R
+
+CONFIRM               ,  SEEK:_LEFT            ,  L
+
+SEEK_RIGHT_THEN_WIPE  X  SEEK_RIGHT_THEN_WIPE  X  R
+SEEK_RIGHT_THEN_WIPE  y  SEEK_RIGHT_THEN_WIPE  X  R
+SEEK_RIGHT_THEN_WIPE  _  WIPE                  _  L
+WIPE                  X  WIPE                  _  L
+WIPE                  :  HALT                  _  L
