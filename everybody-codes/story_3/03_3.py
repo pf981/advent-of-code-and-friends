@@ -12,22 +12,9 @@ class Node:
     right: Node | None = None
 
 
-with open("./story_3/input/everybody_codes_e3_q03_p3.txt") as f:
-    lines = f.read().splitlines()
-# lines = """id=1, plug=RED TRIANGLE, leftSocket=BLUE TRIANGLE, rightSocket=GREEN TRIANGLE, data=?
-# id=2, plug=GREEN TRIANGLE, leftSocket=BLUE CIRCLE, rightSocket=GREEN CIRCLE, data=?
-# id=3, plug=BLUE PENTAGON, leftSocket=BLUE CIRCLE, rightSocket=GREEN CIRCLE, data=?
-# id=4, plug=RED TRIANGLE, leftSocket=BLUE PENTAGON, rightSocket=GREEN PENTAGON, data=?
-# id=5, plug=BLUE TRIANGLE, leftSocket=GREEN CIRCLE, rightSocket=RED CIRCLE, data=?
-# id=6, plug=BLUE TRIANGLE, leftSocket=GREEN CIRCLE, rightSocket=RED CIRCLE, data=?""".splitlines()
-
-
 def get_bond(socket, plug):
     # 0: None, 1: Weak, 2: Strong
     return sum(a == b for a, b in zip(socket, plug))
-
-
-carry = None
 
 
 def place(root: Node | None) -> Node | None:
@@ -44,7 +31,6 @@ def place(root: Node | None) -> Node | None:
         carry2 = root.left
         root.left = carry
         carry = carry2
-        # return place(root)
         bumped_left = True
 
     # Left empty, any bond
@@ -62,11 +48,6 @@ def place(root: Node | None) -> Node | None:
         carry2 = root.right
         root.right = carry
         carry = carry2
-        # return place(root)
-
-        # This will happen anyway
-        # if place(root.right):
-        #     return True
         bumped_right = True
 
     # Right empty, any bond
@@ -78,6 +59,25 @@ def place(root: Node | None) -> Node | None:
         return True
 
     return False
+
+
+def get_checksum(root: Node) -> int:
+    order = []
+
+    def traverse(node):
+        if not node:
+            return
+
+        traverse(node.left)
+        order.append(node.id_)
+        traverse(node.right)
+
+    traverse(root)
+    return sum(i * id_ for i, id_ in enumerate(order, 1))
+
+
+with open("./story_3/input/everybody_codes_e3_q03_p3.txt") as f:
+    lines = f.read().splitlines()
 
 
 root = None
@@ -92,36 +92,12 @@ for line in lines:
         tuple(right_socket.split()),
         data,
     )
-    # print(node)
     if not root:
         root = node
     else:
         carry = node
         place(root)
 
-result = []
 
-
-def traverse(node):
-    if not node:
-        return
-
-    traverse(node.left)
-    result.append(node.id_)
-    traverse(node.right)
-
-
-traverse(root)
-
-answer3 = 0
-for i, id_ in enumerate(result, 1):
-    answer3 += i * id_
-
+answer3 = get_checksum(root)
 print(answer3)
-# 404863
-# Your answer length is: correct
-# The first character of your answer is: correct
-
-# 407808
-# Your answer length is: correct
-# The first character of your answer is: correct
