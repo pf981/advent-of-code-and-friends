@@ -1,29 +1,23 @@
 import itertools
 
-with open("./story_3/input/everybody_codes_e3_q02_p3.txt") as f:
+with open("./story_3/input/everybody_codes_e3_q02_p2.txt") as f:
     lines = f.read().splitlines()
 
-
-# lines = """#..#.......#...
-# ...#...........
-# ...#...........
-# #######........
-# ...#....#######
-# ...#...@...#...
-# ...#.......#...
-# ...........#...
-# ...........#...
-# #..........#...
-# ##......#######""".splitlines()
+# lines = """.......
+# .......
+# .......
+# .#.@...
+# .......
+# .......
+# .......""".splitlines()
 
 # source, bones
-bones = set()
 for r, line in enumerate(lines):
     for c, ch in enumerate(line):
         if ch == "@":
             source = r, c
         if ch == "#":
-            bones.add((r, c))
+            bones = r, c
 
 r, c = source
 seen = {(r, c)}
@@ -31,17 +25,15 @@ seen = {(r, c)}
 max_r = min_r = r
 max_c = min_c = c
 
-for bone in bones:
-    min_r = min(min_r, bone[0])
-    max_r = max(max_r, bone[0])
-    min_c = min(min_c, bone[1])
-    max_c = max(max_c, bone[1])
+min_r = min(min_r, bones[0])
+max_r = max(max_r, bones[0])
+min_c = min(min_c, bones[1])
+max_c = max(max_c, bones[1])
 
 
 def flood_fill(r: int, c: int, visited: set[tuple[int, int]]) -> bool:
-    # print(f"Flood {r=} {c=} {seen=}")
     # print(f"{r=} {c=}")
-    if (r, c) in bones:
+    if (r, c) == bones:
         return True
     if (r, c) in visited:
         return True
@@ -65,8 +57,8 @@ def flood_fill(r: int, c: int, visited: set[tuple[int, int]]) -> bool:
 
 
 def set_all(r, c):
-    # print(f"set_all {r=} {c=} {seen=}")
-    if (r, c) in seen or (r, c) in bones:
+    # print(f"{r=} {c=} {seen=}")
+    if (r, c) in seen or (r, c) == bones:
         return
     seen.add((r, c))
     set_all(r - 1, c)
@@ -76,6 +68,7 @@ def set_all(r, c):
 
 
 def p():
+    l = []
     for r1 in range(min_r, max_r + 1):
         for c1 in range(min_c, max_c + 1):
             ch = "."
@@ -83,19 +76,21 @@ def p():
                 ch = "+"
             if (r1, c1) == (r, c):
                 ch = "@"
-            if (r1, c1) in bones:
+            if (r1, c1) == bones:
                 ch = "#"
             print(ch, end="")
         print()
+    with open("test.txt") as f:
+        f.write("".join(l))
 
 
-it = itertools.cycle("NNNEEESSSWWW")
-answer3 = 0
+it = itertools.cycle("NESW")
+answer2 = 0
 for dir in it:
     # print(f"{answer2=} {r=} {c=} {seen=}")
     r2 = r + (dir == "S") - (dir == "N")
     c2 = c + (dir == "E") - (dir == "W")
-    if (r2, c2) in seen or (r2, c2) in bones:
+    if (r2, c2) in seen or (r2, c2) == bones:
         continue
     seen.add((r2, c2))
 
@@ -105,9 +100,9 @@ for dir in it:
     max_c = max(max_c, c2)
 
     r, c = r2, c2
-    answer3 += 1
+    answer2 += 1
 
-    # print(f"{answer3=} {r=} {c=} {seen=}")
+    # print(f"{answer2=} {r=} {c=} {seen=}")
     # p()
     # if (r - 1, c) in seen and (r + 1, c) in seen:
     #     if flood_fill(r, c - 1, set()):
@@ -128,20 +123,22 @@ for dir in it:
     if flood_fill(r + 1, c, set()):
         set_all(r + 1, c)
 
-    # print(f"--- {answer3} ---")
+    # print("-------")
     # p()
-    # if answer3 >= 10:  # FIXME: REMOVE
-    #     break
 
-    for bone in bones:
-        if not (
-            ((bone[0] - 1, bone[1]) in seen or (bone[0] - 1, bone[1]) in bones)
-            and ((bone[0] + 1, bone[1]) in seen or (bone[0] + 1, bone[1]) in bones)
-            and ((bone[0], bone[1] - 1) in seen or (bone[0], bone[1] - 1) in bones)
-            and ((bone[0], bone[1] + 1) in seen or (bone[0], bone[1] + 1) in bones)
-        ):
-            break
-    else:
+    # if answer2 == 40:
+    #     break
+    if (
+        (bones[0] - 1, bones[1]) in seen
+        and (bones[0] + 1, bones[1]) in seen
+        and (bones[0], bones[1] - 1) in seen
+        and (bones[0], bones[1] + 1) in seen
+    ):
         break
 
-print(answer3)
+print(answer2)
+
+# 3818
+# Your answer length is: correct
+# The first character of your answer is: correct
+# not 3817 or 3819
