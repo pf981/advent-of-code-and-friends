@@ -18,40 +18,33 @@ max_r = min_r = r
 max_c = min_c = c
 
 for bone in bones:
+    seen.add(bone)
     min_r = min(min_r, bone[0])
     max_r = max(max_r, bone[0])
     min_c = min(min_c, bone[1])
     max_c = max(max_c, bone[1])
 
 
-def is_enclosed(r: int, c: int, visited: set[tuple[int, int]]) -> bool:
-    if (r, c) in bones:
+def is_enclosed(r: int, c: int, seen: set[tuple[int, int]]) -> bool:
+    if (r, c) in seen:
         return True
-    if (r, c) in visited:
-        return True
-    visited.add((r, c))
+    seen.add((r, c))
 
     if not (min_r <= r <= max_r and min_c <= c <= max_c):
         return False
-    if (r, c) in seen:
-        return True
 
     return (
-        is_enclosed(r - 1, c, visited)
-        and is_enclosed(r + 1, c, visited)
-        and is_enclosed(r, c + 1, visited)
-        and is_enclosed(r, c - 1, visited)
+        is_enclosed(r - 1, c, seen)
+        and is_enclosed(r + 1, c, seen)
+        and is_enclosed(r, c + 1, seen)
+        and is_enclosed(r, c - 1, seen)
     )
 
 
-def fill(r: int, c: int) -> None:
-    if (r, c) in seen or (r, c) in bones:
-        return
-    seen.add((r, c))
-    fill(r - 1, c)
-    fill(r + 1, c)
-    fill(r, c + 1)
-    fill(r, c - 1)
+def fill(r: int, c: int, seen: set[tuple[int, int]]):
+    seen2 = seen.copy()
+    if is_enclosed(r, c, seen2):
+        seen.update(seen2)
 
 
 # Some areas start enclosed by bones
@@ -62,15 +55,14 @@ for r_bone, c_bone in bones:
         (r_bone - 1, c_bone),
         (r_bone + 1, c_bone),
     ]:
-        if is_enclosed(rr, cc, set()):
-            fill(rr, cc)
+        fill(rr, cc, seen)
 
 it = itertools.cycle("NNNEEESSSWWW")
 answer3 = 0
 for dir in it:
     r2 = r + (dir == "S") - (dir == "N")
     c2 = c + (dir == "E") - (dir == "W")
-    if (r2, c2) in seen or (r2, c2) in bones:
+    if (r2, c2) in seen:
         continue
     seen.add((r2, c2))
 
@@ -83,8 +75,7 @@ for dir in it:
     answer3 += 1
 
     for rr, cc in [(r, c - 1), (r, c + 1), (r - 1, c), (r + 1, c)]:
-        if is_enclosed(rr, cc, set()):
-            fill(rr, cc)
+        fill(rr, cc, seen)
 
     for bone_r, bone_c in bones:
         for rr, cc in [
