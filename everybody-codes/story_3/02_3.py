@@ -3,20 +3,6 @@ import itertools
 with open("./story_3/input/everybody_codes_e3_q02_p3.txt") as f:
     lines = f.read().splitlines()
 
-
-# lines = """#..#.......#...
-# ...#...........
-# ...#...........
-# #######........
-# ...#....#######
-# ...#...@...#...
-# ...#.......#...
-# ...........#...
-# ...........#...
-# #..........#...
-# ##......#######""".splitlines()
-
-# source, bones
 bones = set()
 for r, line in enumerate(lines):
     for c, ch in enumerate(line):
@@ -25,8 +11,8 @@ for r, line in enumerate(lines):
         if ch == "#":
             bones.add((r, c))
 
+seen = {source}
 r, c = source
-seen = {(r, c)}
 
 max_r = min_r = r
 max_c = min_c = c
@@ -38,9 +24,7 @@ for bone in bones:
     max_c = max(max_c, bone[1])
 
 
-def flood_fill(r: int, c: int, visited: set[tuple[int, int]]) -> bool:
-    # print(f"Flood {r=} {c=} {seen=}")
-    # print(f"{r=} {c=}")
+def is_enclosed(r: int, c: int, visited: set[tuple[int, int]]) -> bool:
     if (r, c) in bones:
         return True
     if (r, c) in visited:
@@ -52,58 +36,38 @@ def flood_fill(r: int, c: int, visited: set[tuple[int, int]]) -> bool:
     if (r, c) in seen:
         return True
 
-    result = (
-        flood_fill(r - 1, c, visited)
-        and flood_fill(r + 1, c, visited)
-        and flood_fill(r, c + 1, visited)
-        and flood_fill(r, c - 1, visited)
+    return (
+        is_enclosed(r - 1, c, visited)
+        and is_enclosed(r + 1, c, visited)
+        and is_enclosed(r, c + 1, visited)
+        and is_enclosed(r, c - 1, visited)
     )
 
-    # if result:
-    #     seen.add((r, c))
-    return result
 
-
-def set_all(r, c):
-    # print(f"set_all {r=} {c=} {seen=}")
+def fill(r: int, c: int) -> None:
     if (r, c) in seen or (r, c) in bones:
         return
     seen.add((r, c))
-    set_all(r - 1, c)
-    set_all(r + 1, c)
-    set_all(r, c + 1)
-    set_all(r, c - 1)
+    fill(r - 1, c)
+    fill(r + 1, c)
+    fill(r, c + 1)
+    fill(r, c - 1)
 
 
-def p():
-    for r1 in range(min_r, max_r + 1):
-        for c1 in range(min_c, max_c + 1):
-            ch = "."
-            if (r1, c1) in seen:
-                ch = "+"
-            if (r1, c1) == (r, c):
-                ch = "@"
-            if (r1, c1) in bones:
-                ch = "#"
-            print(ch, end="")
-        print()
-
-
-# Fill in enclosed areas
-for rr, cc in bones:
-    if flood_fill(rr, cc - 1, set()):
-        set_all(rr, cc - 1)
-    if flood_fill(rr, cc + 1, set()):
-        set_all(rr, cc + 1)
-    if flood_fill(rr - 1, cc, set()):
-        set_all(rr - 1, cc)
-    if flood_fill(rr + 1, cc, set()):
-        set_all(rr + 1, cc)
+# Some areas start enclosed by bones
+for r_bone, c_bone in bones:
+    for rr, cc in [
+        (r_bone, c_bone - 1),
+        (r_bone, c_bone + 1),
+        (r_bone - 1, c_bone),
+        (r_bone + 1, c_bone),
+    ]:
+        if is_enclosed(rr, cc, set()):
+            fill(rr, cc)
 
 it = itertools.cycle("NNNEEESSSWWW")
 answer3 = 0
 for dir in it:
-    # print(f"{answer2=} {r=} {c=} {seen=}")
     r2 = r + (dir == "S") - (dir == "N")
     c2 = c + (dir == "E") - (dir == "W")
     if (r2, c2) in seen or (r2, c2) in bones:
@@ -118,41 +82,22 @@ for dir in it:
     r, c = r2, c2
     answer3 += 1
 
-    # print(f"{answer3=} {r=} {c=} {seen=}")
-    # p()
-    # if (r - 1, c) in seen and (r + 1, c) in seen:
-    #     if flood_fill(r, c - 1, set()):
-    #         print(f"Flooded {r=} {c-1=}")
-    #     if flood_fill(r, c + 1, set()):
-    #         print(f"Flooded {r=} {c+1=}")
-    # if (r, c - 1) in seen and (r, c + 1) in seen:
-    #     if flood_fill(r - 1, c, set()):
-    #         print(f"Flooded {r-1=} {c=}")
-    #     if flood_fill(r + 1, c, set()):
-    #         print(f"Flooded {r+1=} {c=}")
-    if flood_fill(r, c - 1, set()):
-        set_all(r, c - 1)
-    if flood_fill(r, c + 1, set()):
-        set_all(r, c + 1)
-    if flood_fill(r - 1, c, set()):
-        set_all(r - 1, c)
-    if flood_fill(r + 1, c, set()):
-        set_all(r + 1, c)
+    for rr, cc in [(r, c - 1), (r, c + 1), (r - 1, c), (r + 1, c)]:
+        if is_enclosed(rr, cc, set()):
+            fill(rr, cc)
 
-    # print(f"--- {answer3} ---")
-    print(answer3)
-    # p()
-    # if answer3 >= 10:  # FIXME: REMOVE
-    #     break
-
-    for bone in bones:
-        if not (
-            ((bone[0] - 1, bone[1]) in seen or (bone[0] - 1, bone[1]) in bones)
-            and ((bone[0] + 1, bone[1]) in seen or (bone[0] + 1, bone[1]) in bones)
-            and ((bone[0], bone[1] - 1) in seen or (bone[0], bone[1] - 1) in bones)
-            and ((bone[0], bone[1] + 1) in seen or (bone[0], bone[1] + 1) in bones)
-        ):
-            break
+    for bone_r, bone_c in bones:
+        for rr, cc in [
+            (bone_r, bone_c - 1),
+            (bone_r, bone_c + 1),
+            (bone_r - 1, bone_c),
+            (bone_r + 1, bone_c),
+        ]:
+            if not ((rr, cc) in seen or (rr, cc) in bones):
+                break
+        else:
+            continue
+        break
     else:
         break
 

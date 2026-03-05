@@ -3,15 +3,6 @@ import itertools
 with open("./story_3/input/everybody_codes_e3_q02_p2.txt") as f:
     lines = f.read().splitlines()
 
-# lines = """.......
-# .......
-# .......
-# .#.@...
-# .......
-# .......
-# .......""".splitlines()
-
-# source, bones
 for r, line in enumerate(lines):
     for c, ch in enumerate(line):
         if ch == "@":
@@ -19,8 +10,8 @@ for r, line in enumerate(lines):
         if ch == "#":
             bones = r, c
 
+seen = {source}
 r, c = source
-seen = {(r, c)}
 
 max_r = min_r = r
 max_c = min_c = c
@@ -31,8 +22,7 @@ min_c = min(min_c, bones[1])
 max_c = max(max_c, bones[1])
 
 
-def flood_fill(r: int, c: int, visited: set[tuple[int, int]]) -> bool:
-    # print(f"{r=} {c=}")
+def is_enclosed(r: int, c: int, visited: set[tuple[int, int]]) -> bool:
     if (r, c) == bones:
         return True
     if (r, c) in visited:
@@ -44,39 +34,27 @@ def flood_fill(r: int, c: int, visited: set[tuple[int, int]]) -> bool:
     if (r, c) in seen:
         return True
 
-    result = (
-        flood_fill(r - 1, c, visited)
-        and flood_fill(r + 1, c, visited)
-        and flood_fill(r, c + 1, visited)
-        and flood_fill(r, c - 1, visited)
+    return (
+        is_enclosed(r - 1, c, visited)
+        and is_enclosed(r + 1, c, visited)
+        and is_enclosed(r, c + 1, visited)
+        and is_enclosed(r, c - 1, visited)
     )
 
-    if result:
-        seen.add((r, c))
-    return result
 
-
-def p():
-    l = []
-    for r1 in range(min_r, max_r + 1):
-        for c1 in range(min_c, max_c + 1):
-            ch = "."
-            if (r1, c1) in seen:
-                ch = "+"
-            if (r1, c1) == (r, c):
-                ch = "@"
-            if (r1, c1) == bones:
-                ch = "#"
-            print(ch, end="")
-        print()
-    with open("test.txt") as f:
-        f.write("".join(l))
+def fill(r: int, c: int) -> None:
+    if (r, c) in seen or (r, c) == bones:
+        return
+    seen.add((r, c))
+    fill(r - 1, c)
+    fill(r + 1, c)
+    fill(r, c + 1)
+    fill(r, c - 1)
 
 
 it = itertools.cycle("NESW")
 answer2 = 0
 for dir in it:
-    # print(f"{answer2=} {r=} {c=} {seen=}")
     r2 = r + (dir == "S") - (dir == "N")
     c2 = c + (dir == "E") - (dir == "W")
     if (r2, c2) in seen or (r2, c2) == bones:
@@ -91,30 +69,10 @@ for dir in it:
     r, c = r2, c2
     answer2 += 1
 
-    # print(f"{answer2=} {r=} {c=} {seen=}")
-    # p()
-    # if (r - 1, c) in seen and (r + 1, c) in seen:
-    #     if flood_fill(r, c - 1, set()):
-    #         print(f"Flooded {r=} {c-1=}")
-    #     if flood_fill(r, c + 1, set()):
-    #         print(f"Flooded {r=} {c+1=}")
-    # if (r, c - 1) in seen and (r, c + 1) in seen:
-    #     if flood_fill(r - 1, c, set()):
-    #         print(f"Flooded {r-1=} {c=}")
-    #     if flood_fill(r + 1, c, set()):
-    #         print(f"Flooded {r+1=} {c=}")
-    if flood_fill(r, c - 1, set()):
-        set_all(r, c - 1)
-    if flood_fill(r, c + 1, set()):
-        set_all(r, c + 1)
-    (flood_fill(r - 1, c, set()))
-    (flood_fill(r + 1, c, set()))
+    for rr, cc in [(r, c - 1), (r, c + 1), (r - 1, c), (r + 1, c)]:
+        if is_enclosed(rr, cc, set()):
+            fill(rr, cc)
 
-    # print("-------")
-    # p()
-
-    # if answer2 == 40:
-    #     break
     if (
         (bones[0] - 1, bones[1]) in seen
         and (bones[0] + 1, bones[1]) in seen
@@ -124,8 +82,3 @@ for dir in it:
         break
 
 print(answer2)
-
-# 3818
-# Your answer length is: correct
-# The first character of your answer is: correct
-# not 3817 or 3819
