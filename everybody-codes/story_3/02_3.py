@@ -89,6 +89,17 @@ def p():
         print()
 
 
+# Fill in enclosed areas
+for rr, cc in bones:
+    if flood_fill(rr, cc - 1, set()):
+        set_all(rr, cc - 1)
+    if flood_fill(rr, cc + 1, set()):
+        set_all(rr, cc + 1)
+    if flood_fill(rr - 1, cc, set()):
+        set_all(rr - 1, cc)
+    if flood_fill(rr + 1, cc, set()):
+        set_all(rr + 1, cc)
+
 it = itertools.cycle("NNNEEESSSWWW")
 answer3 = 0
 for dir in it:
@@ -129,6 +140,7 @@ for dir in it:
         set_all(r + 1, c)
 
     # print(f"--- {answer3} ---")
+    print(answer3)
     # p()
     # if answer3 >= 10:  # FIXME: REMOVE
     #     break
