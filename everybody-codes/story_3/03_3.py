@@ -101,3 +101,22 @@ for line in lines:
 
 answer3 = get_checksum(root)
 print(answer3)
+
+
+# def get_data(root: Node) -> list[str]:
+#     result = []
+
+#     def traverse(node):
+#         if not node:
+#             return
+
+#         traverse(node.left)
+#         result.append(node.data)
+#         traverse(node.right)
+
+#     traverse(root)
+#     return "\n".join(result)
+
+
+# with open("./story_3/input/e3q03p3_out.txt", "w") as f:
+#     f.write(get_data(root))
