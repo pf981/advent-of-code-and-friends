@@ -12,12 +12,12 @@ class Node:
     right: Node | None = None
 
 
-def get_bond(socket, plug):
+def get_bond(socket: tuple[str, str], plug: tuple[str, str]) -> int:
     # 0: None, 1: Weak, 2: Strong
     return sum(a == b for a, b in zip(socket, plug))
 
 
-def place(root: Node | None) -> Node | None:
+def place(root: Node | None) -> bool:
     global carry
     bumped_left = bumped_right = False
 

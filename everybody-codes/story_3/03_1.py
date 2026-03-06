@@ -12,7 +12,7 @@ class Node:
     right: Node | None = None
 
 
-def place(node: Node, root: Node | None) -> Node | None:
+def place(node: Node, root: Node | None) -> bool:
     if not root:
         return False
 
