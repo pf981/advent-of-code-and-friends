@@ -965,3 +965,39 @@ def test_solution37(r):
     hard_input = "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||,||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
     a, b = map(len, hard_input.split(","))
     assert r(hard_input) == tally(math.gcd(a, b))
+
+
+def test_solution38(r):
+    random.seed(0)
+
+    assert r("Kb4,Nd5") == "Y"
+
+    letters = "abcdefgh"
+    for _ in range(100):
+        king = white = (random.randint(0, 7), random.randint(0, 7))
+        while white == king:
+            white = (random.randint(0, 7), random.randint(0, 7))
+
+        rook_check = king[0] == white[0] or king[1] == white[1]
+        bishop_check = (
+            king[0] - king[1] == white[0] - white[1]
+            or king[0] + king[1] == white[0] + white[1]
+        )
+        knight_check = any(
+            (white[0] + dx, white[1] + dy) == king
+            for dx, dy in [(-2, 1), (-2, -1), (-1, -2), (-1, 2), (2, -1), (2, 1)]
+        )
+
+        for piece in "QRBN":
+            lhs = f"K{letters[king[0]]}{king[1] + 1},{piece}{letters[white[0]]}{white[1] + 1}"
+            match piece:
+                case "Q":
+                    check = rook_check or bishop_check
+                case "R":
+                    check = rook_check
+                case "B":
+                    check = bishop_check
+                case "N":
+                    check = knight_check
+            rhs = "NY"[check]
+            assert r(lhs) == rhs
