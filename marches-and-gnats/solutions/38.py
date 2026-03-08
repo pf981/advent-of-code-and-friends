@@ -43,23 +43,33 @@ def generate_code() -> str:
     # --- Rook ---
     for kx in ext_letters:
         a(f"{kx} R ROOK_{kx} R R")
+        a(f"{kx} Q ROOK_{kx} Q R")
         for px in ext_letters:
             if kx == px:
                 a(f"ROOK_{kx} {px} FINISH_Y {px} R")
             else:
-                # kx != px. Set px to 'a' to reduce states. Check py next.
-                a(f"ROOK_{kx} {px} ROOK a R")
+                # kx != px. Check py next.
+                a(f"ROOK_{kx} {px} ROOK {px} R")
 
     for py in ext_nums:
         a(f"ROOK {py} ROOK_{py} {py} L")
-        a(f"ROOK_{py} a ROOK_{py} a L")
+        for px in ext_letters:
+            a(f"ROOK_{py} {px} ROOK_{py} {px} L")
         a(f"ROOK_{py} , ROOK_{py} , L")
         a(f"ROOK_{py} R ROOK_{py} R L")
+        a(f"ROOK_{py} Q ROOK_{py} Q L")
         for ky in ext_nums:
             if py == ky:
                 a(f"ROOK_{py} {ky} FINISH_Y {ky} R")
             else:
-                a(f"ROOK_{py} {ky} FINISH_N {ky} R")
+                a(f"ROOK_{py} {ky} FINISH_N_IF_NOT_QUEEN {ky} R")
+
+    a("FINISH_N_IF_NOT_QUEEN , FINISH_N_IF_NOT_QUEEN , R")
+    a("FINISH_N_IF_NOT_QUEEN R FINISH_N R R")
+
+    # If we do not have a rook-check and the piece is a king, convert to a bishop
+    # "ROOKIFY" will just go to the left and restart
+    a("FINISH_N_IF_NOT_QUEEN Q ROOKIFY B L")
 
     # --- Bishop ---
     # Convert kx to represent positive diagonal, ky to be negative, and same for px, py
