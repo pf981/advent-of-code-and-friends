@@ -21,7 +21,7 @@ def generate_code() -> str:
         for ky in ext_nums:
             a(f"{kx} {ky} {kx} {ky} R")
 
-    # --- Rook ---
+    # --- Rook / Queen ---
     for kx in ext_letters:
         a(f"{kx} R ROOK_{kx} R R")
         a(f"{kx} Q ROOK_{kx} Q R")
