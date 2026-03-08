@@ -989,7 +989,7 @@ def test_solution38(r):
         )
 
         # for piece in "QRBN":
-        for piece in "R":
+        for piece in "RB":
             lhs = f"K{letters[king[0]]}{king[1] + 1},{piece}{letters[white[0]]}{white[1] + 1}"
             match piece:
                 case "Q":
