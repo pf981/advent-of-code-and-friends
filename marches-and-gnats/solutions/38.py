@@ -1,6 +1,7 @@
 def generate_code() -> str:
     lines = []
     letters = "abcdefgh"
+    nums = "12345678"
     ext_letters = "abcdefghijklmno"
     ext_nums = "1234567890αβγδε"
 
@@ -8,30 +9,10 @@ def generate_code() -> str:
         lines.append(s)
 
     def bishop_sum(x: str, y: int) -> str:
-        return ext_letters[letters.index(x) + y - 1]
+        return ext_letters[letters.index(x) + nums.index(y)]
 
     def bishop_diff(x: str, y: int) -> str:
-        return ext_nums[letters.index(x) - (y - 1) + 7]
-
-    def is_check(kx: str, ky: int, piece: str, px: str, py: int) -> bool:
-        rook_check = kx == px or ky == py
-        bishop_check = kx - ky == px - py or kx + ky == px + py
-        knight_check = any(
-            (px + dx, py + dy) == (kx, ky)
-            for dx, dy in [(-2, 1), (-2, -1), (-1, -2), (-1, 2), (2, -1), (2, 1)]
-        )
-
-        match piece:
-            case "Q":
-                return rook_check or bishop_check
-            case "R":
-                return rook_check
-            case "B":
-                return bishop_check
-            case "N":
-                return knight_check
-            case _:
-                raise ValueError(f"Unknown piece: {piece}")
+        return ext_nums[letters.index(x) - nums.index(y) + 7]
 
     a("INIT K INIT _ R")
     for kx in ext_letters:
@@ -77,7 +58,7 @@ def generate_code() -> str:
     for kx in letters:
         a(f"{kx} B BISHOP_{kx} B L")
         a(f"BISHOP_{kx} , BISHOP_{kx} , L")
-        for ky in range(1, 9):
+        for ky in nums:
             bs = bishop_sum(kx, ky)
             a(f"BISHOP_{kx} {ky} BISHOP_SUM_{bs} {bishop_diff(kx, ky)} L")
             a(f"BISHOP_SUM_{bs} {kx} BISHOP_GOTO_RHS {bs} R")
@@ -96,13 +77,45 @@ def generate_code() -> str:
         a(f"ROOKIFY {c} ROOKIFY {c} L")
     a("ROOKIFY _ INIT _ R")
 
+    # --- Knight ---
+    for kx in letters:
+        a(f"{kx} N KNIGHT_{kx} N R")
+        for px in letters:
+            d = abs(letters.index(kx) - letters.index(px))
+            if d not in (1, 2):
+                a(f"KNIGHT_{kx} {px} FINISH_N {px} R")
+            else:
+                a(f"KNIGHT_{kx} {px} KNIGHT_Y {'O' if d == 1 else 'T'} R")
+
+    for py in nums:
+        a(f"KNIGHT_Y {py} KNIGHT_Y_{py} _ L")
+        for d in "OT,":
+            a(f"KNIGHT_Y_{py} {d} KNIGHT_Y_{py} {d} L")
+        a(f"KNIGHT_Y_{py} N KNIGHT_Y_{py} N L")
+
+        for ky in nums:
+            d = abs(nums.index(ky) - nums.index(py))
+            if d not in (1, 2):
+                a(f"KNIGHT_Y_{py} {ky} FINISH_N {ky} R")
+            else:
+                a(f"KNIGHT_Y_{py} {ky} KNIGHT_FINAL_{'O' if d == 1 else 'T'} {ky} R")
+
+    for d in "OT":
+        a(f"KNIGHT_FINAL_{d} , KNIGHT_FINAL_{d} , R")
+        a(f"KNIGHT_FINAL_{d} N KNIGHT_FINAL_{d} N R")
+        for d2 in "OT":
+            if d != d2:
+                a(f"KNIGHT_FINAL_{d} {d2} FINISH_Y {d2} R")
+            else:
+                a(f"KNIGHT_FINAL_{d} {d2} FINISH_N {d2} R")
+
     # --- Append result then wipe left ---
     for result in "YN":
         a(f"FINISH_{result} _ WIPE_LEFT {result} L")
-        for c in ext_letters + ext_nums + "QRBN,":
+        for c in ext_letters + ext_nums + "QRBN,TO":
             a(f"FINISH_{result} {c} FINISH_{result} {c} R")
 
-    for c in ext_letters + ext_nums + "QRBN,":
+    for c in ext_letters + ext_nums + "QRBN,TO":
         a(f"WIPE_LEFT {c} WIPE_LEFT _ L")
     a("WIPE_LEFT _ HALT _ L")
 

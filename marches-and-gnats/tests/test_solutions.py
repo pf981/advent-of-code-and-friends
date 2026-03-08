@@ -970,7 +970,7 @@ def test_solution37(r):
 def test_solution38(r):
     random.seed(0)
 
-    # assert r("Kb4,Nd5") == "Y"
+    assert r("Kb4,Nd5") == "Y"
 
     letters = "abcdefgh"
     for _ in range(100):
@@ -983,13 +983,12 @@ def test_solution38(r):
             king[0] - king[1] == white[0] - white[1]
             or king[0] + king[1] == white[0] + white[1]
         )
-        knight_check = any(
-            (white[0] + dx, white[1] + dy) == king
-            for dx, dy in [(-2, 1), (-2, -1), (-1, -2), (-1, 2), (2, -1), (2, 1)]
-        )
+        knight_check = sorted([abs(white[0] - king[0]), abs(white[1] - king[1])]) == [
+            1,
+            2,
+        ]
 
-        # for piece in "QRBN":
-        for piece in "QRB":
+        for piece in "QRBN":
             lhs = f"K{letters[king[0]]}{king[1] + 1},{piece}{letters[white[0]]}{white[1] + 1}"
             match piece:
                 case "Q":
