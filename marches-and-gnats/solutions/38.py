@@ -48,7 +48,7 @@ def generate_code() -> str:
     a("FINISH_N_IF_NOT_QUEEN , FINISH_N_IF_NOT_QUEEN , R")
     a("FINISH_N_IF_NOT_QUEEN R FINISH_N R R")
 
-    # If we do not have a rook-check and the piece is a king, convert to a bishop
+    # If we do not have a rook-check and the piece is a queen, convert to a bishop
     # "ROOKIFY" will just go to the left and restart
     a("FINISH_N_IF_NOT_QUEEN Q ROOKIFY B L")
 
