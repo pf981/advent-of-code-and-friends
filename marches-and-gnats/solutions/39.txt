@@ -1,66 +1,67 @@
 // Append M
-INIT | INIT | R
-INIT , INIT , R
-INIT ; INIT ; R
-INIT _ NEXT M L
+INIT                        |  INIT                        |  R
+INIT                        ,  INIT                        ,  R
+INIT                        ;  INIT                        ;  R
+INIT                        _  NEXT                        M  L
 
-NEXT M NEXT M L
-NEXT | NEXT | L
-NEXT , NEXT , L
-NEXT x NEXT x L
-NEXT c NEXT c L
-NEXT ; NEXT ; L
-NEXT _ PICKUP _ R
-NEXT X PICKUP X R
+NEXT                        M  NEXT                        M  L
+NEXT                        |  NEXT                        |  L
+NEXT                        ,  NEXT                        ,  L
+NEXT                        x  NEXT                        x  L
+NEXT                        c  NEXT                        c  L
+NEXT                        ;  NEXT                        ;  L
+NEXT                        _  PICKUP                      _  R
 
-PICKUP x PICKUP x R
-PICKUP c PICKUP c R
-PICKUP | HAVE_PIPE x R
-PICKUP , HAVE_COMMA c R
-PICKUP M STRETCH_M_LEFT M L
+PICKUP                      x  PICKUP                      x  R
+PICKUP                      c  PICKUP                      c  R
+PICKUP                      |  HAVE_PIPE                   x  R
+PICKUP                      ,  HAVE_COMMA                  c  R
+PICKUP                      M  STRETCH_M_LEFT              M  L
 
-// "X" means just transport everything to the right of X
-PICKUP ; HAVE_COMMA X R
+PICKUP                      ;  WIPE_LEFT_THEN_HAVE_COMMA   _  L
+WIPE_LEFT_THEN_HAVE_COMMA   x  WIPE_LEFT_THEN_HAVE_COMMA   _  L
+WIPE_LEFT_THEN_HAVE_COMMA   c  WIPE_LEFT_THEN_HAVE_COMMA   _  L
+WIPE_LEFT_THEN_HAVE_COMMA   _  SEEK_RIGHT_THEN_HAVE_COMMA  _  L
+SEEK_RIGHT_THEN_HAVE_COMMA  _  SEEK_RIGHT_THEN_HAVE_COMMA  _  R
+SEEK_RIGHT_THEN_HAVE_COMMA  x  HAVE_COMMA                  x  R
+SEEK_RIGHT_THEN_HAVE_COMMA  |  HAVE_COMMA                  |  R
 
-HAVE_PIPE | HAVE_PIPE | R
-HAVE_PIPE , HAVE_PIPE , R
-HAVE_PIPE ; PICKUP ; R
-HAVE_PIPE M HAVE_PIPE M R
-HAVE_PIPE _ NEXT | L
+HAVE_PIPE                   |  HAVE_PIPE                   |  R
+HAVE_PIPE                   ,  HAVE_PIPE                   ,  R
+HAVE_PIPE                   ;  PICKUP                      ;  R
+HAVE_PIPE                   M  HAVE_PIPE                   M  R
+HAVE_PIPE                   _  NEXT                        |  L
 
-HAVE_COMMA | HAVE_COMMA | R
-HAVE_COMMA x HAVE_COMMA x R
-HAVE_COMMA c HAVE_COMMA c R
-HAVE_COMMA , HAVE_COMMA , R
-HAVE_COMMA ; HAVE_COMMA ; R
-HAVE_COMMA M HAVE_COMMA M R
-HAVE_COMMA _ REVERT_ONE , L
+HAVE_COMMA                  |  HAVE_COMMA                  |  R
+HAVE_COMMA                  x  HAVE_COMMA                  x  R
+HAVE_COMMA                  c  HAVE_COMMA                  c  R
+HAVE_COMMA                  ,  HAVE_COMMA                  ,  R
+HAVE_COMMA                  ;  HAVE_COMMA                  ;  R
+HAVE_COMMA                  M  HAVE_COMMA                  M  R
+HAVE_COMMA                  _  REVERT_ONE                  ,  L
 
 // Revert the xs that don't end in "c"
-REVERT_ONE | REVERT_ONE | L
-REVERT_ONE , REVERT_ONE , L
-REVERT_ONE ; REVERT_ONE ; L
-REVERT_ONE M REVERT_ONE M L
-REVERT_ONE c REVERT_ONE_SKIP c L
-REVERT_ONE x REVERT | L
-REVERT x REVERT | L
-REVERT c NEXT c L
-REVERT ; NEXT ; L
-REVERT _ PICKUP _ R
-REVERT X PICKUP X R
+REVERT_ONE                  |  REVERT_ONE                  |  L
+REVERT_ONE                  ,  REVERT_ONE                  ,  L
+REVERT_ONE                  ;  REVERT_ONE                  ;  L
+REVERT_ONE                  M  REVERT_ONE                  M  L
+REVERT_ONE                  c  REVERT_ONE_SKIP             c  L
+REVERT_ONE                  x  REVERT                      |  L
+REVERT                      x  REVERT                      |  L
+REVERT                      c  NEXT                        c  L
+REVERT                      ;  NEXT                        ;  L
+REVERT                      _  PICKUP                      _  R
 
-REVERT_ONE_SKIP x REVERT_ONE_SKIP x L
-REVERT_ONE_SKIP c REVERT_ONE_SKIP c L
-REVERT_ONE_SKIP ; REVERT_ONE ; L
-REVERT_ONE_SKIP X PICKUP X R
-REVERT_ONE_SKIP _ PICKUP _ R
+REVERT_ONE_SKIP             x  REVERT_ONE_SKIP             x  L
+REVERT_ONE_SKIP             c  REVERT_ONE_SKIP             c  L
+REVERT_ONE_SKIP             ;  REVERT_ONE                  ;  L
+REVERT_ONE_SKIP             _  PICKUP                      _  R
 
 
-STRETCH_M_LEFT x STRETCH_M_LEFT M L
-STRETCH_M_LEFT X STRETCH_M_LEFT M L
-STRETCH_M_LEFT c STRETCH_M_LEFT M L
-STRETCH_M_LEFT ; HAVE_COMMA M R
-STRETCH_M_LEFT _ WIPE_M_RIGHT _ R
+STRETCH_M_LEFT              x  STRETCH_M_LEFT              M  L
+STRETCH_M_LEFT              c  STRETCH_M_LEFT              M  L
+STRETCH_M_LEFT              ;  HAVE_COMMA                  M  R
+STRETCH_M_LEFT              _  WIPE_M_RIGHT                _  R
 
-WIPE_M_RIGHT M WIPE_M_RIGHT _ R
-WIPE_M_RIGHT | HALT | R
+WIPE_M_RIGHT                M  WIPE_M_RIGHT                _  R
+WIPE_M_RIGHT                |  HALT                        |  R
