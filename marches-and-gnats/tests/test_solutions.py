@@ -1001,3 +1001,28 @@ def test_solution38(r):
                     check = knight_check
             rhs = "NY"[check]
             assert r(lhs) == rhs
+
+
+def test_solution39(r):
+    random.seed(0)
+
+    assert r("|,|||,|||;||,|||,||||") == "|,||,|||,|||,|||,||||"
+
+    for _ in range(100):
+        # n1 = random.randint(1, 20)
+        # l1 = [random.randint(1, 20) for _ in range(n1)]
+        # n2 = random.randint(1, 20)
+        # l2 = [random.randint(1, 20) for _ in range(n2)]
+        n1 = random.randint(1, 3)
+        l1 = sorted(random.randint(1, 3) for _ in range(n1))
+        n2 = random.randint(1, 3)
+        l2 = sorted(random.randint(1, 3) for _ in range(n2))
+
+        lhs = (
+            ",".join(tally(num) for num in l1)
+            + ";"
+            + ",".join(tally(num) for num in l2)
+        )
+        rhs = ",".join(tally(num) for num in sorted(l1 + l2))
+
+        assert r(lhs) == rhs
