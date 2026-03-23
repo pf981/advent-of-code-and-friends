@@ -1008,15 +1008,14 @@ def test_solution39(r):
 
     assert r("|,|||,|||;||,|||,||||") == "|,||,|||,|||,|||,||||"
 
+    max_num = 20
+    max_list_length = 20
+
     for _ in range(100):
-        # n1 = random.randint(1, 20)
-        # l1 = [random.randint(1, 20) for _ in range(n1)]
-        # n2 = random.randint(1, 20)
-        # l2 = [random.randint(1, 20) for _ in range(n2)]
-        n1 = random.randint(1, 3)
-        l1 = sorted(random.randint(1, 3) for _ in range(n1))
-        n2 = random.randint(1, 3)
-        l2 = sorted(random.randint(1, 3) for _ in range(n2))
+        n1 = random.randint(1, max_num)
+        l1 = sorted(random.randint(1, max_list_length) for _ in range(n1))
+        n2 = random.randint(1, max_num)
+        l2 = sorted(random.randint(1, max_list_length) for _ in range(n2))
 
         lhs = (
             ",".join(tally(num) for num in l1)
