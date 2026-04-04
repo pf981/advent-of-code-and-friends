@@ -1,0 +1,134 @@
+INIT                     @  LEFT                     @  L
+INIT                     0  INIT                     0  R
+INIT                     -  INIT                     -  R
+INIT                     a  INIT                     a  R
+INIT                     b  INIT                     b  R
+INIT                     c  INIT                     c  R
+INIT                     A  INIT                     A  R
+INIT                     B  INIT                     B  R
+INIT                     C  INIT                     C  R
+
+LEFT                     -  LEFT                     -  L
+LEFT                     0  SEEK_LEFT_THEN_WIPE      Y  L
+LEFT                     a  SEEK_LEFT_THEN_REMOVE_A  -  L
+LEFT                     b  SEEK_LEFT_THEN_REMOVE_B  -  L
+LEFT                     c  SEEK_LEFT_THEN_REMOVE_C  -  L
+LEFT                     A  RIGHT                    A  R
+LEFT                     B  RIGHT                    B  R
+LEFT                     C  RIGHT                    C  R
+LEFT                     _  RIGHT                    _  R
+
+RIGHT                    @  RIGHT                    @  R
+RIGHT                    -  RIGHT                    -  R
+RIGHT                    0  SEEK_LEFT_THEN_WIPE      Y  L
+RIGHT                    a  SEEK_LEFT_THEN_REMOVE_A  -  L
+RIGHT                    b  SEEK_LEFT_THEN_REMOVE_B  -  L
+RIGHT                    c  SEEK_LEFT_THEN_REMOVE_C  -  L
+RIGHT                    A  SEEK_LEFT_THEN_WIPE      N  L
+RIGHT                    B  SEEK_LEFT_THEN_WIPE      N  L
+RIGHT                    C  SEEK_LEFT_THEN_WIPE      N  L
+RIGHT                    _  SEEK_LEFT_THEN_WIPE      N  L
+
+
+SEEK_LEFT_THEN_REMOVE_A  @  SEEK_LEFT_THEN_REMOVE_A  @  L
+SEEK_LEFT_THEN_REMOVE_A  0  SEEK_LEFT_THEN_REMOVE_A  0  L
+SEEK_LEFT_THEN_REMOVE_A  -  SEEK_LEFT_THEN_REMOVE_A  -  L
+SEEK_LEFT_THEN_REMOVE_A  a  SEEK_LEFT_THEN_REMOVE_A  a  L
+SEEK_LEFT_THEN_REMOVE_A  b  SEEK_LEFT_THEN_REMOVE_A  b  L
+SEEK_LEFT_THEN_REMOVE_A  c  SEEK_LEFT_THEN_REMOVE_A  c  L
+SEEK_LEFT_THEN_REMOVE_A  A  SEEK_LEFT_THEN_REMOVE_A  A  L
+SEEK_LEFT_THEN_REMOVE_A  B  SEEK_LEFT_THEN_REMOVE_A  B  L
+SEEK_LEFT_THEN_REMOVE_A  C  SEEK_LEFT_THEN_REMOVE_A  C  L
+SEEK_LEFT_THEN_REMOVE_A  _  REMOVE_A                 _  R
+
+SEEK_LEFT_THEN_REMOVE_B  @  SEEK_LEFT_THEN_REMOVE_B  @  L
+SEEK_LEFT_THEN_REMOVE_B  0  SEEK_LEFT_THEN_REMOVE_B  0  L
+SEEK_LEFT_THEN_REMOVE_B  -  SEEK_LEFT_THEN_REMOVE_B  -  L
+SEEK_LEFT_THEN_REMOVE_B  a  SEEK_LEFT_THEN_REMOVE_B  a  L
+SEEK_LEFT_THEN_REMOVE_B  b  SEEK_LEFT_THEN_REMOVE_B  b  L
+SEEK_LEFT_THEN_REMOVE_B  c  SEEK_LEFT_THEN_REMOVE_B  c  L
+SEEK_LEFT_THEN_REMOVE_B  A  SEEK_LEFT_THEN_REMOVE_B  A  L
+SEEK_LEFT_THEN_REMOVE_B  B  SEEK_LEFT_THEN_REMOVE_B  B  L
+SEEK_LEFT_THEN_REMOVE_B  C  SEEK_LEFT_THEN_REMOVE_B  C  L
+SEEK_LEFT_THEN_REMOVE_B  _  REMOVE_B                 _  R
+
+SEEK_LEFT_THEN_REMOVE_C  @  SEEK_LEFT_THEN_REMOVE_C  @  L
+SEEK_LEFT_THEN_REMOVE_C  0  SEEK_LEFT_THEN_REMOVE_C  0  L
+SEEK_LEFT_THEN_REMOVE_C  -  SEEK_LEFT_THEN_REMOVE_C  -  L
+SEEK_LEFT_THEN_REMOVE_C  a  SEEK_LEFT_THEN_REMOVE_C  a  L
+SEEK_LEFT_THEN_REMOVE_C  b  SEEK_LEFT_THEN_REMOVE_C  b  L
+SEEK_LEFT_THEN_REMOVE_C  c  SEEK_LEFT_THEN_REMOVE_C  c  L
+SEEK_LEFT_THEN_REMOVE_C  A  SEEK_LEFT_THEN_REMOVE_C  A  L
+SEEK_LEFT_THEN_REMOVE_C  B  SEEK_LEFT_THEN_REMOVE_C  B  L
+SEEK_LEFT_THEN_REMOVE_C  C  SEEK_LEFT_THEN_REMOVE_C  C  L
+SEEK_LEFT_THEN_REMOVE_C  _  REMOVE_C                 _  R
+
+
+REMOVE_A                 @  REMOVE_A                 @  R
+REMOVE_A                 0  REMOVE_A                 0  R
+REMOVE_A                 -  REMOVE_A                 -  R
+REMOVE_A                 a  REMOVE_A                 -  R
+REMOVE_A                 b  REMOVE_A                 b  R
+REMOVE_A                 c  REMOVE_A                 c  R
+REMOVE_A                 A  REMOVE_A                 -  R
+REMOVE_A                 B  REMOVE_A                 B  R
+REMOVE_A                 C  REMOVE_A                 C  R
+REMOVE_A                 _  SEEK_LEFT_INIT           _  L
+
+REMOVE_B                 @  REMOVE_B                 @  R
+REMOVE_B                 0  REMOVE_B                 0  R
+REMOVE_B                 -  REMOVE_B                 -  R
+REMOVE_B                 a  REMOVE_B                 a  R
+REMOVE_B                 b  REMOVE_B                 -  R
+REMOVE_B                 c  REMOVE_B                 c  R
+REMOVE_B                 A  REMOVE_B                 A  R
+REMOVE_B                 B  REMOVE_B                 -  R
+REMOVE_B                 C  REMOVE_B                 C  R
+REMOVE_B                 _  SEEK_LEFT_INIT           _  L
+
+REMOVE_C                 @  REMOVE_C                 @  R
+REMOVE_C                 0  REMOVE_C                 0  R
+REMOVE_C                 -  REMOVE_C                 -  R
+REMOVE_C                 a  REMOVE_C                 a  R
+REMOVE_C                 b  REMOVE_C                 b  R
+REMOVE_C                 c  REMOVE_C                 -  R
+REMOVE_C                 A  REMOVE_C                 A  R
+REMOVE_C                 B  REMOVE_C                 B  R
+REMOVE_C                 C  REMOVE_C                 -  R
+REMOVE_C                 _  SEEK_LEFT_INIT           _  L
+
+
+SEEK_LEFT_INIT           @  LEFT                     @  L
+SEEK_LEFT_INIT           0  SEEK_LEFT_INIT           0  L
+SEEK_LEFT_INIT           -  SEEK_LEFT_INIT           -  L
+SEEK_LEFT_INIT           a  SEEK_LEFT_INIT           a  L
+SEEK_LEFT_INIT           b  SEEK_LEFT_INIT           b  L
+SEEK_LEFT_INIT           c  SEEK_LEFT_INIT           c  L
+SEEK_LEFT_INIT           A  SEEK_LEFT_INIT           A  L
+SEEK_LEFT_INIT           B  SEEK_LEFT_INIT           B  L
+SEEK_LEFT_INIT           C  SEEK_LEFT_INIT           C  L
+SEEK_LEFT_INIT           _  INIT                     _  R
+
+SEEK_LEFT_THEN_WIPE      @  SEEK_LEFT_THEN_WIPE      -  L
+SEEK_LEFT_THEN_WIPE      0  SEEK_LEFT_THEN_WIPE      -  L
+SEEK_LEFT_THEN_WIPE      -  SEEK_LEFT_THEN_WIPE      -  L
+SEEK_LEFT_THEN_WIPE      a  SEEK_LEFT_THEN_WIPE      -  L
+SEEK_LEFT_THEN_WIPE      b  SEEK_LEFT_THEN_WIPE      -  L
+SEEK_LEFT_THEN_WIPE      c  SEEK_LEFT_THEN_WIPE      -  L
+SEEK_LEFT_THEN_WIPE      A  SEEK_LEFT_THEN_WIPE      -  L
+SEEK_LEFT_THEN_WIPE      B  SEEK_LEFT_THEN_WIPE      -  L
+SEEK_LEFT_THEN_WIPE      C  SEEK_LEFT_THEN_WIPE      -  L
+SEEK_LEFT_THEN_WIPE      _  WIPE                     _  R
+
+WIPE                     @  WIPE                     _  R
+WIPE                     0  WIPE                     _  R
+WIPE                     -  WIPE                     _  R
+WIPE                     a  WIPE                     _  R
+WIPE                     b  WIPE                     _  R
+WIPE                     c  WIPE                     _  R
+WIPE                     A  WIPE                     _  R
+WIPE                     B  WIPE                     _  R
+WIPE                     C  WIPE                     _  R
+WIPE                     Y  WIPE                     Y  R
+WIPE                     N  WIPE                     N  R
+WIPE                     _  HALT                     _  R

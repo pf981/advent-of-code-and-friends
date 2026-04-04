@@ -1025,3 +1025,57 @@ def test_solution39(r):
         rhs = ",".join(tally(num) for num in sorted(l1 + l2))
 
         assert r(lhs) == rhs
+
+
+def test_solution40(r):
+    random.seed(0)
+
+    assert r("a---@-A--0") == "Y"
+    assert r("a--@-A---A-A--0") == "Y"
+    assert r("@-a---a--A-A---0") == "Y"
+
+    def can_solve(lhs: str) -> bool:
+        lhs = lhs.replace("-", "")
+        ll = lhs.index("@") - 1
+        rr = ll + 2
+        keys = set()
+
+        while True:
+            if ll >= 0 and lhs[ll] == "0":
+                return True
+            if rr < len(lhs) and lhs[rr] == "0":
+                return True
+
+            if ll >= 0 and lhs[ll] == "-":
+                ll -= 1
+                continue
+            if rr < len(lhs) and lhs[rr] == "-":
+                rr += 1
+                continue
+
+            if ll >= 0 and lhs[ll] in "abc":
+                keys.add(lhs[ll].upper())
+                ll -= 1
+                continue
+            if rr < len(lhs) and lhs[rr] in "abc":
+                keys.add(lhs[rr].upper())
+                rr += 1
+                continue
+
+            if ll >= 0 and lhs[ll] in keys:
+                ll -= 1
+                continue
+            if rr < len(lhs) and lhs[rr] in keys:
+                rr += 1
+                continue
+
+            return False
+
+    for _ in range(100):
+        empty_cells = random.randint(0, 20)
+        doors = "".join(random.choices("ABC", k=random.randint(0, 20)))
+        cells = "@0" + doors + doors.lower() + ("-" * empty_cells)
+        lhs = "".join(random.sample(cells, len(cells)))
+        rhs = "Y" if can_solve(lhs) else "N"
+
+        assert r(lhs) == rhs
