@@ -86,7 +86,7 @@ def test_study1():
     def sat(s: str):
         return s.count("o") == 1000 and s.count("oo") == 0
 
-    assert sat("o" * 1000)
+    assert sat("o " * 1000)
 ```
 
 Then run the tests to verify your solution:
