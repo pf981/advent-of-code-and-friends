@@ -18,11 +18,11 @@ def main():
         name = record["name"].lower().replace(":0", "").replace(":", "_")
 
         body = f"""@pytest.mark.skip(reason="not implemented yet")
-    def test_{name}():
-        {sat.replace("\n", "\n    ")}
+def test_{name}():
+    {sat.replace("\n", "\n    ")}
 
-        assert sat(...)
-    """
+    assert sat(...)
+"""
         output[module].append(body)
 
     for module, bodies in output.items():
