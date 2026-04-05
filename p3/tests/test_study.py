@@ -1,7 +1,5 @@
 from typing import List
 
-import pytest
-
 
 def test_study_1():
     def sat(s: str):
@@ -181,63 +179,58 @@ def test_study_20():
     assert sat(list(range(128)))
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_study_21():
     def sat(li: List[int]):
         return all([li[i] != li[i + 1] for i in range(10)]) and len(set(li)) == 3
 
-    assert sat(...)
+    assert sat([0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1])
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_study_22():
     def sat(s: str):
         return s[::2] in s and len(set(s)) == 5
 
-    assert sat(...)
+    assert sat("a" * 20 + "abacadae")
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_study_23():
     def sat(ls: List[str]):
         return tuple(ls) in zip("dee", "doo", "dah!")
 
-    assert sat(...)
+    assert sat(["d", "d", "d"])
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_study_24():
     def sat(li: List[int]):
         return li.count(17) == 3 and li.count(3) >= 2
 
-    assert sat(...)
+    assert sat([17] * 3 + [3] * 3)
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_study_25():
     def sat(s: str):
         return sorted(s) == sorted("Permute me true") and s == s[::-1]
 
-    assert sat(...)
+    assert sat("eurt emPme true")
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_study_26():
     def sat(ls: List[str]):
         return "".join(ls) == str(8**88) and all(len(s) == 8 for s in ls)
 
-    assert sat(...)
+    target = str(8**88)
+    ls = [target[i : i + 8] for i in range(0, len(target), 8)]
+
+    assert sat(ls)
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_study_27():
     def sat(li: List[int]):
         return li[li[0]] != li[li[1]] and li[li[li[0]]] == li[li[li[1]]]
 
-    assert sat(...)
+    assert sat([1, 2, 3, 3])
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_study_28():
     def sat(li: List[int]):
         return (
@@ -245,10 +238,9 @@ def test_study_28():
             and len(set(li)) == 100
         )
 
-    assert sat(...)
+    assert sat(list(range(0, 1000, 10)))
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_study_29():
     def sat(li: List[int]):
         return (
@@ -261,10 +253,9 @@ def test_study_29():
             and len(set(li)) > 995
         )
 
-    assert sat(...)
+    assert sat(list(range(5, 1000)) + [2])
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_study_30():
     def sat(li: List[int]):
         return all(
@@ -274,4 +265,5 @@ def test_study_30():
             ]
         )
 
-    assert sat(...)
+    vals = sorted(range(1000), key=lambda i: 123 * i % 1000)
+    assert sat(vals[:21])
