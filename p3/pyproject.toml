@@ -1,6 +1,6 @@
 [project]
 name = "p3"
-version = "0.1.0"
+version = "1.0.0"
 description = "Solutions to Python Programming Puzzles (P3) https://github.com/microsoft/PythonProgrammingPuzzles"
 readme = "README.md"
 requires-python = ">=3.13"
