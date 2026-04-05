@@ -1,7 +1,7 @@
 
 # AquaQ Challenge Solutions
 
-This projct contains code (and tests) for solving [AquaQ Challenge](https://challenges.aquaq.co.uk/) questions.
+This project contains code (and tests) for solving [AquaQ Challenge](https://challenges.aquaq.co.uk/) questions.
 
 ## 🚀 Prerequisites & Setup
 
