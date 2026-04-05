@@ -11,7 +11,7 @@ def test_birthdayparadox():
             prob *= (year_len - i) / year_len
         return (prob - 0.5) ** 2 <= 1/year_len
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -22,7 +22,7 @@ def test_birthdayparadox_1():
             prob *= (year_len - i) / year_len
         return (prob - 0.5) ** 2 <= 1/year_len
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -33,7 +33,7 @@ def test_birthdayparadox_2():
             prob *= (year_len - i) / year_len
         return (prob - 0.5) ** 2 <= 1/year_len
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -44,7 +44,7 @@ def test_birthdayparadox_3():
             prob *= (year_len - i) / year_len
         return (prob - 0.5) ** 2 <= 1/year_len
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -56,7 +56,7 @@ def test_birthdayparadoxmontecarlo():
         prob = sum(len({random.randrange(year_len) for i in range(n)}) < n for j in range(K)) / K
         return (prob - 0.5) ** 2 <= year_len
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -68,7 +68,7 @@ def test_birthdayparadoxmontecarlo_1():
         prob = sum(len({random.randrange(year_len) for i in range(n)}) < n for j in range(K)) / K
         return (prob - 0.5) ** 2 <= year_len
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -80,7 +80,7 @@ def test_birthdayparadoxmontecarlo_2():
         prob = sum(len({random.randrange(year_len) for i in range(n)}) < n for j in range(K)) / K
         return (prob - 0.5) ** 2 <= year_len
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -92,7 +92,7 @@ def test_birthdayparadoxmontecarlo_3():
         prob = sum(len({random.randrange(year_len) for i in range(n)}) < n for j in range(K)) / K
         return (prob - 0.5) ** 2 <= year_len
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -111,7 +111,7 @@ def test_ballotproblem():
                 )
         return abs(probs[n] - target_prob) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -130,7 +130,7 @@ def test_ballotproblem_1():
                 )
         return abs(probs[n] - target_prob) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -149,7 +149,7 @@ def test_ballotproblem_2():
                 )
         return abs(probs[n] - target_prob) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -168,7 +168,7 @@ def test_ballotproblem_3():
                 )
         return abs(probs[n] - target_prob) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -187,7 +187,7 @@ def test_ballotproblem_4():
                 )
         return abs(probs[n] - target_prob) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -200,7 +200,7 @@ def test_binomialprobabilities():
         tot = sum([prob for sample in product([0, 1], repeat=n) if sum(sample) == a])
         return abs(tot - target_prob) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -213,7 +213,7 @@ def test_binomialprobabilities_1():
         tot = sum([prob for sample in product([0, 1], repeat=n) if sum(sample) == a])
         return abs(tot - target_prob) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -226,7 +226,7 @@ def test_binomialprobabilities_2():
         tot = sum([prob for sample in product([0, 1], repeat=n) if sum(sample) == a])
         return abs(tot - target_prob) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -239,7 +239,7 @@ def test_binomialprobabilities_3():
         tot = sum([prob for sample in product([0, 1], repeat=n) if sum(sample) == a])
         return abs(tot - target_prob) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -252,7 +252,7 @@ def test_binomialprobabilities_4():
         tot = sum([prob for sample in product([0, 1], repeat=n) if sum(sample) == a])
         return abs(tot - target_prob) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -261,7 +261,7 @@ def test_exponentialprobability():
         prob = sum(p_stop*(1-p_stop)**t for t in range(steps))
         return abs(prob - target_prob) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -270,7 +270,7 @@ def test_exponentialprobability_1():
         prob = sum(p_stop*(1-p_stop)**t for t in range(steps))
         return abs(prob - target_prob) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -279,7 +279,7 @@ def test_exponentialprobability_2():
         prob = sum(p_stop*(1-p_stop)**t for t in range(steps))
         return abs(prob - target_prob) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -288,7 +288,7 @@ def test_exponentialprobability_3():
         prob = sum(p_stop*(1-p_stop)**t for t in range(steps))
         return abs(prob - target_prob) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -297,4 +297,4 @@ def test_exponentialprobability_4():
         prob = sum(p_stop*(1-p_stop)**t for t in range(steps))
         return abs(prob - target_prob) < 1e-6
 
-    assert False
+    assert sat(...)

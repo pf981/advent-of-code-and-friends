@@ -10,7 +10,7 @@ def test_findcloseelements():
         assert a in nums and b in nums and a != b
         return abs(a - b) == min(x - y for x in nums for y in nums if x > y)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -20,7 +20,7 @@ def test_findcloseelements_1():
         assert a in nums and b in nums and a != b
         return abs(a - b) == min(x - y for x in nums for y in nums if x > y)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -30,7 +30,7 @@ def test_findcloseelements_2():
         assert a in nums and b in nums and a != b
         return abs(a - b) == min(x - y for x in nums for y in nums if x > y)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -40,7 +40,7 @@ def test_findcloseelements_3():
         assert a in nums and b in nums and a != b
         return abs(a - b) == min(x - y for x in nums for y in nums if x > y)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -50,7 +50,7 @@ def test_findcloseelements_4():
         assert a in nums and b in nums and a != b
         return abs(a - b) == min(x - y for x in nums for y in nums if x > y)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -61,7 +61,7 @@ def test_separateparengroups():
             assert all(s[:i].count("(") > s[:i].count(")") for i in range(1, len(s)))  # s is not further divisible
         return ''.join(ls) == combined.replace(' ', '')
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -72,7 +72,7 @@ def test_separateparengroups_1():
             assert all(s[:i].count("(") > s[:i].count(")") for i in range(1, len(s)))  # s is not further divisible
         return ''.join(ls) == combined.replace(' ', '')
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -83,7 +83,7 @@ def test_separateparengroups_2():
             assert all(s[:i].count("(") > s[:i].count(")") for i in range(1, len(s)))  # s is not further divisible
         return ''.join(ls) == combined.replace(' ', '')
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -94,7 +94,7 @@ def test_separateparengroups_3():
             assert all(s[:i].count("(") > s[:i].count(")") for i in range(1, len(s)))  # s is not further divisible
         return ''.join(ls) == combined.replace(' ', '')
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -105,7 +105,7 @@ def test_separateparengroups_4():
             assert all(s[:i].count("(") > s[:i].count(")") for i in range(1, len(s)))  # s is not further divisible
         return ''.join(ls) == combined.replace(' ', '')
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -113,7 +113,7 @@ def test_frac():
     def sat(x: float, v=523.12892):
         return 0 <= x < 1 and (v - x).is_integer()
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -121,7 +121,7 @@ def test_frac_1():
     def sat(x: float, v=93.86070917102649):
         return 0 <= x < 1 and (v - x).is_integer()
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -129,7 +129,7 @@ def test_frac_2():
     def sat(x: float, v=-6.770237138115334):
         return 0 <= x < 1 and (v - x).is_integer()
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -137,7 +137,7 @@ def test_frac_3():
     def sat(x: float, v=61.58244309946389):
         return 0 <= x < 1 and (v - x).is_integer()
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -145,7 +145,7 @@ def test_frac_4():
     def sat(x: float, v=-80.9341003381162):
         return 0 <= x < 1 and (v - x).is_integer()
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -160,7 +160,7 @@ def test_firstnegcumulative():
                     break
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -175,7 +175,7 @@ def test_firstnegcumulative_1():
                     break
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -190,7 +190,7 @@ def test_firstnegcumulative_2():
                     break
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -205,7 +205,7 @@ def test_firstnegcumulative_3():
                     break
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -220,7 +220,7 @@ def test_firstnegcumulative_4():
                     break
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -228,7 +228,7 @@ def test_minsquareddeviation():
     def sat(x: float, nums=[12, -2, 14, 3, -15, 10, -45, 3, 30]):
         return sum((n - x) ** 2 for n in nums) * len(nums) <= sum((m - n) ** 2 for m in nums for n in nums) * .5 + 1e-4
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -236,7 +236,7 @@ def test_minsquareddeviation_1():
     def sat(x: float, nums=[-47, -58, -46, -29, 48, -7, 85, -48]):
         return sum((n - x) ** 2 for n in nums) * len(nums) <= sum((m - n) ** 2 for m in nums for n in nums) * .5 + 1e-4
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -244,7 +244,7 @@ def test_minsquareddeviation_2():
     def sat(x: float, nums=[-76, -99, 72, 33, 21, -54, -21, 24, 97, 89]):
         return sum((n - x) ** 2 for n in nums) * len(nums) <= sum((m - n) ** 2 for m in nums for n in nums) * .5 + 1e-4
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -252,7 +252,7 @@ def test_minsquareddeviation_3():
     def sat(x: float, nums=[-62, -53, -80]):
         return sum((n - x) ** 2 for n in nums) * len(nums) <= sum((m - n) ** 2 for m in nums for n in nums) * .5 + 1e-4
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -260,7 +260,7 @@ def test_minsquareddeviation_4():
     def sat(x: float, nums=[-76, 76, -88, 37, 7]):
         return sum((n - x) ** 2 for n in nums) * len(nums) <= sum((m - n) ** 2 for m in nums for n in nums) * .5 + 1e-4
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -268,7 +268,7 @@ def test_intersperse():
     def sat(li: List[int], nums=[12, 23, -2, 5, 0], sep=4):
         return li[::2] == nums and li[1::2] == [sep] * (len(nums) - 1)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -276,7 +276,7 @@ def test_intersperse_1():
     def sat(li: List[int], nums=[], sep=23):
         return li[::2] == nums and li[1::2] == [sep] * (len(nums) - 1)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -284,7 +284,7 @@ def test_intersperse_2():
     def sat(li: List[int], nums=[90, 23, 0, 0, 36, 61, 73], sep=14):
         return li[::2] == nums and li[1::2] == [sep] * (len(nums) - 1)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -292,7 +292,7 @@ def test_intersperse_3():
     def sat(li: List[int], nums=[41, 60, 18, 34, 31], sep=2):
         return li[::2] == nums and li[1::2] == [sep] * (len(nums) - 1)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -300,7 +300,7 @@ def test_intersperse_4():
     def sat(li: List[int], nums=[39, 94, 99, 46, 93], sep=25):
         return li[::2] == nums and li[1::2] == [sep] * (len(nums) - 1)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -323,7 +323,7 @@ def test_deepestparens():
     
         return len(groups) == len(depths)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -346,7 +346,7 @@ def test_deepestparens_1():
     
         return len(groups) == len(depths)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -369,7 +369,7 @@ def test_deepestparens_2():
     
         return len(groups) == len(depths)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -392,7 +392,7 @@ def test_deepestparens_3():
     
         return len(groups) == len(depths)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -415,7 +415,7 @@ def test_deepestparens_4():
     
         return len(groups) == len(depths)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -428,7 +428,7 @@ def test_findcontainers():
                 i += 1
         return i == len(containers)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -441,7 +441,7 @@ def test_findcontainers_1():
                 i += 1
         return i == len(containers)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -454,7 +454,7 @@ def test_findcontainers_2():
                 i += 1
         return i == len(containers)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -467,7 +467,7 @@ def test_findcontainers_3():
                 i += 1
         return i == len(containers)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -480,7 +480,7 @@ def test_findcontainers_4():
                 i += 1
         return i == len(containers)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -492,7 +492,7 @@ def test_sumproduct():
             p *= n
         return p == prod
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -504,7 +504,7 @@ def test_sumproduct_1():
             p *= n
         return p == prod
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -516,7 +516,7 @@ def test_sumproduct_2():
             p *= n
         return p == prod
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -528,7 +528,7 @@ def test_sumproduct_3():
             p *= n
         return p == prod
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -540,7 +540,7 @@ def test_sumproduct_4():
             p *= n
         return p == prod
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -554,7 +554,7 @@ def test_rollingmax():
                 assert maxes[0] == nums[0]
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -568,7 +568,7 @@ def test_rollingmax_1():
                 assert maxes[0] == nums[0]
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -582,7 +582,7 @@ def test_rollingmax_2():
                 assert maxes[0] == nums[0]
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -596,7 +596,7 @@ def test_rollingmax_3():
                 assert maxes[0] == nums[0]
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -610,7 +610,7 @@ def test_rollingmax_4():
                 assert maxes[0] == nums[0]
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -618,7 +618,7 @@ def test_palindromecontaining():
     def sat(ans: str, s="so easy", length=20):
         return ans == ans[::-1] and len(ans) == length and s in ans
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -626,7 +626,7 @@ def test_palindromecontaining_1():
     def sat(ans: str, s="aabbab", length=12):
         return ans == ans[::-1] and len(ans) == length and s in ans
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -634,7 +634,7 @@ def test_palindromecontaining_2():
     def sat(ans: str, s="bbb", length=27):
         return ans == ans[::-1] and len(ans) == length and s in ans
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -642,7 +642,7 @@ def test_palindromecontaining_3():
     def sat(ans: str, s="bb", length=38):
         return ans == ans[::-1] and len(ans) == length and s in ans
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -650,7 +650,7 @@ def test_palindromecontaining_4():
     def sat(ans: str, s="", length=0):
         return ans == ans[::-1] and len(ans) == length and s in ans
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -659,7 +659,7 @@ def test_binarystrxor():
         a, b = nums
         return int(str_num, 2) == int(a, 2) ^ int(b, 2)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -668,7 +668,7 @@ def test_binarystrxor_1():
         a, b = nums
         return int(str_num, 2) == int(a, 2) ^ int(b, 2)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -677,7 +677,7 @@ def test_binarystrxor_2():
         a, b = nums
         return int(str_num, 2) == int(a, 2) ^ int(b, 2)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -686,7 +686,7 @@ def test_binarystrxor_3():
         a, b = nums
         return int(str_num, 2) == int(a, 2) ^ int(b, 2)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -695,7 +695,7 @@ def test_binarystrxor_4():
         a, b = nums
         return int(str_num, 2) == int(a, 2) ^ int(b, 2)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -703,7 +703,7 @@ def test_longeststr():
     def sat(ans: str, words=['these', 'are', 'some', 'pretty', 'long', 'words']):
         return ans in words and all(len(ans) >= len(w) for w in words)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -711,7 +711,7 @@ def test_longeststr_1():
     def sat(ans: str, words=['suquojurethy', 'zetenejubichicyj', 'dyzeroquyxipyfe']):
         return ans in words and all(len(ans) >= len(w) for w in words)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -719,7 +719,7 @@ def test_longeststr_2():
     def sat(ans: str, words=['thusisequiw', 'tevozequetextupetha', 'texterut', 'zopuhesofowyk', 'chajokapechunekizic', 'hefuhyjiwakifyma', 'thopebom', 'pah']):
         return ans in words and all(len(ans) >= len(w) for w in words)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -727,7 +727,7 @@ def test_longeststr_3():
     def sat(ans: str, words=['melo', 'zoj', 'wujololyfytew', 'barivitextyte', 'decipywiduvaq', 'ruty', 'gekusoduz']):
         return ans in words and all(len(ans) >= len(w) for w in words)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -735,7 +735,7 @@ def test_longeststr_4():
     def sat(ans: str, words=['quicydynigatha', 'pethiquifegosych', 'jixotextoxa', 'pe', 'xona', 'cifuco', 'gyrejypifam']):
         return ans in words and all(len(ans) >= len(w) for w in words)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -744,7 +744,7 @@ def test_certifiedgcd():
         gcd, a, b = ans
         return m % gcd == n % gcd == 0 and a * m + b * n == gcd and gcd > 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -753,7 +753,7 @@ def test_certifiedgcd_1():
         gcd, a, b = ans
         return m % gcd == n % gcd == 0 and a * m + b * n == gcd and gcd > 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -762,7 +762,7 @@ def test_certifiedgcd_2():
         gcd, a, b = ans
         return m % gcd == n % gcd == 0 and a * m + b * n == gcd and gcd > 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -771,7 +771,7 @@ def test_certifiedgcd_3():
         gcd, a, b = ans
         return m % gcd == n % gcd == 0 and a * m + b * n == gcd and gcd > 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -780,7 +780,7 @@ def test_certifiedgcd_4():
         gcd, a, b = ans
         return m % gcd == n % gcd == 0 and a * m + b * n == gcd and gcd > 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -788,7 +788,7 @@ def test_allprefixes():
     def sat(prefixes: List[str], s="donesezichethofalij"):
         return all(s.startswith(p) for p in prefixes) and len(set(prefixes)) > len(s)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -796,7 +796,7 @@ def test_allprefixes_1():
     def sat(prefixes: List[str], s="vuf"):
         return all(s.startswith(p) for p in prefixes) and len(set(prefixes)) > len(s)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -804,7 +804,7 @@ def test_allprefixes_2():
     def sat(prefixes: List[str], s="t"):
         return all(s.startswith(p) for p in prefixes) and len(set(prefixes)) > len(s)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -812,7 +812,7 @@ def test_allprefixes_3():
     def sat(prefixes: List[str], s="qu"):
         return all(s.startswith(p) for p in prefixes) and len(set(prefixes)) > len(s)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -820,7 +820,7 @@ def test_allprefixes_4():
     def sat(prefixes: List[str], s="dugethixuneku"):
         return all(s.startswith(p) for p in prefixes) and len(set(prefixes)) > len(s)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -828,7 +828,7 @@ def test_spaceyrange():
     def sat(ans: str, n=15):
         return [int(i) for i in ans.split(' ')] == list(range(n + 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -836,7 +836,7 @@ def test_spaceyrange_1():
     def sat(ans: str, n=54635):
         return [int(i) for i in ans.split(' ')] == list(range(n + 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -844,7 +844,7 @@ def test_spaceyrange_2():
     def sat(ans: str, n=83):
         return [int(i) for i in ans.split(' ')] == list(range(n + 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -852,7 +852,7 @@ def test_spaceyrange_3():
     def sat(ans: str, n=99847):
         return [int(i) for i in ans.split(' ')] == list(range(n + 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -860,7 +860,7 @@ def test_spaceyrange_4():
     def sat(ans: str, n=18215):
         return [int(i) for i in ans.split(' ')] == list(range(n + 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -871,7 +871,7 @@ def test_distinctchars():
         assert all(c in s.lower() for c in ans)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -882,7 +882,7 @@ def test_distinctchars_1():
         assert all(c in s.lower() for c in ans)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -893,7 +893,7 @@ def test_distinctchars_2():
         assert all(c in s.lower() for c in ans)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -904,7 +904,7 @@ def test_distinctchars_3():
         assert all(c in s.lower() for c in ans)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -915,7 +915,7 @@ def test_distinctchars_4():
         assert all(c in s.lower() for c in ans)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -923,7 +923,7 @@ def test_parsemusic():
     def sat(beats: List[int], score="o o o| o| .| .| .| o| o| o o o| .|"):
         return " ".join({1: '.|', 2: 'o|', 4: 'o'}[b] for b in beats) == score
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -931,7 +931,7 @@ def test_parsemusic_1():
     def sat(beats: List[int], score=".| o .| o| o| o| o| .| o o"):
         return " ".join({1: '.|', 2: 'o|', 4: 'o'}[b] for b in beats) == score
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -939,7 +939,7 @@ def test_parsemusic_2():
     def sat(beats: List[int], score="o| .| .| .| .| o| o .| o| o| o"):
         return " ".join({1: '.|', 2: 'o|', 4: 'o'}[b] for b in beats) == score
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -947,7 +947,7 @@ def test_parsemusic_3():
     def sat(beats: List[int], score=".| o|"):
         return " ".join({1: '.|', 2: 'o|', 4: 'o'}[b] for b in beats) == score
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -955,7 +955,7 @@ def test_parsemusic_4():
     def sat(beats: List[int], score=""):
         return " ".join({1: '.|', 2: 'o|', 4: 'o'}[b] for b in beats) == score
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -963,7 +963,7 @@ def test_overlappingcount():
     def sat(ans: List[int], s="Bananannanaannanaanananananana", sub="anan", count=7):
         return all(sub == s[i:i + len(sub)] and i >= 0 for i in ans) and len(set(ans)) >= count
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -971,7 +971,7 @@ def test_overlappingcount_1():
     def sat(ans: List[int], s="halidykugadobezebothidububawuvejiquitextyrequamobythynethojahyquutatextoquuzilu", sub="ne", count=1):
         return all(sub == s[i:i + len(sub)] and i >= 0 for i in ans) and len(set(ans)) >= count
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -979,7 +979,7 @@ def test_overlappingcount_2():
     def sat(ans: List[int], s="sutapifitextidavyjedakotextopogonudy", sub="te", count=2):
         return all(sub == s[i:i + len(sub)] and i >= 0 for i in ans) and len(set(ans)) >= count
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -987,7 +987,7 @@ def test_overlappingcount_3():
     def sat(ans: List[int], s="fizyquohachoromuxuquatextidemihithacazynytytextukozarahuwyfuchyquyhidadytext", sub="quohach", count=1):
         return all(sub == s[i:i + len(sub)] and i >= 0 for i in ans) and len(set(ans)) >= count
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -995,7 +995,7 @@ def test_overlappingcount_4():
     def sat(ans: List[int], s="wutextega", sub="xtega", count=1):
         return all(sub == s[i:i + len(sub)] and i >= 0 for i in ans) and len(set(ans)) >= count
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1004,7 +1004,7 @@ def test_sortnumbers():
         nums = 'zero one two three four five six seven eight nine'.split()
         return [nums.index(x) for x in ans.split(" ")] == sorted([nums.index(x) for x in s.split(" ")])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1013,7 +1013,7 @@ def test_sortnumbers_1():
         nums = 'zero one two three four five six seven eight nine'.split()
         return [nums.index(x) for x in ans.split(" ")] == sorted([nums.index(x) for x in s.split(" ")])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1022,7 +1022,7 @@ def test_sortnumbers_2():
         nums = 'zero one two three four five six seven eight nine'.split()
         return [nums.index(x) for x in ans.split(" ")] == sorted([nums.index(x) for x in s.split(" ")])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1031,7 +1031,7 @@ def test_sortnumbers_3():
         nums = 'zero one two three four five six seven eight nine'.split()
         return [nums.index(x) for x in ans.split(" ")] == sorted([nums.index(x) for x in s.split(" ")])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1040,7 +1040,7 @@ def test_sortnumbers_4():
         nums = 'zero one two three four five six seven eight nine'.split()
         return [nums.index(x) for x in ans.split(" ")] == sorted([nums.index(x) for x in s.split(" ")])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1053,7 +1053,7 @@ def test_findclosepair():
                 assert abs(nums[i] - nums[j]) >= abs(nums[b] - nums[a])
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1066,7 +1066,7 @@ def test_findclosepair_1():
                 assert abs(nums[i] - nums[j]) >= abs(nums[b] - nums[a])
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1079,7 +1079,7 @@ def test_findclosepair_2():
                 assert abs(nums[i] - nums[j]) >= abs(nums[b] - nums[a])
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1092,7 +1092,7 @@ def test_findclosepair_3():
                 assert abs(nums[i] - nums[j]) >= abs(nums[b] - nums[a])
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1105,7 +1105,7 @@ def test_findclosepair_4():
                 assert abs(nums[i] - nums[j]) >= abs(nums[b] - nums[a])
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1119,7 +1119,7 @@ def test_rescale():
             assert abs(nums[i] - x) < 1e-6
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1133,7 +1133,7 @@ def test_rescale_1():
             assert abs(nums[i] - x) < 1e-6
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1147,7 +1147,7 @@ def test_rescale_2():
             assert abs(nums[i] - x) < 1e-6
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1161,7 +1161,7 @@ def test_rescale_3():
             assert abs(nums[i] - x) < 1e-6
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1175,7 +1175,7 @@ def test_rescale_4():
             assert abs(nums[i] - x) < 1e-6
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1192,7 +1192,7 @@ def test_filterints():
                     pass
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1209,7 +1209,7 @@ def test_filterints_1():
                     pass
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1226,7 +1226,7 @@ def test_filterints_2():
                     pass
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1243,7 +1243,7 @@ def test_filterints_3():
                     pass
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1260,7 +1260,7 @@ def test_filterints_4():
                     pass
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1274,7 +1274,7 @@ def test_strlength():
                 s[length - 1]
         return len(lengths) == len(strs)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1288,7 +1288,7 @@ def test_strlength_1():
                 s[length - 1]
         return len(lengths) == len(strs)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1302,7 +1302,7 @@ def test_strlength_2():
                 s[length - 1]
         return len(lengths) == len(strs)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1316,7 +1316,7 @@ def test_strlength_3():
                 s[length - 1]
         return len(lengths) == len(strs)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1330,7 +1330,7 @@ def test_strlength_4():
                 s[length - 1]
         return len(lengths) == len(strs)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1338,7 +1338,7 @@ def test_largestdivisor():
     def sat(d: int, n=123456):
         return n % d == 0 and d < n and all(n % e for e in range(d + 1, n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1346,7 +1346,7 @@ def test_largestdivisor_1():
     def sat(d: int, n=17836):
         return n % d == 0 and d < n and all(n % e for e in range(d + 1, n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1354,7 +1354,7 @@ def test_largestdivisor_2():
     def sat(d: int, n=71793):
         return n % d == 0 and d < n and all(n % e for e in range(d + 1, n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1362,7 +1362,7 @@ def test_largestdivisor_3():
     def sat(d: int, n=15466):
         return n % d == 0 and d < n and all(n % e for e in range(d + 1, n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1370,7 +1370,7 @@ def test_largestdivisor_4():
     def sat(d: int, n=57567):
         return n % d == 0 and d < n and all(n % e for e in range(d + 1, n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1383,7 +1383,7 @@ def test_primefactorization():
             assert d > 1
         return prod == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1396,7 +1396,7 @@ def test_primefactorization_1():
             assert d > 1
         return prod == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1409,7 +1409,7 @@ def test_primefactorization_2():
             assert d > 1
         return prod == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1422,7 +1422,7 @@ def test_primefactorization_3():
             assert d > 1
         return prod == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1435,7 +1435,7 @@ def test_primefactorization_4():
             assert d > 1
         return prod == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1443,7 +1443,7 @@ def test_dedup():
     def sat(ans: List[int], li=[2, 19, 2, 53, 1, 1, 2, 44, 17, 0, 19, 31]):
         return set(ans) == set(li) and all(li.index(ans[i]) < li.index(ans[i + 1]) for i in range(len(ans) - 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1451,7 +1451,7 @@ def test_dedup_1():
     def sat(ans: List[int], li=[3, 3, 7, 9, 7, 2, 9, 4, 1]):
         return set(ans) == set(li) and all(li.index(ans[i]) < li.index(ans[i + 1]) for i in range(len(ans) - 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1459,7 +1459,7 @@ def test_dedup_2():
     def sat(ans: List[int], li=[3, 9, 8, 9, 3, 5, 1, 3, 5]):
         return set(ans) == set(li) and all(li.index(ans[i]) < li.index(ans[i + 1]) for i in range(len(ans) - 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1467,7 +1467,7 @@ def test_dedup_3():
     def sat(ans: List[int], li=[3, 8, 2, 1, 1, 7, 7, 7, 5, 5, 5, 9, 3, 7, 7]):
         return set(ans) == set(li) and all(li.index(ans[i]) < li.index(ans[i + 1]) for i in range(len(ans) - 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1475,7 +1475,7 @@ def test_dedup_4():
     def sat(ans: List[int], li=[0, 3, 3, 2, 7, 0, 0, 6, 2, 4, 4, 5]):
         return set(ans) == set(li) and all(li.index(ans[i]) < li.index(ans[i + 1]) for i in range(len(ans) - 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1483,7 +1483,7 @@ def test_flipcase():
     def sat(ans: str, s="FlIp ME!"):
         return len(ans) == len(s) and all({c, d} == {d.upper(), d.lower()} for c, d in zip(ans, s))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1491,7 +1491,7 @@ def test_flipcase_1():
     def sat(ans: str, s="mKC(K2.a!Z|>sv3izC3!"):
         return len(ans) == len(s) and all({c, d} == {d.upper(), d.lower()} for c, d in zip(ans, s))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1499,7 +1499,7 @@ def test_flipcase_2():
     def sat(ans: str, s="K a&3 tE 1tSG B3v3y("):
         return len(ans) == len(s) and all({c, d} == {d.upper(), d.lower()} for c, d in zip(ans, s))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1507,7 +1507,7 @@ def test_flipcase_3():
     def sat(ans: str, s="Sb31E#e<@3u"):
         return len(ans) == len(s) and all({c, d} == {d.upper(), d.lower()} for c, d in zip(ans, s))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1515,7 +1515,7 @@ def test_flipcase_4():
     def sat(ans: str, s="q Y*.zv? !3B3::/3%F3"):
         return len(ans) == len(s) and all({c, d} == {d.upper(), d.lower()} for c, d in zip(ans, s))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1528,7 +1528,7 @@ def test_catstrings():
                 i += 1
         return i == len(cat)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1541,7 +1541,7 @@ def test_catstrings_1():
                 i += 1
         return i == len(cat)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1554,7 +1554,7 @@ def test_catstrings_2():
                 i += 1
         return i == len(cat)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1567,7 +1567,7 @@ def test_catstrings_3():
                 i += 1
         return i == len(cat)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1580,7 +1580,7 @@ def test_catstrings_4():
                 i += 1
         return i == len(cat)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1593,7 +1593,7 @@ def test_findextensions():
                 i += 1
         return i == len(extensions)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1606,7 +1606,7 @@ def test_findextensions_1():
                 i += 1
         return i == len(extensions)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1619,7 +1619,7 @@ def test_findextensions_2():
                 i += 1
         return i == len(extensions)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1632,7 +1632,7 @@ def test_findextensions_3():
                 i += 1
         return i == len(extensions)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1645,7 +1645,7 @@ def test_findextensions_4():
                 i += 1
         return i == len(extensions)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1656,7 +1656,7 @@ def test_findpositives():
             assert n <= 0 or n == stack.pop()
         return stack == []
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1667,7 +1667,7 @@ def test_findpositives_1():
             assert n <= 0 or n == stack.pop()
         return stack == []
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1678,7 +1678,7 @@ def test_findpositives_2():
             assert n <= 0 or n == stack.pop()
         return stack == []
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1689,7 +1689,7 @@ def test_findpositives_3():
             assert n <= 0 or n == stack.pop()
         return stack == []
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1700,7 +1700,7 @@ def test_findpositives_4():
             assert n <= 0 or n == stack.pop()
         return stack == []
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1708,7 +1708,7 @@ def test_fermatcomposites():
     def sat(certificates: List[int], nums=[1449, 14, 21, 105, 217]):
         return all(pow(cert, n - 1, n) > 1 for cert, n in zip(certificates, nums)) and len(certificates) == len(nums)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1716,7 +1716,7 @@ def test_fermatcomposites_1():
     def sat(certificates: List[int], nums=[2299290630, 2051931473, 1592080723, 533977507, 6381433197, 6645010323, 5590359939, 1543343895, 1032597423]):
         return all(pow(cert, n - 1, n) > 1 for cert, n in zip(certificates, nums)) and len(certificates) == len(nums)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1724,7 +1724,7 @@ def test_fermatcomposites_2():
     def sat(certificates: List[int], nums=[962036141, 941419353, 5954955179, 5140095171, 3027040707, 6069862645, 591197645, 2485033263]):
         return all(pow(cert, n - 1, n) > 1 for cert, n in zip(certificates, nums)) and len(certificates) == len(nums)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1732,7 +1732,7 @@ def test_fermatcomposites_3():
     def sat(certificates: List[int], nums=[99210055, 4171577125, 459354525, 1534026075, 4255533095, 2441396441, 155962261]):
         return all(pow(cert, n - 1, n) > 1 for cert, n in zip(certificates, nums)) and len(certificates) == len(nums)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1740,7 +1740,7 @@ def test_fermatcomposites_4():
     def sat(certificates: List[int], nums=[2629304451, 4885026075, 2283948525, 4145214425]):
         return all(pow(cert, n - 1, n) > 1 for cert, n in zip(certificates, nums)) and len(certificates) == len(nums)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1748,7 +1748,7 @@ def test_odddegreepolynomialroot():
     def sat(root: float, coeffs=[1, 2, 3, 17]):
         return abs(sum(coeff * (root ** i) for i, coeff in enumerate(coeffs))) < 1e-4
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1756,7 +1756,7 @@ def test_odddegreepolynomialroot_1():
     def sat(root: float, coeffs=[-1, -5, 4, -8, 3, -1, 0, 7]):
         return abs(sum(coeff * (root ** i) for i, coeff in enumerate(coeffs))) < 1e-4
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1764,7 +1764,7 @@ def test_odddegreepolynomialroot_2():
     def sat(root: float, coeffs=[7, 1]):
         return abs(sum(coeff * (root ** i) for i, coeff in enumerate(coeffs))) < 1e-4
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1772,7 +1772,7 @@ def test_odddegreepolynomialroot_3():
     def sat(root: float, coeffs=[1, 4, 1, -7, 5, 0, -10, -9, 4, 9]):
         return abs(sum(coeff * (root ** i) for i, coeff in enumerate(coeffs))) < 1e-4
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1780,7 +1780,7 @@ def test_odddegreepolynomialroot_4():
     def sat(root: float, coeffs=[7, 8]):
         return abs(sum(coeff * (root ** i) for i, coeff in enumerate(coeffs))) < 1e-4
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1792,7 +1792,7 @@ def test_twothirdssorted():
         assert all(li[i] <= li[i + 2] for i in range(2, len(li) - 2, 3))
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1804,7 +1804,7 @@ def test_twothirdssorted_1():
         assert all(li[i] <= li[i + 2] for i in range(2, len(li) - 2, 3))
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1816,7 +1816,7 @@ def test_twothirdssorted_2():
         assert all(li[i] <= li[i + 2] for i in range(2, len(li) - 2, 3))
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1828,7 +1828,7 @@ def test_twothirdssorted_3():
         assert all(li[i] <= li[i + 2] for i in range(2, len(li) - 2, 3))
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1840,7 +1840,7 @@ def test_twothirdssorted_4():
         assert all(li[i] <= li[i + 2] for i in range(2, len(li) - 2, 3))
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1853,7 +1853,7 @@ def test_uniquesorted():
             assert n in li
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1866,7 +1866,7 @@ def test_uniquesorted_1():
             assert n in li
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1879,7 +1879,7 @@ def test_uniquesorted_2():
             assert n in li
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1892,7 +1892,7 @@ def test_uniquesorted_3():
             assert n in li
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1905,7 +1905,7 @@ def test_uniquesorted_4():
             assert n in li
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1913,7 +1913,7 @@ def test_maxint():
     def sat(m: int, hello=[1, 31, 3, 2, 0, 18, 32, -4, 2, -1000, 3502145, 3502145, 21, 18, 2, 60]):
         return m in hello and not any(m < i for i in hello)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1921,7 +1921,7 @@ def test_maxint_1():
     def sat(m: int, hello=[2, 2, 2, -4, -2, -5, -4, 0, -5, -10, 1, -1, -1, 2]):
         return m in hello and not any(m < i for i in hello)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1929,7 +1929,7 @@ def test_maxint_2():
     def sat(m: int, hello=[8, -1, -8, 1, -10]):
         return m in hello and not any(m < i for i in hello)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1937,7 +1937,7 @@ def test_maxint_3():
     def sat(m: int, hello=[-8, 1, 9, 4, 4, 0, -1, 8, 2, 3, 5, 9, 2, -1, 9]):
         return m in hello and not any(m < i for i in hello)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1945,7 +1945,7 @@ def test_maxint_4():
     def sat(m: int, hello=[5, 2, -10, -2, -4, 2, 3, -5, 9, 0]):
         return m in hello and not any(m < i for i in hello)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1954,7 +1954,7 @@ def test_seveneleventhirteen():
         assert len({(i, j) for i, j in li}) >= lower, "not enough 7's (ignoring duplicates)"
         return all(str(i)[j] == '7' and (i % 11 == 0 or i % 13 == 0) and 0 <= i < n and 0 <= j for i, j in li)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1963,7 +1963,7 @@ def test_seveneleventhirteen_1():
         assert len({(i, j) for i, j in li}) >= lower, "not enough 7's (ignoring duplicates)"
         return all(str(i)[j] == '7' and (i % 11 == 0 or i % 13 == 0) and 0 <= i < n and 0 <= j for i, j in li)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1972,7 +1972,7 @@ def test_seveneleventhirteen_2():
         assert len({(i, j) for i, j in li}) >= lower, "not enough 7's (ignoring duplicates)"
         return all(str(i)[j] == '7' and (i % 11 == 0 or i % 13 == 0) and 0 <= i < n and 0 <= j for i, j in li)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1981,7 +1981,7 @@ def test_seveneleventhirteen_3():
         assert len({(i, j) for i, j in li}) >= lower, "not enough 7's (ignoring duplicates)"
         return all(str(i)[j] == '7' and (i % 11 == 0 or i % 13 == 0) and 0 <= i < n and 0 <= j for i, j in li)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1989,7 +1989,7 @@ def test_halfsorted():
     def sat(li: List[int], orig=[1, 6, 3, 41, 19, 4, 12, 3, 18, 5, -29, 0, 19521]):
         return orig[1::2] == li[1::2] and li[::2] == sorted(orig[::2])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -1997,7 +1997,7 @@ def test_halfsorted_1():
     def sat(li: List[int], orig=[-1, -9, 7, 8, -8, 2, -7]):
         return orig[1::2] == li[1::2] and li[::2] == sorted(orig[::2])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2005,7 +2005,7 @@ def test_halfsorted_2():
     def sat(li: List[int], orig=[4, -3, -8]):
         return orig[1::2] == li[1::2] and li[::2] == sorted(orig[::2])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2013,7 +2013,7 @@ def test_halfsorted_3():
     def sat(li: List[int], orig=[3, 6, -7, 1, 2, -10, 6, -8, -9, -9, 6, -7, 7, -6, 1, 4, -8, -1, 8]):
         return orig[1::2] == li[1::2] and li[::2] == sorted(orig[::2])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2021,7 +2021,7 @@ def test_halfsorted_4():
     def sat(li: List[int], orig=[-7, 6, 8, 8, -3, -5, -6, -5, 6, 7, 5, 7, -9, 9, -7, 4, -8, 8, -9]):
         return orig[1::2] == li[1::2] and li[::2] == sorted(orig[::2])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2033,7 +2033,7 @@ def test_threecycle():
     
         return target == "".join(cycle3(s[i: i + 3]) for i in range(0, len(s), 3))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2045,7 +2045,7 @@ def test_threecycle_1():
     
         return target == "".join(cycle3(s[i: i + 3]) for i in range(0, len(s), 3))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2057,7 +2057,7 @@ def test_threecycle_2():
     
         return target == "".join(cycle3(s[i: i + 3]) for i in range(0, len(s), 3))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2069,7 +2069,7 @@ def test_threecycle_3():
     
         return target == "".join(cycle3(s[i: i + 3]) for i in range(0, len(s), 3))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2081,7 +2081,7 @@ def test_threecycle_4():
     
         return target == "".join(cycle3(s[i: i + 3]) for i in range(0, len(s), 3))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2091,7 +2091,7 @@ def test_primefib():
         assert all(n % i for i in range(2, int(n ** 0.5) + 1)), "n must be prime"
         return n > lower
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2101,7 +2101,7 @@ def test_primefib_1():
         assert all(n % i for i in range(2, int(n ** 0.5) + 1)), "n must be prime"
         return n > lower
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2111,7 +2111,7 @@ def test_primefib_2():
         assert all(n % i for i in range(2, int(n ** 0.5) + 1)), "n must be prime"
         return n > lower
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2121,7 +2121,7 @@ def test_primefib_3():
         assert all(n % i for i in range(2, int(n ** 0.5) + 1)), "n must be prime"
         return n > lower
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2131,7 +2131,7 @@ def test_primefib_4():
         assert all(n % i for i in range(2, int(n ** 0.5) + 1)), "n must be prime"
         return n > lower
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2139,7 +2139,7 @@ def test_triplezerosum():
     def sat(inds: List[int], nums=[12, 6, 41, 15, -10452, 18242, 10440, 6, 6, 6, 6]):
         return len(inds) == 3 and sum(nums[i] for i in inds) == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2147,7 +2147,7 @@ def test_triplezerosum_1():
     def sat(inds: List[int], nums=[-52, -16, 68, -27, 3]):
         return len(inds) == 3 and sum(nums[i] for i in inds) == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2155,7 +2155,7 @@ def test_triplezerosum_2():
     def sat(inds: List[int], nums=[-64, -74, -18, -57, 89, -14, -25, 11, -60, -78]):
         return len(inds) == 3 and sum(nums[i] for i in inds) == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2163,7 +2163,7 @@ def test_triplezerosum_3():
     def sat(inds: List[int], nums=[-90, 63, 70, 21, 42, 20]):
         return len(inds) == 3 and sum(nums[i] for i in inds) == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2171,7 +2171,7 @@ def test_triplezerosum_4():
     def sat(inds: List[int], nums=[-14, 65, -7, -75, 54, 78, -61, 136, -85, 44]):
         return len(inds) == 3 and sum(nums[i] for i in inds) == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2182,7 +2182,7 @@ def test_numpasses():
                 count -= 1
         return count == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2193,7 +2193,7 @@ def test_numpasses_1():
                 count -= 1
         return count == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2204,7 +2204,7 @@ def test_numpasses_2():
                 count -= 1
         return count == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2215,7 +2215,7 @@ def test_numpasses_3():
                 count -= 1
         return count == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2226,7 +2226,7 @@ def test_numpasses_4():
                 count -= 1
         return count == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2234,7 +2234,7 @@ def test_listinc():
     def sat(new_list: List[int], old_list=[321, 12, 532, 129, 9, -12, 4, 56, 90, 0]):
         return [i - 1 for i in new_list] == old_list
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2242,7 +2242,7 @@ def test_listinc_1():
     def sat(new_list: List[int], old_list=[18, 29, 40]):
         return [i - 1 for i in new_list] == old_list
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2250,7 +2250,7 @@ def test_listinc_2():
     def sat(new_list: List[int], old_list=[43, 64, 73, 30, 47]):
         return [i - 1 for i in new_list] == old_list
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2258,7 +2258,7 @@ def test_listinc_3():
     def sat(new_list: List[int], old_list=[43, 9, 49, 93, 36, 47, 48, 38, 12]):
         return [i - 1 for i in new_list] == old_list
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2266,7 +2266,7 @@ def test_listinc_4():
     def sat(new_list: List[int], old_list=[45, 55, 71, 78, 54]):
         return [i - 1 for i in new_list] == old_list
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2275,7 +2275,7 @@ def test_pairzerosum():
         a, b = inds
         return nums[a] + nums[b] == 0 and a >= 0 and b >= 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2284,7 +2284,7 @@ def test_pairzerosum_1():
         a, b = inds
         return nums[a] + nums[b] == 0 and a >= 0 and b >= 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2293,7 +2293,7 @@ def test_pairzerosum_2():
         a, b = inds
         return nums[a] + nums[b] == 0 and a >= 0 and b >= 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2302,7 +2302,7 @@ def test_pairzerosum_3():
         a, b = inds
         return nums[a] + nums[b] == 0 and a >= 0 and b >= 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2311,7 +2311,7 @@ def test_pairzerosum_4():
         a, b = inds
         return nums[a] + nums[b] == 0 and a >= 0 and b >= 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2319,7 +2319,7 @@ def test_changebase():
     def sat(s: str, n=142, base=7):
         return int(s, base) == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2327,7 +2327,7 @@ def test_changebase_1():
     def sat(s: str, n=85328, base=2):
         return int(s, base) == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2335,7 +2335,7 @@ def test_changebase_2():
     def sat(s: str, n=9576751, base=10):
         return int(s, base) == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2343,7 +2343,7 @@ def test_changebase_3():
     def sat(s: str, n=5160280, base=5):
         return int(s, base) == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2351,7 +2351,7 @@ def test_changebase_4():
     def sat(s: str, n=4884658, base=6):
         return int(s, base) == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2359,7 +2359,7 @@ def test_trianglearea():
     def sat(height: int, area=1319098728582, base=45126):
         return base * height == 2 * area
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2367,7 +2367,7 @@ def test_trianglearea_1():
     def sat(height: int, area=2642925075, base=211434006):
         return base * height == 2 * area
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2375,7 +2375,7 @@ def test_trianglearea_2():
     def sat(height: int, area=5529468804, base=18936537):
         return base * height == 2 * area
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2383,7 +2383,7 @@ def test_trianglearea_3():
     def sat(height: int, area=1238452500, base=600):
         return base * height == 2 * area
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2391,7 +2391,7 @@ def test_trianglearea_4():
     def sat(height: int, area=32576448, base=147072):
         return base * height == 2 * area
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2402,7 +2402,7 @@ def test_fib4():
             a, b, c, d = b, c, d, (a + b + c + d)
         return a == target
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2413,7 +2413,7 @@ def test_fib4_1():
             a, b, c, d = b, c, d, (a + b + c + d)
         return a == target
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2424,7 +2424,7 @@ def test_fib4_2():
             a, b, c, d = b, c, d, (a + b + c + d)
         return a == target
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2435,7 +2435,7 @@ def test_fib4_3():
             a, b, c, d = b, c, d, (a + b + c + d)
         return a == target
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2446,7 +2446,7 @@ def test_fib4_4():
             a, b, c, d = b, c, d, (a + b + c + d)
         return a == target
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2455,7 +2455,7 @@ def test_median():
         dev = sum(n - x for n in nums)
         return dev <= upper
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2464,7 +2464,7 @@ def test_median_1():
         dev = sum(n - x for n in nums)
         return dev <= upper
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2473,7 +2473,7 @@ def test_median_2():
         dev = sum(n - x for n in nums)
         return dev <= upper
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2482,7 +2482,7 @@ def test_median_3():
         dev = sum(n - x for n in nums)
         return dev <= upper
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2491,7 +2491,7 @@ def test_median_4():
         dev = sum(n - x for n in nums)
         return dev <= upper
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2499,7 +2499,7 @@ def test_palindrome():
     def sat(pals: List[bool], strs=['palindrome', 'madamimadam', '', 'foo', 'eyes', '(-:-)']):
         return all(pals[i] == (s == s[::-1]) for i, s in enumerate(strs))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2507,7 +2507,7 @@ def test_palindrome_1():
     def sat(pals: List[bool], strs=['getuteg', 'quiuq', 'tebetextxetebet', 'quyquykame', 'palimubibibumilap', 'chirowykigollogikyworihc', 'jyt', 'zenoryluchydoquuzohehozuuqodyhculyronez', 'gumizilixogylygoxilizimug']):
         return all(pals[i] == (s == s[::-1]) for i, s in enumerate(strs))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2515,7 +2515,7 @@ def test_palindrome_2():
     def sat(pals: List[bool], strs=['hahez', 'fuchuwas', 'fatextynuruce', 'wetewotuzoggozutowetew', 'vutot']):
         return all(pals[i] == (s == s[::-1]) for i, s in enumerate(strs))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2523,7 +2523,7 @@ def test_palindrome_3():
     def sat(pals: List[bool], strs=['wexivivixew', 'fyzalagalazyf', 's', 'quizylymaquequqeuqamylyziuq', 'cydilozuthytex', 'quu', 'vygylaf', 'chotexttxetohc', 'hequedipothovof']):
         return all(pals[i] == (s == s[::-1]) for i, s in enumerate(strs))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2531,7 +2531,7 @@ def test_palindrome_4():
     def sat(pals: List[bool], strs=[]):
         return all(pals[i] == (s == s[::-1]) for i, s in enumerate(strs))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2545,7 +2545,7 @@ def test_littlefermat():
     
         return all(val(exp_poly, n) == pow(val(poly, n), d, p) for n in range(p))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2555,7 +2555,7 @@ def test_shiftchars():
         assert len(orig) == n
         return all(ord(orig[i]) + shift == ord(result[i]) for i in range(n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2565,7 +2565,7 @@ def test_shiftchars_1():
         assert len(orig) == n
         return all(ord(orig[i]) + shift == ord(result[i]) for i in range(n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2575,7 +2575,7 @@ def test_shiftchars_2():
         assert len(orig) == n
         return all(ord(orig[i]) + shift == ord(result[i]) for i in range(n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2585,7 +2585,7 @@ def test_shiftchars_3():
         assert len(orig) == n
         return all(ord(orig[i]) + shift == ord(result[i]) for i in range(n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2595,7 +2595,7 @@ def test_shiftchars_4():
         assert len(orig) == n
         return all(ord(orig[i]) + shift == ord(result[i]) for i in range(n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2609,7 +2609,7 @@ def test_removevowels():
         assert n == len(txt)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2623,7 +2623,7 @@ def test_removevowels_1():
         assert n == len(txt)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2637,7 +2637,7 @@ def test_removevowels_2():
         assert n == len(txt)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2651,7 +2651,7 @@ def test_removevowels_3():
         assert n == len(txt)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2665,7 +2665,7 @@ def test_removevowels_4():
         assert n == len(txt)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2679,7 +2679,7 @@ def test_belowthreshold():
         assert j == len(indexes)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2693,7 +2693,7 @@ def test_belowthreshold_1():
         assert j == len(indexes)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2707,7 +2707,7 @@ def test_belowthreshold_2():
         assert j == len(indexes)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2721,7 +2721,7 @@ def test_belowthreshold_3():
         assert j == len(indexes)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2735,7 +2735,7 @@ def test_belowthreshold_4():
         assert j == len(indexes)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2743,7 +2743,7 @@ def test_listtotal():
     def sat(n: int, nums=[10, 42, 17, 9, 1315182, 184, 102, 29, 15, 39, 755]):
         return sum(nums + [-n]) == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2751,7 +2751,7 @@ def test_listtotal_1():
     def sat(n: int, nums=[40388491, -864787067, 862143530, 604555885, -81302113, 717834573]):
         return sum(nums + [-n]) == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2759,7 +2759,7 @@ def test_listtotal_2():
     def sat(n: int, nums=[-93, 35, -95, -7, -85, 2]):
         return sum(nums + [-n]) == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2767,7 +2767,7 @@ def test_listtotal_3():
     def sat(n: int, nums=[-2040052, -6582681, -6604315, 1042475, 7287312, 8050849, 5566992, 4332017]):
         return sum(nums + [-n]) == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2775,7 +2775,7 @@ def test_listtotal_4():
     def sat(n: int, nums=[-1, -1, -1, -1, 0, 0]):
         return sum(nums + [-n]) == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2783,7 +2783,7 @@ def test_diffchars():
     def sat(c: str, a="the quick brown fox jumped over the lazy dog", b="how vexingly quick daft zebras jump"):
         return (c in a) != (c in b)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2791,7 +2791,7 @@ def test_diffchars_1():
     def sat(c: str, a="jyhud", b="nexysezomevus"):
         return (c in a) != (c in b)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2799,7 +2799,7 @@ def test_diffchars_2():
     def sat(c: str, a="vofawawumovisajuryt", b="t"):
         return (c in a) != (c in b)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2807,7 +2807,7 @@ def test_diffchars_3():
     def sat(c: str, a="textuzaxoch", b="acehmottuxxz"):
         return (c in a) != (c in b)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2815,7 +2815,7 @@ def test_diffchars_4():
     def sat(c: str, a="quytextila", b="mydyhopakokinavo"):
         return (c in a) != (c in b)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2823,7 +2823,7 @@ def test_fibonacci():
     def sat(nums: List[int], n=1402):
         return nums[0] == nums[1] == 1 and all(nums[i + 2] == nums[i + 1] + nums[i] for i in range(n - 2))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2831,7 +2831,7 @@ def test_fibonacci_1():
     def sat(nums: List[int], n=537):
         return nums[0] == nums[1] == 1 and all(nums[i + 2] == nums[i + 1] + nums[i] for i in range(n - 2))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2839,7 +2839,7 @@ def test_fibonacci_2():
     def sat(nums: List[int], n=6968):
         return nums[0] == nums[1] == 1 and all(nums[i + 2] == nums[i + 1] + nums[i] for i in range(n - 2))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2847,7 +2847,7 @@ def test_fibonacci_3():
     def sat(nums: List[int], n=5585):
         return nums[0] == nums[1] == 1 and all(nums[i + 2] == nums[i + 1] + nums[i] for i in range(n - 2))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2855,7 +2855,7 @@ def test_fibonacci_4():
     def sat(nums: List[int], n=7277):
         return nums[0] == nums[1] == 1 and all(nums[i + 2] == nums[i + 1] + nums[i] for i in range(n - 2))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2867,7 +2867,7 @@ def test_matchbrackets():
             assert brackets[j] != c and matches[j] == i and all(i < matches[k] < j for k in range(i + 1, j))
         return len(matches) == len(brackets)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2879,7 +2879,7 @@ def test_matchbrackets_1():
             assert brackets[j] != c and matches[j] == i and all(i < matches[k] < j for k in range(i + 1, j))
         return len(matches) == len(brackets)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2891,7 +2891,7 @@ def test_matchbrackets_2():
             assert brackets[j] != c and matches[j] == i and all(i < matches[k] < j for k in range(i + 1, j))
         return len(matches) == len(brackets)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2903,7 +2903,7 @@ def test_matchbrackets_3():
             assert brackets[j] != c and matches[j] == i and all(i < matches[k] < j for k in range(i + 1, j))
         return len(matches) == len(brackets)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2915,7 +2915,7 @@ def test_matchbrackets_4():
             assert brackets[j] != c and matches[j] == i and all(i < matches[k] < j for k in range(i + 1, j))
         return len(matches) == len(brackets)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2926,7 +2926,7 @@ def test_monotonic():
         if direction == "decreasing":
             return all(nums[i + 1] < nums[i] for i in range(len(nums) - 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2937,7 +2937,7 @@ def test_monotonic_1():
         if direction == "decreasing":
             return all(nums[i + 1] < nums[i] for i in range(len(nums) - 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2948,7 +2948,7 @@ def test_monotonic_2():
         if direction == "decreasing":
             return all(nums[i + 1] < nums[i] for i in range(len(nums) - 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2959,7 +2959,7 @@ def test_monotonic_3():
         if direction == "decreasing":
             return all(nums[i + 1] < nums[i] for i in range(len(nums) - 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2970,7 +2970,7 @@ def test_monotonic_4():
         if direction == "decreasing":
             return all(nums[i + 1] < nums[i] for i in range(len(nums) - 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2978,7 +2978,7 @@ def test_commonnumbers():
     def sat(common: List[int], a=[2, 416629, 2, 4, 17, 29, 31, 1000], b=[31, 2, 4, 17, 29, 41205]):
         return all((i in common) == (i in a and i in b) for i in a + b + common)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2986,7 +2986,7 @@ def test_commonnumbers_1():
     def sat(common: List[int], a=[824, 853, 392, 835, 225, 96], b=[73, 534, 705, 376, 376, 965, 404, 976]):
         return all((i in common) == (i in a and i in b) for i in a + b + common)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -2994,7 +2994,7 @@ def test_commonnumbers_2():
     def sat(common: List[int], a=[338, 882, 92, 234], b=[993, 977, 403]):
         return all((i in common) == (i in a and i in b) for i in a + b + common)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3002,7 +3002,7 @@ def test_commonnumbers_3():
     def sat(common: List[int], a=[950, 299, 581, 222, 490, 758, 58, 76, 808, 814], b=[790, 200, 814, 851, 902, 490, 581, 808, 950, 343, 758]):
         return all((i in common) == (i in a and i in b) for i in a + b + common)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3010,7 +3010,7 @@ def test_commonnumbers_4():
     def sat(common: List[int], a=[452, 318, 348, 995, 733, 874, 699], b=[733, 348, 614, 874, 699, 995, 318, 167, 452]):
         return all((i in common) == (i in a and i in b) for i in a + b + common)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3022,7 +3022,7 @@ def test_largestprimefactor():
     
         return is_prime(p) and n % p == 0 and p > 0 and all(n % i or not is_prime(i) for i in range(p + 1, n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3034,7 +3034,7 @@ def test_largestprimefactor_1():
     
         return is_prime(p) and n % p == 0 and p > 0 and all(n % i or not is_prime(i) for i in range(p + 1, n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3046,7 +3046,7 @@ def test_largestprimefactor_2():
     
         return is_prime(p) and n % p == 0 and p > 0 and all(n % i or not is_prime(i) for i in range(p + 1, n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3058,7 +3058,7 @@ def test_largestprimefactor_3():
     
         return is_prime(p) and n % p == 0 and p > 0 and all(n % i or not is_prime(i) for i in range(p + 1, n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3070,7 +3070,7 @@ def test_largestprimefactor_4():
     
         return is_prime(p) and n % p == 0 and p > 0 and all(n % i or not is_prime(i) for i in range(p + 1, n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3078,7 +3078,7 @@ def test_cumulativesums():
     def sat(sums: List[int], n=104):
         return all(sums[i + 1] - sums[i] == i for i in range(n)) and sums[0] == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3086,7 +3086,7 @@ def test_cumulativesums_1():
     def sat(sums: List[int], n=19891):
         return all(sums[i + 1] - sums[i] == i for i in range(n)) and sums[0] == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3094,7 +3094,7 @@ def test_cumulativesums_2():
     def sat(sums: List[int], n=11023):
         return all(sums[i + 1] - sums[i] == i for i in range(n)) and sums[0] == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3102,7 +3102,7 @@ def test_cumulativesums_3():
     def sat(sums: List[int], n=10840):
         return all(sums[i + 1] - sums[i] == i for i in range(n)) and sums[0] == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3110,7 +3110,7 @@ def test_cumulativesums_4():
     def sat(sums: List[int], n=14049):
         return all(sums[i + 1] - sums[i] == i for i in range(n)) and sums[0] == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3120,7 +3120,7 @@ def test_parendepth():
             assert parens[j] != c and matches[j] == i and all(i < matches[k] < j for k in range(i + 1, j))
         return len(matches) == len(parens)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3130,7 +3130,7 @@ def test_parendepth_1():
             assert parens[j] != c and matches[j] == i and all(i < matches[k] < j for k in range(i + 1, j))
         return len(matches) == len(parens)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3140,7 +3140,7 @@ def test_parendepth_2():
             assert parens[j] != c and matches[j] == i and all(i < matches[k] < j for k in range(i + 1, j))
         return len(matches) == len(parens)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3150,7 +3150,7 @@ def test_parendepth_3():
             assert parens[j] != c and matches[j] == i and all(i < matches[k] < j for k in range(i + 1, j))
         return len(matches) == len(parens)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3160,7 +3160,7 @@ def test_parendepth_4():
             assert parens[j] != c and matches[j] == i and all(i < matches[k] < j for k in range(i + 1, j))
         return len(matches) == len(parens)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3172,7 +3172,7 @@ def test_derivative():
     
         return all(abs(val(poly, x + 1e-8) - val(poly, x) - 1e-8 * val(derivative, x)) < 1e-4 for x in range(len(poly)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3184,7 +3184,7 @@ def test_derivative_1():
     
         return all(abs(val(poly, x + 1e-8) - val(poly, x) - 1e-8 * val(derivative, x)) < 1e-4 for x in range(len(poly)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3196,7 +3196,7 @@ def test_derivative_2():
     
         return all(abs(val(poly, x + 1e-8) - val(poly, x) - 1e-8 * val(derivative, x)) < 1e-4 for x in range(len(poly)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3208,7 +3208,7 @@ def test_derivative_3():
     
         return all(abs(val(poly, x + 1e-8) - val(poly, x) - 1e-8 * val(derivative, x)) < 1e-4 for x in range(len(poly)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3220,7 +3220,7 @@ def test_derivative_4():
     
         return all(abs(val(poly, x + 1e-8) - val(poly, x) - 1e-8 * val(derivative, x)) < 1e-4 for x in range(len(poly)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3231,7 +3231,7 @@ def test_fib3():
             a, b, c = b, c, (a + b + c)
         return a == target
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3242,7 +3242,7 @@ def test_fib3_1():
             a, b, c = b, c, (a + b + c)
         return a == target
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3253,7 +3253,7 @@ def test_fib3_2():
             a, b, c = b, c, (a + b + c)
         return a == target
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3264,7 +3264,7 @@ def test_fib3_3():
             a, b, c = b, c, (a + b + c)
         return a == target
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3275,7 +3275,7 @@ def test_fib3_4():
             a, b, c = b, c, (a + b + c)
         return a == target
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3290,7 +3290,7 @@ def test_findvowels():
             assert i == len(v)
         return len(vowels) == len(texts)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3305,7 +3305,7 @@ def test_findvowels_1():
             assert i == len(v)
         return len(vowels) == len(texts)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3320,7 +3320,7 @@ def test_findvowels_2():
             assert i == len(v)
         return len(vowels) == len(texts)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3335,7 +3335,7 @@ def test_findvowels_3():
             assert i == len(v)
         return len(vowels) == len(texts)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3350,7 +3350,7 @@ def test_findvowels_4():
             assert i == len(v)
         return len(vowels) == len(texts)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3360,7 +3360,7 @@ def test_circularshiftnum():
             return n == int(shifted[::-1])
         return n == int(shifted[-shift:] + shifted[:-shift])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3370,7 +3370,7 @@ def test_circularshiftnum_1():
             return n == int(shifted[::-1])
         return n == int(shifted[-shift:] + shifted[:-shift])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3380,7 +3380,7 @@ def test_circularshiftnum_2():
             return n == int(shifted[::-1])
         return n == int(shifted[-shift:] + shifted[:-shift])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3390,7 +3390,7 @@ def test_circularshiftnum_3():
             return n == int(shifted[::-1])
         return n == int(shifted[-shift:] + shifted[:-shift])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3400,7 +3400,7 @@ def test_circularshiftnum_4():
             return n == int(shifted[::-1])
         return n == int(shifted[-shift:] + shifted[:-shift])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3411,7 +3411,7 @@ def test_charsum():
                 tot -= ord(c)
         return tot == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3422,7 +3422,7 @@ def test_charsum_1():
                 tot -= ord(c)
         return tot == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3433,7 +3433,7 @@ def test_charsum_2():
                 tot -= ord(c)
         return tot == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3444,7 +3444,7 @@ def test_charsum_3():
                 tot -= ord(c)
         return tot == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3455,7 +3455,7 @@ def test_charsum_4():
                 tot -= ord(c)
         return tot == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3464,7 +3464,7 @@ def test_missingbananas():
         bowl += f" and {bananas} bananas"
         return sum([int(s) for s in bowl.split() if s.isdigit()]) == total
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3473,7 +3473,7 @@ def test_missingbananas_1():
         bowl += f" and {bananas} bananas"
         return sum([int(s) for s in bowl.split() if s.isdigit()]) == total
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3482,7 +3482,7 @@ def test_missingbananas_2():
         bowl += f" and {bananas} bananas"
         return sum([int(s) for s in bowl.split() if s.isdigit()]) == total
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3491,7 +3491,7 @@ def test_missingbananas_3():
         bowl += f" and {bananas} bananas"
         return sum([int(s) for s in bowl.split() if s.isdigit()]) == total
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3500,7 +3500,7 @@ def test_missingbananas_4():
         bowl += f" and {bananas} bananas"
         return sum([int(s) for s in bowl.split() if s.isdigit()]) == total
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3512,7 +3512,7 @@ def test_smallesteven():
         assert v % 2 == 0 and nums[i] == v
         return all(n > v or n % 2 == 1 for n in nums[:i]) and all(n >= v or n % 2 == 1 for n in nums[i:])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3524,7 +3524,7 @@ def test_smallesteven_1():
         assert v % 2 == 0 and nums[i] == v
         return all(n > v or n % 2 == 1 for n in nums[:i]) and all(n >= v or n % 2 == 1 for n in nums[i:])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3536,7 +3536,7 @@ def test_smallesteven_2():
         assert v % 2 == 0 and nums[i] == v
         return all(n > v or n % 2 == 1 for n in nums[:i]) and all(n >= v or n % 2 == 1 for n in nums[i:])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3548,7 +3548,7 @@ def test_smallesteven_3():
         assert v % 2 == 0 and nums[i] == v
         return all(n > v or n % 2 == 1 for n in nums[:i]) and all(n >= v or n % 2 == 1 for n in nums[i:])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3560,7 +3560,7 @@ def test_smallesteven_4():
         assert v % 2 == 0 and nums[i] == v
         return all(n > v or n % 2 == 1 for n in nums[:i]) and all(n >= v or n % 2 == 1 for n in nums[i:])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3570,7 +3570,7 @@ def test_greatesthindex():
             assert not (i > 0 and i > h and seq.count(i) >= i)
         return h == -1 or seq.count(h) >= h > 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3580,7 +3580,7 @@ def test_greatesthindex_1():
             assert not (i > 0 and i > h and seq.count(i) >= i)
         return h == -1 or seq.count(h) >= h > 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3590,7 +3590,7 @@ def test_greatesthindex_2():
             assert not (i > 0 and i > h and seq.count(i) >= i)
         return h == -1 or seq.count(h) >= h > 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3600,7 +3600,7 @@ def test_greatesthindex_3():
             assert not (i > 0 and i > h and seq.count(i) >= i)
         return h == -1 or seq.count(h) >= h > 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3610,7 +3610,7 @@ def test_greatesthindex_4():
             assert not (i > 0 and i > h and seq.count(i) >= i)
         return h == -1 or seq.count(h) >= h > 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3619,7 +3619,7 @@ def test_wildsort():
         assert sorted(strange) == sorted(li), "Must be a permutation"
         return all(n == (min, max)[i % 2](strange[i:]) for i, n in enumerate(strange))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3628,7 +3628,7 @@ def test_wildsort_1():
         assert sorted(strange) == sorted(li), "Must be a permutation"
         return all(n == (min, max)[i % 2](strange[i:]) for i, n in enumerate(strange))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3637,7 +3637,7 @@ def test_wildsort_2():
         assert sorted(strange) == sorted(li), "Must be a permutation"
         return all(n == (min, max)[i % 2](strange[i:]) for i, n in enumerate(strange))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3646,7 +3646,7 @@ def test_wildsort_3():
         assert sorted(strange) == sorted(li), "Must be a permutation"
         return all(n == (min, max)[i % 2](strange[i:]) for i, n in enumerate(strange))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3655,7 +3655,7 @@ def test_wildsort_4():
         assert sorted(strange) == sorted(li), "Must be a permutation"
         return all(n == (min, max)[i % 2](strange[i:]) for i, n in enumerate(strange))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3665,7 +3665,7 @@ def test_herontriangle():
         sides2 = [((x - x2) ** 2 + (y - y2) ** 2) ** 0.5 for i, (x, y) in enumerate(coords) for x2, y2 in coords[:i]]
         return all(abs(a - b) < 1e-6 for a, b in zip(sorted(sides), sorted(sides2)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3675,7 +3675,7 @@ def test_herontriangle_1():
         sides2 = [((x - x2) ** 2 + (y - y2) ** 2) ** 0.5 for i, (x, y) in enumerate(coords) for x2, y2 in coords[:i]]
         return all(abs(a - b) < 1e-6 for a, b in zip(sorted(sides), sorted(sides2)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3685,7 +3685,7 @@ def test_herontriangle_2():
         sides2 = [((x - x2) ** 2 + (y - y2) ** 2) ** 0.5 for i, (x, y) in enumerate(coords) for x2, y2 in coords[:i]]
         return all(abs(a - b) < 1e-6 for a, b in zip(sorted(sides), sorted(sides2)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3695,7 +3695,7 @@ def test_herontriangle_3():
         sides2 = [((x - x2) ** 2 + (y - y2) ** 2) ** 0.5 for i, (x, y) in enumerate(coords) for x2, y2 in coords[:i]]
         return all(abs(a - b) < 1e-6 for a, b in zip(sorted(sides), sorted(sides2)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3705,7 +3705,7 @@ def test_herontriangle_4():
         sides2 = [((x - x2) ** 2 + (y - y2) ** 2) ** 0.5 for i, (x, y) in enumerate(coords) for x2, y2 in coords[:i]]
         return all(abs(a - b) < 1e-6 for a, b in zip(sorted(sides), sorted(sides2)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3715,7 +3715,7 @@ def test_investigatecrash():
             return sum(weights) > max_weight
         return weights[problem] != weights[- 1 - problem]
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3725,7 +3725,7 @@ def test_investigatecrash_1():
             return sum(weights) > max_weight
         return weights[problem] != weights[- 1 - problem]
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3735,7 +3735,7 @@ def test_investigatecrash_2():
             return sum(weights) > max_weight
         return weights[problem] != weights[- 1 - problem]
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3745,7 +3745,7 @@ def test_investigatecrash_3():
             return sum(weights) > max_weight
         return weights[problem] != weights[- 1 - problem]
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3755,7 +3755,7 @@ def test_investigatecrash_4():
             return sum(weights) > max_weight
         return weights[problem] != weights[- 1 - problem]
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3764,7 +3764,7 @@ def test_closestpalindrome():
         assert pal == pal[::-1] and len(pal) == len(s)
         return sum(a != b for a, b in zip(pal, s)) == sum(a != b for a, b in zip(s, s[::-1])) // 2
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3773,7 +3773,7 @@ def test_closestpalindrome_1():
         assert pal == pal[::-1] and len(pal) == len(s)
         return sum(a != b for a, b in zip(pal, s)) == sum(a != b for a, b in zip(s, s[::-1])) // 2
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3782,7 +3782,7 @@ def test_closestpalindrome_2():
         assert pal == pal[::-1] and len(pal) == len(s)
         return sum(a != b for a, b in zip(pal, s)) == sum(a != b for a, b in zip(s, s[::-1])) // 2
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3791,7 +3791,7 @@ def test_closestpalindrome_3():
         assert pal == pal[::-1] and len(pal) == len(s)
         return sum(a != b for a, b in zip(pal, s)) == sum(a != b for a, b in zip(s, s[::-1])) // 2
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3800,7 +3800,7 @@ def test_closestpalindrome_4():
         assert pal == pal[::-1] and len(pal) == len(s)
         return sum(a != b for a, b in zip(pal, s)) == sum(a != b for a, b in zip(s, s[::-1])) // 2
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3811,7 +3811,7 @@ def test_narrowerlist():
             assert width <= sum(len(s) for s in li2)
         return li in lists
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3822,7 +3822,7 @@ def test_narrowerlist_1():
             assert width <= sum(len(s) for s in li2)
         return li in lists
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3833,7 +3833,7 @@ def test_narrowerlist_2():
             assert width <= sum(len(s) for s in li2)
         return li in lists
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3844,7 +3844,7 @@ def test_narrowerlist_3():
             assert width <= sum(len(s) for s in li2)
         return li in lists
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3855,7 +3855,7 @@ def test_narrowerlist_4():
             assert width <= sum(len(s) for s in li2)
         return li in lists
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3869,7 +3869,7 @@ def test_threeprimes():
         nums = {p * q * r for p, q, r in factors}
         return max(nums) < 1000 and len(nums) == 247
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3877,7 +3877,7 @@ def test_integerlog():
     def sat(x: int, a=3, n=1290070078170102666248196035845070394933441741644993085810116441344597492642263849):
         return a ** x == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3885,7 +3885,7 @@ def test_integerlog_1():
     def sat(x: int, a=4, n=49947976805055875702105555676690660891977570282639538413746511354005947821116249921924897649015871538557230897942505966327167610868612564900642816):
         return a ** x == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3893,7 +3893,7 @@ def test_integerlog_2():
     def sat(x: int, a=2, n=4611686018427387904):
         return a ** x == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3901,7 +3901,7 @@ def test_integerlog_3():
     def sat(x: int, a=7, n=619664992585427611791050679609026893099690427802915014534984716820652776102999166869953170315965558474401):
         return a ** x == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3909,7 +3909,7 @@ def test_integerlog_4():
     def sat(x: int, a=3, n=273892744995340833777347939263771534786080723599733441):
         return a ** x == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3917,7 +3917,7 @@ def test_cuberoot():
     def sat(x: int, n=42714774173606970182754018064350848294149432972747296768):
         return x ** 3 == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3925,7 +3925,7 @@ def test_cuberoot_1():
     def sat(x: int, n=-469541313747981125):
         return x ** 3 == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3933,7 +3933,7 @@ def test_cuberoot_2():
     def sat(x: int, n=963966660871383014273727008911874274513660721639801945125024924885086622296):
         return x ** 3 == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3941,7 +3941,7 @@ def test_cuberoot_3():
     def sat(x: int, n=-858580967744947820888627092732831059532555665642825043140896515384975483968):
         return x ** 3 == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3949,7 +3949,7 @@ def test_cuberoot_4():
     def sat(x: int, n=-1649412660748961726580117293638546881248424191676176072):
         return x ** 3 == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3957,7 +3957,7 @@ def test_hexprimes():
     def sat(primes: List[bool], n="A4D4455214122CE192CCBE3"):
         return all(primes[i] == (c in "2357BD") for i, c in enumerate(n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3965,7 +3965,7 @@ def test_hexprimes_1():
     def sat(primes: List[bool], n="a0eebda812c4c27a97d35f1"):
         return all(primes[i] == (c in "2357BD") for i, c in enumerate(n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3973,7 +3973,7 @@ def test_hexprimes_2():
     def sat(primes: List[bool], n="4a4a5904aaa94eb2"):
         return all(primes[i] == (c in "2357BD") for i, c in enumerate(n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3981,7 +3981,7 @@ def test_hexprimes_3():
     def sat(primes: List[bool], n="b696e7352d58ee"):
         return all(primes[i] == (c in "2357BD") for i, c in enumerate(n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -3989,7 +3989,7 @@ def test_hexprimes_4():
     def sat(primes: List[bool], n="1a8dcd03abe2cdc"):
         return all(primes[i] == (c in "2357BD") for i, c in enumerate(n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4004,7 +4004,7 @@ def test_binarize():
             m = 2 * m + int(c)
         return m == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4019,7 +4019,7 @@ def test_binarize_1():
             m = 2 * m + int(c)
         return m == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4034,7 +4034,7 @@ def test_binarize_2():
             m = 2 * m + int(c)
         return m == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4049,7 +4049,7 @@ def test_binarize_3():
             m = 2 * m + int(c)
         return m == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4064,7 +4064,7 @@ def test_binarize_4():
             m = 2 * m + int(c)
         return m == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4073,7 +4073,7 @@ def test_nearbyduplicates():
         i, j = indices
         return s[i] == s[j] and 0 <= i < j < i + 3
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4082,7 +4082,7 @@ def test_nearbyduplicates_1():
         i, j = indices
         return s[i] == s[j] and 0 <= i < j < i + 3
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4091,7 +4091,7 @@ def test_nearbyduplicates_2():
         i, j = indices
         return s[i] == s[j] and 0 <= i < j < i + 3
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4100,7 +4100,7 @@ def test_nearbyduplicates_3():
         i, j = indices
         return s[i] == s[j] and 0 <= i < j < i + 3
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4109,7 +4109,7 @@ def test_nearbyduplicates_4():
         i, j = indices
         return s[i] == s[j] and 0 <= i < j < i + 3
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4124,7 +4124,7 @@ def test_grader():
             assert i == 0 or gpa <= scores[i - 1]
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4139,7 +4139,7 @@ def test_grader_1():
             assert i == 0 or gpa <= scores[i - 1]
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4154,7 +4154,7 @@ def test_grader_2():
             assert i == 0 or gpa <= scores[i - 1]
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4169,7 +4169,7 @@ def test_grader_3():
             assert i == 0 or gpa <= scores[i - 1]
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4184,7 +4184,7 @@ def test_grader_4():
             assert i == 0 or gpa <= scores[i - 1]
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4192,7 +4192,7 @@ def test_factorstring():
     def sat(factor: str, s="catscatcatscatcatscat"):
         return len(factor) < len(s) and s == factor * (len(s) // len(factor))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4200,7 +4200,7 @@ def test_factorstring_1():
     def sat(factor: str, s="pamithelozefefitextpamithelozefefitext"):
         return len(factor) < len(s) and s == factor * (len(s) // len(factor))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4208,7 +4208,7 @@ def test_factorstring_2():
     def sat(factor: str, s="mahermahermahermahermahermahermahermaher"):
         return len(factor) < len(s) and s == factor * (len(s) // len(factor))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4216,7 +4216,7 @@ def test_factorstring_3():
     def sat(factor: str, s="mapychysmapychysmapychysmapychysmapychysmapychys"):
         return len(factor) < len(s) and s == factor * (len(s) // len(factor))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4224,7 +4224,7 @@ def test_factorstring_4():
     def sat(factor: str, s="thihathihathihathihathihathiha"):
         return len(factor) < len(s) and s == factor * (len(s) // len(factor))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4234,7 +4234,7 @@ def test_oneended():
         strs = {str(n) for n in nums}
         return len(strs) == count and all(s.startswith("1") or s.endswith("1") and len(s) == n for s in strs)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4243,7 +4243,7 @@ def test_bitsum():
         n_str = bin(n)[2:]  # n in binary
         return len(n_str) == b and sum(int(i) for i in n_str) == s
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4252,7 +4252,7 @@ def test_bitsum_1():
         n_str = bin(n)[2:]  # n in binary
         return len(n_str) == b and sum(int(i) for i in n_str) == s
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4261,7 +4261,7 @@ def test_bitsum_2():
         n_str = bin(n)[2:]  # n in binary
         return len(n_str) == b and sum(int(i) for i in n_str) == s
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4270,7 +4270,7 @@ def test_bitsum_3():
         n_str = bin(n)[2:]  # n in binary
         return len(n_str) == b and sum(int(i) for i in n_str) == s
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4279,7 +4279,7 @@ def test_bitsum_4():
         n_str = bin(n)[2:]  # n in binary
         return len(n_str) == b and sum(int(i) for i in n_str) == s
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4290,7 +4290,7 @@ def test_evenoddsum():
                 even_odd_sum -= i
         return even_odd_sum == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4301,7 +4301,7 @@ def test_evenoddsum_1():
                 even_odd_sum -= i
         return even_odd_sum == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4312,7 +4312,7 @@ def test_evenoddsum_2():
                 even_odd_sum -= i
         return even_odd_sum == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4323,7 +4323,7 @@ def test_evenoddsum_3():
                 even_odd_sum -= i
         return even_odd_sum == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4334,7 +4334,7 @@ def test_evenoddsum_4():
                 even_odd_sum -= i
         return even_odd_sum == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4346,7 +4346,7 @@ def test_antishuffle():
             assert len(a) == len(b) and all(a.count(c) == b.count(c) for c in b), "must have same chars"
         return len(s) == len(orig)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4358,7 +4358,7 @@ def test_antishuffle_1():
             assert len(a) == len(b) and all(a.count(c) == b.count(c) for c in b), "must have same chars"
         return len(s) == len(orig)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4370,7 +4370,7 @@ def test_antishuffle_2():
             assert len(a) == len(b) and all(a.count(c) == b.count(c) for c in b), "must have same chars"
         return len(s) == len(orig)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4382,7 +4382,7 @@ def test_antishuffle_3():
             assert len(a) == len(b) and all(a.count(c) == b.count(c) for c in b), "must have same chars"
         return len(s) == len(orig)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4394,7 +4394,7 @@ def test_antishuffle_4():
             assert len(a) == len(b) and all(a.count(c) == b.count(c) for c in b), "must have same chars"
         return len(s) == len(orig)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4407,7 +4407,7 @@ def test_unevenfind():
                 assert n != target or [i, j] in indices
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4420,7 +4420,7 @@ def test_unevenfind_1():
                 assert n != target or [i, j] in indices
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4433,7 +4433,7 @@ def test_unevenfind_2():
                 assert n != target or [i, j] in indices
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4446,7 +4446,7 @@ def test_unevenfind_3():
                 assert n != target or [i, j] in indices
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4459,7 +4459,7 @@ def test_unevenfind_4():
                 assert n != target or [i, j] in indices
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4469,7 +4469,7 @@ def test_updownsort():
         increasing_sign = 1 if ((nums[0] + nums[-1]) % 2 == 1) else -1
         return all((up_down[i + 1] - up_down[i]) * increasing_sign >= 0 for i in range(len(up_down) - 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4478,7 +4478,7 @@ def test_substitutioncypher():
         assert len(encrypted) == len(orig)
         return all(chr(ord(a) - 2 * 2) == b for a, b in zip(encrypted, orig))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4487,7 +4487,7 @@ def test_substitutioncypher_1():
         assert len(encrypted) == len(orig)
         return all(chr(ord(a) - 2 * 2) == b for a, b in zip(encrypted, orig))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4496,7 +4496,7 @@ def test_substitutioncypher_2():
         assert len(encrypted) == len(orig)
         return all(chr(ord(a) - 2 * 2) == b for a, b in zip(encrypted, orig))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4505,7 +4505,7 @@ def test_substitutioncypher_3():
         assert len(encrypted) == len(orig)
         return all(chr(ord(a) - 2 * 2) == b for a, b in zip(encrypted, orig))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4514,7 +4514,7 @@ def test_substitutioncypher_4():
         assert len(encrypted) == len(orig)
         return all(chr(ord(a) - 2 * 2) == b for a, b in zip(encrypted, orig))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4523,7 +4523,7 @@ def test_secondsmallestunique():
         assert n in nums
         return len({i for i in nums if i <= n}) == 2
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4532,7 +4532,7 @@ def test_secondsmallestunique_1():
         assert n in nums
         return len({i for i in nums if i <= n}) == 2
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4541,7 +4541,7 @@ def test_secondsmallestunique_2():
         assert n in nums
         return len({i for i in nums if i <= n}) == 2
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4550,7 +4550,7 @@ def test_secondsmallestunique_3():
         assert n in nums
         return len({i for i in nums if i <= n}) == 2
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4559,7 +4559,7 @@ def test_secondsmallestunique_4():
         assert n in nums
         return len({i for i in nums if i <= n}) == 2
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4569,7 +4569,7 @@ def test_findbored():
         boring_and_exciting = boring + [s for s in sentences if s.split()[:1] != ["I"]]
         return sorted(boring_and_exciting) == sorted(sentences)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4579,7 +4579,7 @@ def test_findbored_1():
         boring_and_exciting = boring + [s for s in sentences if s.split()[:1] != ["I"]]
         return sorted(boring_and_exciting) == sorted(sentences)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4589,7 +4589,7 @@ def test_findbored_2():
         boring_and_exciting = boring + [s for s in sentences if s.split()[:1] != ["I"]]
         return sorted(boring_and_exciting) == sorted(sentences)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4599,7 +4599,7 @@ def test_findbored_3():
         boring_and_exciting = boring + [s for s in sentences if s.split()[:1] != ["I"]]
         return sorted(boring_and_exciting) == sorted(sentences)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4609,7 +4609,7 @@ def test_findbored_4():
         boring_and_exciting = boring + [s for s in sentences if s.split()[:1] != ["I"]]
         return sorted(boring_and_exciting) == sorted(sentences)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4617,7 +4617,7 @@ def test_identifyzerotrips():
     def sat(zero_sums: List[bool], trips=[[1253532, -3920635, 332], [-24, 18, 6], [0, 5, -5], [1, 1, 1], [-20, 17, 4]]):
         return len(zero_sums) == len(trips) and all(z == ((a + b + c) == 0) for z, (a, b, c) in zip(zero_sums, trips))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4625,7 +4625,7 @@ def test_identifyzerotrips_1():
     def sat(zero_sums: List[bool], trips=[[7, -5, -4], [-7, 1, -6], [-2, 10, 3], [-9, -1, 10]]):
         return len(zero_sums) == len(trips) and all(z == ((a + b + c) == 0) for z, (a, b, c) in zip(zero_sums, trips))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4633,7 +4633,7 @@ def test_identifyzerotrips_2():
     def sat(zero_sums: List[bool], trips=[[-9, 9, -1], [-3, -7, -10], [0, -8, 5], [-8, -3, 3], [4, 8, 2], [-10, 8, 3]]):
         return len(zero_sums) == len(trips) and all(z == ((a + b + c) == 0) for z, (a, b, c) in zip(zero_sums, trips))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4641,7 +4641,7 @@ def test_identifyzerotrips_3():
     def sat(zero_sums: List[bool], trips=[[-9, 3, 5], [-2, 8, 6], [1, 7, 8], [-4, 3, 4], [1, -6, 10], [-5, -8, -13], [-4, 10, -8], [1, -2, -4], [7, 2, 9], [4, -4, 0], [8, -1, 2], [-6, 0, -7], [-10, -4, 8], [-2, 6, 4], [-6, 8, 2]]):
         return len(zero_sums) == len(trips) and all(z == ((a + b + c) == 0) for z, (a, b, c) in zip(zero_sums, trips))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4649,7 +4649,7 @@ def test_identifyzerotrips_4():
     def sat(zero_sums: List[bool], trips=[[7, -10, -3], [2, 9, 11], [-3, -10, -1], [-10, -5, 2], [-4, -5, -9], [-10, 5, -5], [1, 7, -6], [-3, -9, -12], [-5, -2, -7], [8, 10, 2], [-5, -2, 0], [-1, -6, -7], [8, 6, 2], [-8, 0, 7], [5, -5, 10], [-8, -6, -1], [-1, 1, 0], [-10, 9, -7]]):
         return len(zero_sums) == len(trips) and all(z == ((a + b + c) == 0) for z, (a, b, c) in zip(zero_sums, trips))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4658,7 +4658,7 @@ def test_weirddecodevowels():
         subs = {ord(c): ord(c) + 2 for c in "aeiouAEIOU"}
         return s.swapcase() == target.translate(subs)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4667,7 +4667,7 @@ def test_weirddecodevowels_1():
         subs = {ord(c): ord(c) + 2 for c in "aeiouAEIOU"}
         return s.swapcase() == target.translate(subs)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4676,7 +4676,7 @@ def test_weirddecodevowels_2():
         subs = {ord(c): ord(c) + 2 for c in "aeiouAEIOU"}
         return s.swapcase() == target.translate(subs)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4685,7 +4685,7 @@ def test_weirddecodevowels_3():
         subs = {ord(c): ord(c) + 2 for c in "aeiouAEIOU"}
         return s.swapcase() == target.translate(subs)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4694,7 +4694,7 @@ def test_weirddecodevowels_4():
         subs = {ord(c): ord(c) + 2 for c in "aeiouAEIOU"}
         return s.swapcase() == target.translate(subs)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4708,7 +4708,7 @@ def test_largestprimedigitsum():
     
         return is_prime(n) and all(m <= n for m in nums if is_prime(m)) and digit_sum == sum(int(c) for c in str(n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4722,7 +4722,7 @@ def test_largestprimedigitsum_1():
     
         return is_prime(n) and all(m <= n for m in nums if is_prime(m)) and digit_sum == sum(int(c) for c in str(n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4736,7 +4736,7 @@ def test_largestprimedigitsum_2():
     
         return is_prime(n) and all(m <= n for m in nums if is_prime(m)) and digit_sum == sum(int(c) for c in str(n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4750,7 +4750,7 @@ def test_largestprimedigitsum_3():
     
         return is_prime(n) and all(m <= n for m in nums if is_prime(m)) and digit_sum == sum(int(c) for c in str(n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4764,7 +4764,7 @@ def test_largestprimedigitsum_4():
     
         return is_prime(n) and all(m <= n for m in nums if is_prime(m)) and digit_sum == sum(int(c) for c in str(n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4772,7 +4772,7 @@ def test_oddcase():
     def sat(different: str, d={'cat': 'CAT', 'tree': 'T', 'pick me': 'not', 'OK': 'red', 'blah': 'blah', 'z': 'Z'}):
         return different in d and all(k.islower() != different.islower() for k in d if k != different)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4780,7 +4780,7 @@ def test_oddcase_1():
     def sat(different: str, d={'den': 'fymehihyxuro', 'madufitextuthohyv': 'sofekuhepokosixyzoza', 'xechygo': 'kythubehuzagu', 'xukefulete': 'hugevybelypyrer', 'maw': 'vaveraral', 'hichaquidyto': 'quisi', 'remenidasohijetybah': 'bukomegewisevoxoz', 'kyte': 'fonecohynipesewyth', 'cax': 'bilesequ', 'caduquetextan': 'juzedabaz', 'THEMITOTH': 'xotugythuzu'}):
         return different in d and all(k.islower() != different.islower() for k in d if k != different)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4788,7 +4788,7 @@ def test_oddcase_2():
     def sat(different: str, d={'CHIRATICHUHUQUYZYPYW': 'kopakyquotyhaquome', 'QUEBYTEXTEXUROBEK': 'tituxa', 'ZUVU': 'xupovutexti', 'NATEXTESYTUBUMY': 'ponusewaquufot', 'THUK': 'gyvy', 'CETEXTOFENAXIXANEKA': 'xyjytextecywykoquo', 'SEKAMIWEHYTHYTEXTUCU': 'jehu', 'H': 'quicyquohofowejivun', 'KYTEXTIBAXUTAV': 'nygutextin', 'LYQUA': 'biruji', 'tizenyry': 'xavyquukoc'}):
         return different in d and all(k.islower() != different.islower() for k in d if k != different)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4796,7 +4796,7 @@ def test_oddcase_3():
     def sat(different: str, d={'CHEWA': 'geratenegafa', 'WATHYHUVOTEXTINO': 'th', 'DIFUS': 'zetextatasohunibathe', 'TUBEZA': 'rajytextar', 'NEZALEQUAZAHEKAGUPU': 'bequexucoxy', 'SEBOLIZEDUL': 'wyxufyhodymube', 'ZU': 'conuhywumychogije', 'DE': 'lebemypovoke', 'DEBURUGINOC': 'gequilithyjyvymufi', 'TEXTURAFA': 'textejesyko', 'rixechy': 'fate'}):
         return different in d and all(k.islower() != different.islower() for k in d if k != different)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4804,7 +4804,7 @@ def test_oddcase_4():
     def sat(different: str, d={'quicaboguc': 'su', 'sacylir': 'tholubakypynythiryr', 'vijuchox': 'matextyquorewetytefy', 'lechi': 'nuch', 'viz': 'cheferopa', 'textowikalihehupyxi': 'quuchonasufexi', 'wuhujasi': 'f', 'tytextedoma': 'zifehabumabocate', 'gaviquolaxagihisice': 'sulywuzoquo', 'muvequo': 'juxachameje', 'B': 'quanesyfeku'}):
         return different in d and all(k.islower() != different.islower() for k in d if k != different)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4813,7 +4813,7 @@ def test_primesupto():
         assert all(1 < p for p in primes) and all(p % q for p in primes for q in primes if q < p)
         return len({i for p in primes for i in range(p, n, p)}) == max(n - 2, 0)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4822,7 +4822,7 @@ def test_primesupto_1():
         assert all(1 < p for p in primes) and all(p % q for p in primes for q in primes if q < p)
         return len({i for p in primes for i in range(p, n, p)}) == max(n - 2, 0)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4831,7 +4831,7 @@ def test_primesupto_2():
         assert all(1 < p for p in primes) and all(p % q for p in primes for q in primes if q < p)
         return len({i for p in primes for i in range(p, n, p)}) == max(n - 2, 0)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4840,7 +4840,7 @@ def test_primesupto_3():
         assert all(1 < p for p in primes) and all(p % q for p in primes for q in primes if q < p)
         return len({i for p in primes for i in range(p, n, p)}) == max(n - 2, 0)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4849,7 +4849,7 @@ def test_primesupto_4():
         assert all(1 < p for p in primes) and all(p % q for p in primes for q in primes if q < p)
         return len({i for p in primes for i in range(p, n, p)}) == max(n - 2, 0)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4865,7 +4865,7 @@ def test_unitsproduct():
             prod //= k
         return prod == 1
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4881,7 +4881,7 @@ def test_unitsproduct_1():
             prod //= k
         return prod == 1
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4897,7 +4897,7 @@ def test_unitsproduct_2():
             prod //= k
         return prod == 1
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4913,7 +4913,7 @@ def test_unitsproduct_3():
             prod //= k
         return prod == 1
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4929,7 +4929,7 @@ def test_unitsproduct_4():
             prod //= k
         return prod == 1
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4938,7 +4938,7 @@ def test_uppercaseeven():
         assert all(s[i] in "AEIOU" for i in positions)
         return all(i in positions or c not in "AEIOU" or i % 2 == 1 for i, c in enumerate(s))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4947,7 +4947,7 @@ def test_uppercaseeven_1():
         assert all(s[i] in "AEIOU" for i in positions)
         return all(i in positions or c not in "AEIOU" or i % 2 == 1 for i, c in enumerate(s))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4956,7 +4956,7 @@ def test_uppercaseeven_2():
         assert all(s[i] in "AEIOU" for i in positions)
         return all(i in positions or c not in "AEIOU" or i % 2 == 1 for i, c in enumerate(s))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4965,7 +4965,7 @@ def test_uppercaseeven_3():
         assert all(s[i] in "AEIOU" for i in positions)
         return all(i in positions or c not in "AEIOU" or i % 2 == 1 for i, c in enumerate(s))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4974,7 +4974,7 @@ def test_uppercaseeven_4():
         assert all(s[i] in "AEIOU" for i in positions)
         return all(i in positions or c not in "AEIOU" or i % 2 == 1 for i, c in enumerate(s))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4982,7 +4982,7 @@ def test_closestinteger():
     def sat(n: int, x=329437923.5):
         return abs(n - x) <= 0.5
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4990,7 +4990,7 @@ def test_closestinteger_1():
     def sat(n: int, x=3557710970.9527555):
         return abs(n - x) <= 0.5
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -4998,7 +4998,7 @@ def test_closestinteger_2():
     def sat(n: int, x=-250406.87146656853):
         return abs(n - x) <= 0.5
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5006,7 +5006,7 @@ def test_closestinteger_3():
     def sat(n: int, x=346686.79646634863):
         return abs(n - x) <= 0.5
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5014,7 +5014,7 @@ def test_closestinteger_4():
     def sat(n: int, x=1087254.523941833):
         return abs(n - x) <= 0.5
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5022,7 +5022,7 @@ def test_stonepiles():
     def sat(li: List[int], n=909):
         return li[0] == n and len(li) == n and all(b - a == 2 for a, b in zip(li, li[1:]))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5030,7 +5030,7 @@ def test_stonepiles_1():
     def sat(li: List[int], n=28694):
         return li[0] == n and len(li) == n and all(b - a == 2 for a, b in zip(li, li[1:]))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5038,7 +5038,7 @@ def test_stonepiles_2():
     def sat(li: List[int], n=97916):
         return li[0] == n and len(li) == n and all(b - a == 2 for a, b in zip(li, li[1:]))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5046,7 +5046,7 @@ def test_stonepiles_3():
     def sat(li: List[int], n=57991):
         return li[0] == n and len(li) == n and all(b - a == 2 for a, b in zip(li, li[1:]))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5054,7 +5054,7 @@ def test_stonepiles_4():
     def sat(li: List[int], n=24997):
         return li[0] == n and len(li) == n and all(b - a == 2 for a, b in zip(li, li[1:]))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5069,7 +5069,7 @@ def test_completesplit():
             merged += [w, s]
         return "".join(merged[:-1]) == string
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5084,7 +5084,7 @@ def test_completesplit_1():
             merged += [w, s]
         return "".join(merged[:-1]) == string
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5099,7 +5099,7 @@ def test_completesplit_2():
             merged += [w, s]
         return "".join(merged[:-1]) == string
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5114,7 +5114,7 @@ def test_completesplit_3():
             merged += [w, s]
         return "".join(merged[:-1]) == string
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5129,7 +5129,7 @@ def test_completesplit_4():
             merged += [w, s]
         return "".join(merged[:-1]) == string
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5139,7 +5139,7 @@ def test_biggesteven():
             return all(i % 2 == 1 for i in range(a, b + 1))
         return a <= x <= b and all(i % 2 == 1 for i in range(x + 1, b + 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5149,7 +5149,7 @@ def test_biggesteven_1():
             return all(i % 2 == 1 for i in range(a, b + 1))
         return a <= x <= b and all(i % 2 == 1 for i in range(x + 1, b + 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5159,7 +5159,7 @@ def test_biggesteven_2():
             return all(i % 2 == 1 for i in range(a, b + 1))
         return a <= x <= b and all(i % 2 == 1 for i in range(x + 1, b + 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5169,7 +5169,7 @@ def test_biggesteven_3():
             return all(i % 2 == 1 for i in range(a, b + 1))
         return a <= x <= b and all(i % 2 == 1 for i in range(x + 1, b + 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5179,7 +5179,7 @@ def test_biggesteven_4():
             return all(i % 2 == 1 for i in range(a, b + 1))
         return a <= x <= b and all(i % 2 == 1 for i in range(x + 1, b + 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5192,7 +5192,7 @@ def test_binaryaverage():
         mu = sum(r) / len(r)
         return abs(mu - n) <= min(abs(mu - n - 1), abs(mu - n + 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5205,7 +5205,7 @@ def test_binaryaverage_1():
         mu = sum(r) / len(r)
         return abs(mu - n) <= min(abs(mu - n - 1), abs(mu - n + 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5218,7 +5218,7 @@ def test_binaryaverage_2():
         mu = sum(r) / len(r)
         return abs(mu - n) <= min(abs(mu - n - 1), abs(mu - n + 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5231,7 +5231,7 @@ def test_binaryaverage_3():
         mu = sum(r) / len(r)
         return abs(mu - n) <= min(abs(mu - n - 1), abs(mu - n + 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5244,7 +5244,7 @@ def test_binaryaverage_4():
         mu = sum(r) / len(r)
         return abs(mu - n) <= min(abs(mu - n - 1), abs(mu - n + 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5262,7 +5262,7 @@ def test_sortedodds():
     
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5280,7 +5280,7 @@ def test_sortedodds_1():
     
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5298,7 +5298,7 @@ def test_sortedodds_2():
     
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5316,7 +5316,7 @@ def test_sortedodds_3():
     
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5334,7 +5334,7 @@ def test_sortedodds_4():
     
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5348,7 +5348,7 @@ def test_backwardsdigits():
     
         return all(n not in range(1, 10) or n in li for n in nums)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5362,7 +5362,7 @@ def test_backwardsdigits_1():
     
         return all(n not in range(1, 10) or n in li for n in nums)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5376,7 +5376,7 @@ def test_backwardsdigits_2():
     
         return all(n not in range(1, 10) or n in li for n in nums)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5390,7 +5390,7 @@ def test_backwardsdigits_3():
     
         return all(n not in range(1, 10) or n in li for n in nums)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5404,7 +5404,7 @@ def test_backwardsdigits_4():
     
         return all(n not in range(1, 10) or n in li for n in nums)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5420,7 +5420,7 @@ def test_alternatingfactorials():
                 assert m == li[i - 2] * i * (i + 1)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5436,7 +5436,7 @@ def test_alternatingfactorials_1():
                 assert m == li[i - 2] * i * (i + 1)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5452,7 +5452,7 @@ def test_alternatingfactorials_2():
                 assert m == li[i - 2] * i * (i + 1)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5468,7 +5468,7 @@ def test_alternatingfactorials_3():
                 assert m == li[i - 2] * i * (i + 1)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5484,7 +5484,7 @@ def test_alternatingfactorials_4():
                 assert m == li[i - 2] * i * (i + 1)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5492,7 +5492,7 @@ def test_evenpalindromenumbers():
     def sat(pals: List[int], n=1099, count=49):
         return all(0 <= i <= n and str(i) == str(i)[::-1] and i % 2 == 0 for i in pals) and len(set(pals)) >= count
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5500,7 +5500,7 @@ def test_evenpalindromenumbers_1():
     def sat(pals: List[int], n=2737, count=56):
         return all(0 <= i <= n and str(i) == str(i)[::-1] and i % 2 == 0 for i in pals) and len(set(pals)) >= count
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5508,7 +5508,7 @@ def test_evenpalindromenumbers_2():
     def sat(pals: List[int], n=7895, count=79):
         return all(0 <= i <= n and str(i) == str(i)[::-1] and i % 2 == 0 for i in pals) and len(set(pals)) >= count
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5516,7 +5516,7 @@ def test_evenpalindromenumbers_3():
     def sat(pals: List[int], n=2645, count=55):
         return all(0 <= i <= n and str(i) == str(i)[::-1] and i % 2 == 0 for i in pals) and len(set(pals)) >= count
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5524,7 +5524,7 @@ def test_evenpalindromenumbers_4():
     def sat(pals: List[int], n=3173, count=59):
         return all(0 <= i <= n and str(i) == str(i)[::-1] and i % 2 == 0 for i in pals) and len(set(pals)) >= count
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5538,7 +5538,7 @@ def test_positivedigitsums():
                 assert pos.count(n) == nums.count(n)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5552,7 +5552,7 @@ def test_positivedigitsums_1():
                 assert pos.count(n) == nums.count(n)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5566,7 +5566,7 @@ def test_positivedigitsums_2():
                 assert pos.count(n) == nums.count(n)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5580,7 +5580,7 @@ def test_positivedigitsums_3():
                 assert pos.count(n) == nums.count(n)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5594,7 +5594,7 @@ def test_positivedigitsums_4():
                 assert pos.count(n) == nums.count(n)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5603,7 +5603,7 @@ def test_rotatesort():
         assert str(original)[1:-1] in str(sorted(original) * 2), "Not ring sorted"
         return any(original == arr[:i] + arr[i + 1:] for i in range(len(arr) + 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5612,7 +5612,7 @@ def test_rotatesort_1():
         assert str(original)[1:-1] in str(sorted(original) * 2), "Not ring sorted"
         return any(original == arr[:i] + arr[i + 1:] for i in range(len(arr) + 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5621,7 +5621,7 @@ def test_rotatesort_2():
         assert str(original)[1:-1] in str(sorted(original) * 2), "Not ring sorted"
         return any(original == arr[:i] + arr[i + 1:] for i in range(len(arr) + 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5630,7 +5630,7 @@ def test_rotatesort_3():
         assert str(original)[1:-1] in str(sorted(original) * 2), "Not ring sorted"
         return any(original == arr[:i] + arr[i + 1:] for i in range(len(arr) + 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5639,7 +5639,7 @@ def test_rotatesort_4():
         assert str(original)[1:-1] in str(sorted(original) * 2), "Not ring sorted"
         return any(original == arr[:i] + arr[i + 1:] for i in range(len(arr) + 1))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5651,7 +5651,7 @@ def test_parityexchange():
             copy1[i], copy2[j] = copy2[j], copy1[i]
         return all(n % 2 == 0 for n in copy1)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5663,7 +5663,7 @@ def test_parityexchange_1():
             copy1[i], copy2[j] = copy2[j], copy1[i]
         return all(n % 2 == 0 for n in copy1)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5675,7 +5675,7 @@ def test_parityexchange_2():
             copy1[i], copy2[j] = copy2[j], copy1[i]
         return all(n % 2 == 0 for n in copy1)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5687,7 +5687,7 @@ def test_parityexchange_3():
             copy1[i], copy2[j] = copy2[j], copy1[i]
         return all(n % 2 == 0 for n in copy1)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5699,7 +5699,7 @@ def test_parityexchange_4():
             copy1[i], copy2[j] = copy2[j], copy1[i]
         return all(n % 2 == 0 for n in copy1)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5710,7 +5710,7 @@ def test_charcounts():
             assert chars.count(c) == counts[c]
         return len(chars) == sum(counts.values())
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5721,7 +5721,7 @@ def test_charcounts_1():
             assert chars.count(c) == counts[c]
         return len(chars) == sum(counts.values())
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5732,7 +5732,7 @@ def test_charcounts_2():
             assert chars.count(c) == counts[c]
         return len(chars) == sum(counts.values())
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5743,7 +5743,7 @@ def test_charcounts_3():
             assert chars.count(c) == counts[c]
         return len(chars) == sum(counts.values())
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5754,7 +5754,7 @@ def test_charcounts_4():
             assert chars.count(c) == counts[c]
         return len(chars) == sum(counts.values())
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5769,7 +5769,7 @@ def test_delpalindrome():
         assert i == len(s)
         return is_palindrome == str(s == s[::-1])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5784,7 +5784,7 @@ def test_delpalindrome_1():
         assert i == len(s)
         return is_palindrome == str(s == s[::-1])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5799,7 +5799,7 @@ def test_delpalindrome_2():
         assert i == len(s)
         return is_palindrome == str(s == s[::-1])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5814,7 +5814,7 @@ def test_delpalindrome_3():
         assert i == len(s)
         return is_palindrome == str(s == s[::-1])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5829,7 +5829,7 @@ def test_delpalindrome_4():
         assert i == len(s)
         return is_palindrome == str(s == s[::-1])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5845,7 +5845,7 @@ def test_replaceme():
                 return False
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5861,7 +5861,7 @@ def test_replaceme_1():
                 return False
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5877,7 +5877,7 @@ def test_replaceme_2():
                 return False
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5893,7 +5893,7 @@ def test_replaceme_3():
                 return False
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5909,7 +5909,7 @@ def test_replaceme_4():
                 return False
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5918,7 +5918,7 @@ def test_minsubarraysum():
         start, end = start_end
         return sum(pow(base, i, p) - p // 2 for i in range(start, end)) <= upper
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5927,7 +5927,7 @@ def test_minsubarraysum_1():
         start, end = start_end
         return sum(pow(base, i, p) - p // 2 for i in range(start, end)) <= upper
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5936,7 +5936,7 @@ def test_minsubarraysum_2():
         start, end = start_end
         return sum(pow(base, i, p) - p // 2 for i in range(start, end)) <= upper
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5945,7 +5945,7 @@ def test_minsubarraysum_3():
         start, end = start_end
         return sum(pow(base, i, p) - p // 2 for i in range(start, end)) <= upper
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5954,7 +5954,7 @@ def test_minsubarraysum_4():
         start, end = start_end
         return sum(pow(base, i, p) - p // 2 for i in range(start, end)) <= upper
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5969,7 +5969,7 @@ def test_buckets():
         assert sum(len(group) != capacity for group in wells) <= 1  # at most one under-capacity group
         return grid2 == grid
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5984,7 +5984,7 @@ def test_buckets_1():
         assert sum(len(group) != capacity for group in wells) <= 1  # at most one under-capacity group
         return grid2 == grid
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -5999,7 +5999,7 @@ def test_buckets_2():
         assert sum(len(group) != capacity for group in wells) <= 1  # at most one under-capacity group
         return grid2 == grid
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6014,7 +6014,7 @@ def test_buckets_3():
         assert sum(len(group) != capacity for group in wells) <= 1  # at most one under-capacity group
         return grid2 == grid
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6029,7 +6029,7 @@ def test_buckets_4():
         assert sum(len(group) != capacity for group in wells) <= 1  # at most one under-capacity group
         return grid2 == grid
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6039,7 +6039,7 @@ def test_binarysort():
             return False  # not even a permutation
         return all(bin(a).count("1") <= bin(b).count("1") for a, b in zip(ordered, ordered[1:]))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6049,7 +6049,7 @@ def test_binarysort_1():
             return False  # not even a permutation
         return all(bin(a).count("1") <= bin(b).count("1") for a, b in zip(ordered, ordered[1:]))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6059,7 +6059,7 @@ def test_binarysort_2():
             return False  # not even a permutation
         return all(bin(a).count("1") <= bin(b).count("1") for a, b in zip(ordered, ordered[1:]))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6069,7 +6069,7 @@ def test_binarysort_3():
             return False  # not even a permutation
         return all(bin(a).count("1") <= bin(b).count("1") for a, b in zip(ordered, ordered[1:]))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6079,7 +6079,7 @@ def test_binarysort_4():
             return False  # not even a permutation
         return all(bin(a).count("1") <= bin(b).count("1") for a, b in zip(ordered, ordered[1:]))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6097,7 +6097,7 @@ def test_consonantfilter():
                 i += 1
         return i == len(words)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6115,7 +6115,7 @@ def test_consonantfilter_1():
                 i += 1
         return i == len(words)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6133,7 +6133,7 @@ def test_consonantfilter_2():
                 i += 1
         return i == len(words)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6151,7 +6151,7 @@ def test_consonantfilter_3():
                 i += 1
         return i == len(words)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6169,7 +6169,7 @@ def test_consonantfilter_4():
                 i += 1
         return i == len(words)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6179,7 +6179,7 @@ def test_vowelsandwich():
         cons = "bcdfghjklmnpqrstvwxz"
         return ham in s and ham[0].lower() in cons and ham[1].lower() in vows and ham[2].lower() in cons
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6189,7 +6189,7 @@ def test_vowelsandwich_1():
         cons = "bcdfghjklmnpqrstvwxz"
         return ham in s and ham[0].lower() in cons and ham[1].lower() in vows and ham[2].lower() in cons
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6199,7 +6199,7 @@ def test_vowelsandwich_2():
         cons = "bcdfghjklmnpqrstvwxz"
         return ham in s and ham[0].lower() in cons and ham[1].lower() in vows and ham[2].lower() in cons
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6209,7 +6209,7 @@ def test_vowelsandwich_3():
         cons = "bcdfghjklmnpqrstvwxz"
         return ham in s and ham[0].lower() in cons and ham[1].lower() in vows and ham[2].lower() in cons
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6219,7 +6219,7 @@ def test_vowelsandwich_4():
         cons = "bcdfghjklmnpqrstvwxz"
         return ham in s and ham[0].lower() in cons and ham[1].lower() in vows and ham[2].lower() in cons
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6228,7 +6228,7 @@ def test_parenthesespermutation():
         assert sorted(perm.split()) == sorted(s.split()), "Must be a permutation of the space-delimited 'groups'"
         return all(perm[:i].count("(") >= perm[:i].count(")") for i in range(len(perm)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6237,7 +6237,7 @@ def test_parenthesespermutation_1():
         assert sorted(perm.split()) == sorted(s.split()), "Must be a permutation of the space-delimited 'groups'"
         return all(perm[:i].count("(") >= perm[:i].count(")") for i in range(len(perm)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6246,7 +6246,7 @@ def test_parenthesespermutation_2():
         assert sorted(perm.split()) == sorted(s.split()), "Must be a permutation of the space-delimited 'groups'"
         return all(perm[:i].count("(") >= perm[:i].count(")") for i in range(len(perm)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6255,7 +6255,7 @@ def test_parenthesespermutation_3():
         assert sorted(perm.split()) == sorted(s.split()), "Must be a permutation of the space-delimited 'groups'"
         return all(perm[:i].count("(") >= perm[:i].count(")") for i in range(len(perm)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6264,7 +6264,7 @@ def test_parenthesespermutation_4():
         assert sorted(perm.split()) == sorted(s.split()), "Must be a permutation of the space-delimited 'groups'"
         return all(perm[:i].count("(") >= perm[:i].count(")") for i in range(len(perm)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6277,7 +6277,7 @@ def test_biggestk():
             smallest.remove(n)
         return k == 0 or k == len(nums) or max(smallest) <= min(biggest)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6290,7 +6290,7 @@ def test_biggestk_1():
             smallest.remove(n)
         return k == 0 or k == len(nums) or max(smallest) <= min(biggest)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6303,7 +6303,7 @@ def test_biggestk_2():
             smallest.remove(n)
         return k == 0 or k == len(nums) or max(smallest) <= min(biggest)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6316,7 +6316,7 @@ def test_biggestk_3():
             smallest.remove(n)
         return k == 0 or k == len(nums) or max(smallest) <= min(biggest)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6329,7 +6329,7 @@ def test_biggestk_4():
             smallest.remove(n)
         return k == 0 or k == len(nums) or max(smallest) <= min(biggest)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6340,7 +6340,7 @@ def test_oddevensum():
                 tot -= i
         return tot == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6351,7 +6351,7 @@ def test_oddevensum_1():
                 tot -= i
         return tot == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6362,7 +6362,7 @@ def test_oddevensum_2():
                 tot -= i
         return tot == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6373,7 +6373,7 @@ def test_oddevensum_3():
                 tot -= i
         return tot == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6384,7 +6384,7 @@ def test_oddevensum_4():
                 tot -= i
         return tot == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6395,7 +6395,7 @@ def test_longearlysum():
                 tot -= n
         return tot == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6406,7 +6406,7 @@ def test_longearlysum_1():
                 tot -= n
         return tot == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6417,7 +6417,7 @@ def test_longearlysum_2():
                 tot -= n
         return tot == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6428,7 +6428,7 @@ def test_longearlysum_3():
                 tot -= n
         return tot == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6439,7 +6439,7 @@ def test_longearlysum_4():
                 tot -= n
         return tot == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6455,7 +6455,7 @@ def test_oddcollatz():
                 return num_odds == len(odds)
             n = (3 * n + 1) if n % 2 == 1 else n // 2
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6471,7 +6471,7 @@ def test_oddcollatz_1():
                 return num_odds == len(odds)
             n = (3 * n + 1) if n % 2 == 1 else n // 2
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6487,7 +6487,7 @@ def test_oddcollatz_2():
                 return num_odds == len(odds)
             n = (3 * n + 1) if n % 2 == 1 else n // 2
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6503,7 +6503,7 @@ def test_oddcollatz_3():
                 return num_odds == len(odds)
             n = (3 * n + 1) if n % 2 == 1 else n // 2
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6519,7 +6519,7 @@ def test_oddcollatz_4():
                 return num_odds == len(odds)
             n = (3 * n + 1) if n % 2 == 1 else n // 2
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6535,7 +6535,7 @@ def test_datediff():
             assert d <= 29
         return m - d - y == target
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6551,7 +6551,7 @@ def test_datediff_1():
             assert d <= 29
         return m - d - y == target
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6567,7 +6567,7 @@ def test_datediff_2():
             assert d <= 29
         return m - d - y == target
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6583,7 +6583,7 @@ def test_datediff_3():
             assert d <= 29
         return m - d - y == target
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6599,7 +6599,7 @@ def test_datediff_4():
             assert d <= 29
         return m - d - y == target
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6611,7 +6611,7 @@ def test_strangesplit():
             return ",".join(lst) == s
         return "".join(lst) == "".join(c for c in s if c.islower() and ord(c) % 2 == 0)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6623,7 +6623,7 @@ def test_strangesplit_1():
             return ",".join(lst) == s
         return "".join(lst) == "".join(c for c in s if c.islower() and ord(c) % 2 == 0)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6635,7 +6635,7 @@ def test_strangesplit_2():
             return ",".join(lst) == s
         return "".join(lst) == "".join(c for c in s if c.islower() and ord(c) % 2 == 0)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6647,7 +6647,7 @@ def test_strangesplit_3():
             return ",".join(lst) == s
         return "".join(lst) == "".join(c for c in s if c.islower() and ord(c) % 2 == 0)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6659,7 +6659,7 @@ def test_strangesplit_4():
             return ",".join(lst) == s
         return "".join(lst) == "".join(c for c in s if c.islower() and ord(c) % 2 == 0)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6670,7 +6670,7 @@ def test_increasingviolation():
         i, j = violation
         return 0 <= i < j and nums[i] >= nums[j]
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6681,7 +6681,7 @@ def test_increasingviolation_1():
         i, j = violation
         return 0 <= i < j and nums[i] >= nums[j]
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6692,7 +6692,7 @@ def test_increasingviolation_2():
         i, j = violation
         return 0 <= i < j and nums[i] >= nums[j]
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6703,7 +6703,7 @@ def test_increasingviolation_3():
         i, j = violation
         return 0 <= i < j and nums[i] >= nums[j]
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6714,7 +6714,7 @@ def test_increasingviolation_4():
         i, j = violation
         return 0 <= i < j and nums[i] >= nums[j]
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6723,7 +6723,7 @@ def test_primeintervalintersection():
         intersection_width = min(interval1[1], interval2[1]) - max(interval1[0], interval2[0])
         return intersection_width > 1 and all(intersection_width % i for i in range(2, intersection_width))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6732,7 +6732,7 @@ def test_primeintervalintersection_1():
         intersection_width = min(interval1[1], interval2[1]) - max(interval1[0], interval2[0])
         return intersection_width > 1 and all(intersection_width % i for i in range(2, intersection_width))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6741,7 +6741,7 @@ def test_primeintervalintersection_2():
         intersection_width = min(interval1[1], interval2[1]) - max(interval1[0], interval2[0])
         return intersection_width > 1 and all(intersection_width % i for i in range(2, intersection_width))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6750,7 +6750,7 @@ def test_primeintervalintersection_3():
         intersection_width = min(interval1[1], interval2[1]) - max(interval1[0], interval2[0])
         return intersection_width > 1 and all(intersection_width % i for i in range(2, intersection_width))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6759,7 +6759,7 @@ def test_primeintervalintersection_4():
         intersection_width = min(interval1[1], interval2[1]) - max(interval1[0], interval2[0])
         return intersection_width > 1 and all(intersection_width % i for i in range(2, intersection_width))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6780,7 +6780,7 @@ def test_productsigns():
     
         return n == tot
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6801,7 +6801,7 @@ def test_productsigns_1():
     
         return n == tot
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6822,7 +6822,7 @@ def test_productsigns_2():
     
         return n == tot
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6843,7 +6843,7 @@ def test_productsigns_3():
     
         return n == tot
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6864,7 +6864,7 @@ def test_productsigns_4():
     
         return n == tot
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6879,7 +6879,7 @@ def test_lexpath():
     
         return all(path[i] in edges[path[i - 1]] for i in range(1, k)) and all(check([i]) for i in range(len(edges)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6894,7 +6894,7 @@ def test_lexpath_1():
     
         return all(path[i] in edges[path[i - 1]] for i in range(1, k)) and all(check([i]) for i in range(len(edges)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6909,7 +6909,7 @@ def test_lexpath_2():
     
         return all(path[i] in edges[path[i - 1]] for i in range(1, k)) and all(check([i]) for i in range(len(edges)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6924,7 +6924,7 @@ def test_lexpath_3():
     
         return all(path[i] in edges[path[i - 1]] for i in range(1, k)) and all(check([i]) for i in range(len(edges)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6939,7 +6939,7 @@ def test_lexpath_4():
     
         return all(path[i] in edges[path[i - 1]] for i in range(1, k)) and all(check([i]) for i in range(len(edges)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6947,7 +6947,7 @@ def test_tribonacci():
     def sat(seq: List[int], length=181):
         return all(seq[n] == (seq[n - 1] + seq[n - 2] + seq[n + 1] if n % 2 else 1 + n // 2) for n in range(length))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6955,7 +6955,7 @@ def test_tribonacci_1():
     def sat(seq: List[int], length=412):
         return all(seq[n] == (seq[n - 1] + seq[n - 2] + seq[n + 1] if n % 2 else 1 + n // 2) for n in range(length))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6963,7 +6963,7 @@ def test_tribonacci_2():
     def sat(seq: List[int], length=482):
         return all(seq[n] == (seq[n - 1] + seq[n - 2] + seq[n + 1] if n % 2 else 1 + n // 2) for n in range(length))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6971,7 +6971,7 @@ def test_tribonacci_3():
     def sat(seq: List[int], length=50):
         return all(seq[n] == (seq[n - 1] + seq[n - 2] + seq[n + 1] if n % 2 else 1 + n // 2) for n in range(length))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6979,7 +6979,7 @@ def test_tribonacci_4():
     def sat(seq: List[int], length=761):
         return all(seq[n] == (seq[n - 1] + seq[n - 2] + seq[n + 1] if n % 2 else 1 + n // 2) for n in range(length))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -6993,7 +6993,7 @@ def test_oddproduct():
                 prod //= i
         return prod == any(int(c) % 2 for c in str(n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7007,7 +7007,7 @@ def test_oddproduct_1():
                 prod //= i
         return prod == any(int(c) % 2 for c in str(n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7021,7 +7021,7 @@ def test_oddproduct_2():
                 prod //= i
         return prod == any(int(c) % 2 for c in str(n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7035,7 +7035,7 @@ def test_oddproduct_3():
                 prod //= i
         return prod == any(int(c) % 2 for c in str(n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7049,7 +7049,7 @@ def test_oddproduct_4():
                 prod //= i
         return prod == any(int(c) % 2 for c in str(n))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7064,7 +7064,7 @@ def test_validbracketsubsequence():
                 depths.append(depths[-1] - 1)
         return depths[-1] == 0 and min(depths) == 0 and max(depths) > 1
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7079,7 +7079,7 @@ def test_validbracketsubsequence_1():
                 depths.append(depths[-1] - 1)
         return depths[-1] == 0 and min(depths) == 0 and max(depths) > 1
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7094,7 +7094,7 @@ def test_validbracketsubsequence_2():
                 depths.append(depths[-1] - 1)
         return depths[-1] == 0 and min(depths) == 0 and max(depths) > 1
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7109,7 +7109,7 @@ def test_validbracketsubsequence_3():
                 depths.append(depths[-1] - 1)
         return depths[-1] == 0 and min(depths) == 0 and max(depths) > 1
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7124,7 +7124,7 @@ def test_validbracketsubsequence_4():
                 depths.append(depths[-1] - 1)
         return depths[-1] == 0 and min(depths) == 0 and max(depths) > 1
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7138,7 +7138,7 @@ def test_ceilingsquares():
     
         return len(running_squares) == len(x)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7152,7 +7152,7 @@ def test_ceilingsquares_1():
     
         return len(running_squares) == len(x)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7166,7 +7166,7 @@ def test_ceilingsquares_2():
     
         return len(running_squares) == len(x)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7180,7 +7180,7 @@ def test_ceilingsquares_3():
     
         return len(running_squares) == len(x)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7194,7 +7194,7 @@ def test_ceilingsquares_4():
     
         return len(running_squares) == len(x)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7208,7 +7208,7 @@ def test_lastletters():
                 assert not b
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7222,7 +7222,7 @@ def test_lastletters_1():
                 assert not b
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7236,7 +7236,7 @@ def test_lastletters_2():
                 assert not b
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7250,7 +7250,7 @@ def test_lastletters_3():
                 assert not b
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7264,7 +7264,7 @@ def test_lastletters_4():
                 assert not b
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7277,7 +7277,7 @@ def test_drops():
                 d += 1
         return d == len(drop_indexes)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7294,7 +7294,7 @@ def test_largestnegsmallestpos():
             assert pos > 0 and pos in nums and all(n <= 0 or n >= pos for n in nums)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7311,7 +7311,7 @@ def test_largestnegsmallestpos_1():
             assert pos > 0 and pos in nums and all(n <= 0 or n >= pos for n in nums)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7328,7 +7328,7 @@ def test_largestnegsmallestpos_2():
             assert pos > 0 and pos in nums and all(n <= 0 or n >= pos for n in nums)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7345,7 +7345,7 @@ def test_largestnegsmallestpos_3():
             assert pos > 0 and pos in nums and all(n <= 0 or n >= pos for n in nums)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7362,7 +7362,7 @@ def test_largestnegsmallestpos_4():
             assert pos > 0 and pos in nums and all(n <= 0 or n >= pos for n in nums)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7376,7 +7376,7 @@ def test_largeststringnum():
                 found = True
         return found
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7390,7 +7390,7 @@ def test_largeststringnum_1():
                 found = True
         return found
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7404,7 +7404,7 @@ def test_largeststringnum_2():
                 found = True
         return found
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7418,7 +7418,7 @@ def test_largeststringnum_3():
                 found = True
         return found
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7432,7 +7432,7 @@ def test_largeststringnum_4():
                 found = True
         return found
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7440,7 +7440,7 @@ def test_even4sum():
     def sat(summands: List[int], n=1234567890):
         return sum(summands) == n and min(summands) > 0 and len(summands) == 4 and all(s % 2 == 0 for s in summands)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7448,7 +7448,7 @@ def test_even4sum_1():
     def sat(summands: List[int], n=8):
         return sum(summands) == n and min(summands) > 0 and len(summands) == 4 and all(s % 2 == 0 for s in summands)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7456,7 +7456,7 @@ def test_even4sum_2():
     def sat(summands: List[int], n=10):
         return sum(summands) == n and min(summands) > 0 and len(summands) == 4 and all(s % 2 == 0 for s in summands)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7464,7 +7464,7 @@ def test_even4sum_3():
     def sat(summands: List[int], n=12):
         return sum(summands) == n and min(summands) > 0 and len(summands) == 4 and all(s % 2 == 0 for s in summands)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7472,7 +7472,7 @@ def test_even4sum_4():
     def sat(summands: List[int], n=465665808):
         return sum(summands) == n and min(summands) > 0 and len(summands) == 4 and all(s % 2 == 0 for s in summands)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7487,7 +7487,7 @@ def test_inversesuperfactorial():
             assert sf == 1
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7502,7 +7502,7 @@ def test_inversesuperfactorial_1():
             assert sf == 1
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7517,7 +7517,7 @@ def test_inversesuperfactorial_2():
             assert sf == 1
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7532,7 +7532,7 @@ def test_inversesuperfactorial_3():
             assert sf == 1
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7547,7 +7547,7 @@ def test_inversesuperfactorial_4():
             assert sf == 1
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7566,7 +7566,7 @@ def test_expandspaces():
         new += ("-" if space_count > 2 else "_" * space_count)
         return new == target
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7585,7 +7585,7 @@ def test_expandspaces_1():
         new += ("-" if space_count > 2 else "_" * space_count)
         return new == target
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7604,7 +7604,7 @@ def test_expandspaces_2():
         new += ("-" if space_count > 2 else "_" * space_count)
         return new == target
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7623,7 +7623,7 @@ def test_expandspaces_3():
         new += ("-" if space_count > 2 else "_" * space_count)
         return new == target
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7642,7 +7642,7 @@ def test_expandspaces_4():
         new += ("-" if space_count > 2 else "_" * space_count)
         return new == target
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7659,7 +7659,7 @@ def test_filenameok():
                 assert f.split(".")[1:] not in [['txt'], ['dll'], ['exe']] or not f[0].isalpha() or n_digits > 3
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7676,7 +7676,7 @@ def test_filenameok_1():
                 assert f.split(".")[1:] not in [['txt'], ['dll'], ['exe']] or not f[0].isalpha() or n_digits > 3
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7693,7 +7693,7 @@ def test_filenameok_2():
                 assert f.split(".")[1:] not in [['txt'], ['dll'], ['exe']] or not f[0].isalpha() or n_digits > 3
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7710,7 +7710,7 @@ def test_filenameok_3():
                 assert f.split(".")[1:] not in [['txt'], ['dll'], ['exe']] or not f[0].isalpha() or n_digits > 3
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7727,7 +7727,7 @@ def test_filenameok_4():
                 assert f.split(".")[1:] not in [['txt'], ['dll'], ['exe']] or not f[0].isalpha() or n_digits > 3
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7735,7 +7735,7 @@ def test_findstrangesum():
     def sat(lst: List[int], tot=1125181293221):
         return sum(n ** 2 if n % 3 == 0 else n ** 3 if n % 4 == 0 else n for n in lst) == tot
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7743,7 +7743,7 @@ def test_findstrangesum_1():
     def sat(lst: List[int], tot=704):
         return sum(n ** 2 if n % 3 == 0 else n ** 3 if n % 4 == 0 else n for n in lst) == tot
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7751,7 +7751,7 @@ def test_findstrangesum_2():
     def sat(lst: List[int], tot=8849):
         return sum(n ** 2 if n % 3 == 0 else n ** 3 if n % 4 == 0 else n for n in lst) == tot
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7759,7 +7759,7 @@ def test_findstrangesum_3():
     def sat(lst: List[int], tot=-516784):
         return sum(n ** 2 if n % 3 == 0 else n ** 3 if n % 4 == 0 else n for n in lst) == tot
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7767,7 +7767,7 @@ def test_findstrangesum_4():
     def sat(lst: List[int], tot=976643993):
         return sum(n ** 2 if n % 3 == 0 else n ** 3 if n % 4 == 0 else n for n in lst) == tot
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7786,7 +7786,7 @@ def test_primewords():
     
         return i == len(prime_words)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7805,7 +7805,7 @@ def test_primewords_1():
     
         return i == len(prime_words)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7824,7 +7824,7 @@ def test_primewords_2():
     
         return i == len(prime_words)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7843,7 +7843,7 @@ def test_primewords_3():
     
         return i == len(prime_words)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7862,7 +7862,7 @@ def test_primewords_4():
     
         return i == len(prime_words)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7871,7 +7871,7 @@ def test_simplifyproductfraction():
         [[a, b], [c, d], [u, v]] = [[int(n) for n in s.split("/")] for s in [x, y, z]]
         return a * c * v == b * d * u and len(z) <= max_len
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7880,7 +7880,7 @@ def test_simplifyproductfraction_1():
         [[a, b], [c, d], [u, v]] = [[int(n) for n in s.split("/")] for s in [x, y, z]]
         return a * c * v == b * d * u and len(z) <= max_len
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7889,7 +7889,7 @@ def test_simplifyproductfraction_2():
         [[a, b], [c, d], [u, v]] = [[int(n) for n in s.split("/")] for s in [x, y, z]]
         return a * c * v == b * d * u and len(z) <= max_len
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7898,7 +7898,7 @@ def test_simplifyproductfraction_3():
         [[a, b], [c, d], [u, v]] = [[int(n) for n in s.split("/")] for s in [x, y, z]]
         return a * c * v == b * d * u and len(z) <= max_len
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7907,7 +7907,7 @@ def test_simplifyproductfraction_4():
         [[a, b], [c, d], [u, v]] = [[int(n) for n in s.split("/")] for s in [x, y, z]]
         return a * c * v == b * d * u and len(z) <= max_len
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7916,7 +7916,7 @@ def test_sortbydigitsum():
         digit_sums = [sum(int(c) for c in str(n) if c != "-") for n in ordered]
         return sorted(ordered) == sorted(nums) and digit_sums == sorted(digit_sums)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7925,7 +7925,7 @@ def test_sortbydigitsum_1():
         digit_sums = [sum(int(c) for c in str(n) if c != "-") for n in ordered]
         return sorted(ordered) == sorted(nums) and digit_sums == sorted(digit_sums)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7934,7 +7934,7 @@ def test_sortbydigitsum_2():
         digit_sums = [sum(int(c) for c in str(n) if c != "-") for n in ordered]
         return sorted(ordered) == sorted(nums) and digit_sums == sorted(digit_sums)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7943,7 +7943,7 @@ def test_sortbydigitsum_3():
         digit_sums = [sum(int(c) for c in str(n) if c != "-") for n in ordered]
         return sorted(ordered) == sorted(nums) and digit_sums == sorted(digit_sums)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7952,7 +7952,7 @@ def test_sortbydigitsum_4():
         digit_sums = [sum(int(c) for c in str(n) if c != "-") for n in ordered]
         return sorted(ordered) == sorted(nums) and digit_sums == sorted(digit_sums)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7961,7 +7961,7 @@ def test_bigodds():
         assert all(o > 10 and odds.count(o) == nums.count(o) and int(str(o)[i]) % 2 for o in odds for i in [-1, 0])
         return all(n in odds or n <= 10 or int(str(n)[0]) % 2 == 0 or int(str(n)[-1]) % 2 == 0 for n in nums)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7970,7 +7970,7 @@ def test_bigodds_1():
         assert all(o > 10 and odds.count(o) == nums.count(o) and int(str(o)[i]) % 2 for o in odds for i in [-1, 0])
         return all(n in odds or n <= 10 or int(str(n)[0]) % 2 == 0 or int(str(n)[-1]) % 2 == 0 for n in nums)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7979,7 +7979,7 @@ def test_bigodds_2():
         assert all(o > 10 and odds.count(o) == nums.count(o) and int(str(o)[i]) % 2 for o in odds for i in [-1, 0])
         return all(n in odds or n <= 10 or int(str(n)[0]) % 2 == 0 or int(str(n)[-1]) % 2 == 0 for n in nums)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7988,7 +7988,7 @@ def test_bigodds_3():
         assert all(o > 10 and odds.count(o) == nums.count(o) and int(str(o)[i]) % 2 for o in odds for i in [-1, 0])
         return all(n in odds or n <= 10 or int(str(n)[0]) % 2 == 0 or int(str(n)[-1]) % 2 == 0 for n in nums)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -7997,7 +7997,7 @@ def test_bigodds_4():
         assert all(o > 10 and odds.count(o) == nums.count(o) and int(str(o)[i]) % 2 for o in odds for i in [-1, 0])
         return all(n in odds or n <= 10 or int(str(n)[0]) % 2 == 0 or int(str(n)[-1]) % 2 == 0 for n in nums)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8006,7 +8006,7 @@ def test_threeples():
         assert len({tuple(t) for t in trips}) >= count
         return all(0 <= i < j < k and (a[i] + a[j] + a[k]) % 3 == 0 for i, j, k in trips)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8015,7 +8015,7 @@ def test_threeples_1():
         assert len({tuple(t) for t in trips}) >= count
         return all(0 <= i < j < k and (a[i] + a[j] + a[k]) % 3 == 0 for i, j, k in trips)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8024,7 +8024,7 @@ def test_threeples_2():
         assert len({tuple(t) for t in trips}) >= count
         return all(0 <= i < j < k and (a[i] + a[j] + a[k]) % 3 == 0 for i, j, k in trips)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8033,7 +8033,7 @@ def test_threeples_3():
         assert len({tuple(t) for t in trips}) >= count
         return all(0 <= i < j < k and (a[i] + a[j] + a[k]) % 3 == 0 for i, j, k in trips)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8042,7 +8042,7 @@ def test_threeples_4():
         assert len({tuple(t) for t in trips}) >= count
         return all(0 <= i < j < k and (a[i] + a[j] + a[k]) % 3 == 0 for i, j, k in trips)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8051,7 +8051,7 @@ def test_planetrange():
         assert " " not in "".join(planets_between)
         return " ".join([a] + planets_between + [b]) in "Venus Earth Mars Jupiter Saturn Uranus Neptune Pluto"
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8060,7 +8060,7 @@ def test_planetrange_1():
         assert " " not in "".join(planets_between)
         return " ".join([a] + planets_between + [b]) in "Venus Earth Mars Jupiter Saturn Uranus Neptune Pluto"
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8069,7 +8069,7 @@ def test_planetrange_2():
         assert " " not in "".join(planets_between)
         return " ".join([a] + planets_between + [b]) in "Venus Earth Mars Jupiter Saturn Uranus Neptune Pluto"
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8078,7 +8078,7 @@ def test_planetrange_3():
         assert " " not in "".join(planets_between)
         return " ".join([a] + planets_between + [b]) in "Venus Earth Mars Jupiter Saturn Uranus Neptune Pluto"
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8087,7 +8087,7 @@ def test_planetrange_4():
         assert " " not in "".join(planets_between)
         return " ".join([a] + planets_between + [b]) in "Venus Earth Mars Jupiter Saturn Uranus Neptune Pluto"
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8097,7 +8097,7 @@ def test_evenwords():
         assert all(lens[i] % 2 == 0 and lens[i] == max(lens[:i + 1]) and w in words for i, w in enumerate(evens))
         return all((len(w) % 2 == 1 or w in evens) for w in words)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8107,7 +8107,7 @@ def test_evenwords_1():
         assert all(lens[i] % 2 == 0 and lens[i] == max(lens[:i + 1]) and w in words for i, w in enumerate(evens))
         return all((len(w) % 2 == 1 or w in evens) for w in words)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8117,7 +8117,7 @@ def test_evenwords_2():
         assert all(lens[i] % 2 == 0 and lens[i] == max(lens[:i + 1]) and w in words for i, w in enumerate(evens))
         return all((len(w) % 2 == 1 or w in evens) for w in words)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8127,7 +8127,7 @@ def test_evenwords_3():
         assert all(lens[i] % 2 == 0 and lens[i] == max(lens[:i + 1]) and w in words for i, w in enumerate(evens))
         return all((len(w) % 2 == 1 or w in evens) for w in words)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8137,7 +8137,7 @@ def test_evenwords_4():
         assert all(lens[i] % 2 == 0 and lens[i] == max(lens[:i + 1]) and w in words for i, w in enumerate(evens))
         return all((len(w) % 2 == 1 or w in evens) for w in words)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8154,7 +8154,7 @@ def test_primesel():
     
         return set(neighbors) == goods and all(n == min(neighbors[i:]) for i, n in enumerate(neighbors))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8171,7 +8171,7 @@ def test_primesel_1():
     
         return set(neighbors) == goods and all(n == min(neighbors[i:]) for i, n in enumerate(neighbors))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8188,7 +8188,7 @@ def test_primesel_2():
     
         return set(neighbors) == goods and all(n == min(neighbors[i:]) for i, n in enumerate(neighbors))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8205,7 +8205,7 @@ def test_primesel_3():
     
         return set(neighbors) == goods and all(n == min(neighbors[i:]) for i, n in enumerate(neighbors))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8222,7 +8222,7 @@ def test_primesel_4():
     
         return set(neighbors) == goods and all(n == min(neighbors[i:]) for i, n in enumerate(neighbors))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8234,7 +8234,7 @@ def test_evensqure():
     
         return tot == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8246,7 +8246,7 @@ def test_evensqure_1():
     
         return tot == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8258,7 +8258,7 @@ def test_evensqure_2():
     
         return tot == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8270,7 +8270,7 @@ def test_evensqure_3():
     
         return tot == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8282,7 +8282,7 @@ def test_evensqure_4():
     
         return tot == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8290,7 +8290,7 @@ def test_arraydiff():
     def sat(b: List[int], a=[1, 2, 3, 0, 4, 17, 2, 4, 5, 9, 8, 4], c=[1, 2, 3, 4, 0, 16, 2, 3, 5, 9, 8, 4]):
         return len(b) == len(a) and all(i + j == k for i, j, k in zip(a, b, c))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8298,7 +8298,7 @@ def test_arraydiff_1():
     def sat(b: List[int], a=[14, -1, 12, 11, 3, -1, 18, 5, 8, 5, 6, 1], c=[15, 19, 15, 19, 4, 1, 7, 12, -1, 16, 11, 5]):
         return len(b) == len(a) and all(i + j == k for i, j, k in zip(a, b, c))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8306,7 +8306,7 @@ def test_arraydiff_2():
     def sat(b: List[int], a=[14, 14, 2, 1, 11, 10, 15, 11, 9, 10, 4, 1, 7, 10, 16, 12], c=[5, 11, 16, 8, 19, 12, 19, 9, 10, 11, 14, 18, 2, 2, 0, 17]):
         return len(b) == len(a) and all(i + j == k for i, j, k in zip(a, b, c))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8314,7 +8314,7 @@ def test_arraydiff_3():
     def sat(b: List[int], a=[4, 8, 14, 17, 15, -1, 17, 8, -1, 4, 3, 10, 2, 13, 1], c=[13, 14, 11, 18, 16, 8, 14, 3, 0, 9, 7, 19, 11, 15, 9]):
         return len(b) == len(a) and all(i + j == k for i, j, k in zip(a, b, c))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8322,7 +8322,7 @@ def test_arraydiff_4():
     def sat(b: List[int], a=[13, 10, 7, 7, 1, 10, 0, 17, 5, 14, 10, 14], c=[13, 13, 17, 4, 18, 17, 12, 16, 0, 3, 12, 14]):
         return len(b) == len(a) and all(i + j == k for i, j, k in zip(a, b, c))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8342,7 +8342,7 @@ def test_strongestextension():
     
         return ext in extensions and case_delta(ext) == max([case_delta(x) for x in extensions])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8362,7 +8362,7 @@ def test_strongestextension_1():
     
         return ext in extensions and case_delta(ext) == max([case_delta(x) for x in extensions])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8382,7 +8382,7 @@ def test_strongestextension_2():
     
         return ext in extensions and case_delta(ext) == max([case_delta(x) for x in extensions])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8402,7 +8402,7 @@ def test_strongestextension_3():
     
         return ext in extensions and case_delta(ext) == max([case_delta(x) for x in extensions])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8422,7 +8422,7 @@ def test_strongestextension_4():
     
         return ext in extensions and case_delta(ext) == max([case_delta(x) for x in extensions])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8430,7 +8430,7 @@ def test_rotatestring():
     def sat(r: str, s="light star", t="I love to look at the starlight!"):
         return r in t and len(r) == len(s) and r in s + s
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8438,7 +8438,7 @@ def test_rotatestring_1():
     def sat(r: str, s="fuz tox banu dukukyjosuthihono", t="sikysefylacywitijuz thosowehiv kiviwas girezol betext lepumarasithihonofuz tox banu dukukyjosutog kuquinecakyt"):
         return r in t and len(r) == len(s) and r in s + s
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8446,7 +8446,7 @@ def test_rotatestring_2():
     def sat(r: str, s="vyquaquabuwuktus tyryrezywovimu sopikalo ", t="zugu benuzyca cafoca gawy sycapoxitus tyryrezywovimu sopikalo vyquaquabuwuko citextytextythakidu basikyched"):
         return r in t and len(r) == len(s) and r in s + s
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8454,7 +8454,7 @@ def test_rotatestring_3():
     def sat(r: str, s="udynybu cequelynxebalu w guh", t="zigoxesychujocefete nyquuquu wubupi quidoxebalu w guhudynybu cequelynuquumythaku xet syquaxatext lizevachuciconolove"):
         return r in t and len(r) == len(s) and r in s + s
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8462,7 +8462,7 @@ def test_rotatestring_4():
     def sat(r: str, s="fecajajeh b tythanenifewed quomekucybimudegicyj zos depogip kmowe", t="fuch mowefecajajeh b tythanenifewed quomekucybimudegicyj zos depogip kotextu hothakatozate thyzet"):
         return r in t and len(r) == len(s) and r in s + s
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8475,7 +8475,7 @@ def test_evenodddigits():
                 odds -= 1
         return evens == 0 and odds == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8488,7 +8488,7 @@ def test_evenodddigits_1():
                 odds -= 1
         return evens == 0 and odds == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8501,7 +8501,7 @@ def test_evenodddigits_2():
                 odds -= 1
         return evens == 0 and odds == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8514,7 +8514,7 @@ def test_evenodddigits_3():
                 odds -= 1
         return evens == 0 and odds == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8527,7 +8527,7 @@ def test_evenodddigits_4():
                 odds -= 1
         return evens == 0 and odds == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8548,7 +8548,7 @@ def test_romannumerals():
                         break
         return m == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8569,7 +8569,7 @@ def test_romannumerals_1():
                         break
         return m == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8590,7 +8590,7 @@ def test_romannumerals_2():
                         break
         return m == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8611,7 +8611,7 @@ def test_romannumerals_3():
                         break
         return m == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8632,7 +8632,7 @@ def test_romannumerals_4():
                         break
         return m == n
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8643,7 +8643,7 @@ def test_pythagoreantriples():
                 return False
         return triples == sorted(triples) and len(triples) >= m
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8654,7 +8654,7 @@ def test_pythagoreantriples_1():
                 return False
         return triples == sorted(triples) and len(triples) >= m
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8665,7 +8665,7 @@ def test_pythagoreantriples_2():
                 return False
         return triples == sorted(triples) and len(triples) >= m
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8676,7 +8676,7 @@ def test_pythagoreantriples_3():
                 return False
         return triples == sorted(triples) and len(triples) >= m
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8687,7 +8687,7 @@ def test_pythagoreantriples_4():
                 return False
         return triples == sorted(triples) and len(triples) >= m
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8699,7 +8699,7 @@ def test_mostunique():
             assert len(set(p)) <= n
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8711,7 +8711,7 @@ def test_mostunique_1():
             assert len(set(p)) <= n
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8723,7 +8723,7 @@ def test_mostunique_2():
             assert len(set(p)) <= n
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8735,7 +8735,7 @@ def test_mostunique_3():
             assert len(set(p)) <= n
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8747,7 +8747,7 @@ def test_mostunique_4():
             assert len(set(p)) <= n
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8759,7 +8759,7 @@ def test_hungryrabbits():
             assert stock < need and remaining == 0 or stock >= need and remaining + need == stock
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8771,7 +8771,7 @@ def test_hungryrabbits_1():
             assert stock < need and remaining == 0 or stock >= need and remaining + need == stock
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8783,7 +8783,7 @@ def test_hungryrabbits_2():
             assert stock < need and remaining == 0 or stock >= need and remaining + need == stock
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8795,7 +8795,7 @@ def test_hungryrabbits_3():
             assert stock < need and remaining == 0 or stock >= need and remaining + need == stock
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8807,7 +8807,7 @@ def test_hungryrabbits_4():
             assert stock < need and remaining == 0 or stock >= need and remaining + need == stock
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8819,7 +8819,7 @@ def test_evaluateoperators():
             expr += op + str(n)
         return eval(expr) == target
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8831,7 +8831,7 @@ def test_evaluateoperators_1():
             expr += op + str(n)
         return eval(expr) == target
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8843,7 +8843,7 @@ def test_evaluateoperators_2():
             expr += op + str(n)
         return eval(expr) == target
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8855,7 +8855,7 @@ def test_evaluateoperators_3():
             expr += op + str(n)
         return eval(expr) == target
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8867,7 +8867,7 @@ def test_evaluateoperators_4():
             expr += op + str(n)
         return eval(expr) == target
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8876,7 +8876,7 @@ def test_reversecase():
         assert len(rev) == len(strs)
         return all(r.swapcase() == s != r or r[::-1] == s == s.swapcase() for r, s in zip(rev, strs))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8885,7 +8885,7 @@ def test_reversecase_1():
         assert len(rev) == len(strs)
         return all(r.swapcase() == s != r or r[::-1] == s == s.swapcase() for r, s in zip(rev, strs))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8894,7 +8894,7 @@ def test_reversecase_2():
         assert len(rev) == len(strs)
         return all(r.swapcase() == s != r or r[::-1] == s == s.swapcase() for r, s in zip(rev, strs))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8903,7 +8903,7 @@ def test_reversecase_3():
         assert len(rev) == len(strs)
         return all(r.swapcase() == s != r or r[::-1] == s == s.swapcase() for r, s in zip(rev, strs))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8912,7 +8912,7 @@ def test_reversecase_4():
         assert len(rev) == len(strs)
         return all(r.swapcase() == s != r or r[::-1] == s == s.swapcase() for r, s in zip(rev, strs))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8931,7 +8931,7 @@ def test_zobristcollision():
         a, b = positions
         return zobrist(a) == zobrist(b) and a != b
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8939,7 +8939,7 @@ def test_evenbetween():
     def sat(ab: List[int], s="3298832990329923299432996329983300033002"):
         return abs(ab[0] - ab[1]) > 4 and s == "".join(str(i) for i in range(min(ab), max(ab) + 1) if i % 2 == 0)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8947,7 +8947,7 @@ def test_evenbetween_1():
     def sat(ab: List[int], s="38600386023860438606"):
         return abs(ab[0] - ab[1]) > 4 and s == "".join(str(i) for i in range(min(ab), max(ab) + 1) if i % 2 == 0)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8955,7 +8955,7 @@ def test_evenbetween_2():
     def sat(ab: List[int], s="254042540625408"):
         return abs(ab[0] - ab[1]) > 4 and s == "".join(str(i) for i in range(min(ab), max(ab) + 1) if i % 2 == 0)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8963,7 +8963,7 @@ def test_evenbetween_3():
     def sat(ab: List[int], s="32880328823288432886"):
         return abs(ab[0] - ab[1]) > 4 and s == "".join(str(i) for i in range(min(ab), max(ab) + 1) if i % 2 == 0)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -8971,4 +8971,4 @@ def test_evenbetween_4():
     def sat(ab: List[int], s="6062860630606326063460636"):
         return abs(ab[0] - ab[1]) > 4 and s == "".join(str(i) for i in range(min(ab), max(ab) + 1) if i % 2 == 0)
 
-    assert False
+    assert sat(...)

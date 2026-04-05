@@ -10,7 +10,7 @@ def test_conway99():
         N = {i: {j for j in range(99) if j != i and ([i, j] in edges or [j, i] in edges)} for i in range(99)}
         return all(len(N[i].intersection(N[j])) == (1 if j in N[i] else 2) for i in range(99) for j in range(i))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -18,7 +18,7 @@ def test_anyedge():
     def sat(e: List[int], edges=[[0, 217], [40, 11], [17, 29], [11, 12], [31, 51]]):
         return e in edges
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -26,7 +26,7 @@ def test_anyedge_1():
     def sat(e: List[int], edges=[[0, 1], [1, 1], [0, 0]]):
         return e in edges
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -34,7 +34,7 @@ def test_anyedge_2():
     def sat(e: List[int], edges=[[1, 0], [0, 1], [1, 1]]):
         return e in edges
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -42,7 +42,7 @@ def test_anyedge_3():
     def sat(e: List[int], edges=[[1, 15], [15, 3], [5, 12], [11, 0], [8, 5], [1, 9], [3, 6], [5, 10], [12, 0], [6, 6], [9, 2], [13, 15], [2, 9], [5, 1], [10, 11], [4, 12], [0, 6], [8, 12], [15, 14], [1, 13], [11, 7], [15, 4], [13, 5], [7, 14], [14, 5], [12, 2], [7, 8], [2, 14], [3, 15], [2, 2], [7, 2], [3, 4], [4, 2], [1, 3], [4, 4], [3, 11], [14, 6], [14, 8], [14, 12], [7, 15], [7, 3], [7, 10], [10, 8], [7, 13], [2, 15], [14, 0], [1, 5], [11, 15], [1, 8], [6, 4], [15, 8], [9, 3], [1, 10], [2, 3], [4, 13], [7, 5], [2, 11], [0, 1], [15, 6], [0, 2], [5, 5]]):
         return e in edges
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -50,7 +50,7 @@ def test_anyedge_4():
     def sat(e: List[int], edges=[[7, 84], [72, 0], [65, 93], [66, 13], [39, 15], [91, 6], [16, 77], [43, 71], [34, 72], [83, 1], [91, 93], [41, 20], [71, 69], [51, 60], [75, 22], [25, 82], [93, 45], [54, 31], [38, 22], [76, 33], [18, 81], [91, 74], [28, 97], [39, 69], [15, 26], [83, 75], [57, 24], [94, 38], [26, 23], [40, 48], [37, 20], [90, 84], [75, 8], [36, 21], [93, 11], [97, 74], [79, 74], [69, 36], [3, 29], [66, 82], [49, 15], [52, 43], [76, 25], [39, 11], [9, 93], [68, 55], [53, 46], [29, 90], [12, 81], [44, 66], [54, 55], [2, 30], [1, 6], [8, 61], [67, 10], [61, 84], [72, 51], [13, 27], [93, 53], [44, 38], [86, 14], [90, 8], [22, 62], [5, 72], [63, 36], [31, 51], [83, 5], [36, 53], [92, 78], [44, 80], [23, 16], [43, 16], [18, 37], [34, 14], [23, 6], [19, 61], [59, 10], [85, 30], [25, 80], [76, 39], [21, 28], [60, 47], [15, 43], [26, 80], [59, 19], [83, 81], [4, 64], [3, 71], [52, 34], [90, 14], [44, 84], [37, 56], [76, 10], [69, 89], [30, 38], [17, 38], [42, 7], [79, 62], [15, 87], [45, 4], [96, 0], [44, 43], [84, 42], [26, 22], [1, 91], [1, 11], [68, 7], [72, 32], [8, 0], [64, 59], [16, 86], [25, 46], [65, 30], [10, 43], [89, 43], [55, 0], [91, 66], [49, 0], [22, 77], [80, 21], [16, 58], [55, 45], [64, 13], [55, 56], [89, 96], [84, 20], [11, 74], [92, 91], [36, 15], [51, 8], [4, 44], [55, 55], [6, 83], [76, 5], [3, 11], [15, 96], [18, 15], [43, 58], [19, 70], [87, 41], [43, 47], [2, 51], [47, 32], [14, 93], [27, 61], [21, 26], [78, 88], [52, 40], [21, 79], [12, 8], [74, 73], [5, 22], [50, 4], [15, 67], [87, 10], [90, 24], [17, 45], [75, 96], [27, 81], [76, 29], [52, 93], [74, 40], [48, 62], [5, 75], [68, 58], [61, 19], [56, 54], [4, 29], [26, 60], [24, 1], [37, 41], [95, 63], [49, 37], [81, 18], [79, 91], [82, 8], [29, 73], [55, 84], [18, 13], [32, 7], [77, 63], [26, 72], [90, 5], [95, 4], [46, 13], [0, 64], [84, 34], [52, 51], [32, 30], [24, 55], [51, 17], [12, 7], [73, 34], [54, 47], [96, 95], [65, 67], [46, 90], [58, 17], [54, 2], [45, 10], [84, 45], [46, 6], [0, 4], [16, 60], [50, 35], [86, 45], [89, 19], [48, 10], [4, 57], [43, 62], [19, 30], [2, 35], [83, 68], [36, 26], [69, 4], [41, 82], [12, 52], [77, 95], [90, 75], [78, 58], [93, 29], [38, 87], [15, 82], [42, 86], [39, 90], [20, 53], [79, 25], [68, 81], [64, 82], [45, 56], [14, 85], [97, 13], [46, 15], [46, 43], [8, 71], [90, 72], [97, 66], [80, 57], [25, 8], [90, 74]]):
         return e in edges
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -59,7 +59,7 @@ def test_anytriangle():
         a, b, c = tri
         return [a, b] in edges and [b, c] in edges and [c, a] in edges and a != b != c != a
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -68,7 +68,7 @@ def test_anytriangle_1():
         a, b, c = tri
         return [a, b] in edges and [b, c] in edges and [c, a] in edges and a != b != c != a
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -77,7 +77,7 @@ def test_anytriangle_2():
         a, b, c = tri
         return [a, b] in edges and [b, c] in edges and [c, a] in edges and a != b != c != a
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -86,7 +86,7 @@ def test_anytriangle_3():
         a, b, c = tri
         return [a, b] in edges and [b, c] in edges and [c, a] in edges and a != b != c != a
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -95,7 +95,7 @@ def test_anytriangle_4():
         a, b, c = tri
         return [a, b] in edges and [b, c] in edges and [c, a] in edges and a != b != c != a
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -109,7 +109,7 @@ def test_plantedclique():
     
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -123,7 +123,7 @@ def test_plantedclique_1():
     
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -137,7 +137,7 @@ def test_plantedclique_2():
     
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -151,7 +151,7 @@ def test_plantedclique_3():
     
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -165,7 +165,7 @@ def test_plantedclique_4():
     
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -173,7 +173,7 @@ def test_shortestpath():
     def sat(path: List[int], weights=[{1: 20, 2: 1}, {2: 2, 3: 5}, {1: 10}], bound=11):
         return path[0] == 0 and path[-1] == 1 and sum(weights[a][b] for a, b in zip(path, path[1:])) <= bound
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -181,7 +181,7 @@ def test_shortestpath_1():
     def sat(path: List[int], weights=[{3: 210, 0: 513, 1: 66, 5: 612}, {0: 794, 1: 111, 3: 598}, {4: 295, 0: 601}, {}, {3: 452, 0: 689, 5: 124, 1: 406}, {2: 289, 5: 660, 3: 498}], bound=66):
         return path[0] == 0 and path[-1] == 1 and sum(weights[a][b] for a, b in zip(path, path[1:])) <= bound
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -189,7 +189,7 @@ def test_shortestpath_2():
     def sat(path: List[int], weights=[{25: 594, 24: 349}, {}, {29: 745}, {}, {7: 245}, {9: 384}, {1: 490, 21: 253, 22: 904, 13: 526}, {4: 452, 27: 179, 28: 673}, {22: 30, 29: 307, 8: 104}, {12: 399, 0: 792}, {}, {}, {20: 349, 6: 53}, {}, {}, {}, {14: 223}, {23: 705}, {13: 903, 21: 159}, {}, {27: 144, 28: 181}, {26: 922, 20: 241}, {}, {24: 966, 29: 78}, {26: 107}, {1: 121}, {18: 898, 0: 280, 12: 425}, {}, {18: 750, 25: 440, 28: 152, 29: 109, 6: 330}, {23: 298}], bound=715):
         return path[0] == 0 and path[-1] == 1 and sum(weights[a][b] for a, b in zip(path, path[1:])) <= bound
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -197,7 +197,7 @@ def test_shortestpath_3():
     def sat(path: List[int], weights=[{1: 239}, {0: 602, 2: 280}, {2: 293, 0: 816, 3: 925}, {}], bound=239):
         return path[0] == 0 and path[-1] == 1 and sum(weights[a][b] for a, b in zip(path, path[1:])) <= bound
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -205,7 +205,7 @@ def test_shortestpath_4():
     def sat(path: List[int], weights=[{1: 996, 2: 237, 4: 264}, {4: 329, 5: 12, 2: 542, 0: 419}, {2: 170, 6: 339, 5: 211}, {1: 714, 5: 885, 3: 640}, {5: 652, 4: 3, 3: 26, 6: 74}, {0: 647, 5: 346}, {2: 297, 6: 358, 3: 636, 0: 722, 4: 942}], bound=996):
         return path[0] == 0 and path[-1] == 1 and sum(weights[a][b] for a, b in zip(path, path[1:])) <= bound
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -214,7 +214,7 @@ def test_unweightedshortestpath():
         assert path[0] == u and path[-1] == v and all([i, j] in edges for i, j in zip(path, path[1:]))
         return len(path) <= bound
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -223,7 +223,7 @@ def test_unweightedshortestpath_1():
         assert path[0] == u and path[-1] == v and all([i, j] in edges for i, j in zip(path, path[1:]))
         return len(path) <= bound
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -232,7 +232,7 @@ def test_unweightedshortestpath_2():
         assert path[0] == u and path[-1] == v and all([i, j] in edges for i, j in zip(path, path[1:]))
         return len(path) <= bound
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -241,7 +241,7 @@ def test_unweightedshortestpath_3():
         assert path[0] == u and path[-1] == v and all([i, j] in edges for i, j in zip(path, path[1:]))
         return len(path) <= bound
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -250,7 +250,7 @@ def test_unweightedshortestpath_4():
         assert path[0] == u and path[-1] == v and all([i, j] in edges for i, j in zip(path, path[1:]))
         return len(path) <= bound
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -262,7 +262,7 @@ def test_anypath():
         assert path[-1] == max(max(edge) for edge in edges)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -274,7 +274,7 @@ def test_anypath_1():
         assert path[-1] == max(max(edge) for edge in edges)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -286,7 +286,7 @@ def test_anypath_2():
         assert path[-1] == max(max(edge) for edge in edges)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -298,7 +298,7 @@ def test_anypath_3():
         assert path[-1] == max(max(edge) for edge in edges)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -310,7 +310,7 @@ def test_anypath_4():
         assert path[-1] == max(max(edge) for edge in edges)
         return True
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -320,7 +320,7 @@ def test_evenpath():
         assert all([[a, b] in edges for a, b in zip(path, path[1:])])
         return len(path) % 2 == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -330,7 +330,7 @@ def test_evenpath_1():
         assert all([[a, b] in edges for a, b in zip(path, path[1:])])
         return len(path) % 2 == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -340,7 +340,7 @@ def test_evenpath_2():
         assert all([[a, b] in edges for a, b in zip(path, path[1:])])
         return len(path) % 2 == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -350,7 +350,7 @@ def test_evenpath_3():
         assert all([[a, b] in edges for a, b in zip(path, path[1:])])
         return len(path) % 2 == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -360,7 +360,7 @@ def test_evenpath_4():
         assert all([[a, b] in edges for a, b in zip(path, path[1:])])
         return len(path) % 2 == 0
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -368,7 +368,7 @@ def test_oddpath():
     def sat(p: List[int], edges=[[0, 1], [0, 2], [1, 3], [1, 4], [2, 5], [3, 4], [5, 6], [6, 7], [6, 1]]):
         return p[0] == 0 and p[-1] == 1 == len(p) % 2 and all([[a, b] in edges for a, b in zip(p, p[1:])])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -376,7 +376,7 @@ def test_oddpath_1():
     def sat(p: List[int], edges=[[1, 6], [2, 3], [2, 7], [0, 8], [7, 8], [7, 2], [1, 5], [8, 7], [7, 0], [0, 0], [8, 1], [5, 7], [4, 7], [6, 1], [4, 4], [7, 4]]):
         return p[0] == 0 and p[-1] == 1 == len(p) % 2 and all([[a, b] in edges for a, b in zip(p, p[1:])])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -384,7 +384,7 @@ def test_oddpath_2():
     def sat(p: List[int], edges=[[40, 31], [16, 32], [41, 10], [14, 9], [36, 26], [14, 12], [22, 6], [36, 6], [13, 22], [0, 34], [6, 28], [27, 22], [31, 5], [2, 3], [34, 37], [17, 14], [1, 4], [22, 26], [32, 18], [20, 10], [28, 17], [2, 22], [22, 30], [36, 41], [7, 35], [24, 29], [31, 31], [26, 39], [14, 32], [33, 27], [33, 9], [30, 37], [40, 14], [19, 17], [15, 11], [7, 40], [6, 36], [20, 19], [7, 12], [17, 25], [14, 24], [34, 25], [27, 34], [35, 41], [34, 3], [25, 12], [34, 29], [21, 23], [2, 12], [25, 26], [28, 16], [17, 2], [15, 28], [29, 0], [32, 16], [13, 29], [23, 26], [3, 11], [39, 3], [40, 16], [22, 39], [12, 30], [12, 24], [38, 24], [5, 1], [21, 39], [33, 39], [29, 36], [23, 40], [34, 20], [35, 10], [13, 7], [10, 2], [32, 26], [37, 4], [36, 21], [1, 18], [23, 11], [19, 11], [35, 5], [10, 32], [9, 17], [21, 2]]):
         return p[0] == 0 and p[-1] == 1 == len(p) % 2 and all([[a, b] in edges for a, b in zip(p, p[1:])])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -392,7 +392,7 @@ def test_oddpath_3():
     def sat(p: List[int], edges=[[6, 6], [3, 6], [5, 0], [7, 16], [9, 12], [10, 3], [3, 5], [14, 17], [10, 14], [15, 3], [17, 15], [8, 18], [1, 12], [3, 7], [12, 17], [15, 15], [6, 2], [10, 9], [5, 13], [2, 15], [8, 5], [9, 15], [10, 6], [10, 17], [3, 9], [2, 6], [4, 1], [7, 12], [13, 1], [15, 17], [13, 5], [14, 10], [0, 17], [0, 11], [4, 17], [1, 11], [12, 18]]):
         return p[0] == 0 and p[-1] == 1 == len(p) % 2 and all([[a, b] in edges for a, b in zip(p, p[1:])])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -400,7 +400,7 @@ def test_oddpath_4():
     def sat(p: List[int], edges=[[4, 8], [7, 6], [2, 0], [3, 2], [6, 3], [4, 5], [11, 5], [11, 0], [1, 5], [12, 12], [12, 1], [4, 11], [3, 3], [2, 10], [10, 6], [0, 7], [2, 7], [6, 11], [2, 9], [7, 7], [8, 9], [2, 1], [4, 6], [9, 4]]):
         return p[0] == 0 and p[-1] == 1 == len(p) % 2 and all([[a, b] in edges for a, b in zip(p, p[1:])])
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -416,7 +416,7 @@ def test_zarankiewicz():
             for right in combinations(range(n), t)
         )
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -432,7 +432,7 @@ def test_zarankiewicz_1():
             for right in combinations(range(n), t)
         )
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -448,7 +448,7 @@ def test_zarankiewicz_2():
             for right in combinations(range(n), t)
         )
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -456,7 +456,7 @@ def test_graphisomorphism():
     def sat(bi: List[int], g1=[[0, 1], [1, 2], [2, 3], [3, 4], [2, 5]], g2=[[0, 4], [1, 5], [4, 1], [1, 2], [2, 3]]):
         return len(bi) == len(set(bi)) and {(i, j) for i, j in g1} == {(bi[i], bi[j]) for i, j in g2}
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -464,7 +464,7 @@ def test_graphisomorphism_1():
     def sat(bi: List[int], g1=[[0, 6], [0, 8], [0, 10], [0, 11], [1, 3], [1, 5], [1, 7], [1, 10], [2, 4], [2, 5], [2, 7], [2, 8], [2, 9], [3, 5], [3, 7], [3, 10], [4, 4], [5, 1], [5, 2], [5, 7], [5, 8], [5, 10], [6, 1], [6, 2], [6, 3], [6, 4], [6, 6], [6, 7], [6, 8], [6, 9], [6, 10], [6, 11], [7, 0], [7, 2], [7, 9], [8, 4], [8, 6], [8, 9], [8, 10], [9, 1], [9, 3], [9, 4], [9, 5], [9, 6], [9, 7], [9, 9], [9, 10], [9, 11], [10, 1], [10, 3], [10, 6], [10, 8], [11, 1], [11, 2], [11, 4], [11, 8], [11, 9], [11, 11]], g2=[[0, 11], [9, 2], [10, 10], [6, 11], [7, 5], [5, 0], [9, 3], [8, 2], [10, 8], [2, 11], [4, 8], [0, 7], [2, 10], [11, 11], [4, 5], [10, 11], [6, 10], [9, 7], [6, 6], [8, 10], [1, 5], [2, 9], [10, 3], [0, 2], [9, 8], [5, 4], [0, 5], [6, 2], [8, 1], [1, 6], [6, 3], [0, 10], [0, 8], [10, 5], [2, 7], [0, 6], [0, 0], [10, 0], [3, 8], [5, 3], [5, 7], [10, 6], [6, 7], [7, 0], [3, 9], [3, 4], [0, 3], [0, 4], [1, 7], [4, 9], [7, 10], [9, 5], [7, 11], [3, 5], [10, 4], [10, 9], [2, 8], [1, 0]]):
         return len(bi) == len(set(bi)) and {(i, j) for i, j in g1} == {(bi[i], bi[j]) for i, j in g2}
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -472,7 +472,7 @@ def test_graphisomorphism_2():
     def sat(bi: List[int], g1=[[0, 1], [0, 7], [1, 1], [2, 0], [2, 3], [2, 5], [2, 6], [3, 0], [3, 1], [3, 2], [3, 5], [3, 6], [3, 7], [4, 3], [4, 5], [4, 6], [5, 0], [5, 2], [5, 3], [6, 0], [6, 5], [6, 7], [7, 0], [7, 4], [7, 6]], g2=[[0, 7], [7, 1], [0, 2], [3, 1], [2, 0], [7, 0], [0, 6], [4, 7], [2, 7], [7, 6], [1, 6], [3, 6], [6, 5], [1, 3], [7, 3], [4, 0], [1, 0], [3, 4], [2, 1], [2, 6], [7, 2], [6, 3], [7, 5], [4, 1], [5, 5]]):
         return len(bi) == len(set(bi)) and {(i, j) for i, j in g1} == {(bi[i], bi[j]) for i, j in g2}
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -480,7 +480,7 @@ def test_graphisomorphism_3():
     def sat(bi: List[int], g1=[[0, 0], [0, 5], [0, 6], [0, 9], [1, 1], [1, 2], [1, 3], [1, 5], [1, 7], [1, 8], [2, 1], [2, 4], [2, 8], [2, 9], [3, 0], [3, 4], [3, 7], [3, 9], [4, 2], [4, 3], [4, 5], [4, 9], [5, 6], [5, 7], [5, 8], [5, 9], [6, 0], [6, 4], [6, 7], [7, 5], [7, 6], [7, 8], [8, 1], [8, 7], [9, 1], [9, 4], [9, 8], [9, 9]], g2=[[1, 0], [2, 5], [0, 1], [5, 0], [6, 2], [8, 8], [0, 2], [9, 3], [3, 7], [5, 8], [1, 8], [8, 3], [5, 3], [0, 9], [6, 7], [1, 5], [8, 2], [7, 4], [6, 3], [9, 0], [4, 1], [1, 1], [7, 3], [7, 5], [2, 4], [5, 9], [3, 9], [7, 7], [7, 9], [4, 9], [4, 8], [8, 7], [7, 6], [9, 5], [6, 8], [2, 8], [4, 2], [2, 6]]):
         return len(bi) == len(set(bi)) and {(i, j) for i, j in g1} == {(bi[i], bi[j]) for i, j in g2}
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -488,7 +488,7 @@ def test_graphisomorphism_4():
     def sat(bi: List[int], g1=[[1, 0], [1, 1], [1, 2], [2, 1]], g2=[[0, 2], [2, 2], [2, 0], [2, 1]]):
         return len(bi) == len(set(bi)) and {(i, j) for i, j in g1} == {(bi[i], bi[j]) for i, j in g2}
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -496,4 +496,4 @@ def test_shortintegerpath():
     def sat(li: List[int]):
         return all(j in {i - 1, i + 1, 3 * i} for i, j in zip([0] + li, li + [128])) and len(li) == 9
 
-    assert False
+    assert sat(...)

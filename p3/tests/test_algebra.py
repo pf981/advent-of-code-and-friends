@@ -9,7 +9,7 @@ def test_quadraticroot():
         a, b, c = coeffs
         return abs(a * x**2 + b * x + c) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -21,7 +21,7 @@ def test_quadraticroot_1():
         a, b, c = coeffs
         return abs(a * x**2 + b * x + c) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -32,7 +32,7 @@ def test_quadraticroot_2():
         a, b, c = coeffs
         return abs(a * x**2 + b * x + c) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -43,7 +43,7 @@ def test_quadraticroot_3():
         a, b, c = coeffs
         return abs(a * x**2 + b * x + c) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -54,7 +54,7 @@ def test_quadraticroot_4():
         a, b, c = coeffs
         return abs(a * x**2 + b * x + c) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -64,7 +64,7 @@ def test_allquadraticroots():
         r1, r2 = roots
         return abs(r1 + r2 + b) + abs(r1 * r2 - c) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -74,7 +74,7 @@ def test_allquadraticroots_1():
         r1, r2 = roots
         return abs(r1 + r2 + b) + abs(r1 * r2 - c) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -84,7 +84,7 @@ def test_allquadraticroots_2():
         r1, r2 = roots
         return abs(r1 + r2 + b) + abs(r1 * r2 - c) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -94,7 +94,7 @@ def test_allquadraticroots_3():
         r1, r2 = roots
         return abs(r1 + r2 + b) + abs(r1 * r2 - c) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -104,7 +104,7 @@ def test_allquadraticroots_4():
         r1, r2 = roots
         return abs(r1 + r2 + b) + abs(r1 * r2 - c) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -112,7 +112,7 @@ def test_cubicroot():
     def sat(x: float, coeffs=[2.0, 1.0, 0.0, 8.0]):
         return abs(sum(c * x ** (3 - i) for i, c in enumerate(coeffs))) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -128,7 +128,7 @@ def test_cubicroot_1():
     ):
         return abs(sum(c * x ** (3 - i) for i, c in enumerate(coeffs))) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -144,7 +144,7 @@ def test_cubicroot_2():
     ):
         return abs(sum(c * x ** (3 - i) for i, c in enumerate(coeffs))) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -160,7 +160,7 @@ def test_cubicroot_3():
     ):
         return abs(sum(c * x ** (3 - i) for i, c in enumerate(coeffs))) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -176,7 +176,7 @@ def test_cubicroot_4():
     ):
         return abs(sum(c * x ** (3 - i) for i, c in enumerate(coeffs))) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -191,7 +191,7 @@ def test_allcubicroots():
             < 1e-6
         )
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -209,7 +209,7 @@ def test_allcubicroots_1():
             < 1e-6
         )
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -227,7 +227,7 @@ def test_allcubicroots_2():
             < 1e-6
         )
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -245,7 +245,7 @@ def test_allcubicroots_3():
             < 1e-6
         )
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -263,4 +263,4 @@ def test_allcubicroots_4():
             < 1e-6
         )
 
-    assert False
+    assert sat(...)

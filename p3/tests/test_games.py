@@ -21,7 +21,7 @@ def test_nim():
             assert any(state), "You lost!"
             bot_move()
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -42,7 +42,7 @@ def test_nim_1():
             assert any(state), "You lost!"
             bot_move()
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -63,7 +63,7 @@ def test_nim_2():
             assert any(state), "You lost!"
             bot_move()
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -84,7 +84,7 @@ def test_nim_3():
             assert any(state), "You lost!"
             bot_move()
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -105,7 +105,7 @@ def test_nim_4():
             assert any(state), "You lost!"
             bot_move()
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -126,7 +126,7 @@ def test_mastermind():
     
         return all(helper(r + s + t + u) for r in COLORS for s in COLORS for t in COLORS for u in COLORS)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -147,7 +147,7 @@ def test_mastermind_1():
     
         return all(helper(r + s + t + u) for r in COLORS for s in COLORS for t in COLORS for u in COLORS)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -168,7 +168,7 @@ def test_mastermind_2():
     
         return all(helper(r + s + t + u) for r in COLORS for s in COLORS for t in COLORS for u in COLORS)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -183,7 +183,7 @@ def test_tictactoex():
     
         return tie(0, 0)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -199,7 +199,7 @@ def test_tictactoeo():
     
         return all(tie(1 << i, 0) for i in range(9))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -208,7 +208,7 @@ def test_rockpaperscissors():
         assert len(probs) == 3 and abs(sum(probs) - 1) < 1e-6
         return max(probs[(i + 2) % 3] - probs[(i + 1) % 3] for i in range(3)) < 1e-6
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -224,7 +224,7 @@ def test_nash():
         return (all(sum(A[i][j] * q[j] for j in range(n)) <= v + eps for i in range(m)) and
                 all(sum(B[i][j] * p[i] for i in range(m)) <= w + eps for j in range(n)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -240,7 +240,7 @@ def test_nash_1():
         return (all(sum(A[i][j] * q[j] for j in range(n)) <= v + eps for i in range(m)) and
                 all(sum(B[i][j] * p[i] for i in range(m)) <= w + eps for j in range(n)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -256,7 +256,7 @@ def test_nash_2():
         return (all(sum(A[i][j] * q[j] for j in range(n)) <= v + eps for i in range(m)) and
                 all(sum(B[i][j] * p[i] for i in range(m)) <= w + eps for j in range(n)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -272,7 +272,7 @@ def test_nash_3():
         return (all(sum(A[i][j] * q[j] for j in range(n)) <= v + eps for i in range(m)) and
                 all(sum(B[i][j] * p[i] for i in range(m)) <= w + eps for j in range(n)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -288,7 +288,7 @@ def test_nash_4():
         return (all(sum(A[i][j] * q[j] for j in range(n)) <= v + eps for i in range(m)) and
                 all(sum(B[i][j] * p[i] for i in range(m)) <= w + eps for j in range(n)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -303,7 +303,7 @@ def test_zerosum():
         return (all(sum(A[i][j] * q[j] for j in range(n)) <= v + eps for i in range(m)) and
                 all(sum(A[i][j] * p[i] for i in range(m)) >= v - eps for j in range(n)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -318,7 +318,7 @@ def test_zerosum_1():
         return (all(sum(A[i][j] * q[j] for j in range(n)) <= v + eps for i in range(m)) and
                 all(sum(A[i][j] * p[i] for i in range(m)) >= v - eps for j in range(n)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -333,7 +333,7 @@ def test_zerosum_2():
         return (all(sum(A[i][j] * q[j] for j in range(n)) <= v + eps for i in range(m)) and
                 all(sum(A[i][j] * p[i] for i in range(m)) >= v - eps for j in range(n)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -348,7 +348,7 @@ def test_zerosum_3():
         return (all(sum(A[i][j] * q[j] for j in range(n)) <= v + eps for i in range(m)) and
                 all(sum(A[i][j] * p[i] for i in range(m)) >= v - eps for j in range(n)))
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -363,4 +363,4 @@ def test_zerosum_4():
         return (all(sum(A[i][j] * q[j] for j in range(n)) <= v + eps for i in range(m)) and
                 all(sum(A[i][j] * p[i] for i in range(m)) >= v - eps for j in range(n)))
 
-    assert False
+    assert sat(...)

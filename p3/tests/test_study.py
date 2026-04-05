@@ -186,7 +186,7 @@ def test_study_21():
     def sat(li: List[int]):
         return all([li[i] != li[i + 1] for i in range(10)]) and len(set(li)) == 3
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -194,7 +194,7 @@ def test_study_22():
     def sat(s: str):
         return s[::2] in s and len(set(s)) == 5
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -202,7 +202,7 @@ def test_study_23():
     def sat(ls: List[str]):
         return tuple(ls) in zip("dee", "doo", "dah!")
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -210,7 +210,7 @@ def test_study_24():
     def sat(li: List[int]):
         return li.count(17) == 3 and li.count(3) >= 2
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -218,7 +218,7 @@ def test_study_25():
     def sat(s: str):
         return sorted(s) == sorted("Permute me true") and s == s[::-1]
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -226,7 +226,7 @@ def test_study_26():
     def sat(ls: List[str]):
         return "".join(ls) == str(8**88) and all(len(s) == 8 for s in ls)
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -234,7 +234,7 @@ def test_study_27():
     def sat(li: List[int]):
         return li[li[0]] != li[li[1]] and li[li[li[0]]] == li[li[li[1]]]
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -245,7 +245,7 @@ def test_study_28():
             and len(set(li)) == 100
         )
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -261,7 +261,7 @@ def test_study_29():
             and len(set(li)) > 995
         )
 
-    assert False
+    assert sat(...)
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -274,4 +274,4 @@ def test_study_30():
             ]
         )
 
-    assert False
+    assert sat(...)

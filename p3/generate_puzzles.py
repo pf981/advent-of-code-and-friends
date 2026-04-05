@@ -21,7 +21,7 @@ def main():
     def test_{name}():
         {sat.replace("\n", "\n    ")}
 
-        assert False
+        assert sat(...)
     """
         output[module].append(body)
 
