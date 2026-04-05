@@ -28,6 +28,7 @@ A collection of solutions to various coding challenges and puzzles, all in one p
 | [`leetcode`](https://leetcode.com/u/PaulFoster/) | [LeetCode](https://leetcode.com/) | LeetCode | ⏳ 2125/3758+ |
 | [`marches-and-gnats/`](marches-and-gnats/) | [Marches and Gnats](https://mng.quest/) | Puzzles using a primitive turing machine | ⏳ 27/33 |
 | [`markov-algorithm-online/`](markov-algorithm-online/) | [Markov Algorithm Online](https://mao.snuke.org/) | Solve puzzles in a language where the only operation is string-replacement | ✅ 85/85 |
+| [`p3/`](p3/) | [Python Programming Puzzles (P3)](https://github.com/microsoft/PythonProgrammingPuzzles/) | Find an input that makes the given function return True | ⏳ 71/1715 |
 | [`pi-coding-quest/`](pi-coding-quest/) | [Pi Coding Quest](https://ivanr3d.com/projects/pi/) | Coding challenges inspired by the mystical number Pi | ✅ 2024,2025,2026 |
 | [`project-euler-first-100/`](project-euler-first-100/), [`project-euler-solutions`](https://github.com/pf981/project-euler-solutions)(private)| [Project Euler](https://projecteuler.net/) | Mathematical computation problems | ⏳ 95/957 |
 | [`synacor-challenge/`](synacor-challenge/) | [Synacor Challenge](https://github.com/Aneurysm9/vm_challenge) | Virtual machine and reverse engineering puzzle | ✅ |
