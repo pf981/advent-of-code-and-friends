@@ -95,73 +95,65 @@ def test_study_10():
     assert sat(s)
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_study_11():
     def sat(ls: List[str]):
         return min(ls) == max(ls) == str(len(ls))
 
-    assert False
+    assert sat(["1"])
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_study_12():
     def sat(li: List[int]):
         return all(i + j == 9 for i, j in zip([4] + li, li)) and len(li) == 1000
 
-    assert False
+    assert sat([5, 4] * 500)
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_study_13():
     def sat(x: float):
         return str(x - 3.1415).startswith("123.456")
 
-    assert False
+    assert sat(123.456 + 3.1415)
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_study_14():
     def sat(li: List[int]):
         return all([sum(li[:i]) == i for i in range(20)])
 
-    assert False
+    assert sat([1] * 20)
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_study_15():
     def sat(li: List[int]):
         return all(sum(li[:i]) == 2**i - 1 for i in range(20))
 
-    assert False
+    s = 0
+    assert [(s := 2**i - 1 - s) for i in range(20)]
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_study_16():
     def sat(s: str):
         return float(s) + len(s) == 4.5
 
-    assert False
+    assert sat("1.5")
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_study_17():
     def sat(i: int):
         return len(str(i + 1000)) > len(str(i + 1001))
 
-    assert False
+    assert sat(-1 - 1000)
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_study_18():
     def sat(ls: List[str]):
         return [
             s + t for s in ls for t in ls if s != t
         ] == "berlin berger linber linger gerber gerlin".split()
 
-    assert False
+    assert sat(["ber", "lin", "ger"])
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_study_19():
     def sat(li: List[int]):
         return {i + j for i in li for j in li} == {
@@ -179,15 +171,14 @@ def test_study_19():
             34,
         }
 
-    assert False
+    assert sat([0, 1, 2, 3, 17])
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_study_20():
     def sat(li: List[int]):
         return all(j in {i - 1, i + 1, 3 * i} for i, j in zip([0] + li, li + [128]))
 
-    assert False
+    assert sat(list(range(128)))
 
 
 @pytest.mark.skip(reason="not implemented yet")
@@ -259,15 +250,15 @@ def test_study_28():
 
 @pytest.mark.skip(reason="not implemented yet")
 def test_study_29():
-    def sat(l: List[int]):
+    def sat(li: List[int]):
         return (
             all(
                 i in range(1000) and abs(i * i - j * j) >= 10
-                for i in l
-                for j in l
+                for i in li
+                for j in li
                 if i != j
             )
-            and len(set(l)) > 995
+            and len(set(li)) > 995
         )
 
     assert False
