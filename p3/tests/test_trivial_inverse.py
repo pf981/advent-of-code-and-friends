@@ -3,127 +3,112 @@ from typing import List
 import pytest
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_helloworld():
     def sat(s: str):
         return s + "world" == "Hello world"
 
-    assert sat(...)
+    assert sat("Hello ")
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_backworlds():
     def sat(s: str):
         return s[::-1] + "world" == "Hello world"
 
-    assert sat(...)
+    assert sat("Hello "[::-1])
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_stradd():
     def sat(st: str, a="world", b="Hello world"):
         return st + a == b
 
-    assert sat(...)
+    assert sat("Hello ")
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_stradd_1():
     def sat(st: str, a="zine", b="cerofilimybazine"):
         return st + a == b
 
-    assert sat(...)
+    assert sat("cerofilimyba")
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_stradd_2():
     def sat(st: str, a="id", b="xakid"):
         return st + a == b
 
-    assert sat(...)
+    assert sat("xak")
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_stradd_3():
     def sat(st: str, a="dyr", b="dyr"):
         return st + a == b
 
-    assert sat(...)
+    assert sat("")
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_stradd_4():
     def sat(st: str, a="s", b="tos"):
         return st + a == b
 
-    assert sat(...)
+    assert sat("to")
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strsetlen():
     def sat(s: str, dups=2021):
         return len(set(s)) == len(s) - dups
 
-    assert sat(...)
+    assert sat("a" * 2022)
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strsetlen_1():
     def sat(s: str, dups=0):
         return len(set(s)) == len(s) - dups
 
-    assert sat(...)
+    assert sat("")
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strsetlen_2():
     def sat(s: str, dups=1):
         return len(set(s)) == len(s) - dups
 
-    assert sat(...)
+    assert sat("aa")
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strsetlen_3():
     def sat(s: str, dups=2):
         return len(set(s)) == len(s) - dups
 
-    assert sat(...)
+    assert sat("aaa")
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strmul():
     def sat(s: str, target="foofoofoofoo", n=2):
         return s * n == target
 
-    assert sat(...)
+    assert sat("foofoo")
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strmul_1():
     def sat(s: str, target="biquacagegichisykbiquacagegichisykbiquacagegichisyk", n=3):
         return s * n == target
 
-    assert sat(...)
+    assert sat("biquacagegichisyk")
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strmul_2():
     def sat(s: str, target="hutextogoxanithiru", n=1):
         return s * n == target
 
-    assert sat(...)
+    assert sat("hutextogoxanithiru")
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strmul_3():
     def sat(s: str, target="sisisisisisisisisisisisisisi", n=7):
         return s * n == target
 
-    assert sat(...)
+    s = "sisisisisisisisisisisisisisi"
+    assert sat(s[: len(s) // 7])
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strmul_4():
     def sat(
         s: str,
@@ -132,26 +117,24 @@ def test_strmul_4():
     ):
         return s * n == target
 
-    assert sat(...)
+    s = "fuchomurybaxefuchomurybaxefuchomurybaxefuchomurybaxefuchomurybaxefuchomurybaxefuchomurybaxe"
+    assert sat(s[: len(s) // 7])
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strmul2():
     def sat(n: int, target="foofoofoofoo", s="foofoo"):
         return s * n == target
 
-    assert sat(...)
+    assert sat(2)
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strmul2_1():
     def sat(n: int, target="", s="jan"):
         return s * n == target
 
-    assert sat(...)
+    assert sat(0)
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strmul2_2():
     def sat(
         n: int,
@@ -160,10 +143,11 @@ def test_strmul2_2():
     ):
         return s * n == target
 
-    assert sat(...)
+    target = "koquuwibehyckoquuwibehyckoquuwibehyckoquuwibehyckoquuwibehyckoquuwibehyckoquuwibehyc"
+    s = "koquuwibehyc"
+    assert sat(len(target) // len(s))
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strmul2_3():
     def sat(
         n: int,
@@ -172,10 +156,11 @@ def test_strmul2_3():
     ):
         return s * n == target
 
-    assert sat(...)
+    target = "kasujyzkasujyzkasujyzkasujyzkasujyzkasujyzkasujyzkasujyzkasujyzkasujyzkasujyzkasujyzkasujyzkasujyzkasujyzkasujyz"
+    s = "kasujyzkasujyz"
+    assert sat(len(target) // len(s))
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strmul2_4():
     def sat(
         n: int,
@@ -184,122 +169,109 @@ def test_strmul2_4():
     ):
         return s * n == target
 
-    assert sat(...)
+    target = "kedezygijithequuthkedezygijithequuthkedezygijithequuthkedezygijithequuthkedezygijithequuthkedezygijithequuthkedezygijithequuthkedezygijithequuthkedezygijithequuthkedezygijithequuthkedezygijithequuthkedezygijithequuthkedezygijithequuthkedezygijithequuthkedezygijithequuthkedezygijithequuth"
+    s = "kedezygijithequuthkedezygijithequuth"
+    assert sat(len(target) // len(s))
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strlen():
     def sat(s: str, n=1000):
         return len(s) == n
 
-    assert sat(...)
+    assert sat("a" * 1000)
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strlen_1():
     def sat(s: str, n=39):
         return len(s) == n
 
-    assert sat(...)
+    assert sat("a" * 39)
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strlen_2():
     def sat(s: str, n=790):
         return len(s) == n
 
-    assert sat(...)
+    assert sat("a" * 790)
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strlen_3():
     def sat(s: str, n=485):
         return len(s) == n
 
-    assert sat(...)
+    assert sat("a" * 485)
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strlen_4():
     def sat(s: str, n=4031):
         return len(s) == n
 
-    assert sat(...)
+    assert sat("a" * 4031)
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strat():
     def sat(i: int, s="cat", target="a"):
         return s[i] == target
 
-    assert sat(...)
+    assert sat(1)
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strat_1():
     def sat(i: int, s="quadyquady", target="a"):
         return s[i] == target
 
-    assert sat(...)
+    assert sat(2)
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strat_2():
     def sat(i: int, s="quixatextofazejate", target="i"):
         return s[i] == target
 
-    assert sat(...)
+    assert sat(2)
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strat_3():
     def sat(i: int, s="thethe", target="e"):
         return s[i] == target
 
-    assert sat(...)
+    assert sat(2)
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strat_4():
     def sat(i: int, s="bucudibucudibucudi", target="b"):
         return s[i] == target
 
-    assert sat(...)
+    assert sat(0)
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strnegat():
     def sat(i: int, s="cat", target="a"):
         return s[i] == target and i < 0
 
-    assert sat(...)
+    assert sat(-2)
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strnegat_1():
     def sat(i: int, s="ch", target="c"):
         return s[i] == target and i < 0
 
-    assert sat(...)
+    assert sat(-2)
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strnegat_2():
     def sat(i: int, s="nydivimocuvacetext", target="y"):
         return s[i] == target and i < 0
 
-    assert sat(...)
+    assert sat(-len("nydivimocuvacetext") + 1)
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strnegat_3():
     def sat(i: int, s="chyxchyx", target="x"):
         return s[i] == target and i < 0
 
-    assert sat(...)
+    assert sat(-1)
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strnegat_4():
     def sat(
         i: int,
@@ -308,7 +280,10 @@ def test_strnegat_4():
     ):
         return s[i] == target and i < 0
 
-    assert sat(...)
+    assert sat(
+        -"tuchuworyquofojyzusutuchuworyquofojyzusutuchuworyquofojyzusu"[::-1].index("h")
+        - 1
+    )
 
 
 @pytest.mark.skip(reason="not implemented yet")
