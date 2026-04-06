@@ -13,16 +13,16 @@ def generate_code() -> str:
     #     a(f"INIT {c} SEEK_LEFT_THEN_CHECK_COL_1_FOR_1 {c} L")
 
     # Use for testing squares
-    for c in nums + "|=":
-        a(f"INIT {c} INIT {c} R")
-    a("INIT _ SEEK_LEFT_REPLACE_abcabcabcdefdefdefghighigh i L")
+    # for c in nums + "|=":
+    #     a(f"INIT {c} INIT {c} R")
+    # a("INIT _ SEEK_LEFT_REPLACE_abcabcabcdefdefdefghighigh i L")
     # FIXME: Remove above, Uncomment below
 
-    # for c in nums:
-    #     if c == "1":
-    #         a(f"INIT {c} CHECK_ROW_1_FOUND {c} R")
-    #     else:
-    #         a(f"INIT {c} CHECK_ROW_1 {c} R")
+    for c in nums:
+        if c == "1":
+            a(f"INIT {c} CHECK_ROW_1_FOUND {c} R")
+        else:
+            a(f"INIT {c} CHECK_ROW_1 {c} R")
 
     # Check rows
     for target in nums[1:]:
@@ -168,7 +168,7 @@ def generate_code() -> str:
                 continue
             for suffix in ["", "_FOUND"]:
                 a(
-                    f"CHECK_SQUARE_FOR_{target}{suffix} {stopper} CHECK_SQUARE_FOR_{target}{suffix}_NEXT {c} R"
+                    f"CHECK_SQUARE_FOR_{target}{suffix} {stopper} CHECK_SQUARE_FOR_{target}{suffix}_NEXT {stopper} R"
                 )
 
         # NEXT
@@ -190,6 +190,33 @@ def generate_code() -> str:
                         a(
                             f"CHECK_SQUARE_FOR_{target}{suffix}_NEXT_{square} {c} CHECK_SQUARE_FOR_{target}{suffix}_NEXT_{square} {c} R"
                         )
+
+                # End of board
+                if target == "9":
+                    if square == "i":
+                        # Y
+                        a(
+                            f"CHECK_SQUARE_FOR_{target}{suffix}_NEXT_{square} _ SEEK_LEFT_THEN_WIPE Y L"
+                        )
+                        break  # FIXME: Review if this break works correctly
+                    new_square = chr(ord(square) + 1)
+                    new_target = target
+                else:
+                    new_square = square
+                    new_target = str(int(target) + 1)
+                a(
+                    f"CHECK_SQUARE_FOR_{target}{suffix}_NEXT_{square} _ SEEK_LEFT_THEN_CHECK_{new_square}_FOR_{new_target} _ L"
+                )
+
+    for target in nums[1:]:
+        for square in "abcdefghi":
+            for c in nums + "abcdefghi":
+                a(
+                    f"SEEK_LEFT_THEN_CHECK_{square}_FOR_{target} {c} SEEK_LEFT_THEN_CHECK_{square}_FOR_{target} {c} L"
+                )
+            a(
+                f"SEEK_LEFT_THEN_CHECK_{square}_FOR_{target} _ CHECK_SQUARE_FOR_{target}_NEXT_{square} _ R"
+            )
 
     # Wipe
     for c in nums + "|=abcdefghi":
@@ -234,3 +261,18 @@ if __name__ == "__main__":
 # )
 # print(x) # Y
 # 534|678|912=672|195|348=198|342|567=859|761|423=426|853|791=713|924|856=961|537|284=287|419|635=345|286|179
+
+# x = (
+#     "295|743|861="
+#     "836|195|427="
+#     "471|682|395="
+#     "168|357|249="
+#     "357|924|618="
+#     "924|618|573="
+#     "589|471|236="
+#     "612|539|784="
+#     "743|286|951"
+# )
+# print(x)
+# 295|743|861=836|195|427=471|682|395=168|357|249=357|924|618=924|618|573=589|471|236=612|539|784=743|286|951
+# Expect Y
