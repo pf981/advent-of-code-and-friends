@@ -286,40 +286,36 @@ def test_strnegat_4():
     )
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strslice():
     def sat(inds: List[int], s="hello world", target="do"):
         i, j, k = inds
         return s[i:j:k] == target
 
-    assert sat(...)
+    assert sat([-1, -5, -3])
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strslice_1():
     def sat(inds: List[int], s="ninykofiwimninykofiwim", target=""):
         i, j, k = inds
         return s[i:j:k] == target
 
-    assert sat(...)
+    assert sat([0, 0, 1])
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strslice_2():
     def sat(inds: List[int], s="limerybinylimerybiny", target="n"):
         i, j, k = inds
         return s[i:j:k] == target
 
-    assert sat(...)
+    assert sat([-2, -3, -1])
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_strslice_3():
     def sat(inds: List[int], s="fyzihurothevirechahfyzihurothevirechah", target=""):
         i, j, k = inds
         return s[i:j:k] == target
 
-    assert sat(...)
+    assert sat([0, 0, 1])
 
 
 @pytest.mark.skip(reason="not implemented yet")

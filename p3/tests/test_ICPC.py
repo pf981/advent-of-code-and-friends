@@ -3,7 +3,6 @@ from typing import List
 import pytest
 
 
-@pytest.mark.skip(reason="not implemented yet")
 def test_bipermutations():
     def sat(
         perms: List[List[int]],
@@ -26,7 +25,7 @@ def test_bipermutations():
             )
         return all(heights0[i] > heights1[j] for i, j in zip(perm0, perm1))
 
-    assert sat(...)
+    assert sat([[6, 7, 4, 3, 0, 1, 5, 2], [6, 7, 4, 3, 0, 1, 5, 2]])
 
 
 @pytest.mark.skip(reason="not implemented yet")
