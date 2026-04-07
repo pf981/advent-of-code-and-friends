@@ -6,17 +6,18 @@ def generate_code() -> str:
 
     nums = "0123456789"
 
-    # FIXME: DEBUG - For testing only. Skip straight to Cols
-
-    # Use for testing cols
+    # # DEBUG - For testing only. Skip straight to Cols
+    # # Use for testing cols
     # for c in nums:
     #     a(f"INIT {c} SEEK_LEFT_THEN_CHECK_COL_1_FOR_1 {c} L")
 
-    # Use for testing squares
+    # # DEBUG - For testing only. Skip straight to Cols
+    # # Use for testing squares
     # for c in nums + "|=":
     #     a(f"INIT {c} INIT {c} R")
     # a("INIT _ SEEK_LEFT_REPLACE_abcabcabcdefdefdefghighigh i L")
-    # FIXME: Remove above, Uncomment below
+
+    # # To use DEBUG above, uncomment for loop below
 
     for c in nums:
         if c == "1":
@@ -200,7 +201,7 @@ def generate_code() -> str:
                         )
                         break  # FIXME: Review if this break works correctly
                     new_square = chr(ord(square) + 1)
-                    new_target = target
+                    new_target = "1"
                 else:
                     new_square = square
                     new_target = str(int(target) + 1)
@@ -236,43 +237,3 @@ if __name__ == "__main__":
     code = generate_code()
     with open("solutions/19.txt", "w", encoding="utf-8") as f:
         f.write(code)
-# x = (
-#     "143|657|028="
-#     + "682|314|579="
-#     + "571|289|346="
-#     + "726|493|851="
-#     + "315|862|497="
-#     + "894|571|263="
-#     + "457|136|982="
-#     + "068|925|734="
-#     + "239|748|615"
-# )
-# 143|657|028=682|314|579=571|289|346=726|493|851=315|862|497=894|571|263=457|136|982=068|925|734=239|748|615
-# x = (
-#     "534|678|912="
-#     "672|195|348="
-#     "198|342|567="
-#     "859|761|423="
-#     "426|853|791="
-#     "713|924|856="
-#     "961|537|284="
-#     "287|419|635="
-#     "345|286|179"
-# )
-# print(x) # Y
-# 534|678|912=672|195|348=198|342|567=859|761|423=426|853|791=713|924|856=961|537|284=287|419|635=345|286|179
-
-# x = (
-#     "295|743|861="
-#     "836|195|427="
-#     "471|682|395="
-#     "168|357|249="
-#     "357|924|618="
-#     "924|618|573="
-#     "589|471|236="
-#     "612|539|784="
-#     "743|286|951"
-# )
-# print(x)
-# 295|743|861=836|195|427=471|682|395=168|357|249=357|924|618=924|618|573=589|471|236=612|539|784=743|286|951
-# Expect Y
