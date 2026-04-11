@@ -6,3 +6,14 @@
 // |||||||||,||||||||||||||||||||
 // |||||||||,||||||||||||||||||||;
 // |||||||||,||||||||||||||||||||;
+
+// ax,ay;bx,by
+// dx;dy
+// dx^2;dy^2
+// {dx^2}{dy^2}   // Concatenate by removing ";"
+// sqrt {dx^2}{dy^2}
+
+// How many perfect squares are there within some reasonable bound? There are like 50
+// Just hardcode them?
+
+// How to "compress"?
