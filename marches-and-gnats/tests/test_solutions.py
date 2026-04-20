@@ -1288,6 +1288,18 @@ def test_solution41(r):
         return result
 
     for _ in range(100):
-        lhs = str(random.randint(1, 10**30))
+        n_streaks = random.randint(1, 30)
+        parts = []
+        prev = ""
+        for _ in range(n_streaks):
+            streak = random.randint(1, 9)
+            while True:
+                num = str(random.randint(0, 9))
+                if num != prev:
+                    break
+            parts.append(num * streak)
+            prev = num
+
+        lhs = "".join(parts)
         rhs = look_and_say(lhs)
         assert r(lhs) == rhs
