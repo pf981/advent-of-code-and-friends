@@ -1262,3 +1262,32 @@ def test_solution40(r):
         rhs = "Y" if can_solve(lhs) else "N"
 
         assert r(lhs) == rhs
+
+
+def test_solution41(r):
+    random.seed(0)
+
+    assert r("111221") == "312211"
+    assert r("1") == "11"
+    assert r("21") == "1211"
+    assert r("1001") == "112011"
+
+    def look_and_say(input_: str) -> str:
+        k = 1
+        cur = input_[0]
+        result = ""
+        for i in range(1, len(input_)):
+            if cur == input_[i]:
+                k += 1
+            else:
+                result = result + str(k) + cur
+                k = 1
+            cur = input_[i]
+        result = result + str(k) + cur
+
+        return result
+
+    for _ in range(100):
+        lhs = str(random.randint(1, 10**30))
+        rhs = look_and_say(lhs)
+        assert r(lhs) == rhs
