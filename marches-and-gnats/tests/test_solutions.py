@@ -1303,3 +1303,10 @@ def test_solution41(r):
         lhs = "".join(parts)
         rhs = look_and_say(lhs)
         assert r(lhs) == rhs
+
+
+def test_solution42(r):
+    # Only checks that a valid move is made
+    assert r("[tttt____ffff]") == "[ttt_t___ffff]"
+    assert r("[ttt__tf__fff]") in ("[ttt___ft_fff]", "[tt_t_tf__fff]")
+    assert r("[__ttttf__fff]") == "[__ttt_ft_fff]"
