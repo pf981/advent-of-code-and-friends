@@ -18,7 +18,6 @@ def count_streak(nums: list[int]) -> tuple[int, str]:
 
             rest = get_outputs(used2)
 
-            # +-*/
             for child in rest:
                 result.add(root + child)
                 result.add(root - child)
@@ -32,7 +31,6 @@ def count_streak(nums: list[int]) -> tuple[int, str]:
         return frozenset(result)
 
     outputs = get_outputs(0)
-    # print("\n".join(str(o) for o in sorted(outputs)))
     result = set()
     for num in outputs:
         num_int = round(num)
