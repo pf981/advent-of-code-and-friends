@@ -1310,3 +1310,47 @@ def test_solution42(r):
     assert r("[tttt____ffff]") == "[ttt_t___ffff]"
     assert r("[ttt__tf__fff]") in ("[ttt___ft_fff]", "[tt_t_tf__fff]")
     assert r("[__ttttf__fff]") == "[__ttt_ft_fff]"
+
+
+def test_solution43(r):
+    def to_str(y: int, m: int, d: int) -> str:
+        return f"{y:>04d}-{m:>02d}-{d:>02d}"
+
+    days = {9: 30, 4: 30, 6: 30, 11: 30, 2: 28}
+
+    assert r("2026-12-31") == "2027-01-01"
+    assert r("2026-10-31") == "2026-11-01"
+    assert r("2026-11-30") == "2026-12-01"
+    assert r("2026-01-31") == "2026-02-01"
+    assert r("2026-02-28") == "2026-03-01"
+    assert r("2026-03-31") == "2026-04-01"
+    assert r("2026-04-30") == "2026-05-01"
+    assert r("2026-05-31") == "2026-06-01"
+    assert r("2026-06-30") == "2026-07-01"
+    assert r("2026-07-31") == "2026-08-01"
+    assert r("2026-08-31") == "2026-09-01"
+    assert r("2026-09-30") == "2026-10-01"
+
+    for m in range(1, 13):
+        for d in range(1, days.get(m, 31)):
+            assert r(to_str(2000, m, d)) == to_str(2000, m, d + 1)
+
+    # return  # DEBUG
+
+    assert r("1000-12-31") == "1001-01-01"
+    assert r("2023-02-28") == "2023-03-01"
+    assert r("9999-12-30") == "9999-12-31"
+
+    for m in range(1, 13):
+        y = random.randint(1000, 9998)
+        d = days.get(m, 31)
+        if m == 12:
+            assert r(to_str(y, m, d)) == to_str(y + 1, 1, 1)
+        else:
+            assert r(to_str(y, m, d)) == to_str(y, m + 1, 1)
+
+    for _ in range(100):
+        y = random.randint(1000, 9999)
+        m = random.randint(1, 12)
+        d = random.randint(1, days.get(m, 31) - 1)
+        assert r(to_str(y, m, d)) == to_str(y, m, d + 1)
