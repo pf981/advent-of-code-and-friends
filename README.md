@@ -30,6 +30,7 @@ A collection of solutions to various coding challenges and puzzles, all in one p
 | [`markov-algorithm-online/`](markov-algorithm-online/) | [Markov Algorithm Online](https://mao.snuke.org/) | Solve puzzles in a language where the only operation is string-replacement | ✅ 85/85 |
 | [`p3/`](p3/) | [Python Programming Puzzles (P3)](https://github.com/microsoft/PythonProgrammingPuzzles/) | Find an input that makes the given function return True | ⏳ 71/1715 |
 | [`pi-coding-quest/`](pi-coding-quest/) | [Pi Coding Quest](https://ivanr3d.com/projects/pi/) | Coding challenges inspired by the mystical number Pi | ✅ 2024,2025,2026 |
+| [`practical-python/`](practical-python/) | [Practical Python](https://adventure.practicalpython.org/) | Python challenges similar to Advent of Code | ⏳ 1/9 |
 | [`project-euler-first-100/`](project-euler-first-100/), [`project-euler-solutions`](https://github.com/pf981/project-euler-solutions)(private)| [Project Euler](https://projecteuler.net/) | Mathematical computation problems | ⏳ 95/957 |
 | [`synacor-challenge/`](synacor-challenge/) | [Synacor Challenge](https://github.com/Aneurysm9/vm_challenge) | Virtual machine and reverse engineering puzzle | ✅ |
 | [`toms-data-onion/`](toms-data-onion/) | [Tom's Data Onion](https://www.tomdalling.com/toms-data-onion/) | Solve many puzzles wrapped inside each other, like a matryoshka doll, or the layers of an onion | ✅ 6/6 |

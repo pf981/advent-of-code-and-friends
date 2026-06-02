@@ -1,0 +1,9 @@
+[project]
+name = "practical-python"
+version = "1.0.0"
+description = "Solutions to https://adventure.practicalpython.org/"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "ipykernel>=7.2.0",
+]
