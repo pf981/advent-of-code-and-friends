@@ -1,4 +1,4 @@
-with open("./input/2025/input1.txt") as f:
+with open("./input/2025/01/input2.txt") as f:
     text = f.read()
 
 m = {
@@ -34,9 +34,11 @@ m = {
     "_...._": "-",
 }
 
+num = int("".join(str(ord(c)) for c in text))
+morse = f"{num:b}".replace("0", ".").replace("1", "_").split("_._.__")
 result = []
-for line in text.splitlines():
-    result.append("".join(m[w] for w in line.split()))
+for s in morse:
+    result.append(m.get(s, ""))
 
-answer = " ".join(result)
+answer = "".join(result)
 print(answer)
