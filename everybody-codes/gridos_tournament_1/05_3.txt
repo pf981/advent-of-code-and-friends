@@ -1,0 +1,41 @@
+HEADS AAABCD
+START ****** START2 ****** UDDRDL
+START2 ****** START3 A**BCD DSDRDL
+START3 ****** LEFT ****** RRRSSS
+
+RIGHT *.**** LEFT +++*** RRRSSS
+RIGHT *@**** RIGHT *@+*** RRRSSS
+LEFT *.**** RIGHT +++*** RRRSSS
+LEFT *@**** LEFT +@**** RRRSSS
+
+// Always ends on RIGHT
+RIGHT B__*** B1 ___*** LLLSSS
+B1 ****** B2 ****** DLLSSS
+B2 ****** LEFT2 ****** DDLSSS
+
+RIGHT2 *.**** LEFT2 +++*** DDDSSS
+RIGHT2 *@**** RIGHT2 *@+*** DDDSSS
+LEFT2 *.**** RIGHT2 +++*** DDDSSS
+LEFT2 *@**** LEFT2 +@**** DDDSSS
+
+RIGHT2 C__*** C1 ___*** UUUSSS
+C1 ****** C2 ****** LUUSSS
+C2 ****** LEFT3 ****** LLUSSS
+
+RIGHT3 *.**** LEFT3 +++*** LLLSSS
+RIGHT3 *@**** RIGHT3 *@+*** LLLSSS
+LEFT3 *.**** RIGHT3 +++*** LLLSSS
+LEFT3 *@**** LEFT3 +@**** LLLSSS
+
+RIGHT3 D__*** D1 ___*** RRRSSS
+D1 ****** D2 ****** URRSSS
+D2 ****** LEFT4 ****** UURSSS
+
+RIGHT4 *.**** LEFT4 +++*** UUUSSS
+RIGHT4 *@**** RIGHT4 *@+*** UUUSSS
+LEFT4 *.**** RIGHT4 +++*** UUUSSS
+LEFT4 *@**** LEFT4 +@**** UUUSSS
+
+LEFT4 *+**** RIGHT4 +++*** UUUSSS
+
+RIGHT4 A__*** STOP ___*** SSSSSS

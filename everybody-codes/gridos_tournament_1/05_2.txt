@@ -1,0 +1,67 @@
+HEADS AAABBB
+START ****** START2 ****** SDDLLS
+START2 ****** START3 ****** SSDLSS
+START3 ****** UR +....+ RRRDDD
+
+// ...
+// *@*
+// ___
+// +++
+
+UR ..*... DL ++++++ RRRDDD
+UR ..**@* DR +++*@+ RRRDDD
+UR ..*___ DR +++*** RRRSSS
+UR *@*... UL +@*+++ RRRDDD
+UR *@**@* UR +@**@+ RRRDDD
+UR *@*___ UR +@**** RRRSSS
+UR ___... UL ___+++ SSSDDD
+UR ___*@* UR ___*@+ SSSDDD
+UR ______ STOP ****** SSSSSS
+
+DR ..*... UL ++++++ RRRDDD
+DR ..**@* UR +++*@+ RRRDDD
+DR ..*___ UR +++*** RRRSSS
+DR *@*... DL *@++++ RRRDDD
+DR *@**@* DR *@+*@+ RRRDDD
+DR *@*___ DR *@+*** RRRSSS
+DR ___... DL ___+++ SSSDDD
+DR ___*@* DR ___*@+ SSSDDD
+DR ______ STOP ****** SSSSSS
+
+UL ..*... DR ++++++ RRRDDD
+UL ..**@* DL ++++@* RRRDDD
+UL ..*___ DL +++*** RRRSSS
+UL *@*... UR +@*+++ RRRDDD
+UL *@**@* UL +@*+@* RRRDDD
+UL *@*___ UL +@**** RRRSSS
+UL ___... UR ___+++ SSSDDD
+UL ___*@* UL ___+@* SSSDDD
+UL ______ STOP ****** SSSSSS
+
+DL ..*... UR ++++++ RRRDDD
+DL ..**@* UL ++++@* RRRDDD
+DL ..*___ UL +++*** RRRSSS
+DL *@*... DR *@++++ RRRDDD
+DL *@**@* DL *@++@* RRRDDD
+DL *@*___ DL *@+*** RRRSSS
+DL ___... DR ___+++ SSSDDD
+DL ___*@* DL ___+@* SSSDDD
+DL ______ STOP ****** SSSSSS
+
+
+UR +++... UL ***+++ RRRDDD
+UR +++*@* UR ****@+ RRRDDD
+UR +++___ STOP ****** RRRSSS
+
+DR +++... DL ***+++ RRRDDD
+DR +++*@* DR ****@+ RRRDDD
+DR +++___ STOP ****** RRRSSS
+
+UL +++... UR ***+++ RRRDDD
+UL +++*@* UL ***+@* RRRDDD
+UL +++___ STOP ****** RRRSSS
+
+DL +++... DR ***+++ RRRDDD
+DL +++*@* DL ***+@* RRRDDD
+DL +++___ STOP ****** RRRSSS
+

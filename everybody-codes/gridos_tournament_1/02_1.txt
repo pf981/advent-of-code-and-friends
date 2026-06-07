@@ -1,12 +1,53 @@
-HEADS A
-START A PREV_A _ R
-START B PREV_B _ R
-
-PREV_A A PREV_A @ R
-PREV_A B PREV_B _ R
-
-PREV_B A PREV_A _ R
-PREV_B B PREV_B @ R
-
-PREV_A _ STOP _ S
-PREV_B _ STOP _ S
+HEADS ABB
+START AA* AA __* RLS
+AA AA* AA @*@ RLL
+AB AA* AA @*_ RLL
+BA AA* AA _*@ RLL
+BB AA* AA _*_ RLL
+AA @@* STOP *** SSS
+AA A@* STOP **@ SSS
+AA A_* STOP **@ SSS
+AA B@* STOP **@ SSS
+AA B_* STOP **@ SSS
+AA __* STOP *** SSS
+AA _@* STOP *** SSS
+AA @__ STOP *** SSS
+START AB* AB __* RLS
+AA AB* AB @*_ RLL
+AB AB* AB @*@ RLL
+BA AB* AB _*_ RLL
+BB AB* AB _*@ RLL
+AB @@* STOP *** SSS
+AB A@* STOP **_ SSS
+AB A_* STOP **_ SSS
+AB B@* STOP **_ SSS
+AB B_* STOP **_ SSS
+AB __* STOP *** SSS
+AB _@* STOP *** SSS
+AB @__ STOP *** SSS
+START BA* BA __* RLS
+AA BA* BA _*@ RLL
+AB BA* BA _*_ RLL
+BA BA* BA @*@ RLL
+BB BA* BA @*_ RLL
+BA @@* STOP *** SSS
+BA A@* STOP **_ SSS
+BA A_* STOP **_ SSS
+BA B@* STOP **_ SSS
+BA B_* STOP **_ SSS
+BA __* STOP *** SSS
+BA _@* STOP *** SSS
+BA @__ STOP *** SSS
+START BB* BB __* RLS
+AA BB* BB _*_ RLL
+AB BB* BB _*@ RLL
+BA BB* BB @*_ RLL
+BB BB* BB @*@ RLL
+BB @@* STOP *** SSS
+BB A@* STOP **@ SSS
+BB A_* STOP **@ SSS
+BB B@* STOP **@ SSS
+BB B_* STOP **@ SSS
+BB __* STOP *** SSS
+BB _@* STOP *** SSS
+BB @__ STOP *** SSS

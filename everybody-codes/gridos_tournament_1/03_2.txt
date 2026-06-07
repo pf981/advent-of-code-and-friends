@@ -1,0 +1,24 @@
+HEADS AAA
+START *** GO *** SRD
+
+GO ##* GO ##* RRR
+GO #=* GO *** RRR
+GO =#* GO ~** RRR
+GO ==* WRITE ~** RRR
+WRITE ==* WRITE ~=~ RRR
+WRITE =#* NEXT_ROW ~** LLL
+
+NEXT_ROW *** LEFT *** DDD
+LEFT !** LEFT *** LLL
+LEFT _** GO2 *** RRR
+
+GO2 ~~* WRITE2 ~~* RRR
+WRITE2 ~~* WRITE2 ~~~ RRR
+WRITE2 ~_* GO *** UUU
+GO2 ~_* GO *** UUU
+GO2 __* GO *** UUU
+
+GO ~~~ GO *** RRR
+GO ~#* GO *** RRR
+
+GO *_* STOP *** SSS

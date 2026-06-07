@@ -1,0 +1,7 @@
+HEADS AAAA
+START **** INIT **** SDDD
+INIT **** GO **** SSLR
+
+GO #*** GO *__* RRRR
+GO =*** GO ~**~ RRRR
+GO _*** STOP **** SSSS
