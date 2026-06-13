@@ -30,13 +30,19 @@ def split2(s: str) -> list[str]:
 
 def get_length(s: str, iterations: int) -> int:
     counts = collections.Counter([s])
+    result = 0
     for _ in range(iterations):
         counts2 = collections.Counter()
         for s, count in counts.items():
             for part in split1(s):
+                if part == "22":
+                    result += 2 * count
+                    continue
                 counts2[look_and_say(part)] += count
         counts = counts2
-    return sum(len(s) * count for s, count in counts.items())
+
+    result += sum(len(s) * count for s, count in counts.items())
+    return result
 
 
 def get_triples(s: str, iterations: int) -> int:
@@ -64,4 +70,4 @@ print(trunc(get_triples(open("./input/2026/02/input2.txt").read(), ITERATIONS)))
 print(f"Ran in {time.time() - t}s")
 # 76447...55004
 # 55205...68778
-# Ran in 0.09727859497070312s
+# Ran in 0.09012961387634277s
