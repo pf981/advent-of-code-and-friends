@@ -20,29 +20,27 @@ def look_and_say(s: str) -> str:
 
 
 @functools.cache
-def get_counts(s: str, iterations: int) -> tuple[tuple[str, int], ...]:
+def get_counts(s: str, iterations: int) -> collections.Counter[str]:
     if not iterations:
-        return ((s, 1),)
+        return collections.Counter([s])
     if iterations == 1:
-        return tuple(
-            collections.Counter(look_and_say(s).replace("22", " 22").split()).items()
-        )
+        return collections.Counter(look_and_say(s).replace("22", " 22").split())
 
     counts = collections.Counter()
-    for p, count in get_counts(s, iterations // 2):
-        for p2, count2 in get_counts(p, iterations - iterations // 2):
+    for p, count in get_counts(s, iterations // 2).items():
+        for p2, count2 in get_counts(p, iterations - iterations // 2).items():
             counts[p2] += count * count2
-    return tuple(counts.items())
+    return counts
 
 
 def get_length(s: str, iterations: int) -> int:
-    return sum(len(label) * count for label, count in get_counts(s, iterations))
+    return sum(len(label) * count for label, count in get_counts(s, iterations).items())
 
 
 def get_triples(s: str, iterations: int) -> int:
     return sum(
         (label.count("111") + label.count("222")) * count
-        for label, count in get_counts(s, iterations)
+        for label, count in get_counts(s, iterations).items()
     )
 
 
