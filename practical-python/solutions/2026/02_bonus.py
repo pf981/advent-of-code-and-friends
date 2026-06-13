@@ -20,7 +20,7 @@ def look_and_say(s: str) -> str:
     return "".join(result)
 
 
-def get_transitions(s: str) -> tuple[np.array, str]:
+def get_transitions(s: str) -> tuple[np.ndarray, list[str]]:
     transitions = collections.defaultdict(
         collections.Counter
     )  # part -> counter_of_parts
