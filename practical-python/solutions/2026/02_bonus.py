@@ -2,6 +2,8 @@ import collections
 import functools
 import time
 
+import numpy as np
+
 
 @functools.cache
 def look_and_say(s: str) -> str:
@@ -18,42 +20,49 @@ def look_and_say(s: str) -> str:
     return "".join(result)
 
 
-@functools.cache
-def split1(s: str) -> list[str]:
-    return s.replace("22", " 22 ").split()
+def get_transitions(s: str) -> tuple[np.array, str]:
+    transitions = collections.defaultdict(
+        collections.Counter
+    )  # part -> counter_of_parts
 
+    seen = set()
+    parts = {s}
+    for _ in range(100):
+        seen.update(parts)
+        for part in parts:
+            for part2 in look_and_say(part).replace("22", " 22").split():
+                transitions[part][part2] += 1
+        parts = {p2 for p in parts for p2 in transitions[p] if p2 not in seen}
 
-@functools.cache
-def split2(s: str) -> list[str]:
-    return s.replace("22", " 22").split()
+    labels = list(transitions)
+
+    n = len(labels)
+    mat = np.array(
+        [[transitions[labels[r]][labels[c]] for c in range(n)] for r in range(n)],
+        dtype=object,
+    )
+    return (mat, labels)
 
 
 def get_length(s: str, iterations: int) -> int:
-    counts = collections.Counter([s])
-    result = 0
-    for _ in range(iterations):
-        counts2 = collections.Counter()
-        for s, count in counts.items():
-            for part in split1(s):
-                if part == "22":
-                    result += 2 * count
-                    continue
-                counts2[look_and_say(part)] += count
-        counts = counts2
+    mat, labels = get_transitions(s)
+    input_ = np.zeros(len(labels), dtype=object)
+    input_[labels.index(s)] = 1
+    counts = input_ @ np.linalg.matrix_power(mat, iterations)
 
-    result += sum(len(s) * count for s, count in counts.items())
-    return result
+    return sum(len(label) * count for label, count in zip(labels, counts))
 
 
 def get_triples(s: str, iterations: int) -> int:
-    counts = collections.Counter([s])
-    for _ in range(iterations):
-        counts2 = collections.Counter()
-        for s, count in counts.items():
-            for part in split2(s):
-                counts2[look_and_say(part)] += count
-        counts = counts2
-    return sum((s.count("111") + s.count("222")) * count for s, count in counts.items())
+    mat, labels = get_transitions(s)
+    input_ = np.zeros(len(labels), dtype=object)
+    input_[labels.index(s)] = 1
+    counts = input_ @ np.linalg.matrix_power(mat, iterations)
+
+    return sum(
+        (label.count("111") + label.count("222")) * count
+        for label, count in zip(labels, counts)
+    )
 
 
 def trunc(val: int) -> str:
@@ -70,4 +79,4 @@ print(trunc(get_triples(open("./input/2026/02/input2.txt").read(), ITERATIONS)))
 print(f"Ran in {time.time() - t}s")
 # 76447...55004
 # 55205...68778
-# Ran in 0.09012961387634277s
+# Ran in 0.009452104568481445s
