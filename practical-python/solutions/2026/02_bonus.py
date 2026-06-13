@@ -1,25 +1,6 @@
+import collections
 import functools
 import time
-
-
-@functools.cache
-def get_length(s: str, iterations: int) -> int:
-    if not iterations or not s:
-        return len(s)
-
-    parts = s.replace("22", " 22").split()
-
-    return sum(get_length(look_and_say(part), iterations - 1) for part in parts)
-
-
-@functools.cache
-def count_triples(s: str, iterations: int) -> int:
-    if not iterations or not s:
-        return s.count("111") + s.count("222")
-
-    parts = s.replace("22", " 22").split()
-
-    return sum(count_triples(look_and_say(part), iterations - 1) for part in parts)
 
 
 @functools.cache
@@ -37,8 +18,39 @@ def look_and_say(s: str) -> str:
     return "".join(result)
 
 
+def get_counts(s: str, iterations: int) -> collections.Counter[str]:
+    counts = collections.Counter([s])
+    for _ in range(iterations):
+        counts2 = collections.Counter()
+        for s, count in counts.items():
+            for part in s.replace("22", " 22").split():
+                counts2[look_and_say(part)] += count
+        counts = counts2
+    return counts
+
+
+def get_length(s: str, iterations: int) -> int:
+    counts = get_counts(s, iterations)
+    return sum(len(s) * count for s, count in counts.items())
+
+
+def get_triples(s: str, iterations: int) -> int:
+    counts = get_counts(s, iterations)
+    return sum((s.count("111") + s.count("222")) * count for s, count in counts.items())
+
+
+def trunc(val: int) -> str:
+    s = str(val)
+    if len(s) <= 10:
+        return s
+    return s[:5] + "..." + s[-5:]
+
+
 t = time.time()
-print(get_length(open("./input/2026/02/input1.txt").read(), 65))
-print(count_triples(open("./input/2026/02/input2.txt").read(), 65))
+ITERATIONS = 10_000
+print(trunc(get_length(open("./input/2026/02/input1.txt").read(), ITERATIONS)))
+print(trunc(get_triples(open("./input/2026/02/input2.txt").read(), ITERATIONS)))
 print(f"Ran in {time.time() - t}s")
-# Ran in 0.0015673637390136719s
+# 76447...55004
+# 55205...68778
+# Ran in 0.1549062728881836s
