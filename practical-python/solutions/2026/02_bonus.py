@@ -20,19 +20,20 @@ def look_and_say(s: str) -> str:
     return "".join(result)
 
 
-def get_transitions(s: str) -> tuple[np.ndarray, list[str]]:
+def get_counts(s: str, iterations: int) -> list[tuple[str, int]]:
     transitions = collections.defaultdict(
         collections.Counter
     )  # part -> counter_of_parts
 
     seen = set()
-    parts = {s}
-    for _ in range(100):
-        seen.update(parts)
-        for part in parts:
-            for part2 in look_and_say(part).replace("22", " 22").split():
-                transitions[part][part2] += 1
-        parts = {p2 for p in parts for p2 in transitions[p] if p2 not in seen}
+    parts = [s]
+    while parts:
+        p = parts.pop()
+        for p2 in look_and_say(p).replace("22", " 22").split():
+            transitions[p][p2] += 1
+            if p2 not in seen:
+                seen.add(p2)
+                parts.append(p2)
 
     labels = list(transitions)
 
@@ -41,27 +42,21 @@ def get_transitions(s: str) -> tuple[np.ndarray, list[str]]:
         [[transitions[labels[r]][labels[c]] for c in range(n)] for r in range(n)],
         dtype=object,
     )
-    return (mat, labels)
+    input_ = np.zeros(len(labels), dtype=object)
+    input_[labels.index(s)] = 1
+    counts = input_ @ np.linalg.matrix_power(mat, iterations)
+
+    return list(zip(labels, counts))
 
 
 def get_length(s: str, iterations: int) -> int:
-    mat, labels = get_transitions(s)
-    input_ = np.zeros(len(labels), dtype=object)
-    input_[labels.index(s)] = 1
-    counts = input_ @ np.linalg.matrix_power(mat, iterations)
-
-    return sum(len(label) * count for label, count in zip(labels, counts))
+    return sum(len(label) * count for label, count in get_counts(s, iterations))
 
 
 def get_triples(s: str, iterations: int) -> int:
-    mat, labels = get_transitions(s)
-    input_ = np.zeros(len(labels), dtype=object)
-    input_[labels.index(s)] = 1
-    counts = input_ @ np.linalg.matrix_power(mat, iterations)
-
     return sum(
         (label.count("111") + label.count("222")) * count
-        for label, count in zip(labels, counts)
+        for label, count in get_counts(s, iterations)
     )
 
 
