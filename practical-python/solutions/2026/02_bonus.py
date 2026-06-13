@@ -25,7 +25,7 @@ def get_counts(s: str, iterations: int) -> list[tuple[str, int]]:
         collections.Counter
     )  # part -> counter_of_parts
 
-    seen = set()
+    seen = {s}
     parts = [s]
     while parts:
         p = parts.pop()
