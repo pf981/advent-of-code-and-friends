@@ -1,22 +1,43 @@
+import functools
+
 with open("./input/2026/02/input1.txt") as f:
     text = f.read()
-# text = "121"
-val = list(text)
+iterations = 65
 
-for _ in range(65):
-    val2 = []
+
+@functools.cache
+def get_length(s: str, iterations: int) -> int:
+    if not iterations or not s:
+        return len(s)
+
+    parts = []
+    l = i = 0
+    while i < len(s):
+        if s[i : i + 2] == "22":
+            parts.append(s[l:i])
+            l = i
+            i += 1
+        i += 1
+    if l < len(s):
+        parts.append(s[l:])
+
+    return sum(get_length(look_and_say(part), iterations - 1) for part in parts)
+
+
+def look_and_say(s: str) -> str:
+    result = []
     i = 0
-    while i < len(val):
-        if i < len(val) - 1 and val[i] == val[i + 1]:
-            val2.append("2")
-            val2.append(val[i])
+    while i < len(s):
+        if i < len(s) - 1 and s[i] == s[i + 1]:
+            result.append("2")
+            result.append(s[i])
             i += 2
         else:
-            val2.append("1")
-            val2.append(val[i])
+            result.append("1")
+            result.append(s[i])
             i += 1
-    val = val2
-# print("".join(val))
-answer = len(val)
+    return "".join(result)
+
+
+answer = get_length(text, iterations)
 print(answer)
-# 54336330
