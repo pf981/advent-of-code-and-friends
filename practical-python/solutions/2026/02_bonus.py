@@ -18,24 +18,35 @@ def look_and_say(s: str) -> str:
     return "".join(result)
 
 
-def get_counts(s: str, iterations: int) -> collections.Counter[str]:
+@functools.cache
+def split1(s: str) -> list[str]:
+    return s.replace("22", " 22 ").split()
+
+
+@functools.cache
+def split2(s: str) -> list[str]:
+    return s.replace("22", " 22").split()
+
+
+def get_length(s: str, iterations: int) -> int:
     counts = collections.Counter([s])
     for _ in range(iterations):
         counts2 = collections.Counter()
         for s, count in counts.items():
-            for part in s.replace("22", " 22").split():
+            for part in split1(s):
                 counts2[look_and_say(part)] += count
         counts = counts2
-    return counts
-
-
-def get_length(s: str, iterations: int) -> int:
-    counts = get_counts(s, iterations)
     return sum(len(s) * count for s, count in counts.items())
 
 
 def get_triples(s: str, iterations: int) -> int:
-    counts = get_counts(s, iterations)
+    counts = collections.Counter([s])
+    for _ in range(iterations):
+        counts2 = collections.Counter()
+        for s, count in counts.items():
+            for part in split2(s):
+                counts2[look_and_say(part)] += count
+        counts = counts2
     return sum((s.count("111") + s.count("222")) * count for s, count in counts.items())
 
 
@@ -53,4 +64,4 @@ print(trunc(get_triples(open("./input/2026/02/input2.txt").read(), ITERATIONS)))
 print(f"Ran in {time.time() - t}s")
 # 76447...55004
 # 55205...68778
-# Ran in 0.1549062728881836s
+# Ran in 0.09727859497070312s
