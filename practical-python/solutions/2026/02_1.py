@@ -10,32 +10,23 @@ def get_length(s: str, iterations: int) -> int:
     if not iterations or not s:
         return len(s)
 
-    parts = []
-    l = i = 0
-    while i < len(s):
-        if s[i : i + 2] == "22":
-            parts.append(s[l:i])
-            l = i
-            i += 1
-        i += 1
-    if l < len(s):
-        parts.append(s[l:])
+    parts = s.replace("22", " 22").split()
 
     return sum(get_length(look_and_say(part), iterations - 1) for part in parts)
 
 
+@functools.cache
 def look_and_say(s: str) -> str:
     result = []
     i = 0
     while i < len(s):
-        if i < len(s) - 1 and s[i] == s[i + 1]:
-            result.append("2")
-            result.append(s[i])
+        if i + 1 < len(s) and s[i] == s[i + 1]:
+            result.append("2" + s[i])
             i += 2
         else:
-            result.append("1")
-            result.append(s[i])
+            result.append("1" + s[i])
             i += 1
+
     return "".join(result)
 
 
