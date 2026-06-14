@@ -54,3 +54,6 @@ part1 = get_length("11212", 65)
 part2 = get_triples("12111112121112111212212112111212", 65)
 
 assert False, f"\n{part1=}\n{part2=}"
+# AssertionError:
+# part1=54336330
+# part2=39307769
