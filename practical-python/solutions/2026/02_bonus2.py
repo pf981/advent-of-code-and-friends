@@ -5,21 +5,27 @@ for name in list(dir(builtins)):
         delattr(builtins, name)
 delattr(builtins, "delattr")
 
+dp = {}
+
 
 def get_counts(s: str, iterations: int) -> dict[str, int]:
-    if not iterations:
-        return {s: 1}
-    if iterations == 1:
-        counts = {}
-        for p in look_and_say(s).replace("22", " 22").split():
-            counts[p] = counts.get(p, 0) + 1
-        return counts
+    if (s, iterations) in dp:
+        return dp[(s, iterations)]
 
-    counts = {}
+    if not iterations:
+        dp[(s, iterations)] = {s: 1}
+        return dp[(s, iterations)]
+    if iterations == 1:
+        dp[(s, iterations)] = {}
+        for p in look_and_say(s).replace("22", " 22").split():
+            dp[(s, iterations)][p] = dp[(s, iterations)].get(p, 0) + 1
+        return dp[(s, iterations)]
+
+    dp[(s, iterations)] = {}
     for p, count in get_counts(s, iterations // 2).items():
         for p2, count2 in get_counts(p, iterations - iterations // 2).items():
-            counts[p2] = counts.get(p2, 0) + count * count2
-    return counts
+            dp[(s, iterations)][p2] = dp[(s, iterations)].get(p2, 0) + count * count2
+    return dp[(s, iterations)]
 
 
 def get_length(s: str, iterations: int) -> int:
