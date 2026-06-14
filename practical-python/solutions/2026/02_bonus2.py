@@ -13,19 +13,19 @@ def get_counts(s: str, iterations: int) -> dict[str, int]:
         return dp[(s, iterations)]
 
     if not iterations:
-        dp[(s, iterations)] = {s: 1}
-        return dp[(s, iterations)]
-    if iterations == 1:
-        dp[(s, iterations)] = {}
+        counts = {s: 1}
+    elif iterations == 1:
+        counts = {}
         for p in look_and_say(s).replace("22", " 22").split():
-            dp[(s, iterations)][p] = dp[(s, iterations)].get(p, 0) + 1
-        return dp[(s, iterations)]
+            counts[p] = counts.get(p, 0) + 1
+    else:
+        counts = {}
+        for p, count in get_counts(s, iterations // 2).items():
+            for p2, count2 in get_counts(p, iterations - iterations // 2).items():
+                counts[p2] = counts.get(p2, 0) + count * count2
 
-    dp[(s, iterations)] = {}
-    for p, count in get_counts(s, iterations // 2).items():
-        for p2, count2 in get_counts(p, iterations - iterations // 2).items():
-            dp[(s, iterations)][p2] = dp[(s, iterations)].get(p2, 0) + count * count2
-    return dp[(s, iterations)]
+    dp[(s, iterations)] = counts
+    return counts
 
 
 def get_length(s: str, iterations: int) -> int:
