@@ -56,8 +56,12 @@ def look_and_say(s: str) -> str:
     return "".join(result)
 
 
-part1 = get_length("11212", 65)
-part2 = get_triples("12111112121112111212212112111212", 65)
+def read(filename):
+    return __loader__.get_data.__globals__["_io"].FileIO(filename).read().decode()
+
+
+part1 = get_length(read("./input/2026/02/input1.txt"), 65)
+part2 = get_triples(read("./input/2026/02/input2.txt"), 65)
 
 assert False, f"\n{part1=}\n{part2=}"
 # AssertionError:
