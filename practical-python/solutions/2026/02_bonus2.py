@@ -8,7 +8,7 @@ delattr(builtins, "delattr")
 dp = {}
 
 
-def get_counts(s: str, iterations: int) -> dict[str, int]:
+def get_counts(s, iterations):
     if (s, iterations) in dp:
         return dp[(s, iterations)]
 
@@ -28,21 +28,21 @@ def get_counts(s: str, iterations: int) -> dict[str, int]:
     return counts
 
 
-def get_length(s: str, iterations: int) -> int:
+def get_length(s, iterations):
     total = 0
     for label, count in get_counts(s, iterations).items():
         total += label.__len__() * count
     return total
 
 
-def get_triples(s: str, iterations: int) -> int:
+def get_triples(s, iterations):
     total = 0
     for label, count in get_counts(s, iterations).items():
         total += (label.count("111") + label.count("222")) * count
     return total
 
 
-def look_and_say(s: str) -> str:
+def look_and_say(s):
     result = []
     i = 0
     while i < s.__len__():
