@@ -21,6 +21,5 @@ while nums:
         flips += 1
     nums.pop()
 
-
 answer = flips
 print(answer)
