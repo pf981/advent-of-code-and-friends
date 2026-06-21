@@ -12,7 +12,7 @@ class Treap:
     largest: int
     count: int = 1
     lazy_reverse = False
-    parent: Treap | None = None
+    parent: Treap | None = None  # Think I can remove this
     left: Treap | None = None
     right: Treap | None = None
 
@@ -64,44 +64,42 @@ def reverse(node: Treap | None) -> None:
     node.lazy_reverse = not node.lazy_reverse
 
 
-def split(node: Treap | None, left_size: int) -> tuple[Treap | None, Treap | None]:
+def split_off_max(
+    node: Treap | None, max_val: int
+) -> tuple[Treap | None, Treap | None]:
+    print(f"  Split {node.val if node else None}; {max_val=}")
+    # print_treap(node)
+    # print()
 
-    print(f"\nSplit {left_size=}")
-    print_treap(node)
-    print()
-
+    recalc(node)  # FIXME: Added this - is it needed?
     if not node:
-        # assert not left_size
         return (None, None)
-    if not left_size:
-        return (None, node)
 
-    left_count = node.left.count if node.left else 0
-    print(f"{node.val=} {left_size=} {left_count=}")
+    if node.val == max_val:
+        return (node.left, node.right)
 
-    # node is in the right part
-    if left_count >= left_size:
-        l, r = split(node.left, left_size)
-        node.left = r
-        if r:
-            r.parent = node
+    # max_value is in left subtree, this node is in the right split
+    if node.left and node.left.largest == max_val:
+        l, r = split_off_max(node.left, max_val)
+        node.left = None
         recalc(node)
-        if l:
-            l.parent = None
-        return l, node
+        r = merge(r, node)
+        return (l, r)
 
-    # node is in the left part
-    l, r = split(node.right, left_size - left_count - 1)
-    node.right = l
-    if l:
-        l.parent = node
-    recalc(node)
-    if r:
-        r.parent = None
-    return node, r
+    # max_value is in right subtree, this node is in the left split
+    if node.right and node.right.largest == max_val:
+        l, r = split_off_max(node.right, max_val)
+        node.right = None
+        recalc(node)
+        l = merge(node, l)
+        return (l, r)
+
+    assert False
 
 
 def merge(left: Treap | None, right: Treap | None) -> Treap | None:
+    recalc(left)
+    recalc(right)
     if not left:
         return right
     if not right:
@@ -121,17 +119,14 @@ def merge(left: Treap | None, right: Treap | None) -> Treap | None:
         return right
 
 
-def split_off_max(node: Treap | None) -> tuple[Treap | None, Treap | None]: ...
-
-
 with open("./input/2026/03/input1.txt") as f:
     text = f.read()
-text = """-3 -
- - -
-2 -
---4
-  -
-1  -"""
+# text = """-3 -
+#  - -
+# 2 -
+# --4
+#   -
+# 1  -"""
 
 treap = None
 for num in re.findall(r"\d+", text):
@@ -141,8 +136,16 @@ for num in re.findall(r"\d+", text):
 print_treap(treap)
 
 flips = 0
-while treap:
-    l, r = split_off_max(treap)
+# while treap:
+for _ in range(len(re.findall(r"\d+", text))):  # FIXME: TEST
+    l, r = split_off_max(treap, treap.largest)
+
+    print("--- R ---")
+    print_treap(r)
+    print()
+    print("--- L ---")
+    print_treap(l)
+    print()
 
     # If right split is empty, largest was in the correct position
     if not r:
@@ -156,9 +159,22 @@ while treap:
         reverse(l)
         flips += 1
 
+    print("--- l after maybe reverse ---")
+    print_treap(l)
+    print("-------------")
+
     treap = merge(l, r)
+    print("--- After merge ---")
+    print_treap(treap)
+    print("-------------")
     reverse(treap)
     flips += 1
+
+    print("--- After final reverse ---")
+    print_treap(treap)
+    print("-------------")
+    # break  # TEST
+
 
 answer = flips
 print(answer)
