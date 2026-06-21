@@ -40,13 +40,8 @@ def reverse(node: Treap | None) -> None:
     node.lazy_reverse = not node.lazy_reverse
 
 
-def split_off_max(
-    node: Treap | None, max_val: int
-) -> tuple[Treap | None, Treap | None, bool]:
+def split_off_max(node: Treap, max_val: int) -> tuple[Treap | None, Treap | None, bool]:
     recalc(node)
-
-    if not node:
-        return (None, None)
 
     if node.val == max_val:
         return (node.left, node.right, node.is_flipped)
