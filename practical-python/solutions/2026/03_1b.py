@@ -10,7 +10,7 @@ class Treap:
     priority: float
     val: int
     largest: int
-    lazy_reverse = False
+    lazy_reverse: bool = False
     left: Treap | None = None
     right: Treap | None = None
 
@@ -19,17 +19,17 @@ def recalc(node: Treap | None) -> None:
     if not node:
         return
 
-    node.largest = node.val
-    if node.left:
-        node.largest = max(node.largest, node.left.largest)
-    if node.right:
-        node.largest = max(node.largest, node.right.largest)
-
     if node.lazy_reverse:
         node.lazy_reverse = False
         node.left, node.right = node.right, node.left
         reverse(node.left)
         reverse(node.right)
+
+    node.largest = node.val
+    if node.left:
+        node.largest = max(node.largest, node.left.largest)
+    if node.right:
+        node.largest = max(node.largest, node.right.largest)
 
 
 def reverse(node: Treap | None) -> None:
@@ -53,7 +53,6 @@ def split_off_max(
     if node.left and node.left.largest == max_val:
         l, r = split_off_max(node.left, max_val)
         node.left = None
-        recalc(node)
         r = merge(r, node)
         return (l, r)
 
@@ -61,7 +60,6 @@ def split_off_max(
     if node.right and node.right.largest == max_val:
         l, r = split_off_max(node.right, max_val)
         node.right = None
-        recalc(node)
         l = merge(node, l)
         return (l, r)
 
@@ -80,13 +78,11 @@ def merge(left: Treap | None, right: Treap | None) -> Treap | None:
     if left.priority < right.priority:
         # Left is root
         left.right = merge(left.right, right)
-        left.right.parent = left
         recalc(left)
         return left
     else:
         # Right is root
         right.left = merge(left, right.left)
-        right.left.parent = right
         recalc(right)
         return right
 
