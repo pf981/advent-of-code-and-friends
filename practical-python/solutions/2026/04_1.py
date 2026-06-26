@@ -15,13 +15,13 @@ c = C = ncols / 100_000_000
 
 i = 0
 seen = set()
-while r < nrows + 1 and c < ncols + 1:
+while True:
     r = math.floor(R + dr * i)
     c = math.floor(C + dc * i)
-    i += 1
     if r >= nrows or c >= ncols:
         break
     seen.add((r, c))
+    i += 1
 
 answer = len(seen)
 print(answer)
