@@ -8,20 +8,12 @@ lines = text.splitlines()
 nrows = len(lines)
 ncols = len(lines[0])
 
-dr = nrows / 100_000
-dc = ncols / 100_000
-r = R = nrows / 100_000_000
-c = C = ncols / 100_000_000
-
-i = 0
+N = 100_000
 seen = set()
-while True:
-    r = math.floor(R + dr * i)
-    c = math.floor(C + dc * i)
-    if r >= nrows or c >= ncols:
-        break
+for i in range(1, N):
+    r = math.floor(i * nrows / N)
+    c = math.floor(i * ncols / N)
     seen.add((r, c))
-    i += 1
 
 answer = len(seen)
 print(answer)
