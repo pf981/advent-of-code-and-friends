@@ -69,18 +69,13 @@ lines = text.splitlines()
 nrows = len(lines)
 ncols = len(lines[0])
 
-# nrows, ncols = 4, 6  # TTEST
-
-dr = nrows / 10_00000
-dc = ncols / 10_00000
-R = nrows / 100_000000
-C = ncols / 100_000000
-# r = c = R = C = 0
+dr = nrows / 100_000
+dc = ncols / 100_000
+r = R = nrows / 100_000_000
+c = C = ncols / 100_000_000
 
 i = 0
 seen = set()
-r = R
-c = C
 while r < nrows + 1 and c < ncols + 1:
     r = math.floor(R + dr * i)
     c = math.floor(C + dc * i)
@@ -88,10 +83,12 @@ while r < nrows + 1 and c < ncols + 1:
     if r >= nrows or c >= ncols:
         break
     seen.add((r, c))
-print(len(seen))
 
 answer = 0
 for r, c in seen:
     answer += prices[materials[letters[lines[r][c]]]]
 
-print(answer / 100)
+answer /= 100
+if int(answer) == answer:
+    answer = int(answer)
+print(answer)
