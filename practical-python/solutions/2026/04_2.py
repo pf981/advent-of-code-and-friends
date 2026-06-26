@@ -78,7 +78,5 @@ answer = 0
 for r, c in seen:
     answer += prices[materials[letters[lines[r][c]]]]
 
-answer /= 100
-if int(answer) == answer:
-    answer = int(answer)
+answer = round(answer / 100)
 print(answer)
