@@ -67,9 +67,9 @@ lines = text.splitlines()
 nrows = len(lines)
 ncols = len(lines[0])
 
-N = 100_000
+N = nrows + ncols
 seen = set()
-for i in range(1, N):
+for i in range(N):
     r = i * nrows // N
     c = i * ncols // N
     seen.add((r, c))
