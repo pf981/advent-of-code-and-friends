@@ -1,7 +1,6 @@
 import collections
 
-
-with open("./input/03.txt") as f:
+with open("./input/2025/03.txt") as f:
     lines = f.read().splitlines()
 
 answer1 = collections.Counter(lines).most_common(1)[0][0]

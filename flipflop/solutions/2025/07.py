@@ -14,7 +14,7 @@ def count_ways(xs: tuple[int, ...], sizes: tuple[int, ...]) -> int:
     return ways
 
 
-with open("./input/07.txt") as f:
+with open("./input/2025/07.txt") as f:
     lines = f.read().splitlines()
 
 dims = [[int(x) for x in line.split()] for line in lines]

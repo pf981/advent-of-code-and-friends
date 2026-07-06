@@ -1,7 +1,6 @@
 import collections
 
-
-with open("./input/00.txt") as f:
+with open("./input/2025/00.txt") as f:
     lines = f.read().splitlines()
 
 nums = [int(line) for line in lines]

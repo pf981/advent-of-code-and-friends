@@ -1,8 +1,7 @@
-import itertools
 import functools
+import itertools
 
-
-with open("./input/02.txt") as f:
+with open("./input/2025/02.txt") as f:
     text = f.read().strip()
 
 answer1 = h = 0

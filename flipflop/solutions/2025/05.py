@@ -1,4 +1,4 @@
-with open("./input/05.txt") as f:
+with open("./input/2025/05.txt") as f:
     text = f.read().strip()
 
 seen = {}

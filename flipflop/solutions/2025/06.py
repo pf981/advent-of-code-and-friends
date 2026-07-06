@@ -1,4 +1,4 @@
-with open("./input/06.txt") as f:
+with open("./input/2025/06.txt") as f:
     lines = f.read().splitlines()
 
 sky_n = 1000

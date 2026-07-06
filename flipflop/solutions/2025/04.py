@@ -1,4 +1,4 @@
-with open("./input/04.txt") as f:
+with open("./input/2025/04.txt") as f:
     lines = f.read().splitlines()
 
 x, y = (0, 0)

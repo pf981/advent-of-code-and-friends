@@ -1,4 +1,4 @@
-with open("./input/01.txt") as f:
+with open("./input/2025/01.txt") as f:
     lines = f.read().splitlines()
 
 answer1 = sum(len(word) // 2 for word in lines)
