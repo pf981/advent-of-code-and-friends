@@ -1,0 +1,14 @@
+[project]
+name = "kodeinkgp-solutions"
+version = "1.0.0"
+description = "Solutions to kodeinkgp.in/dekodeX"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "ipykernel>=7.3.0",
+    "ruff>=0.15.18",
+    "sortedcontainers>=2.4.0",
+]
+
+[tool.ruff.lint]
+ignore = ["E741"]
