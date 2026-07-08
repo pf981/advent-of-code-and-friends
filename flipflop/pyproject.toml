@@ -4,4 +4,6 @@ version = "1.0.0"
 description = "Solutions to https://flipflop.slome.org/"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "ruff>=0.15.20",
+]
