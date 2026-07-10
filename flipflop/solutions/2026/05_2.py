@@ -12,7 +12,6 @@ def solve():
         r += (ch == "v") - (ch == "^")
         c += (ch == ">") - (ch == "<")
 
-        # r...
     return len(seen)
 
 

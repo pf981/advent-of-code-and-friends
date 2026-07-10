@@ -9,6 +9,5 @@ while (r, c) not in seen:
     r += (ch == "v") - (ch == "^")
     c += (ch == ">") - (ch == "<")
 
-    # r...
 answer = len(seen)
 print(answer)

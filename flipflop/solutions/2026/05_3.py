@@ -1,15 +1,5 @@
 with open("./input/2026/05.txt") as f:
     lines = f.read().splitlines()
-# lines = """>>>>vvv>vv
-# >^>>>>>>>v
-# >>^<>vvv>v
-# ^^^>>vv>^v
-# ^<<<v>vv>v
-# ^<>^<>v>v<
-# >^^<<<<<vv
-# ^^^<^v<<>v
-# ^v<^<<vvvv
-# ^<^<<<<<<<""".splitlines()
 lines = [list(line) for line in lines]
 
 
@@ -19,14 +9,18 @@ def solve():
     rights = 3
     while (r, c) not in seen or rights:
         ch = lines[r][c]
+
         if (r, c) in seen:
             rights -= 1
             ch = {"^": ">", ">": "v", "v": "<", "<": "^"}[ch]
+
         seen.add((r, c))
+
         r += (ch == "v") - (ch == "^")
         c += (ch == ">") - (ch == "<")
         if not (0 <= r < nrows and 0 <= c < ncols):
             return float("-inf")
+
     return len(seen)
 
 
