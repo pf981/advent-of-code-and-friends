@@ -8,11 +8,13 @@ lines = [list(line) for line in lines]
 def solve():
     seen = collections.Counter()
     r, c = 0, 0
-    while seen[(r, c)] < 3:
+    illegal_turns = 3
+    while illegal_turns and seen[(r, c)] < 3:
         ch = lines[r][c]
 
         if seen[(r, c)]:
             ch = {"^": ">", ">": "v", "v": "<", "<": "^"}[ch]
+            illegal_turns -= 1
 
         seen[(r, c)] += 1
 
