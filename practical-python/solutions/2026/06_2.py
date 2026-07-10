@@ -1,8 +1,8 @@
-def is_cc(start: tuple[int, int], end: tuple[int, int], p: tuple[int, int]) -> bool:
-    x1, y1 = start
-    x2, y2 = end
-    xp, yp = p
-    return (y2 - y1) * (xp - x2) - (x2 - x1) * (yp - y2) < 0
+def is_cc(p1: tuple[int, int], p2: tuple[int, int], p3: tuple[int, int]) -> bool:
+    x1, y1 = p1
+    x2, y2 = p2
+    x3, y3 = p3
+    return (y2 - y1) * (x3 - x2) - (x2 - x1) * (y3 - y2) < 0
 
 
 with open("./input/2026/06/input2.txt") as f:
@@ -20,17 +20,17 @@ points.sort(key=lambda p: p[-1] == "U")
 outside = set()
 while True:
     hull.append(p)
-    end = points[0][:-1]
-    for p2 in points:
-        c = p2[-1]
-        p2 = p2[:-1]
-        if end == p or is_cc(p, p2, end):
+    p2 = points[0][:-1]
+    for candidate in points:
+        c = candidate[-1]
+        candidate = candidate[:-1]
+        if p2 == p or is_cc(p, candidate, p2):
             if c == "U":
-                outside.add(p2)
+                outside.add(candidate)
             else:
-                end = p2
-    p = end
-    if end == leftmost:
+                p2 = candidate
+    p = p2
+    if p2 == leftmost:
         break
 
 answer = len(hull) * (len(points) - len(outside))
