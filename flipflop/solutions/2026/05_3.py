@@ -1,20 +1,20 @@
+import collections
+
 with open("./input/2026/05.txt") as f:
     lines = f.read().splitlines()
 lines = [list(line) for line in lines]
 
 
 def solve():
-    seen = set()
+    seen = collections.Counter()
     r, c = 0, 0
-    rights = 3
-    while (r, c) not in seen or rights:
+    while seen[(r, c)] < 3:
         ch = lines[r][c]
 
-        if (r, c) in seen:
-            rights -= 1
+        if seen[(r, c)]:
             ch = {"^": ">", ">": "v", "v": "<", "<": "^"}[ch]
 
-        seen.add((r, c))
+        seen[(r, c)] += 1
 
         r += (ch == "v") - (ch == "^")
         c += (ch == ">") - (ch == "<")
