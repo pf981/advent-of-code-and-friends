@@ -1,15 +1,5 @@
 with open("./input/2026/06.txt") as f:
     lines = f.read().splitlines()
-# lines = """;&%,&/<.%~&|-!-;-+`.
-# =#######:@#=*3333,%!
-# @*+;|.|####.!3,33A&^
-# -<a|*!~#`!#~`3*-3|/;
-# S##########*@/!`-|`-
-# ,,|@:#./,@#,,@B=@!%@
-# <3C!*#`~=*#;./333*.@
-# %3@&/#*:`~#^|/+3<!&=
-# |33*><:b###<<c333*~|
-# <&&@/:!|``:/:&:&&`,&""".splitlines()
 
 nrows = len(lines)
 ncols = len(lines[0])
@@ -34,7 +24,6 @@ stack = [(*start, False)]
 result = []
 while stack:
     r, c, is_clockwise = stack.pop()
-    # print(f"{r=} {c=}")
     for dr, dc in [(-1, 0), (0, -1), (0, 1), (1, 0)]:
         r2 = r + dr
         c2 = c + dc
