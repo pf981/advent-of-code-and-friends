@@ -12,8 +12,7 @@ points = [tuple(map(int, line[:-2].split(","))) for line in lines]
 underground = {p for p, (*_, c) in zip(points, lines) if c == "U"}
 
 hull = []
-points.sort(key=lambda p: (p in underground, p))
-p1 = points[0]
+p1 = start = min(p for p in points if p not in underground)
 outside = set()
 while True:
     hull.append(p1)
@@ -24,7 +23,7 @@ while True:
     outside |= {p3 for p3 in underground if is_ccw(p1, p2, p3)}
 
     p1 = p2
-    if p1 == points[0]:
+    if p1 == start:
         break
 
 answer = len(hull) * (len(points) - len(outside))
