@@ -8,7 +8,6 @@ def is_ccw(p1, p2, p3) -> bool:
 with open("./input/2026/06/input1.txt") as f:
     lines = f.read().splitlines()
 
-
 points = [tuple(map(int, line.split(","))) for line in lines]
 hull = []
 p1 = start = min(points)
