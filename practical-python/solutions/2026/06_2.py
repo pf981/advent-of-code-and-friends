@@ -1,35 +1,26 @@
-def is_cc(p1: tuple[int, int], p2: tuple[int, int], p3: tuple[int, int]) -> bool:
-    x1, y1 = p1
-    x2, y2 = p2
-    x3, y3 = p3
-    return (y2 - y1) * (x3 - x2) - (x2 - x1) * (y3 - y2) < 0
-
-
 with open("./input/2026/06/input2.txt") as f:
     lines = f.read().splitlines()
 
-
-points = []
-for line in lines:
-    x, y, c = line.split(",")
-    points.append((int(x), int(y), c))
+points = [tuple(map(int, line[:-2].split(","))) for line in lines]
+underground = {p for p, (*_, c) in zip(points, lines) if c == "U"}
 
 hull = []
-p = leftmost = min(p[:-1] for p in points if p[-1] != "U")
-points.sort(key=lambda p: p[-1] == "U")
+p1 = leftmost = min(p for p in points if p not in underground)
+points.sort(key=lambda p: p in underground)
 outside = set()
 while True:
-    hull.append(p)
-    p2 = points[0][:-1]
-    for candidate in points:
-        c = candidate[-1]
-        candidate = candidate[:-1]
-        if p2 == p or is_cc(p, candidate, p2):
-            if c == "U":
-                outside.add(candidate)
+    hull.append(p1)
+    p2 = points[0]
+    for p3 in points:
+        if (
+            p2 == p1
+            or (p2[1] - p1[1]) * (p3[0] - p2[0]) - (p2[0] - p1[0]) * (p3[1] - p2[1]) < 0
+        ):
+            if p3 in underground:
+                outside.add(p3)
             else:
-                p2 = candidate
-    p = p2
+                p2 = p3
+    p1 = p2
     if p2 == leftmost:
         break
 
