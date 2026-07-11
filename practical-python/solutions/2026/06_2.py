@@ -5,8 +5,8 @@ points = [tuple(map(int, line[:-2].split(","))) for line in lines]
 underground = {p for p, (*_, c) in zip(points, lines) if c == "U"}
 
 hull = []
-p1 = leftmost = min(p for p in points if p not in underground)
-points.sort(key=lambda p: p in underground)
+points.sort(key=lambda p: (p in underground, p))
+p1 = leftmost = points[0]
 outside = set()
 while True:
     hull.append(p1)
