@@ -1,7 +1,6 @@
 import collections
 import functools
 import heapq
-import itertools
 
 with open("./input/2026/09.txt") as f:
     lines = f.read().splitlines()
