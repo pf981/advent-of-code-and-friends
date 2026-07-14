@@ -1,6 +1,7 @@
 import collections
 import functools
 import heapq
+import itertools
 
 with open("./input/2026/09.txt") as f:
     lines = f.read().splitlines()
@@ -35,10 +36,17 @@ while q:
                 q.append((r2, c2))
 
             # Simplified shoot
-            r2, c2 = shoot(r, c, dr, dc)
-            if (r2, c2) not in naive_steps:
-                naive_steps[(r2, c2)] = d
-                q.append((r2, c2))
+            if lines[r2][c2] == "#":
+                for i in itertools.count(1):
+                    r2 = r - i * dr
+                    c2 = c - i * dc
+                    if lines[r2][c2] == "#":
+                        break
+                    if (r2, c2) in naive_steps:
+                        continue
+                    else:
+                        naive_steps[(r2, c2)] = d
+                        q.append((r2, c2))
         d += 1
 
 start = next((r, c) for r in range(nrows) for c in range(ncols) if lines[r][c] == "S")
