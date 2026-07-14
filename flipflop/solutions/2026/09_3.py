@@ -44,7 +44,7 @@ while q:
                         q.append((r2, c2))
                     r2 -= dr
                     c2 -= dc
-        d += 1
+    d += 1
 
 start = next((r, c) for r in range(nrows) for c in range(ncols) if lines[r][c] == "S")
 q = collections.deque([(*start, tuple())])
