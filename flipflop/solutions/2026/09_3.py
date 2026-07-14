@@ -67,8 +67,8 @@ while q:
         if len(portals) == 2 and (r, c) in portals:
             r2, c2 = next(p for p in portals if p != (r, c))
             if (r2, c2, portals) not in seen:
-                q.append((r2, c2, portals))
                 seen.add((r2, c2, portals))
+                q.append((r2, c2, portals))
 
         # Shoot
         for dr, dc in [(-1, 0), (0, -1), (0, 1), (1, 0)]:
