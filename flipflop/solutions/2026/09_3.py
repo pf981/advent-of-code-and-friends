@@ -7,71 +7,52 @@ with open("./input/2026/09.txt") as f:
 
 nrows = len(lines)
 ncols = len(lines[0])
-r, c = next(
-    (r, c) for r, line in enumerate(lines) for c, ch in enumerate(line) if ch == "S"
-)
 
-
-@functools.cache
-def count_naive_steps(r: int, c: int) -> int:
-    q = collections.deque([(r, c)])
-    d = 0
-    seen = {(r, c)}
-    while q:
-        for _ in range(len(q)):
-            r, c = q.popleft()
-            if lines[r][c] == "E":
-                return d
-
-            for dr, dc in [(-1, 0), (0, -1), (0, 1), (1, 0)]:
-                r2 = r + dr
-                c2 = c + dc
-
-                if not (0 <= r2 < nrows and 0 <= c2 < ncols):
-                    continue
-                if lines[r2][c2] == "#":
-                    continue
-
-                if (r2, c2) in seen:
-                    continue
-                seen.add((r2, c2))
-
-                q.append((r2, c2))
-        else:
-            d += 1
-            continue
-        break
-    return float("inf")
-
-
-@functools.cache
-def shoot(r: int, c: int, dr: int, dc: int) -> tuple[int, int]:
-    for i in range(1, nrows + ncols):
-        r2 = r + i * dr
-        c2 = c + i * dc
-        if not (0 <= r2 < nrows and 0 <= c2 < ncols):
-            continue
-        if lines[r2][c2] == "#":
-            break
-    i -= 1
-    r2 = r + i * dr
-    c2 = c + i * dc
-    return r2, c2
-
-
-r, c = next(
-    (r, c) for r, line in enumerate(lines) for c, ch in enumerate(line) if ch == "S"
-)
-
-q = collections.deque([(r, c, tuple())])
-d = 0
-seen = {(r, c, tuple())}
-CAP = 10_000
+naive_steps = {}
+end = next((r, c) for r in range(nrows) for c in range(ncols) if lines[r][c] == "E")
+naive_steps[end] = 0
+seen = {end}
+d = 1
+q = collections.deque([end])
 while q:
-    # print(q)
+    for _ in range(len(q)):
+        r, c = q.popleft()
+
+        for dr, dc in [(-1, 0), (0, -1), (0, 1), (1, 0)]:
+            r2 = r + dr
+            c2 = c + dc
+
+            if not (0 <= r2 < nrows and 0 <= c2 < ncols):
+                continue
+            if lines[r2][c2] == "#":
+                continue
+
+            if (r2, c2) in naive_steps:
+                continue
+            naive_steps[(r2, c2)] = d
+
+            q.append((r2, c2))
+
+        d += 1
+
+
+@functools.cache
+def shoot(r: int, c: int, dr: int, dc: int) -> tuple[int, int] | None:
+    if not (0 <= r < nrows and 0 <= c < ncols) or lines[r][c] == "#":
+        return None
+    nxt = shoot(r + dr, c + dc, dr, dc)
+    return nxt if nxt else (r, c)
+
+
+start = next((r, c) for r in range(nrows) for c in range(ncols) if lines[r][c] == "S")
+q = collections.deque([(*start, tuple())])
+d = 0
+seen = {q[0]}
+CAP = 500
+while q:
     if len(q) > CAP:
         q = collections.deque(
-            heapq.nsmallest(CAP, q, key=lambda x: count_naive_steps(x[0], x[1]))
+            heapq.nsmallest(CAP, q, key=lambda x: naive_steps[(x[0], x[1])])
         )
 
     for _ in range(len(q)):
@@ -91,30 +72,22 @@ while q:
             if (r2, c2, portals) not in seen:
                 q.append((r2, c2, portals))
                 seen.add((r2, c2, portals))
-                # Remove other portal, if you chose not to portal there
-                portals = ((r, c),)
 
         # Shoot
         for dr, dc in [(-1, 0), (0, -1), (0, 1), (1, 0)]:
             r2, c2 = shoot(r, c, dr, dc)
 
             # Shoot 1
-            t = list(portals[1:])
-            t.append((r2, c2))
-            t = tuple(sorted(set(t)))
-
-            if (r, c, t) not in seen:
-                seen.add((r, c, t))
-                q.append((r, c, t))
+            portals2 = tuple(sorted(set(portals[1:]) | {(r2, c2)}))
+            if (r, c, portals2) not in seen:
+                seen.add((r, c, portals2))
+                q.append((r, c, portals2))
 
             # Shoot 2
-            t = list(portals[:1])
-            t.append((r2, c2))
-            t = tuple(sorted(set(t)))
-
-            if (r, c, t) not in seen:
-                seen.add((r, c, t))
-                q.append((r, c, t))
+            portals2 = tuple(sorted(set(portals[:1]) | {(r2, c2)}))
+            if (r, c, portals2) not in seen:
+                seen.add((r, c, portals2))
+                q.append((r, c, portals2))
     else:
         d += 1
         continue
