@@ -8,6 +8,15 @@ with open("./input/2026/09.txt") as f:
 nrows = len(lines)
 ncols = len(lines[0])
 
+
+@functools.cache
+def shoot(r: int, c: int, dr: int, dc: int) -> tuple[int, int] | None:
+    if not (0 <= r < nrows and 0 <= c < ncols) or lines[r][c] == "#":
+        return None
+    nxt = shoot(r + dr, c + dc, dr, dc)
+    return nxt if nxt else (r, c)
+
+
 naive_steps = {}
 end = next((r, c) for r in range(nrows) for c in range(ncols) if lines[r][c] == "E")
 naive_steps[end] = 0
@@ -19,36 +28,24 @@ while q:
         r, c = q.popleft()
 
         for dr, dc in [(-1, 0), (0, -1), (0, 1), (1, 0)]:
-            r2 = r + dr
-            c2 = c + dc
+            # Walk
+            r2, c2 = r + dr, c + dc
+            if (r2, c2) not in naive_steps and lines[r2][c2] != "#":
+                naive_steps[(r2, c2)] = d
+                q.append((r2, c2))
 
-            if not (0 <= r2 < nrows and 0 <= c2 < ncols):
-                continue
-            if lines[r2][c2] == "#":
-                continue
-
-            if (r2, c2) in naive_steps:
-                continue
-            naive_steps[(r2, c2)] = d
-
-            q.append((r2, c2))
-
+            # Simplified shoot
+            r2, c2 = shoot(r, c, dr, dc)
+            if (r2, c2) not in naive_steps:
+                naive_steps[(r2, c2)] = d
+                q.append((r2, c2))
         d += 1
-
-
-@functools.cache
-def shoot(r: int, c: int, dr: int, dc: int) -> tuple[int, int] | None:
-    if not (0 <= r < nrows and 0 <= c < ncols) or lines[r][c] == "#":
-        return None
-    nxt = shoot(r + dr, c + dc, dr, dc)
-    return nxt if nxt else (r, c)
-
 
 start = next((r, c) for r in range(nrows) for c in range(ncols) if lines[r][c] == "S")
 q = collections.deque([(*start, tuple())])
 d = 0
 seen = {q[0]}
-CAP = 500
+CAP = 100
 while q:
     if len(q) > CAP:
         q = collections.deque(
