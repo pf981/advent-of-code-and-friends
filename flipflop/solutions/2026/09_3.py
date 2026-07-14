@@ -37,14 +37,14 @@ while q:
 
             # Simplified shoot
             if lines[r2][c2] == "#":
-                for i in itertools.count(1):
-                    r2 = r - i * dr
-                    c2 = c - i * dc
-                    if lines[r2][c2] == "#":
-                        break
+                r2 = r - dr
+                c2 = c - dc
+                while lines[r2][c2] != "#":
                     if (r2, c2) not in naive_steps:
                         naive_steps[(r2, c2)] = d
                         q.append((r2, c2))
+                    r2 -= dr
+                    c2 -= dc
         d += 1
 
 start = next((r, c) for r in range(nrows) for c in range(ncols) if lines[r][c] == "S")
