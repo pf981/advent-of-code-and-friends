@@ -42,9 +42,7 @@ while q:
                     c2 = c - i * dc
                     if lines[r2][c2] == "#":
                         break
-                    if (r2, c2) in naive_steps:
-                        continue
-                    else:
+                    if (r2, c2) not in naive_steps:
                         naive_steps[(r2, c2)] = d
                         q.append((r2, c2))
         d += 1
