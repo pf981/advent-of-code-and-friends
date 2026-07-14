@@ -101,8 +101,7 @@ while q:
             # Shoot 1
             t = list(portals[1:])
             t.append((r2, c2))
-            t.sort()
-            t = tuple(set(t))
+            t = tuple(sorted(set(t)))
 
             if (r, c, t) not in seen:
                 seen.add((r, c, t))
@@ -111,8 +110,7 @@ while q:
             # Shoot 2
             t = list(portals[:1])
             t.append((r2, c2))
-            t.sort()
-            t = tuple(set(t))
+            t = tuple(sorted(set(t)))
 
             if (r, c, t) not in seen:
                 seen.add((r, c, t))
