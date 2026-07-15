@@ -13,11 +13,10 @@ for line in lines:
     ops.append([len(part) // 2 for part in parts])
 
 
-def does_halt(r0: int, r1: int) -> bool:
+def does_halt(r0_r1: tuple[int, int]) -> bool:
     iterations = 0
     regs = [0] * 16
-    regs[0] = r0
-    regs[1] = r1
+    regs[:2] = r0_r1
     ip = 0
 
     while ip < len(ops):
@@ -86,8 +85,17 @@ def does_halt(r0: int, r1: int) -> bool:
 answer = 0
 for r0 in range(16):
     for r1 in range(16):
-        out = does_halt(r0, r1)
+        out = does_halt((r0, r1))
         answer += out
         print(r0, r1, out)
 answer *= 65536 // 16
 print(answer)
+
+# from concurrent.futures import ProcessPoolExecutor
+
+# if __name__ == "__main__":
+#     pairs = [(r0, r1) for r0 in range(16) for r1 in range(16)]
+#     with ProcessPoolExecutor() as pool:
+#         results = pool.map(does_halt, pairs)
+#     answer = sum(results) * (65536 // 16)
+#     print(answer)
