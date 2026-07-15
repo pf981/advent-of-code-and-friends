@@ -1,0 +1,107 @@
+import itertools
+
+with open("./input/2026/10.txt") as f:
+    lines = f.read().splitlines()
+
+outputs = {}  # r0,r1 -> does_halt
+seen = {}  # state -> r0, r1
+
+
+def does_halt(r0: int, r1: int) -> bool:
+    # print(f"Trying {r0=}")
+    iterations = 0
+    regs = [0] * 16
+    regs[0] = r0
+    regs[1] = r1
+    ip = 0
+    labels = {}
+    for i, line in enumerate(lines):
+        # Label
+        if line[1] == "e":
+            label = (len(line) - 2) // 2
+            labels[label] = i
+    while ip < len(lines):
+        state = (ip, tuple(regs))
+        if state in seen:
+            if seen[state] not in outputs:
+                return True
+            return outputs[seen[state]]
+
+        line = lines[ip]
+        # Label
+        if line[1] == "e":
+            ip += 1
+            continue
+
+        parts = line[2:].split("ne")
+        nums = [len(part) // 2 for part in parts]
+        # print(nums)
+        op, *args = nums
+        match op:
+            case 0:
+                # 0 nas: Load immediate value into register. (val, dest_reg)
+                val, dest_reg = args
+                regs[dest_reg] = val
+            case 1:
+                # 1 na: Copy value from one register to another. (src_reg, dest_reg)
+                src_reg, dest_reg = args
+                regs[dest_reg] = regs[src_reg]
+            case 2:
+                # 2 nas: Add values from two registers and store result in a third register. (src_reg1, src_reg2, dest_reg)
+                src_reg1, src_reg2, dest_reg = args
+                regs[dest_reg] = regs[src_reg1] + regs[src_reg2]
+            case 3:
+                # 3 nas: Subtract values from two registers and store result in a third. (src_reg1, src_reg2, dest_reg)
+                src_reg1, src_reg2, dest_reg = args
+                regs[dest_reg] = regs[src_reg1] - regs[src_reg2]
+            case 4:
+                # 4 nas: Multiply values from two registers and store result in a third. (src_reg1, src_reg2, dest_reg)
+                src_reg1, src_reg2, dest_reg = args
+                regs[dest_reg] = regs[src_reg1] * regs[src_reg2]
+            case 5:
+                # 5 nas: Modulo values from two registers and store result in a third. (src_reg1, src_reg2, dest_reg)
+                src_reg1, src_reg2, dest_reg = args
+                out = 0
+                if regs[src_reg2]:
+                    out = regs[src_reg1] % regs[src_reg2]
+                regs[dest_reg] = out
+            case 6:
+                # 6 nas: Increment value in a register by 1. (reg)
+                (reg,) = args
+                regs[reg] += 1
+            case 7:
+                # 7 nas: Decrement value in a register by 1. (reg)
+                (reg,) = args
+                regs[reg] -= 1
+            case 8:
+                # 8 nas: Jump to label. (label)
+                (label,) = args
+                ip = labels[label] - 1
+            case 9:
+                # 9 nas: Jump to label if value in register is zero. (reg, label)
+                reg, label = args
+                if regs[reg] == 0:
+                    ip = labels[label] - 1
+            case 10:
+                # 10 nas: Jump to label if value in register is not zero. (reg, label)
+                reg, label = args
+                if regs[reg] != 0:
+                    ip = labels[label] - 1
+
+        for i in range(len(regs)):
+            regs[i] %= 2**16
+
+        ip += 1
+        iterations += 1
+        if iterations > 5_000_000:
+            return True
+    return False
+
+
+answer = 0
+for r0 in range(65536):
+    for r1 in range(16):
+        outputs[(r0, r1)] = does_halt(r0, r1)
+        answer += outputs[(r0, r1)]
+        print(r0, r1, outputs[(r0, r1)])
+print(answer)
