@@ -1,21 +1,20 @@
-import itertools
-
 with open("./input/2026/10.txt") as f:
     lines = f.read().splitlines()
 
 
 def does_halt(r0: int) -> bool:
-    print(f"Trying {r0=}")
     iterations = 0
     regs = [0] * 16
     regs[0] = r0
     ip = 0
     labels = {}
+
     for i, line in enumerate(lines):
         # Label
         if line[1] == "e":
             label = (len(line) - 2) // 2
             labels[label] = i
+
     while ip < len(lines):
         line = lines[ip]
         # Label

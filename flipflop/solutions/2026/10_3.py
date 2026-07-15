@@ -1,36 +1,27 @@
-import itertools
-import functools
-
 with open("./input/2026/10.txt") as f:
     lines = f.read().splitlines()
 
+labels = {}
+ops = []
+for line in lines:
+    if line[1] == "e":
+        label = (len(line) - 2) // 2
+        labels[label] = len(ops)
+        continue
 
-@functools.cache
-def get_output(r0: int, r1: int = 0) -> list[int] | None:
-    bonked = False
-    # print(f"Trying {r0=}")
+    parts = line[2:].split("ne")
+    ops.append([len(part) // 2 for part in parts])
+
+
+def does_halt(r0: int, r1: int) -> bool:
     iterations = 0
     regs = [0] * 16
     regs[0] = r0
     regs[1] = r1
     ip = 0
-    labels = {}
-    for i, line in enumerate(lines):
-        # Label
-        if line[1] == "e":
-            label = (len(line) - 2) // 2
-            labels[label] = i
-    while ip < len(lines):
-        line = lines[ip]
-        # Label
-        if line[1] == "e":
-            ip += 1
-            continue
 
-        parts = line[2:].split("ne")
-        nums = [len(part) // 2 for part in parts]
-        # print(nums)
-        op, *args = nums
+    while ip < len(ops):
+        op, *args = ops[ip]
         match op:
             case 0:
                 # 0 nas: Load immediate value into register. (val, dest_reg)
@@ -83,25 +74,20 @@ def get_output(r0: int, r1: int = 0) -> list[int] | None:
                     ip = labels[label] - 1
 
         for i in range(len(regs)):
-            regs[i] %= 2**16
+            regs[i] %= 65536
 
         ip += 1
         iterations += 1
-        if regs[-3] != 0 or regs[-2] != 0:
-            if iterations > 1000000 and not bonked:
-                # print("BONK!")
-                bonked = True
         if iterations > 5_000_000:
-            return [None] + regs
-    return regs
+            return True
+    return False
 
 
-outputs = []
-for r0 in range(100):
+answer = 0
+for r0 in range(16):
     for r1 in range(16):
-        # for r0 in range(100, 200):
-        out = get_output(r0, r1)
+        out = does_halt(r0, r1)
+        answer += out
         print(r0, r1, out)
-        outputs.append((r0, 0, out))
-# answer = sum(does_halt(r0) for r0 in range(100))
-# print(answer)
+answer *= 65536 // 16
+print(answer)

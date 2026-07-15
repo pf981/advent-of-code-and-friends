@@ -1,78 +1,5 @@
-import itertools
-
 with open("./input/2026/10.txt") as f:
     lines = f.read().splitlines()
-
-# lines = """banenanena
-# banenananenana
-# banenanananenanana
-# banananenanenananenananana
-# banananenananananenanananenanananana
-# bananenananananane
-# """.splitlines()
-# lines = """banenane
-# banananananananananenananananananana
-# banenanena
-# be
-# banenanenana
-# banananananananananenanana
-# benana
-# banenanenanana
-# banananananananananena
-# benanana
-# banenanenananana
-# banananananananananenana
-# benananananananananana
-# banenanenanananana
-# bananananananananane
-# benananananananananananana
-# banenanenananananana
-# benanananananananana
-# banenanenanananananana
-# benananananananana
-# banenanenananananananana
-# banananananananananenananananananananana
-# bena
-# banenanenanananananananana""".splitlines()
-# lines = """banenanena
-# banenanananananananananananananananenanana
-# be
-# banananenenanenana
-# bananenane
-# bananenananena
-# bananananananananenanana
-# banananananananananananenananane
-# banenena
-# banenenana""".splitlines()
-# lines = """banenananananananananananananananananananananena
-# benanana
-# bananananananananena
-# banenananananananananananananananenana
-# benananana
-# bananananananananenana
-# banenananananananananananenanana
-# bena
-# bananananananananenanana
-# banananenenane
-# banananenananene
-# banananananananananananenanananena
-# banananananananananananenananenananana
-# banananananananananananenanenanana
-# banenanena
-# bananananananananane
-# banene
-# be
-# bananananananananena
-# bananananananane
-# bananananananananananenane""".splitlines()
-# lines = """banenananenana
-# banenananananananananananenanananananananananananananana
-# be
-# banananenanenananena
-# banananananananenanana
-# bananananananananenananana
-# bananananananananenanananananananananananananana
-# banananananananananananenananananananananananananananane""".splitlines()
 
 regs = [0] * 16
 ip = 0
@@ -82,6 +9,7 @@ for i, line in enumerate(lines):
     if line[1] == "e":
         label = (len(line) - 2) // 2
         labels[label] = i
+
 while ip < len(lines):
     line = lines[ip]
     # Label
@@ -151,4 +79,3 @@ while ip < len(lines):
 
 answer = regs[0]
 print(answer)
-# 15723 incorrect
