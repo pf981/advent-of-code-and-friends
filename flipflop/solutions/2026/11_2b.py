@@ -2,11 +2,11 @@ import collections
 
 with open("./input/2026/11.txt") as f:
     lines = f.read().splitlines()
-# lines = """    01          XX          XX
-# 02  00  XX  XX  01  00  02  02  XX
+lines = """    01          XX          XX
+02  00  XX  XX  01  00  02  02  XX
 
-#     02          XX          00
-# 01  00  XX  01  01  02  XX  02  XX""".splitlines()
+    02          XX          00
+01  00  XX  01  01  02  XX  02  XX""".splitlines()
 
 
 def get_required_energy(tree):
@@ -40,9 +40,9 @@ for i in range(0, len(lines), 3):
     dnas.append(m)
 
 
-def get_mass(trees, dnas):
+def get_mass(trees, dnas, max_years=100):
     living = set(range(len(trees)))
-    for year in range(1, 100 + 1):
+    for year in range(1, max_years + 1):
         used = set()
         for tree in trees:
             used.update(tree)
@@ -89,7 +89,6 @@ def get_mass(trees, dnas):
 
             # print(f"{year=} {required_energy=} {produced_energy=}")
             if year >= 5 and required_energy > produced_energy:
-                print(f"Tree {tree_id} dead at {year=}: {len(tree)} mass")
                 living.remove(tree_id)
 
         if not living:
@@ -109,10 +108,16 @@ def get_mass(trees, dnas):
 
 
 trees = [{(1, 10 * i): "00"} for i in range(len(dnas))]  # FIXME:USE THIS
-# trees = [{(1, 100000 * i): "00"} for i in range(len(dnas))]  # FIXME TEST
 
 answer = get_mass(trees, dnas)
 print(answer)
+
+
+# trees = [{(1, 100000 * i): "00"} for i in range(len(dnas))]  # FIXME TEST
+# answer = get_mass(trees, dnas, 144)
+# trees = [{(1, 100 * i): "00"} for i in range(len(dnas))]  # FIXME TEST
+# answer = get_mass(trees, dnas, 144)
+# print(answer)
 
 
 # sum(id_ == "ZZ" for id_ in tree.values())
@@ -153,3 +158,4 @@ def ppp(trees):
 # pp(tree)
 # 9636 incorrect
 # 6424 incorrect
+# 23375 incorrect

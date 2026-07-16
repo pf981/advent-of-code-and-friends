@@ -2,11 +2,11 @@ import collections
 
 with open("./input/2026/11.txt") as f:
     lines = f.read().splitlines()
-# lines = """    01          XX          XX
-# 02  00  XX  XX  01  00  02  02  XX
+lines = """    01          XX          XX
+02  00  XX  XX  01  00  02  02  XX
 
-#     02          XX          00
-# 01  00  XX  01  01  02  XX  02  XX""".splitlines()
+    02          XX          00
+01  00  XX  01  01  02  XX  02  XX""".splitlines()
 
 
 def get_required_energy(tree):
@@ -44,8 +44,8 @@ def get_mass(trees, dnas):
     living = set(range(len(trees)))
     for year in range(1, 100 + 1):
         used = set()
-        for tree in trees:
-            used.update(tree)
+        # for tree in trees:
+        #     used.update(tree)
 
         # Update
         for tree_id in range(len(trees)):
@@ -57,6 +57,8 @@ def get_mass(trees, dnas):
 
             tree2 = {}
             for (r, c), id_ in tree.items():
+                if (r, c) in used:
+                    continue
                 tree2[(r, c)] = "ZZ"  # Stem
 
                 if id_ == "ZZ":

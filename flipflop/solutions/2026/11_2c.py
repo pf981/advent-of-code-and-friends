@@ -2,11 +2,11 @@ import collections
 
 with open("./input/2026/11.txt") as f:
     lines = f.read().splitlines()
-# lines = """    01          XX          XX
-# 02  00  XX  XX  01  00  02  02  XX
+lines = """    01          XX          XX
+02  00  XX  XX  01  00  02  02  XX
 
-#     02          XX          00
-# 01  00  XX  01  01  02  XX  02  XX""".splitlines()
+    02          XX          00
+01  00  XX  01  01  02  XX  02  XX""".splitlines()
 
 
 def get_required_energy(tree):
@@ -88,7 +88,8 @@ def get_mass(trees, dnas):
             produced_energy = get_produced_energy(tree, stems)
 
             # print(f"{year=} {required_energy=} {produced_energy=}")
-            if year >= 5 and required_energy > produced_energy:
+            # if year >= 5 and required_energy > produced_energy:
+            if year >= 50 and required_energy > produced_energy:
                 print(f"Tree {tree_id} dead at {year=}: {len(tree)} mass")
                 living.remove(tree_id)
 
