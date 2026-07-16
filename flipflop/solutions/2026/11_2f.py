@@ -2,16 +2,11 @@ import collections
 
 with open("./input/2026/11.txt") as f:
     lines = f.read().splitlines()
-# lines = """    01          XX          XX
-# 02  00  XX  XX  01  00  02  02  XX
+lines = """    01          XX          XX
+02  00  XX  XX  01  00  02  02  XX
 
-#     02          XX          00
-# 01  00  XX  01  01  02  XX  02  XX""".splitlines()
-# lines = """    01          XX          XX
-# 02  00  XX  XX  01  00  02  02  XX
-
-#     02          XX          00
-# 01  00  XX  01  01  02  XX  02  XX""".splitlines()
+    02          XX          00
+01  00  XX  01  01  02  XX  02  XX""".splitlines()
 
 
 def get_required_energy(tree):
@@ -75,19 +70,38 @@ def get_mass(trees, dnas):
                 if right != "XX" and (r, c + 1) not in used:
                     tree2[(r, c + 1)] = max(tree2.get((r, c + 1), ""), right)
 
+                # above, left, right = m[id_]
+                # if above != "XX":
+                #     if (r + 1, c) not in used:
+                #         tree2[(r + 1, c)] = max(tree2.get((r + 1, c), ""), above)
+                #     else:
+                #         extra += 1
+                # if left != "XX":
+                #     if (r, c - 1) not in used:
+                #         tree2[(r, c - 1)] = max(tree2.get((r, c - 1), ""), left)
+                #     else:
+                #         extra += 1
+                # if right != "XX":
+                #     if (r, c + 1) not in used:
+                #         tree2[(r, c + 1)] = max(tree2.get((r, c + 1), ""), right)
+                #     else:
+                #         extra += 1
+
             trees[tree_id] = tree2
             used.update(tree2)
 
-        stems = set()
-        for tree in trees:
-            for p, id_ in tree.items():
-                if id_ == "ZZ":
-                    stems.add(p)
-        stems = sorted(stems, reverse=True)
+            # Check for death immediately after growth
+            stems = set()
+            for tree in trees:
+                for p, id_ in tree.items():
+                    if id_ == "ZZ":
+                        stems.add(p)
+            stems = sorted(stems, reverse=True)
 
-        for tree_id in range(len(trees)):
-            if tree_id not in living:
-                continue
+            # for tree_id in range(len(trees)):
+            #     if tree_id not in living:
+            #         continue
+            #     tree = trees[tree_id]
             tree = trees[tree_id]
             required_energy = get_required_energy(tree)
             produced_energy = get_produced_energy(tree, stems)
@@ -97,16 +111,17 @@ def get_mass(trees, dnas):
                 print(f"Tree {tree_id} dead at {year=}: {len(tree)} mass")
                 living.remove(tree_id)
 
-        if not living:
-            print("all dead")
-            break
+            if not living:
+                print("all dead")
+                print(f"{year=} {len(used)=}")
+                return sum(len(tree) for tree in trees)
     print(f"{year=} {len(used)=}")
     # pp(trees[0])
     # print()
     # print()
     # pp(trees[1])
     # return len(used)
-    ppp(trees)
+    # ppp(trees)
     return sum(len(tree) for tree in trees)
 
     # print(f"{year=} {len(tree)=}")
@@ -158,4 +173,5 @@ def ppp(trees):
 # pp(tree)
 # 9636 incorrect
 # 6424 incorrect
-# 6424 still incorrect
+# 9760 incorrrect
+# 6527 incorrect

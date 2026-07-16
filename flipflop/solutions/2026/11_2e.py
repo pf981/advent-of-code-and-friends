@@ -2,16 +2,11 @@ import collections
 
 with open("./input/2026/11.txt") as f:
     lines = f.read().splitlines()
-# lines = """    01          XX          XX
-# 02  00  XX  XX  01  00  02  02  XX
+lines = """    01          XX          XX
+02  00  XX  XX  01  00  02  02  XX
 
-#     02          XX          00
-# 01  00  XX  01  01  02  XX  02  XX""".splitlines()
-# lines = """    01          XX          XX
-# 02  00  XX  XX  01  00  02  02  XX
-
-#     02          XX          00
-# 01  00  XX  01  01  02  XX  02  XX""".splitlines()
+    02          XX          00
+01  00  XX  01  01  02  XX  02  XX""".splitlines()
 
 
 def get_required_energy(tree):
@@ -106,7 +101,7 @@ def get_mass(trees, dnas):
     # print()
     # pp(trees[1])
     # return len(used)
-    ppp(trees)
+    # ppp(trees)
     return sum(len(tree) for tree in trees)
 
     # print(f"{year=} {len(tree)=}")
@@ -115,6 +110,7 @@ def get_mass(trees, dnas):
 
 trees = [{(1, 10 * i): "00"} for i in range(len(dnas))]  # FIXME:USE THIS
 # trees = [{(1, 100000 * i): "00"} for i in range(len(dnas))]  # FIXME TEST
+trees.reverse()  # FIXME: TEST
 
 answer = get_mass(trees, dnas)
 print(answer)
@@ -158,4 +154,4 @@ def ppp(trees):
 # pp(tree)
 # 9636 incorrect
 # 6424 incorrect
-# 6424 still incorrect
+# 6984 incorrect
