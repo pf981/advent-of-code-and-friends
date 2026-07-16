@@ -1,19 +1,9 @@
 import collections
 
-with open("./input/2026/11.txt") as f:
-    lines = f.read().splitlines()
-# lines = """    01          XX          XX
-# 02  00  XX  XX  01  00  02  02  XX
 
-#     02          XX          00
-# 01  00  XX  01  01  02  XX  02  XX""".splitlines()
-
-
-def get_required_energy(tree):
-    return 3 * len(tree)
-
-
-def get_produced_energy(tree, stems):
+def get_produced_energy(
+    tree: dict[tuple[int, int], str], stems: set[tuple[int, int]]
+) -> int:
     above = collections.Counter()
     result = 0
     for r, c in stems:
@@ -26,28 +16,15 @@ def get_produced_energy(tree, stems):
     return result
 
 
-dnas = []
-for i in range(0, len(lines), 3):
-    m = {}  # id -> (above, left, right)
-    aboves = lines[i].split()
-    parts = lines[i + 1].split()
-    triples = [parts[j : j + 3] for j in range(0, len(parts), 3)]
-
-    for above, triple in zip(aboves, triples):
-        left, mid, right = triple
-        m[mid] = (above, left, right)
-
-    dnas.append(m)
-
-
-def get_trees(trees, dnas):
+def get_trees(
+    trees: list[dict[tuple[int, int], str]], dnas: list[dict[str, tuple[str, str, str]]]
+) -> list[dict[tuple[int, int], str]]:
     living = set(range(len(trees)))
     for year in range(1, 100 + 1):
         used = set()
         for tree in trees:
             used.update(tree)
 
-        # Update
         for tree_id in range(len(trees)):
             if tree_id not in living:
                 continue
@@ -84,108 +61,58 @@ def get_trees(trees, dnas):
             if tree_id not in living:
                 continue
             tree = trees[tree_id]
-            required_energy = get_required_energy(tree)
+            required_energy = 3 * len(tree)
             produced_energy = get_produced_energy(tree, stems)
 
-            # print(f"{year=} {required_energy=} {produced_energy=}")
             if year >= 5 and required_energy > produced_energy:
-                print(f"Tree {tree_id} dead at {year=}: {len(tree)} mass")
                 living.remove(tree_id)
 
         if not living:
-            print("all dead")
             break
-    print(f"{year=} {len(used)=}")
-    # pp(trees[0])
-    # print()
-    # print()
-    # pp(trees[1])
-    # return len(used)
-    # ppp(trees)
-    # return sum(len(tree) for tree in trees)
     return trees
 
-    # print(f"{year=} {len(tree)=}")
-    # return len(tree)
+
+def get_offspring(
+    trees: list[dict[tuple[int, int], str]], dnas: list[dict[str, tuple[str, str, str]]]
+) -> tuple[list[dict[tuple[int, int], str]], list[dict[str, tuple[str, str, str]]]]:
+    offspring = {}  # c -> (r, c, m)
+    for tree, m in zip(get_trees(trees, dnas), dnas):
+        for (r, c), id_ in tree.items():
+            if id_ != "ZZ":
+                if c not in offspring or r > offspring[c][0]:
+                    offspring[c] = (r, c, m)
+
+    trees2 = []
+    dnas2 = []
+    for _, c, m in sorted(offspring.values(), key=lambda x: x[1]):
+        trees2.append({(1, c): "00"})
+        dnas2.append(m)
+
+    return trees2, dnas2
+
+
+with open("./input/2026/11.txt") as f:
+    lines = f.read().splitlines()
+
+
+dnas = []
+for i in range(0, len(lines), 3):
+    m = {}  # id -> (above, left, right)
+    aboves = lines[i].split()
+    parts = lines[i + 1].split()
+    triples = [parts[j : j + 3] for j in range(0, len(parts), 3)]
+
+    for above, triple in zip(aboves, triples):
+        left, mid, right = triple
+        m[mid] = (above, left, right)
+
+    dnas.append(m)
 
 
 trees = [{(1, 10 * i): "00"} for i in range(len(dnas))]
+trees, dnas = get_offspring(trees, dnas)
+trees, dnas = get_offspring(trees, dnas)
 trees = get_trees(trees, dnas)
 
-offspring = {}  # c -> (r, c, m)
-for tree, m in zip(trees, dnas):
-    for (r, c), id_ in tree.items():
-        if id_ != "ZZ":
-            if c not in offspring or r > offspring[c][0]:
-                offspring[c] = (r, c, m)
-
-trees2 = []
-dnas2 = []
-for _, c, m in sorted(offspring.values(), key=lambda x: x[1]):
-    # print(c)
-    trees2.append({(1, c): "00"})
-    dnas2.append(m)
-
-
-trees, dnas = trees2, dnas2
-
-trees = get_trees(trees, dnas)
-# ppp(trees2)
-offspring = {}  # c -> (r, c, m)
-for tree, m in zip(trees, dnas):
-    for (r, c), id_ in tree.items():
-        if id_ != "ZZ":
-            if c not in offspring or r > offspring[c][0]:
-                offspring[c] = (r, c, m)
-
-trees2 = []
-dnas2 = []
-for _, c, m in sorted(offspring.values(), key=lambda x: x[1]):
-    # print(c)
-    trees2.append({(1, c): "00"})
-    dnas2.append(m)
-
-
-answer = sum(len(tree) for tree in get_trees(trees2, dnas2))
+answer = sum(len(tree) for tree in trees)
 print(answer)
-
-
-# sum(id_ == "ZZ" for id_ in tree.values())
-# sum(id_ != "ZZ" for id_ in tree.values())
-
-
-def pp(tree):
-    max_y = max(y for y, _ in tree)
-    min_x = min(x for _, x in tree)
-    max_x = max(x for _, x in tree)
-    for r in range(max_y, 0, -1):
-        line = [f"{r:>02}:"]
-        for c in range(min_x - 1, max_x + 2):
-            ch = "."
-            if (r, c) in tree:
-                ch = "#" if tree[(r, c)] == "ZZ" else "@"
-            line.append(ch)
-        print("".join(line))
-
-
-def ppp(trees):
-    tree = {}
-    for t in trees:
-        tree.update(t)
-    max_y = max(y for y, _ in tree)
-    min_x = min(x for _, x in tree)
-    max_x = max(x for _, x in tree)
-    for r in range(max_y, 0, -1):
-        line = [f"{r:>02}:"]
-        for c in range(min_x - 1, max_x + 2):
-            ch = "."
-            if (r, c) in tree:
-                ch = "#" if tree[(r, c)] == "ZZ" else "@"
-            line.append(ch)
-        print("".join(line))
-
-
-# pp(tree)
-# 9636 incorrect
-# 6424 incorrect
-# 6424 still incorrect
