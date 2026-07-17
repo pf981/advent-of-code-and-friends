@@ -1,3 +1,4 @@
+import itertools
 import re
 import string
 from collections.abc import Generator
@@ -70,13 +71,34 @@ def get_hash(s: str, iv: int) -> int:
 
 def gen_s() -> Generator[str, None, None]:
     letters = string.digits + string.ascii_lowercase + string.ascii_uppercase
-    for letter in letters:
-        yield letter
 
-    for letter in letters:
-        for nxt in gen_s():
-            yield letter + nxt
+    cur = []
 
+    def gen(length):
+        if not length:
+            yield "".join(cur)
+            return
+
+        for c in letters:
+            cur.append(c)
+            yield from gen(length - 1)
+            cur.pop()
+
+    for length in itertools.count(1):
+        yield from gen(length)
+    # for length in itertools.count(1):
+    #     ...
+    # for letter in letters:
+    #     yield letter
+
+    # for letter in letters:
+    #     for nxt in gen_s():
+    #         yield letter + nxt
+
+
+# it = gen_s()
+# for _ in range(1000):
+#     print(next(it))
 
 for s in gen_s():
     if get_hash(s, 0) == 1918767294:
