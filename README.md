@@ -19,7 +19,7 @@ A collection of solutions to various coding challenges and puzzles, all in one p
 | [`cses/`](cses/) | [Code Submission Evaluation System](https://cses.fi/) | High quality problem set for learning algorithmic programming | ⏳ 16/400+ |
 | [`dekodex/`](dekodex/) | [DekodeX](https://kodeinkgp.in/dekodeX/) | Puzzles similar to Advent of Code | ✅ 10/10 |
 | [`dimity-jones-solutions`](https://github.com/pf981/dimity-jones-solutions/) | [Dimity Jones in Puzzle Castle](https://obnakwa.itch.io/dimityjones) | Progressively decrypt chapters in a book to reveal the story | ✅ 89/89 |
-| [`easters/`](easters/) | [easters.dev](https://www.eldarverse.com/) | Easter holiday puzzles | ⏳ 1/6 |
+| [`easters/`](easters/) | [easters.dev](https://easters.dev/) | Easter holiday puzzles | ⏳ 1/6 |
 | [`eldarverse/`](eldarverse/) | [Eldarverse](https://www.eldarverse.com/) | Puzzles similar to Advent of Code (harder) | ⏳ 4/39 |
 | [`everybody-codes/`](everybody-codes/) | [Everybody Codes](https://everybody.codes/) | Puzzles similar to Advent of Code | ✅ 162/162 🦆 |
 | [`exercism/`](exercism/) | [Exercism](https://exercism.org/) | Coding practice and mentorship platform | ✅ 125/125 Gleam Puzzles |
