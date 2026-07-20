@@ -35,6 +35,7 @@ A collection of solutions to various coding challenges and puzzles, all in one p
 | [`practical-python/`](practical-python/) | [Practical Python](https://adventure.practicalpython.org/) | Python challenges similar to Advent of Code | ✅ 22/22 |
 | [`project-euler-first-100/`](project-euler-first-100/), [`project-euler-solutions`](https://github.com/pf981/project-euler-solutions)(private)| [Project Euler](https://projecteuler.net/) | Mathematical computation problems | ⏳ 103/957 |
 | [`synacor-challenge/`](synacor-challenge/) | [Synacor Challenge](https://github.com/Aneurysm9/vm_challenge) | Virtual machine and reverse engineering puzzle | ✅ |
+| [`systems-check/`](systems-check/) | [Systems Check](https://systemscheck.dev/) | Puzzles similar to Advent of Code | ⏳ 1/5 |
 | [`toms-data-onion/`](toms-data-onion/) | [Tom's Data Onion](https://www.tomdalling.com/toms-data-onion/) | Solve many puzzles wrapped inside each other, like a matryoshka doll, or the layers of an onion | ✅ 6/6 |
 | [`xint/`](xint/) | [[X]INT](https://salza.dk/xint/) | An API-Based game for programmers and hackers | ✅ |
 
