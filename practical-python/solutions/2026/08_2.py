@@ -2,19 +2,6 @@ import heapq
 
 with open("./input/2026/08/input2.txt") as f:
     text = f.read()
-# text = """100 10 14,101 6 1,102 1 15,103 4 13,104 3 13,105 7 2,106 10 7
-#  ################
-#     ######      #
-# ###   #####  ####
-# ###           ###
-# ####### ## #    #
-# ####### ## ######
-# #       ##      #
-# #  #####  #######
-# #  ######      ##
-# # ######  #### ##
-# #         #### ##
-# #################"""
 
 target, *grid = text.splitlines()
 targets = {}  # (r, c) -> id_
@@ -28,6 +15,7 @@ ncols = len(grid[0])
 heap = []  # [(d, turns, heading, r, c), ...]
 for heading in "NESW":
     heapq.heappush(heap, (0, 0, heading, 0, 0))
+
 seen = set()
 order = []  # [(id_, turns), ...]
 while heap:
@@ -46,11 +34,9 @@ while heap:
         c2 = c + (heading2 == "E") - (heading2 == "W")
         if not (0 <= r2 < nrows and 0 <= c2 < ncols):
             continue
-
         if grid[r2][c2] == "#":
             continue
         heapq.heappush(heap, (d + 1, turns + (heading2 != heading), heading2, r2, c2))
 
-print(order)
-answer = f"{order[0][0]} {order[0][1]} {order[-1][0]} {order[-1][1]}"
+answer = " ".join(map(str, order[0] + order[-1]))
 print(answer)
