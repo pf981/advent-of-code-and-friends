@@ -12,6 +12,7 @@ def count_ways(n: int) -> int:
 
 with open("./input/2026/09/input1.txt") as f:
     text = f.read()
+
 n = len(text.split(","))
 
 answer = count_ways(n)
