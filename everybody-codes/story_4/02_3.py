@@ -18,17 +18,17 @@ for line in lines:
 squares = {start}
 
 
-def dfs(x: int, y: int) -> int:
-    result = 0
+def dfs(x: int, y: int) -> None:
     for move in "ABC":
         x2, y2 = m[move]
         x3 = (x + x2) // 2
         y3 = (y + y2) // 2
+
         if (x3, y3) in squares:
             continue
+
         squares.add((x3, y3))
-        result = max(result, dfs(x3, y3))
-    return 1 + result
+        dfs(x3, y3)
 
 
 dfs(*start)
