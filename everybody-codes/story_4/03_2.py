@@ -4,14 +4,6 @@ sys.setrecursionlimit(1_000_000)
 
 with open("./story_4/input/everybody_codes_e4_q03_p2.txt") as f:
     lines = f.read().splitlines()
-# lines = """width=30
-# height=10
-# horizontal-offsets=10011
-# vertical-offsets=11011""".splitlines()
-# lines = """width=100
-# height=70
-# horizontal-offsets=111101111101101111000100100110
-# vertical-offsets=110100001110111011101000001111""".splitlines()
 
 for line in lines:
     if line.startswith("width"):
@@ -38,7 +30,6 @@ for r in range(nrows):
 
         is_isolated = n and e and s and w
         if is_isolated:
-            # print(f"{r=} {c=} ISOLATED")
             isolated.add((r, c))
 
 
@@ -77,8 +68,6 @@ def fill(r: int, c: int, col: bool | None) -> None:
         fill(r, c - 1, col)
 
 
-# colors[0][0] = True
-
 for r in range(nrows):
     for c in range(ncols):
         fill(r, c, None)
@@ -89,4 +78,3 @@ for r, c in isolated:
 
 answer = max(counts)
 print(answer)
-# 279
