@@ -10,7 +10,7 @@ def to_dec(left: list[int], right: list[int]) -> int:
     return num
 
 
-def get_smallest(num, left):
+def get_smallest_right(num: int, left: list[int]) -> list[int]:
     right = 0
     while True:
         right_list = list(map(int, f"{right:0{len(left)}}"))
@@ -34,7 +34,7 @@ for line in lines:
 
     num = to_dec(left, right)
 
-    if right == get_smallest(num, left):
+    if right == get_smallest_right(num, left):
         answer += num
 
 print(answer)
