@@ -13,8 +13,7 @@ def to_dec(left: list[int], right: list[int]) -> int:
 def get_smallest(num, left):
     right = 0
     while True:
-        right_list = list(map(int, "0" * 20 + str(right)))
-        right_list = right_list[-len(left) :]
+        right_list = list(map(int, f"{right:0{len(left)}}"))
         if to_dec(left, right_list) == num:
             return right_list
         right += 1
