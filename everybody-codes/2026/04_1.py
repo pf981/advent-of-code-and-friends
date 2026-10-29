@@ -1,5 +1,30 @@
+import collections
+import re
+
 with open("./2026/input/everybody_codes_e2026_q04_p1.txt") as f:
     lines = f.read().splitlines()
+# lines = """id=1 quest=1 part=1 time=187
+# id=3 quest=1 part=1 time=413
+# id=5 quest=1 part=3 time=744
+# id=2 quest=1 part=3 time=745
+# id=4 quest=1 part=2 time=558
+# id=1 quest=1 part=2 time=299
+# id=1 quest=1 part=3 time=362
+# id=4 quest=1 part=3 time=1268
+# id=4 quest=1 part=1 time=457
+# id=5 quest=1 part=1 time=257
+# id=2 quest=1 part=1 time=192
+# id=3 quest=1 part=3 time=1168
+# id=5 quest=1 part=2 time=346
+# id=3 quest=1 part=2 time=455
+# id=2 quest=1 part=2 time=562""".splitlines()
 
-answer = ...
+participants = collections.Counter()
+for line in lines:
+    id_, quest, part, time = map(int, re.findall(r"-?\d+", line))
+    participants[id_] += time
+
+l = sorted(participants, key=lambda p: participants[p])
+
+answer = sum(i * id_ for i, id_ in enumerate(sorted(participants.values()), 1))
 print(answer)
