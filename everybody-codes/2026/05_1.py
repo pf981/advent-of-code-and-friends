@@ -1,16 +1,6 @@
 with open("./2026/input/everybody_codes_e2026_q05_p1.txt") as f:
     lines = f.read().splitlines()
-# lines = """010100100100001101000
-# 111101001000001110000
-# 101111011000101010011
-# 001000101010000100000
-# 000110100110011001100
-# 000001110111111000000
-# 101100010101011110000
-# 001101100000001010011
-# 001001001111010001001
-# 100011011110011010101
-# 001100101110010010000""".splitlines()
+
 grid = [list(map(int, line)) for line in lines]
 nrows = len(lines)
 ncols = len(lines[0])
@@ -26,18 +16,6 @@ for r in range(nrows):
                 if not (0 <= r2 < nrows and 0 <= c2 < ncols):
                     continue
                 neighbours[r][c] += grid[r2][c2]
-
-
-def pp():
-    for r in range(nrows):
-        for c in range(ncols):
-            ch = grid[r][c]
-            if (r, c) in land:
-                ch = "#"
-            print(ch, end="")
-        print()
-    print()
-
 
 todo = [(nrows // 2, ncols // 2)]
 land = set()
@@ -59,8 +37,6 @@ while todo:
             neighbours[r2][c2] += 1 - grid[r][c]
             if neighbours[r2][c2] >= 5:
                 todo.append((r2, c2))
-    # pp()
-
 
 answer = len(land)
 print(answer)
