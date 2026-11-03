@@ -2,13 +2,6 @@ import collections
 
 with open("./2026/input/everybody_codes_e2026_q06_p1.txt") as f:
     lines = f.read().splitlines()
-# lines ='''BRDS:FLWR,SLTT,YSTS
-# FLWR:SLTT,YSTS
-# SLTT:YSTS,MLKK,BTTR
-# NULL:BRDS,FLWR,SLTT
-# YSTS:BRDS,FLWR
-# MLKK:SPCS,NULL
-# HNYN:BRDS,FLWR,SLTT,YSTS'''.splitlines()
 
 m = collections.defaultdict(list)
 for line in lines:
