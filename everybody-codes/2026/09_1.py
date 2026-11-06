@@ -4,9 +4,6 @@ import re
 
 with open("./2026/input/everybody_codes_e2026_q09_p1.txt") as f:
     lines = f.read().splitlines()
-# lines = """id=1, growth=3, limit=10
-# id=2, growth=5, limit=20
-# id=3, growth=7, limit=30""".splitlines()
 
 plants = [tuple(map(int, re.findall(r"-?\d+", line))) for line in lines]
 
@@ -18,20 +15,17 @@ for id_, growth, limit in plants:
 
     for seconds in itertools.count():
         counts2 = collections.Counter()
-        print(f"{seconds=} {counts=} {elements=}")
-
         for length, count in counts.items():
             # Grow 1
             elements += count
             length += 1
 
             # Split
-            # elements += count  # Branching point
             if length == growth:
                 m = length // 2
                 counts2[m] += 2 * count
                 counts2[1] += count  # New branch
-                elements += 1  # FIXME: Not sure if this is right
+                elements += 1
             else:
                 counts2[length] += count
 
@@ -39,10 +33,6 @@ for id_, growth, limit in plants:
         if elements >= limit:
             break
 
-    print(f"{id_=} {growth=} {limit=} {seconds=}\n")
     answer += seconds + 1
 
 print(answer)
-# 151
-# Your answer length is: correct
-# The first character of your answer is: incorrect
