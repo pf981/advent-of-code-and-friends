@@ -1,28 +1,7 @@
 import collections
 
-
-def move(p: tuple[int, int], dir: str) -> tuple[int, int]:
-    assert dir in "^>v<"
-
-    return (
-        p[0] + (dir == "v") - (dir == "^"),
-        p[1] + (dir == ">") - (dir == "<"),
-    )
-
-
 with open("./2026/input/everybody_codes_e2026_q10_p1.txt") as f:
     lines = f.read().splitlines()
-# lines = """###########
-# #####.#####
-# ###.....###
-# ##.......##
-# ##.>>.<<.##
-# #v...>...v#
-# ##...v...##
-# ##.......##
-# ###.....###
-# #####.#####
-# ###########""".splitlines()
 
 nrows = len(lines)
 ncols = len(lines[0])
@@ -32,13 +11,12 @@ ghosts = collections.defaultdict(list)
 for r in range(nrows):
     for c in range(ncols):
         if lines[r][c] == ".":
-            continue
-        if lines[r][c] == "#":
+            pass
+        elif lines[r][c] == "#":
             walls.add((r, c))
-            continue
-
-        assert lines[r][c] in "^>v<"
-        ghosts[(r, c)].append(lines[r][c])
+        else:
+            assert lines[r][c] in "^>v<"
+            ghosts[(r, c)].append(lines[r][c])
 
 rot90 = {
     "^": ">",
@@ -52,22 +30,6 @@ rot180 = {
     "v": "^",
     "<": ">",
 }
-
-
-def pp():
-    for r in range(nrows):
-        for c in range(ncols):
-            ch = "."
-            if (r, c) in walls:
-                ch = "#"
-            if (r, c) in ghosts:
-                if len(ghosts[(r, c)]) > 1:
-                    ch = len(ghosts[(r, c)])
-                else:
-                    ch = ghosts[(r, c)][0]
-            print(ch, end="")
-        print()
-
 
 answer = 0
 for round in range(10):
@@ -96,9 +58,6 @@ for round in range(10):
             dirs[i] = rot180[dirs[i]]
 
     ghosts = ghosts2
-    # print(f"Round {round + 1} {collisions=}")
-    # pp()
-    # print()
 
     answer += collisions
 
