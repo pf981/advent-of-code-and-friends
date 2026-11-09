@@ -2,10 +2,6 @@ import collections
 
 with open("./2026/input/everybody_codes_e2026_q11_p1.txt") as f:
     lines = f.read().splitlines()
-# lines = """portals: 10
-
-# 5 10
-# 2 7""".splitlines()
 
 head, _, *rest = lines
 
@@ -25,7 +21,6 @@ def get_route_sum(start) -> int:
     seen = {start}
     d = 0
     while q:
-        print(f"{q=}")
         for _ in range(len(q)):
             node = q.popleft()
             for node2 in m[node]:

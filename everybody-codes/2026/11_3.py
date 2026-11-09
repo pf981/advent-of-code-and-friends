@@ -59,7 +59,6 @@ min_s2 = float("inf")
 gap = n // 8
 for start in range(1, gap + 1):
     nodes = list(range(start, n + 1, gap))
-    print(nodes)
 
     for pairs in get_pairs(nodes):
         is_valid = True
