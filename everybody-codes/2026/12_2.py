@@ -1,39 +1,10 @@
 with open("./2026/input/everybody_codes_e2026_q12_p2.txt") as f:
     lines = f.read().splitlines()
-# lines = """........#.
-# .##.......
-# .##..####.
-# .#...#....
-# .....#....
-# .####.....""".splitlines()
-# lines = """...............................
-# .####....#####..#######........
-# .####....#####..#######........
-# .####....#####..#######........
-# .........#####.......##........
-# .........########....##........
-# .........########....##........
-# ...............................
-# .######....#.....#.....###.....
-# ...........#...........###.....
-# ...........#......########.....
-# ...........#......########.....
-# ...........#......########.....
-# ..................########.....
-# ...............................""".splitlines()
 
 seen = set()
 
-
 nrows = len(lines)
 ncols = len(lines[0])
-
-# Represent as (w1,h1), (w2,h2)
-# Min of:
-# max(h1,h2)
-# max(w1,w2)
-# w1+h2
-# w2+h1
 
 
 def get_points(r: int, c: int) -> set:
@@ -65,13 +36,8 @@ def get_w1_h1_w2_h2(r, c) -> tuple[int, int, int, int]:
                 min_c = min(min_c, c)
                 max_c = max(max_c, c)
 
-        # print("".join(lines[r]))
-
     if not (min_r <= max_r and min_c <= max_c):
         return 0, 0, 0, 0
-    print(f"{min_r=} {max_r=} {min_c=} {max_c=}")
-    print(f"{nrows=} {ncols=}")
-    print(f"{len(lines2)=} {len(lines2[0])}")
 
     # Single rect
     if all(
@@ -98,16 +64,10 @@ for r in range(nrows):
     for c in range(ncols):
         w1, h1, w2, h2 = get_w1_h1_w2_h2(r, c)
 
-        # options = [max(h1, h2), max(w1, w2), w1 + h2, w2 + h1]
         options = [h1 + h2, max(w1, w2), w1 + h2, w2 + h1]
         if min(options) == 0:
             continue
 
-        print(f"{w1=} {h1=} {w2=} {h2=}")
-        print(f"{r=} {c=} {options=} {min(options)=}\n")
-
         answer += min(options)
 
 print(answer)
-
-# w2 is wrong

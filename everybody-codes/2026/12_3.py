@@ -3,49 +3,6 @@ import itertools
 
 with open("./2026/input/everybody_codes_e2026_q12_p3.txt") as f:
     lines = f.read().splitlines()
-# lines = """........#.
-# .##.......
-# .##..####.
-# .#...#..#.
-# .....####.
-# .###......""".splitlines()
-# lines = """..............................
-# .##########....##.....#######.
-# .##########.##.##..#..#######.
-# .####..####.##.##.....#.#####.
-# .##########.##.#####..#.#####.
-# .##########.##........#######.
-# ..............................
-# .##########..################.
-# .##########..#..............#.
-# .#######..#..#..............#.
-# .#######..#..################.
-# .##########..################.
-# ..............................""".splitlines()
-# lines = """..............................
-# .############################.
-# .##...................###.###.
-# .##..################.###.###.
-# .##..######.........#.###.###.
-# .##..################.###.###.
-# .##...................###.###.
-# .##..####################.###.
-# .##..####################.###.
-# .##.......................###.
-# .############################.
-# ..............................""".splitlines()
-# lines = """..............................
-# .############################.
-# .##...................###.###.
-# .##...................###.###.
-# .##...................###.###.
-# .##...................###.###.
-# .##...................###.###.
-# .##..####################.###.
-# .##..####################.###.
-# .##.......................###.
-# .############################.
-# ..............................""".splitlines()
 
 points = frozenset(
     (r, c) for r, line in enumerate(lines) for c, ch in enumerate(line) if ch == "#"
@@ -79,26 +36,8 @@ def normalise_points(points: frozenset[tuple[int, int]]) -> frozenset[tuple[int,
     return frozenset((r - top_left_r, c - top_left_c) for r, c in points)
 
 
-def pp(points):
-    if not points:
-        print("NONE")
-        return
-    min_r = min(r for r, _ in points)
-    max_r = max(r for r, _ in points)
-    min_c = min(c for _, c in points)
-    max_c = max(c for _, c in points)
-
-    for r in range(min_r, max_r + 1):
-        for c in range(min_c, max_c + 1):
-            print("#" if (r, c) in points else ".", end="")
-        print()
-    print()
-
-
 @functools.cache
 def get_min_cost(points: frozenset[tuple[int, int]]) -> int:
-    # pp(points)
-
     if not points:
         return 0
 
@@ -136,20 +75,5 @@ def break_shapes(
     return result
 
 
-answer = 0
-for ps in break_shapes(points):
-    cost = get_min_cost(ps)
-
-    if cost:
-        print(f"{cost=}\n")
-
-    answer += cost
-
-# Last eg should be
-# r=1 c=1 cost=12
-# r=3 c=5 cost=4
-
+answer = sum(get_min_cost(ps) for ps in break_shapes(points))
 print(answer)
-# 3013 wrong
-# Your answer length is: correct
-# The first character of your answer is: incorrect
