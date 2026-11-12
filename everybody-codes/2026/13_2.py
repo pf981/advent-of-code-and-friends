@@ -3,44 +3,29 @@ from fractions import Fraction
 
 with open("./2026/input/everybody_codes_e2026_q13_p2.txt") as f:
     text = f.read()
-# text = """hands 6:8:12
-# direction CW:CCW:CW
-# current 2:4:8
-# move 9:7:4
-
-# hands 6:8:12
-# direction CW:CCW:CW
-# current 1:2:2
-# move 10:12:15
-
-# hands 6:8:12
-# direction CW:CCW:CW
-# current 1:2:2
-# move 10:12:20"""  # 5+7+9=21
-# with open("./2026/input/everybody_codes_e2026_q13_p2_eg.txt") as f:
-#     text = f.read()
-# text = """hands 6:8:12
-# direction CW:CCW:CW
-# current 2:4:8
-# move 9:7:4"""
 
 
 def overlaps(i: int, j: int, vi: int, vj: int, prod: int) -> bool:
-    if i == j:
+    """
+    d_t = d_0 + v * t
+
+    i_t = i + vi * t
+    j_t = j + vj * t
+
+    i_t = j_t   I.e. they intersect
+    => i + vi * t = j + vj * t
+    => t = (i - j) / (vj - vi)
+
+    If 0 < t <= 1 then they will intersect in the next second
+    """
+    if i == j or vj - vi == 0:
         return False
 
-    def check(i: int, j: int, vi: int, vj: int):
-        if vj - vi == 0:
-            # If they are going the same speed, they can't intersect unless they started from the same position
-            return False
+    def check(i: int):
         t_intersect = Fraction((i - j), (vj - vi))
-        # print(f"{i=} {j=} {vi=} {vj=} {t_intersect=}")
         return 0 < t_intersect <= 1
 
-    for d in range(-5, 5 + 1):
-        if check(i - d * prod, j, vi, vj):
-            return True
-    return False
+    return check(i - prod) or check(i) or check(i + prod)
 
 
 def get_calibration(lines: list[str]) -> int:
@@ -77,7 +62,6 @@ def get_calibration(lines: list[str]) -> int:
                     prod,
                 ):
                     meetings += 1
-                    # print(f"  Meeting {i=} {j=} {t=} {positions=}")
 
         prev_positions = positions.copy()
 
@@ -87,6 +71,5 @@ def get_calibration(lines: list[str]) -> int:
 answer = 0
 for part in text.split("\n\n"):
     meetings = get_calibration(part.splitlines())
-    # print(f"{part=}\n{meetings=}\n")
     answer += meetings
 print(answer)
