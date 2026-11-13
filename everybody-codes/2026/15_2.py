@@ -17,7 +17,7 @@ while heap:
         continue
     seen[(r, c, prev_r, prev_c)] = sulphur
 
-    if lines[r][c] == "E" and sulphur >= 2026:
+    if lines[r][c] == "E" and sulphur >= TARGET_SULPHUR:
         break
 
     for dr, dc in [(-1, 0), (0, -1), (0, 1), (1, 0)]:
