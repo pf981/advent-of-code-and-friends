@@ -1,10 +1,5 @@
 with open("./2026/input/everybody_codes_e2026_q14_p1.txt") as f:
     lines = f.read().splitlines()
-# lines = """AAAEEEFFFF
-# AADDDDDGFF
-# BACDDIGGFF
-# BABBIIIGGH
-# BBBBIIIIHH""".splitlines()
 
 nrows = len(lines)
 ncols = len(lines[0])

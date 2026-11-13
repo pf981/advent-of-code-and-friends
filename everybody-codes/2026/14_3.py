@@ -3,27 +3,10 @@ import itertools
 
 with open("./2026/input/everybody_codes_e2026_q14_p3.txt") as f:
     lines = f.read().splitlines()
-# lines = """AAAEEEFFFF
-# AADDDDDGFF
-# BACDDIGGFF
-# BABBIIIGGH
-# BBBBIIIIHH""".splitlines()
-# lines = """IIIIIILOHHHHHHHHGGGGGQSRRRRKKK
-# IIIIIILOOHHHHHHGGXGGGQSRRRRKKK
-# PPPPILLLOOOODDHBGGGGGQSSRRRKKK
-# PPZPLLLLFFOODDBBBBGGQQQSSRKKKK
-# PPPPLLLLFFFONDDDBBMGGQQSSKKJJJ
-# PPPCCCCCCFFONNDDMMMGQQQSSSKJJJ
-# PCCCCCCCCFFNNDDDDMAAQQQSSSKKJJ
-# PPCCECCCFFNNNNDADMAATQTTSSSJJJ
-# PPEEEEECCFFNNAAAMMATTTTTSTSSSJ
-# PPEEEEEEEFFNNNAAAAAATTTTTTSSJJ""".splitlines()
 
 nrows = len(lines)
 ncols = len(lines[0])
 
-# Don't forget frame seem
-# seems = []  # cost, node1, node2
 seems = collections.Counter()  # {node1, node2} -> cost
 
 # Frame
@@ -56,7 +39,6 @@ def get_min_cost(seems):
         if not candidates:
             break
         cost, a, b = min(candidates)
-        # print(f"{cost=} {a=} {b=}")
         usable.add(a)
         usable.add(b)
         total_cost += cost
@@ -76,21 +58,6 @@ for charges in itertools.combinations(nodes, 2):
             seems2[frozenset([charge, b])] = 0
 
     min_cost = get_min_cost(seems2)
-    if "A" in charges and "B" in charges:
-        print(f"{charges=}\n{min_cost=}\n{seems2=}\n")
     answer = min(answer, min_cost)
 
 print(answer)
-
-# for cost, a, b in edges:
-#     if a in done and b in done:
-#         continue
-#     done.add(a)
-#     done.add(b)
-#     total_cost += cost
-
-# print(len(done))
-# answer = pairs
-# 371
-# Your answer length is: correct
-# The first character of your answer is: incorrect

@@ -2,27 +2,10 @@ import collections
 
 with open("./2026/input/everybody_codes_e2026_q14_p2.txt") as f:
     lines = f.read().splitlines()
-# lines = """AAAEEEFFFF
-# AADDDDDGFF
-# BACDDIGGFF
-# BABBIIIGGH
-# BBBBIIIIHH""".splitlines()
-# lines = """IIIIIILOHHHHHHHHGGGGGQSRRRRKKK
-# IIIIIILOOHHHHHHGGXGGGQSRRRRKKK
-# PPPPILLLOOOODDHBGGGGGQSSRRRKKK
-# PPZPLLLLFFOODDBBBBGGQQQSSRKKKK
-# PPPPLLLLFFFONDDDBBMGGQQSSKKJJJ
-# PPPCCCCCCFFONNDDMMMGQQQSSSKJJJ
-# PCCCCCCCCFFNNDDDDMAAQQQSSSKKJJ
-# PPCCECCCFFNNNNDADMAATQTTSSSJJJ
-# PPEEEEECCFFNNAAAMMATTTTTSTSSSJ
-# PPEEEEEEEFFNNNAAAAAATTTTTTSSJJ""".splitlines()
 
 nrows = len(lines)
 ncols = len(lines[0])
 
-# Don't forget frame seem
-# seems = []  # cost, node1, node2
 seems = collections.Counter()  # {node1, node2} -> cost
 
 # Frame
@@ -54,22 +37,9 @@ while True:
     if not candidates:
         break
     cost, a, b = min(candidates)
-    print(f"{cost=} {a=} {b=}")
     usable.add(a)
     usable.add(b)
     total_cost += cost
 
-# for cost, a, b in edges:
-#     if a in done and b in done:
-#         continue
-#     done.add(a)
-#     done.add(b)
-#     total_cost += cost
-
-# print(len(done))
-# answer = pairs
 answer = total_cost
 print(answer)
-# 371
-# Your answer length is: correct
-# The first character of your answer is: incorrect
