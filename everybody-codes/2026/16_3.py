@@ -1,28 +1,8 @@
 from collections import deque
 
-
-def last(q: deque[tuple[str, int]], is_reversed: bool) -> tuple[str, int]:
-    if is_reversed:
-        return q[0]
-    return q[-1]
-
-
-def pop(q: deque[tuple[str, int]], is_reversed: bool) -> tuple[str, int]:
-    if is_reversed:
-        return q.popleft()
-    return q.pop()
-
-
-def popleft(q: deque[tuple[str, int]], is_reversed: bool) -> tuple[str, int]:
-    if is_reversed:
-        return q.pop()
-    return q.popleft()
-
-
 with open("./2026/input/everybody_codes_e2026_q16_p3.txt") as f:
-    lines = f.read().splitlines()
+    text = f.read().strip()
 COPIES = 100
-
 
 left = deque()
 mid = deque()  # [[color, length], ...]
@@ -30,10 +10,9 @@ right = deque()
 
 is_reversed = False
 
-assert len(lines) == 1
 streak = 0
-prev = lines[0][0]
-for ch in lines[0] * COPIES:
+prev = text[0]
+for ch in text * COPIES:
     if ch == prev:
         streak += 1
         continue
@@ -43,7 +22,7 @@ for ch in lines[0] * COPIES:
     prev = ch
 mid.append([prev, streak])
 
-n = len(lines[0] * COPIES)
+n = len(text * COPIES)
 n_left = n_right = 0
 flips = 0
 
@@ -55,13 +34,13 @@ while True:
             n_right = 0
             mid, right = right, mid
 
-    ch, length = popleft(mid, is_reversed)
+    ch, length = mid.pop() if is_reversed else mid.popleft()
     n_left += length
     left.append((ch, length))
 
     color = left[-1][0]
-    while mid and last(mid, is_reversed)[0] != color:
-        ch, length = pop(mid, is_reversed)
+    while mid and mid[0 if is_reversed else -1][0] != color:
+        ch, length = mid.popleft() if is_reversed else mid.pop()
         n_right += length
         if right and right[0][0] == ch:
             length += right.popleft()[1]
