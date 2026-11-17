@@ -5,7 +5,7 @@ with open("./2026/input/everybody_codes_e2026_q16_p3.txt") as f:
 COPIES = 100
 
 left = deque()
-mid = deque()  # [[color, length], ...]
+mid = deque()  # [(color, length), ...]
 right = deque()
 
 is_reversed = False
@@ -22,7 +22,7 @@ for ch in text * COPIES:
     prev = ch
 mid.append([prev, streak])
 
-n = len(text * COPIES)
+n = len(text) * COPIES
 n_left = n_right = 0
 flips = 0
 
@@ -32,6 +32,7 @@ while True:
             break
         else:
             n_right = 0
+            is_reversed = False
             mid, right = right, mid
 
     ch, length = mid.pop() if is_reversed else mid.popleft()
