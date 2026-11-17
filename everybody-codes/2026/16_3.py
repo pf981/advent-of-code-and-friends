@@ -1,12 +1,34 @@
+from collections import deque
+
+
+def last(q: deque[tuple[str, int]], is_reversed: bool) -> tuple[str, int]:
+    if is_reversed:
+        return q[0]
+    return q[-1]
+
+
+def pop(q: deque[tuple[str, int]], is_reversed: bool) -> tuple[str, int]:
+    if is_reversed:
+        return q.popleft()
+    return q.pop()
+
+
+def popleft(q: deque[tuple[str, int]], is_reversed: bool) -> tuple[str, int]:
+    if is_reversed:
+        return q.pop()
+    return q.popleft()
+
+
 with open("./2026/input/everybody_codes_e2026_q16_p3.txt") as f:
     lines = f.read().splitlines()
-# lines = """RRYGGYBBYG""".splitlines()
-# COPIES = 100
+COPIES = 100
 
-lines = """RRYGYBYG""".splitlines()
-COPIES = 10
 
-groups = []  # [(ch, length), ...]
+left = deque()
+mid = deque()  # [[color, length], ...]
+right = deque()
+
+is_reversed = False
 
 assert len(lines) == 1
 streak = 0
@@ -16,43 +38,37 @@ for ch in lines[0] * COPIES:
         streak += 1
         continue
 
-    groups.append([prev, streak])
+    mid.append((prev, streak))
     streak = 1
     prev = ch
-groups.append([prev, streak])
+mid.append([prev, streak])
 
-
-def merge(groups):
-    stack = [groups[0]]
-    for ch, length in groups:
-        if ch == stack[-1][0]:
-            stack[-1][1] += length
-        else:
-            stack.append([ch, length])
-    return stack
-
-
-shades = {ch for ch, _ in groups}
+n = len(lines[0] * COPIES)
+n_left = n_right = 0
 flips = 0
-while len(groups) != len(shades):
-    # print(f"{flips=} {groups=}")
-    for first in range(len(groups)):
-        ch = groups[first][0]
-        last = next(i for i in reversed(range(len(groups))) if groups[i][0] == ch)
-        if first != last:
+
+while True:
+    if not mid:
+        if not right:
             break
-    assert first != last
+        else:
+            n_right = 0
+            mid, right = right, mid
 
-    flips += sum(length for _, length in groups[first + 1 : last + 1])
+    ch, length = popleft(mid, is_reversed)
+    n_left += length
+    left.append((ch, length))
 
-    groups = (
-        groups[:first]
-        + [[groups[first][0], groups[first][1] + groups[last][1]]]
-        + groups[first + 1 : last][::-1]
-        + groups[last + 1 :]
-    )
-    groups = merge(groups)
+    color = left[-1][0]
+    while mid and last(mid, is_reversed)[0] != color:
+        ch, length = pop(mid, is_reversed)
+        n_right += length
+        if right and right[0][0] == ch:
+            length += right.popleft()[1]
+        right.appendleft((ch, length))
 
+    is_reversed = not is_reversed
+    flips += n - n_left - n_right
 
 answer = flips
 print(answer)
