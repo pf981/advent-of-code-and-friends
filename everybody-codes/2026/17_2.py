@@ -2,24 +2,19 @@ import collections
 
 with open("./2026/input/everybody_codes_e2026_q17_p2.txt") as f:
     lines = f.read().splitlines()
-# lines = """####.######
-# #.#.##..#..
-# ##.##.##..#
-# #.#.###.###
-# #.###.###.#
-# ###.##.#.##""".splitlines()
 
 nrows = len(lines)
 ncols = len(lines[0])
 
 
-def is_set(r, c):
+def is_set(r: int, c: int) -> bool:
     return 0 <= r < nrows and 0 <= c < ncols and lines[r][c] == "#"
 
 
-def get_dirs(r, c, prev_r, prev_c):
+def get_dirs(r: int, c: int, prev_r: int, prev_c: int) -> str:
     if r == c == 0:
         return "ES"  # Hard code start
+
     tl, tr, bl, br = (
         is_set(r - 1, c - 1),
         is_set(r - 1, c),
@@ -59,7 +54,6 @@ def get_dirs(r, c, prev_r, prev_c):
                 return "N"
 
     dirs = ""
-    # if bl == tl and tl != tr:
     if tl != tr:
         dirs += "N"
     if br != tr:
@@ -78,9 +72,8 @@ d = 0
 while q:
     for _ in range(len(q)):
         r, c, prev_r, prev_c, hit_end = q.popleft()
-        print(r, c, prev_r, prev_c, hit_end)
 
-        if (r, c) == (nrows, ncols):  # FIXME: Not the target
+        if (r, c) == (nrows, ncols):
             hit_end = True
 
         if (r, c) == (0, 0) and hit_end:
@@ -92,18 +85,8 @@ while q:
 
             if (r2, c2) == (prev_r, prev_c):
                 continue
-            # if not (0 <= r2 < nrows and 0 <= c2 < ncols):
-            #     continue
             if (r2, c2, r, c, hit_end) in seen:
                 continue
-
-            tl, tr, bl, br = (
-                is_set(r - 1, c - 1),
-                is_set(r - 1, c),
-                is_set(r, c - 1),
-                is_set(r, c),
-            )
-
             seen.add((r2, c2, r, c, hit_end))
 
             q.append((r2, c2, r, c, hit_end))
@@ -115,24 +98,3 @@ while q:
 assert (r, c) == (0, 0) and hit_end
 answer = d
 print(answer)
-
-
-# # 4,7 N not working
-# def get_dirs(r, c):
-#     tl, tr, bl, br = (
-#         is_set(r - 1, c - 1),
-#         is_set(r - 1, c),
-#         is_set(r, c - 1),
-#         is_set(r, c),
-#     )
-#     dirs = ""
-#     if br == tr and tl != tr:
-#         dirs += "N"
-#     if br != tr:
-#         dirs += "E"
-#     if br != bl:
-#         dirs += "S"
-#     if bl != tl:
-#         dirs += "W"
-#     return dirs
-# get_dirs(4,7)

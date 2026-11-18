@@ -2,12 +2,6 @@ import collections
 
 with open("./2026/input/everybody_codes_e2026_q17_p1.txt") as f:
     lines = f.read().splitlines()
-# lines = """####.######
-# #.#.##..#..
-# ##.##.##..#
-# #.#.###.###
-# #.###.###.#
-# ###.##.#.##""".splitlines()
 
 nrows = len(lines)
 ncols = len(lines[0])
