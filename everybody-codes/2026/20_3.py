@@ -1,6 +1,153 @@
+import operator
+
 with open("./2026/input/everybody_codes_e2026_q20_p3.txt") as f:
     lines = f.read().splitlines()
-    # text = f.read().strip()
 
-answer = ...
+# lines = """1 + 1 = 5 - 1
+# 1 + 1 = 3 - 3
+# 0 - 1 = 1 + 7
+# 1 + 1 = 1 - 6
+# 1 + 1 = 2 - 1
+# 1 + 1 = 5 + 7
+# 1 + 4 = 9 - 9
+# 1 + 1 = 2 + 9
+# 1 + 1 = 1 + 2""".splitlines()
+# lines = """4469 - 5934 = 1631 - 2AA7
+# 8471 - 2276 = 4510 + 2736
+# A767 - 6104 = 1825 + 2538
+# 9961 + 1140 = 5963 + 2974
+# 9188 - 406A = 3598 + 1533
+# 96A6 - 1606 = 4676 - 3524
+# 9114 - 15A2 = 5258 + 2371
+# 7023 - 2209 = 1433 + 3436
+# 921A - 2696 = 2A91 + 3688
+# 8492 - 2055 = 4186 + 3260
+# 1234 + 4567 = 8901 + 2345""".splitlines()
+
+
+# c -> [(c2, leftover), ...]
+take_one = {
+    "0": [("6", 0), ("9", 0), ("A", 0)],
+    "1": [],
+    "2": [("3", 0)],
+    "3": [("2", 0), ("5", 0)],
+    "4": [],
+    "5": [("3", 0)],
+    "6": [("0", 0), ("5", 1), ("9", 0), ("A", 0)],
+    "7": [("1", 1)],
+    "8": [("0", 1), ("6", 1), ("9", 1), ("A", 1)],
+    "9": [("0", 0), ("3", 1), ("5", 1), ("6", 0), ("A", 0)],
+    "+": [("-", 1)],
+    "-": [],
+    "=": [],
+    " ": [],
+    "A": [("0", 0), ("6", 0), ("9", 0)],
+}
+
+# c -> [c2, ...]
+give_one = {
+    "0": ["8"],
+    "1": ["7"],
+    "2": [],
+    "3": ["9"],
+    "4": [],
+    "5": ["6", "9"],
+    "6": ["8"],
+    "7": [],
+    "8": [],
+    "9": ["8"],
+    "+": [],
+    "-": ["+"],
+    "=": [],
+    " ": [],
+    "A": ["8"],
+}
+
+
+def get_strings(line: str):
+    yield line
+
+    l = list(line)
+    for i_take in range(len(line)):
+        for take_c, leftover in take_one[l[i_take]]:
+            l[i_take] = take_c
+            if not leftover:
+                yield "".join(l)
+                l[i_take] = line[i_take]  # Restore
+                continue
+
+            for i_give in range(len(line)):
+                if i_take == i_give:
+                    continue
+                for give_c in give_one[l[i_give]]:
+                    l[i_give] = give_c
+
+                    yield "".join(l)
+
+                    l[i_give] = line[i_give]  # Restore
+
+            l[i_take] = line[i_take]  # Restore
+
+
+def is_valid(line: str) -> bool:
+    l_a, l_op, l_b, _, r_a, r_op, r_b = line.split()
+    l_a, l_b, r_a, r_b = (int(s, 11) for s in [l_a, l_b, r_a, r_b])
+    l_f = {"+": operator.add, "-": operator.sub}[l_op]
+    r_f = {"+": operator.add, "-": operator.sub}[r_op]
+    return l_f(l_a, l_b) == r_f(r_a, r_b)
+
+
+def get_segments(c: str) -> int:
+    return {
+        "0": 6,
+        "1": 2,
+        "2": 5,
+        "3": 5,
+        "4": 4,
+        "5": 5,
+        "6": 6,
+        "7": 3,
+        "8": 7,
+        "9": 6,
+        "+": 2,
+        "-": 1,
+        "=": 2,
+        " ": 0,
+        "A": 6,
+    }[c]
+
+
+def to_b_11(dec: int) -> str:
+    result = []
+
+    while dec > 0:
+        dec, remainder = divmod(dec, 11)
+        result.append("0123456789A"[remainder])
+
+    return "".join(reversed(result))
+
+
+dec = 0
+for line in lines:
+    for line2 in get_strings(line):
+        if is_valid(line2):
+            print(f"{line=} -> {line2=}")
+            dec += sum(map(get_segments, line2))
+            break
+
+answer = to_b_11(dec)
 print(answer)
+# 80354
+# Your answer length is: correct
+# The first character of your answer is: incorrect
+
+
+# list(get_strings("1 + 1 = 5 - 1"))
+
+# 4393A
+# Your answer length is: correct
+# The first character of your answer is: correct
+
+# 47879
+# Your answer length is: correct
+# The first character of your answer is: correct
